@@ -1,5 +1,10 @@
 <template>
-  <RouterView />
+  <div class="loading" v-if="!game.assetsProgress.loaded">
+    <VProgressCircular indeterminate class="mb-1 mr-2"/>
+    Lade ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
+  </div>
+
+  <RouterView v-else />
 
   <VBtn
     class="help-button"
@@ -200,8 +205,7 @@ async function help () {
 
   helpLoading.value = true
   const res = await game.getHelp()
-  console.log(res)
-
+  
   if (res.success) {
     helpMessage.value = 'Hilfe wurde angefordert!'
   } else {
@@ -213,9 +217,20 @@ async function help () {
 </script>
 
 <style scoped lang="scss">
+@use '@/scss/vars' as *;
+
 .help-button {
   position: fixed;
   top: 1rem;
   right: 1rem;
+}
+
+.loading {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
 }
 </style>

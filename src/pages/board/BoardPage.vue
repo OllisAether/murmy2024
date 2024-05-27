@@ -3,8 +3,9 @@
 
   <VDialog v-model="navigationDialog" max-width="300">
     <VCard>
-      <VToolbar color="transparent">
+      <VToolbar>
         <VToolbarTitle>
+          <VIcon>mdi-television</VIcon>
           Board
         </VToolbarTitle>
         <VSpacer />
@@ -14,6 +15,14 @@
       </VToolbar>
 
       <VCardText>
+        <VBtn
+          variant="tonal"
+          color="primary"
+          @click="toggleFs"
+          class="w-100 mb-2"
+        >
+          Vollbild an/aus
+        </VBtn>
         <VBtn
           variant="tonal"
           color="error"
@@ -38,12 +47,20 @@ const auth = useAuthManager()
 
 const navigationDialog = ref(false)
 
+function toggleFs () {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+  } else {
+    document.documentElement.requestFullscreen()
+  }
+
+}
+
 let taps = 0
 useEventListener('pointerdown', tap)
 
 function tap () {
   // 3 Taps to open dialog
-
   if (navigationDialog.value) return
 
   taps++

@@ -9,8 +9,10 @@
 
 <script lang="ts" setup>
 import { useAuthManager } from '../../store/authManager';
+import { useGameManager } from '../../store/gameManager';
 
 const auth = useAuthManager()
+const game = useGameManager()
 </script>
 
 <style lang="scss" scoped>
@@ -18,19 +20,14 @@ const auth = useAuthManager()
 
 .teamname {
   font-size: min(20vh, 10vw);
-  // font-weight: bold;
-  // text-transform: uppercase;
-  // font-style: italic;
   font-family: $fontDisplay;
 
-  position: fixed;
-  padding: 4rem 8rem;
+  position: absolute;
   top: 50%;
-  left: 50%;
-  width: fit-content;
+  width: 100%;
   text-align: center;
   line-height: 1.2;
-  transform: translate(-50%, -50%)translateY(-0.6em);
+  transform: translateY(-60%);
 
   span {
     font-size: 0.3em;

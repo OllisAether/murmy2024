@@ -16,5 +16,10 @@ export default defineConfig({
         ws: true
       }
     }
-  }
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })
