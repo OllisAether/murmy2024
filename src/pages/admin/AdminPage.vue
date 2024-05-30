@@ -9,11 +9,19 @@
       </VToolbar>
 
       <VList nav>
-        <VListItem to="/admin/dashboard">
+        <VListItem to="/admin/dashboard" >
           <VListItemTitle>
             <VIcon>mdi-view-dashboard</VIcon>
             Dashboard
           </VListItemTitle>
+          <template #append>
+            <VBadge
+              v-if="admin.needsHelp.length"
+              color="error"
+              :content="admin.needsHelp.length"
+              inline
+            />
+          </template>
         </VListItem>
         <VListItem to="/admin/teams">
           <VListItemTitle>
@@ -41,25 +49,6 @@
               <TutorialCard @close="tutorialDialog = false" />
             </VDialog>
           </VListItem>
-          <!-- <VDivider />
-          <VListItem @click="">
-            <VListItemTitle>
-              <VIcon>mdi-logout</VIcon>
-              Logout
-            </VListItemTitle>
-
-            <VDialog activator="parent" max-width="300">
-              <VCard>
-                <VCardText>
-                  Bis du sicher, dass du dich ausloggen möchtest?
-                </VCardText>
-                <VCardActions>
-                  <VBtn>Abbrechen</VBtn>
-                  <VBtn variant="tonal" color="primary" @click="auth.logout()">Logout</VBtn>
-                </VCardActions>
-              </VCard>
-            </VDialog>
-          </VListItem> -->
         </VList>
       </template>
     </VNavigationDrawer>
@@ -90,25 +79,24 @@
       </VBtn>
     </VAppBar>
 
-    <VMain>
-      <VContainer v-if="admin.needsHelp.length > 0" class="pb-0">
-        <VAlert
-          v-for="help in admin.needsHelp"
-          :key="help"
-          type="info"
-          icon="mdi-help-circle"
-          variant="tonal"
-        >
-          <b>{{ admin.teams.find(team => team.id === help)?.name || 'Unbekanntes Team' }}</b> brauchen Hilfe!
-
-          <template #close>
-            <VBtn icon @click="admin.removeHelpRequest(help)">
-              <VIcon>mdi-close</VIcon>
-            </VBtn>
-          </template>
-        </VAlert>
-
-      </VContainer>
+    <VMain class="main">
+      <div class="alerts-wrapper" v-if="admin.alert.length > 0">
+        <div class="alerts">
+          <VAlert
+            v-for="alert in admin.alerts"
+            :key="alert.id"
+            :icon="alert.icon ?? undefined"
+            :title="alert.title ?? undefined"
+            :text="alert.message ?? undefined"
+            :type="alert.type === 'default' ? undefined : alert.type"
+            @click:close="alert.close?.()"
+            :closable="true"
+            variant="elevated"
+          >
+            <TimedProgress v-if="alert.closeAfter" :duration="alert.closeAfter" />
+          </VAlert>
+        </div>
+      </div>
 
       <RouterView />
     </VMain>
@@ -124,6 +112,7 @@ import { VBtn, VIcon, VNavigationDrawer, VToolbar } from 'vuetify/components';
 import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import TutorialCard from '../../components/admin/TutorialCard.vue';
+import TimedProgress from '../../components/TimedProgress.vue';
 
 const route = useRoute();
 const drawer = ref(!useDisplay().mdAndDown.value);
@@ -154,3 +143,21 @@ async function logout() {
   logoutDialog.value = false;
 }
 </script>
+
+<style lang="scss" scoped>
+.alerts {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  @media screen and (max-width: 768px) {
+    position: static;
+    margin: 1rem 1rem;
+  }
+
+  &-wrapper {
+    z-index: 100;
+    position: relative;
+  }
+}
+</style>

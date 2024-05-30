@@ -7,7 +7,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/login",
+      name: "login",
+      path: "/login/:code?",
       component: () => import("./pages/LoginPage.vue"),
 
       meta: {
@@ -15,6 +16,7 @@ const router = createRouter({
       },
     },
     {
+      name: "team",
       path: "/team",
       redirect: "/team/home",
       component: () => import("./pages/team/MainPage.vue"),
@@ -31,8 +33,8 @@ const router = createRouter({
       ]
     },
     {
+      name: "admin",
       path: "/admin",
-      redirect: "/admin/dashboard",
       component: () => import("./pages/admin/AdminPage.vue"),
 
       meta: {
@@ -64,6 +66,16 @@ const router = createRouter({
       ],
     },
     {
+      name: "adminLogin",
+      path: "/admin/login",
+      component: () => import("./pages/admin/AdminLoginPage.vue"),
+
+      meta: {
+        allowedRoles: [Role.Unauthorized],
+      },
+    },
+    {
+      name: "board",
       path: '/board',
       component: () => import("./pages/board/BoardPage.vue"),
 
@@ -73,7 +85,7 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)',
-      redirect() {
+      redirect () {
         const auth = useAuthManager()
 
         switch (auth.role) {
@@ -120,7 +132,11 @@ router.beforeEach(async (to, _, next) => {
         next("/team")
         break
       default:
-        next("/login")
+        if (to.path.startsWith("/admin")) {
+          next("/admin/login")
+        } else {
+          next("/login")
+        }
     }
   } else {
     console.log("Authorized access", to, auth.role, allowedRoles)

@@ -43,8 +43,8 @@ body:not(.admin) {
 }
 
 /* prevent pinch-zoom for Chrome 36+, Safari 13+ */
-html:not(.admin) {
-  overflow: hidden;
+* {
+  // overflow: hidden;
   touch-action: pan-x pan-y;
-  min-height: 100%; /* prevent pinch-zoom at page bottom */
+  // min-height: 100%; /* prevent pinch-zoom at page bottom */
 }

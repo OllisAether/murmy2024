@@ -3,6 +3,18 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useWsClient } from "./wsClient";
 import { Role } from "../../shared/roles";
+import { idGen } from "../../shared/random";
+
+export interface AlertOptions {
+  id: string
+  icon: string | null
+  title: string | null
+  message: string | null
+  closable: boolean
+  closeAfter?: number
+  close?: () => void
+  type: 'info' | 'warning' | 'error' | 'success' | 'default'
+}
 
 export const useAdmin = defineStore('admin', () => {
   const ws = useWsClient()
@@ -19,8 +31,29 @@ export const useAdmin = defineStore('admin', () => {
         console.log('Clients', c)
         clients.value = c
       }),
-      ws.onAction('helpRequests', (n) => {
+      ws.onAction('helpRequests', (n: string[]) => {
+        const newAlerts = n.filter((id) => !needsHelp.value.includes(id))
+        const removedAlerts = needsHelp.value.filter((id) => !n.includes(id))
+
         needsHelp.value = n
+        
+        newAlerts.forEach(teamId => {
+          const team = teams.value.find(team => team.id === teamId)
+
+          if (!team) return
+          alert(
+            {
+              title: `"${team.name}" fordert Hilfe an`,
+              id: `help:${teamId}`,
+              closable: true,
+              type: 'warning'
+            }
+          )
+        })
+
+        removedAlerts.forEach((teamId) => {
+          closeAlert(`help:${teamId}`)
+        })
       })
     ]
 
@@ -145,6 +178,34 @@ export const useAdmin = defineStore('admin', () => {
   }
   // #endregion
 
+  // #region Alerts
+  const alerts = ref<AlertOptions[]>([])
+  
+  function alert (options: Partial<AlertOptions> = {}) {
+    const opt: AlertOptions = {
+      id: options.id ?? idGen(),
+      title: options.title ?? null,
+      message: options.message ?? null,
+      icon: options.icon ?? null,
+      closable: options.closable ?? true,
+      closeAfter: options.closeAfter ?? 5000,
+      close: options.close,
+      type: options.type ?? 'default'
+    }
+
+    alerts.value.push(opt)
+
+    opt.closeAfter && setTimeout(() => {
+      closeAlert(opt.id)
+    }, opt.closeAfter + 500)
+  }
+
+  function closeAlert (id: string) {
+    alerts.value = alerts.value.filter((a) => a.id !== id)
+  }
+
+  // #endregion
+
   return {
     initAdmin,
     deinitAdmin,
@@ -158,6 +219,8 @@ export const useAdmin = defineStore('admin', () => {
     removeHelpRequest,
     needsHelp,
     teams,
-    clients
+    clients,
+    alerts,
+    alert
   }
 })

@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 import { assets } from "../assets/assets";
 
 export interface Assets {
-  type: 'image' | 'audio' | 'video' | 'font' | 'json'
+  type: 'image' | 'audio' | 'video'
   name: string
   url: string
   content?: any
@@ -23,64 +23,7 @@ export const useGameManager = defineStore('gameManager', () => {
     console.log('GameManager deinitialized')
   }
 
-  const assetsProgress = ref<{
-    loaded: boolean
-    loadedAssets: number
-    totalAssets: number
-  }>({
-    loaded: assets.length === 0,
-    loadedAssets: 0,
-    totalAssets: assets.length
-  })
-  function preloadAssets () {
-    console.log('Preloading assets')
-
-    return new Promise<void>((resolve) => {
-
-      for (const asset of assets) {
-        const xhr = new XMLHttpRequest()
-
-        xhr.open('GET', asset.url, true)
-        xhr.responseType = asset.type === 'json' ? 'json' : 'blob'
-
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            if (asset.type === 'json') {
-              asset.content = xhr.response
-            } else {
-              const url = URL.createObjectURL(xhr.response)
-              asset.content = url
-            }
-          }
-
-          assetsProgress.value.loadedAssets++
-
-          if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
-            assetsProgress.value.loaded = true
-            resolve()
-          }
-        }
-
-        xhr.onerror = function () {
-          console.error('Failed to load asset', asset.url)
-
-          assetsProgress.value.loadedAssets++
-
-          if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
-            assetsProgress.value.loaded = true
-            resolve()
-          }
-        }
-
-        xhr.send()
-      }
-    })
-  }
-
-  function getAsset (name: string) {
-    return assets.find(asset => asset.name === name)
-  }
-  
+  // #region Help
   async function getHelp () {
     const res = await ws.request('help')
 
@@ -94,13 +37,88 @@ export const useGameManager = defineStore('gameManager', () => {
 
     return { success: true }
   }
+  // #endregion
+
+  // #region Assets
+  const assetsProgress = ref<{
+    loaded: boolean
+    loadedAssets: number
+    totalAssets: number
+  }>({
+    loaded: assets.length === 0,
+    loadedAssets: 0,
+    totalAssets: assets.length
+  })
+  function preloadAssets () {
+    console.log('Preloading assets')
+
+
+    return new Promise<void>((resolve) => {
+    function finishAsset () {
+      assetsProgress.value.loadedAssets++
+
+      if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
+        assetsProgress.value.loaded = true
+        resolve()
+      }
+    }
+
+      for (const asset of assets) {
+        if (asset.content !== undefined) {
+          finishAsset()
+          continue
+        }
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.open('GET', asset.url, true)
+        xhr.responseType = 'blob'
+
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const blob = xhr.response
+
+            const objectURL = URL.createObjectURL(blob)
+            const content = new Image()
+
+            content.src = objectURL
+
+            content.onload = function () {
+              asset.content = content
+            }
+
+            asset.content = content
+          }
+
+          finishAsset()
+        }
+
+        xhr.onerror = function () {
+          console.error('Failed to load asset', asset.url)
+
+          finishAsset()
+        }
+
+        xhr.send()
+      }
+    })
+  }
+
+  function getAsset (name: string) {
+    return assets.find(asset => asset.name === name)
+  }
+  // #endregion
+
+  // #region Suspect Database
+
+  // #endregion 
 
   return {
     initGameManager,
     deinitGameManager,
     getHelp,
+    assetsProgress,
     preloadAssets,
     getAsset,
-    assetsProgress,
   }
 })

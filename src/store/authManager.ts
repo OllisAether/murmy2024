@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useWsClient } from "./wsClient";
 import router from "../router";
 import { Role } from "../../shared/roles";
@@ -37,16 +37,11 @@ export const useAuthManager = defineStore('authManager', () => {
             break
           default:
             role.value = Role.Unauthorized
-            router.push('/login')
         }
       } catch (e) {
         console.error(e)
         role.value = Role.Unauthorized
-        router.push('/login')
       }
-    } else {
-      role.value = Role.Unauthorized
-      router.push('/login')
     }
     loading.value = false
   })
@@ -61,7 +56,9 @@ export const useAuthManager = defineStore('authManager', () => {
     switch (data.type) {
       case Role.Admin:
         role.value = Role.Admin
-        router.push('/admin')
+        if (router.currentRoute.value.name !== 'admin') {
+          router.push('/admin')
+        }
         break
       case Role.Board:
         role.value = Role.Board
@@ -69,7 +66,9 @@ export const useAuthManager = defineStore('authManager', () => {
           type: Role.Board,
           pw: data.password
         }))
-        router.push('/board')
+        if (router.currentRoute.value.name !== 'board') {
+          router.push('/board')
+        }
         break
       case Role.Team:
         role.value = Role.Team
@@ -81,12 +80,16 @@ export const useAuthManager = defineStore('authManager', () => {
           type: Role.Team,
           pw: data.teamCode
         }))
-        router.push('/team')
+        if (router.currentRoute.value.name !== 'team') {
+          router.push('/team')
+        }
         break
       default:
         team.value = null
         role.value = Role.Unauthorized
-        router.push('/login')
+        if (router.currentRoute.value.name !== 'login') {
+          router.push('/login')
+        }
     }
   })
 
@@ -169,9 +172,7 @@ export const useAuthManager = defineStore('authManager', () => {
 
     await wsClient.disconnect()
 
-    // setTimeout(() => {
     wsClient.connect()
-    // }, 1000)
   }
 
   return {

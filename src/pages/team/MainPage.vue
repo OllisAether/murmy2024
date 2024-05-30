@@ -4,7 +4,9 @@
     Lade ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
   </div>
 
-  <RouterView v-else />
+  <!-- <RouterView v-else /> -->
+
+  <Workspace />
 
   <VBtn
     class="help-button"
@@ -32,7 +34,7 @@
 
           <p class="mb-2">
             <b>
-              Wir werden dir keine Hinweise zum Spiel geben!
+              Wir werden euch keine Hinweise zum Spiel geben!
             </b>
           </p>
 
@@ -110,6 +112,7 @@ import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
 import { onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
+import Workspace  from './Workspace.vue';
 
 const auth = useAuthManager()
 const game = useGameManager()
