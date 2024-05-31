@@ -1,14 +1,10 @@
 import { defineStore } from "pinia";
 import { useWsClient } from "./wsClient";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { assets } from "../assets/assets";
-
-export interface Assets {
-  type: 'image' | 'audio' | 'video'
-  name: string
-  url: string
-  content?: any
-}
+import { files as fAsset } from "../assets/files";
+import { File } from "../../shared/files/file";
+import { UAParser } from "ua-parser-js";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -22,6 +18,36 @@ export const useGameManager = defineStore('gameManager', () => {
   function deinitGameManager () {
     console.log('GameManager deinitialized')
   }
+
+  // #region Fullscreen
+  const canFullscreen = ref(false)
+
+  const ua = new UAParser(navigator.userAgent).getResult()
+
+  console.log('User agent', ua)
+
+  if (!(ua.browser.name === 'Safari' && ua.device.type === 'tablet') && ua.os.name !== 'iOS') {
+    canFullscreen.value = true
+  }
+
+  const isFullscreen = ref(false)
+
+  document.addEventListener('fullscreenchange', function () {
+    isFullscreen.value = !!document.fullscreenElement
+  })
+
+  function toggleFullscreen () {
+    if (!canFullscreen.value) {
+      return
+    }
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      document.documentElement.requestFullscreen()
+    }
+  }
+  // #endregion
 
   // #region Help
   async function getHelp () {
@@ -50,8 +76,7 @@ export const useGameManager = defineStore('gameManager', () => {
     totalAssets: assets.length
   })
   function preloadAssets () {
-    console.log('Preloading assets')
-
+    console.log('Preloading assets', assets)
 
     return new Promise<void>((resolve) => {
     function finishAsset () {
@@ -74,23 +99,19 @@ export const useGameManager = defineStore('gameManager', () => {
         xhr.open('GET', asset.url, true)
         xhr.responseType = 'blob'
 
-        xhr.onload = function () {
+        xhr.onload = async function () {
           if (xhr.status === 200) {
             const blob = xhr.response
 
             const objectURL = URL.createObjectURL(blob)
-            const content = new Image()
 
-            content.src = objectURL
-
-            content.onload = function () {
-              asset.content = content
-            }
-
-            asset.content = content
+            asset.content = objectURL
+            console.log('Loaded asset', asset.url, objectURL)
+            finishAsset()
+          } else {
+            console.error('Failed to load asset', asset.url)
+            finishAsset()
           }
-
-          finishAsset()
         }
 
         xhr.onerror = function () {
@@ -110,15 +131,23 @@ export const useGameManager = defineStore('gameManager', () => {
   // #endregion
 
   // #region Suspect Database
+  
+  // #endregion
 
-  // #endregion 
+  // #region Files
+  const files = ref<File[]>(fAsset)
+  // #endregion
 
   return {
     initGameManager,
     deinitGameManager,
+    canFullscreen,
+    toggleFullscreen,
     getHelp,
     assetsProgress,
     preloadAssets,
     getAsset,
+    files,
+    isFullscreen
   }
 })

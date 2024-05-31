@@ -1,7 +1,7 @@
 @import './fonts';
 
 body, html {
-  background: #080808;
+  background: #0a0a0a;
   color: white;
 }
 
@@ -42,9 +42,15 @@ body:not(.admin) {
   overflow: hidden;
 }
 
-/* prevent pinch-zoom for Chrome 36+, Safari 13+ */
-* {
-  // overflow: hidden;
-  touch-action: pan-x pan-y;
-  // min-height: 100%; /* prevent pinch-zoom at page bottom */
+// /* prevent pinch-zoom for Chrome 36+, Safari 13+ */
+// * {
+//   // overflow: hidden;
+//   touch-action: pan-x pan-y;
+//   // min-height: 100%; /* prevent pinch-zoom at page bottom */
+// }
+
+#app {
+  position: fixed;
+  overflow: hidden;
+  inset: 0;
 }

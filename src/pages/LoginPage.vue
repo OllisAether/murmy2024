@@ -50,10 +50,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { useAuthManager } from '../store/authManager'
-import { useEventListener } from '@vueuse/core'
-import { Role } from '../../shared/roles';
 import { codeLength, codeRegex } from '../../shared/teamcode';
 import { useRoute } from 'vue-router';
+import { useGameManager } from '../store/gameManager';
 
 const route = useRoute()
 const auth = useAuthManager()
@@ -75,7 +74,11 @@ function setCode (value: string) {
 }
 
 async function login () {
-  await auth.loginTeam(code.value)
+  const success = await auth.loginTeam(code.value)
+
+  if (success) {
+    useGameManager().toggleFullscreen()
+  }
 }
 
 onMounted(() => {
@@ -94,11 +97,5 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.team-list {
-  background: #151515;
-  border-radius: .5rem;
-  max-height: 50vh;
 }
 </style>

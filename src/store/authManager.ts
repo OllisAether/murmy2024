@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { nextTick, ref } from "vue";
+import { ref } from "vue";
 import { useWsClient } from "./wsClient";
 import router from "../router";
 import { Role } from "../../shared/roles";
@@ -100,7 +100,7 @@ export const useAuthManager = defineStore('authManager', () => {
   async function loginTeam (code: string) {
     if (!code || code.length !== 6) {
       loginError.value = 'Bitte 6-stelligen Code eingeben'
-      return
+      return false
     }
 
     loginLoading.value = true
@@ -118,7 +118,8 @@ export const useAuthManager = defineStore('authManager', () => {
         }))
         
         loginError.value = null
-        break
+        loginLoading.value = false
+        return true
       case 403:
         loginError.value = 'Ungültiger Code'
         break
@@ -130,6 +131,7 @@ export const useAuthManager = defineStore('authManager', () => {
     }
 
     loginLoading.value = false
+    return false
   }
 
   const adminLoginLoading = ref(false)

@@ -1,5 +1,5 @@
 <template>
-  <VCard class="login-card" max-width="500">
+  <VCard class="login-card" max-width="500" min-width="300">
     <VToolbar>
       <VToolbarTitle>
         <VIcon>mdi-shield-account</VIcon>
@@ -79,6 +79,7 @@ function adminLogin () {
   position: absolute;
   top: 50%;
   left: 50%;
+  width: calc(100% - 2rem);
   transform: translate(-50%, -50%);
 }
 

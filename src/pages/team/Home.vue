@@ -9,10 +9,8 @@
 
 <script lang="ts" setup>
 import { useAuthManager } from '../../store/authManager';
-import { useGameManager } from '../../store/gameManager';
 
 const auth = useAuthManager()
-const game = useGameManager()
 </script>
 
 <style lang="scss" scoped>

@@ -8,7 +8,6 @@
           <VIcon>mdi-television</VIcon>
           Board
         </VToolbarTitle>
-        <VSpacer />
         <VBtn icon @click="navigationDialog = false">
           <VIcon>mdi-close</VIcon>
         </VBtn>

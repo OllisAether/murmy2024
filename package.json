@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@pictogrammers/memory": "^1.5.0",
+    "@pictogrammers/memory-svg": "^1.5.0",
     "@vueuse/core": "^10.9.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -38,6 +40,7 @@
     "sass": "^1.77.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-svg-loader": "^5.1.0",
     "vue-tsc": "^2.0.6"
   }
 }

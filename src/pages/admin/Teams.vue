@@ -6,7 +6,6 @@
           <VIcon>mdi-account-group</VIcon>
           Teams
         </VToolbarTitle>
-        <VSpacer />
         <VBtn icon>
           <VIcon>mdi-plus</VIcon>
           

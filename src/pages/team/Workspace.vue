@@ -1,6 +1,9 @@
 <template>
   <VLayout class="workspace">
     <VNavigationDrawer
+      :persistent="display.smAndUp.value"
+      :permanent="display.smAndUp.value"
+      :mobile="display.smAndDown.value"
       width="400"
     >
       <VToolbar color="transparent" border="b">
@@ -30,31 +33,28 @@
       </VList>
     </VNavigationDrawer>
 
-    <VMain>
-
+    <VMain class="main">
+      <Workarea />
     </VMain>
   </VLayout>
 </template>
 
 <script setup lang="ts">
 import { useAuthManager } from '../../store/authManager';
+import Workarea from '../../components/game/Workarea.vue';
+import { useDisplay } from 'vuetify';
 
+const display = useDisplay()
 const auth = useAuthManager()
 </script>
 
 <style lang="scss" scoped>
 .workspace {
-  // display: flex;
-  // height: 100vh;
+  height: 100%;
+  overflow: hidden;
 
-  // &__database {
-  //   width: 25rem;
-  //   background-color: #111;
-  // }
-
-  // &__area {
-  //   flex: 1;
-  //   background-color: #000000;
-  // }
+  .main {
+    height: 100%;
+  }
 }
 </style>

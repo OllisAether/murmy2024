@@ -29,12 +29,17 @@ const router = createRouter({
         {
           path: "home",
           component: () => import("./pages/team/Home.vue"),
+        },
+        {
+          path: 'workspace',
+          component: () => import("./pages/team/Workspace.vue"),
         }
       ]
     },
     {
       name: "admin",
       path: "/admin",
+      redirect: '/admin/dashboard',
       component: () => import("./pages/admin/AdminPage.vue"),
 
       meta: {

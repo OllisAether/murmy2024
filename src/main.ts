@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 import './scss/main.scss'
 
 import 'vuetify/styles'
-import '@mdi/font/css/materialdesignicons.css'
+import '@mdi/font/css/materialdesignicons.min.css'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
@@ -16,7 +16,7 @@ const vuetify = createVuetify({
   directives,
   theme: {
     defaultTheme: 'dark',
-  }
+  },
 })
 
 // Create a new Pinia instance
@@ -27,3 +27,10 @@ createApp(App)
   .use(pinia)
   .use(router)
   .mount('#app')
+
+// Wakelock
+if ('wakeLock' in navigator) {
+  navigator.wakeLock.request('screen')
+    .then(() => console.log('Wake lock active'))
+    .catch(console.error)
+}
