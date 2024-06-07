@@ -2,7 +2,7 @@
   <VContainer>
     <VRow>
       <VCol :cols="12" :md="4">
-        <VCard class="mb-4">
+        <VCard class="mb-6">
           <VToolbar>
             <VToolbarTitle>
               <VIcon>mdi-account-question</VIcon>
@@ -86,12 +86,26 @@
           </VList>
         </VCard>
       </VCol>
+      <VCol :cols="12" :md="8">
+        <VCard>
+          <VToolbar>
+            <VToolbarTitle>
+              <VIcon>mdi-view-dashboard</VIcon>
+              Dashboard
+            </VToolbarTitle>
+          </VToolbar>
+
+          <VCardText>
+            asdf
+          </VCardText>
+        </VCard>
+      </VCol>
     </VRow>
   </VContainer>
 </template>
 
 <script lang="ts" setup>
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin'
 
 const admin = useAdmin()
 </script>

@@ -78,6 +78,8 @@ async function login () {
 
   if (success) {
     useGameManager().toggleFullscreen()
+  } else {
+    code.value = ''
   }
 }
 

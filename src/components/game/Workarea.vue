@@ -3,14 +3,16 @@
     <div
       :class="['workarea__phone',
         {
-          'workarea__phone--active': active === 'phone',
-          'workarea__phone--off': activePhone === 'off'
+          'workarea__phone--active': route.params.space === 'phone',
         }
       ]"
     >
-      <div class="workarea__phone__content">
-        <div class="workarea__phone__content__screen">
-          <ChatPage v-if="activePhone === 'chat'" />
+      <div class="workarea__phone__content" ref="phone">
+        <div class="workarea__phone__content__screen" :style="{
+          transform: `scale(${screenScale})`,
+          height: `${screenHeight}px`
+        }">
+          <RouterView class="workarea__phone__content__screen__app" />
         </div>
 
         <div class="workarea__phone__content__status-bar">
@@ -41,27 +43,67 @@
 
     <AppNav
       @change="change"
-      :active="active === 'phone' ? activePhone : active"
+      :active="active"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AppNav from './AppNav.vue'
 import IPhone from '../../assets/IPhone.svg'
-import IPhoneIndicators from '../../assets/IPhoneIndicators.svg'
-import FilesPage from './files/FilesPage.vue'
-import ToolsPage from './tools/ToolsPage.vue'
-import ChatPage from './chat/ChatPage.vue'
+import { useEventListener } from '@vueuse/core';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import router from '../../router';
+import FilesPage from './files/FilesPage.vue';
+import ToolsPage from './tools/ToolsPage.vue';
+import IPhoneIndicators from '../../assets/IPhoneIndicators.svg';
 
-const active = ref<'files' | 'phone' | 'tools'>(localStorage.getItem('active') as 'files' | 'phone' | 'tools' || 'files')
-const activePhone = ref<'chat' | 'social' | 'mail' | 'off'>(localStorage.getItem('activePhone') as 'chat' | 'social' | 'mail' | 'off' || 'off')
+const route = useRoute()
+const active = computed(() => {
+  switch (route.name) {
+    case 'workspace':
+      return route.params.space as string
+    case 'chat':
+    case 'chatRoom':
+      return 'chat'
+    case 'search':
+      return 'search'
+    case 'mail':
+      return 'mail'
+  }
 
-watch([active, activePhone], () => {
-  localStorage.setItem('active', active.value)
-  localStorage.setItem('activePhone', activePhone.value)
-}, { deep: true })
+  return 'files'
+})
+
+const lastPhonePage = ref('off')
+
+onBeforeRouteUpdate((_, __, next) => {
+  if ([ 'files', 'tools' ].includes(active.value)) {
+    lastPhonePage.value = active.value
+  }
+  next()
+})
+
+function change (name: string) {
+  switch (name) {
+    case 'files':
+      router.push({ name: 'workspace', params: { space: 'files' } })
+      break
+    case 'chat':
+      router.push({ name: 'chat', params: { space: 'phone' } })
+      break
+    case 'search':
+      router.push({ name: 'search', params: { space: 'phone' } })
+      break
+    case 'mail':
+      router.push({ name: 'mail', params: { space: 'phone' } })
+      break
+    case 'tools':
+      router.push({ name: 'workspace', params: { space: 'tools' } })
+      break
+  }
+}
 
 const time = ref('00:00')
 
@@ -78,25 +120,26 @@ onMounted(() => {
   return () => clearInterval(interval)
 })
 
-function change (type: string) {
-  switch (type) {
-    case 'social':
-    case 'chat':
-    case 'mail':
-      active.value = 'phone'
-      activePhone.value = type as 'chat' | 'social' | 'mail'
-      break
-    case 'files':
-      active.value = 'files'
-      break
-    case 'tools':
-      active.value = 'tools'
-      break
-  }
+const phone = ref<HTMLElement | null>(null)
+const screenScale = ref(1)
+const screenHeight = ref(902)
+useEventListener('resize', () => {
+  setScreen()
+})
+
+function setScreen () {
+  if (!phone.value) return
+  const phoneWidth = phone.value.clientWidth
+  const phoneHeight = phone.value.clientHeight
+  screenScale.value = phoneWidth / 380
+  screenHeight.value = 380 * phoneHeight / phoneWidth
 }
+onMounted(setScreen)
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .workarea {
   position: relative;
   height: 100%;
@@ -111,15 +154,16 @@ function change (type: string) {
   &__phone {
     position: absolute;
     top: 49%;
-    left: 0%;
-    transform: translate(-80%, -50%)scale(0.8);
+    left: 0;
+    translate: -30%;
+    transform: translate(-50%, -50%)translateX(-3rem)scale(1);
     height: min(100vw, 90vh);
     aspect-ratio: 440 / 902;
     filter: blur(0.5rem);
     opacity: 0.5;
-    container-type: inline-size;
+    container-type: size;
 
-    will-change: transform, opacity, left, filter;
+    will-change: translate, opacity, left, filter;
     transition:
       left 1s cubic-bezier(0.19, 1, 0.22, 1),
       transform 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -132,7 +176,7 @@ function change (type: string) {
 
     &--active {
       left: 50%;
-      transform: translate(-50%, -50%)translateX(-3rem)scale(1);
+      translate: 0;
       filter: blur(0);
       opacity: 1;
 
@@ -142,15 +186,7 @@ function change (type: string) {
 
       .workarea__phone__content {
         pointer-events: all;
-      }
-    }
-
-    &--off {
-      background: #0a0a0a;
-
-      .workarea__phone__content {
-        opacity: 0;
-        transform: scale(1.5);
+        opacity: 1;
       }
     }
 
@@ -167,11 +203,13 @@ function change (type: string) {
       inset: 1.6% 4%;
       border-radius: 14cqw;
       background: white;
+      color: black;
       overflow: hidden;
       pointer-events: none;
       font-size: 4cqw;
+      opacity: 0;
 
-      transition: opacity .5s;
+      transition: opacity .2s;
 
       &__status-bar {
         z-index: 1;
@@ -179,15 +217,16 @@ function change (type: string) {
         top: 0;
         left: 0;
         right: 0;
-        height: 6cqh;
-        color: black;
+        height: 14cqw;
+        color: white;
+        mix-blend-mode: difference;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 2% 9% 0 11%;
 
         &__clock {
-          font-family: 'SF Pro Display', sans-serif;
+          font-family: $fontPhoneDisplay, sans-serif;
           font-size: 1em;
           font-weight: bold;
         }
@@ -200,7 +239,15 @@ function change (type: string) {
       &__screen {
         position: absolute;
         inset: 0;
-        // padding-top: 6cqh;
+        transform-origin: top left;
+        width: 380px;
+
+        &__app {
+          // position: absolute;
+          // inset: 0;
+          // overflow: hidden;
+          // border-radius: 14cqw;
+        }
       }
 
       &__nav {
@@ -223,7 +270,7 @@ function change (type: string) {
     &__layout {
       height: 100%;
     }
-    
+
     &__page {
       position: absolute;
       inset: 0;

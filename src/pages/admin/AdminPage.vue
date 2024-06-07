@@ -23,12 +23,31 @@
             />
           </template>
         </VListItem>
+
+        <div class="mb-2 mt-8">
+          Spiel ablauf
+          <VDivider />
+        </div>
+
+        <VListItem to="/admin/cue">
+          <VListItemTitle>
+            <VIcon>mdi-play-box-multiple-outline</VIcon>
+            Cue
+          </VListItemTitle>
+        </VListItem>
+
+        <div class="mb-2 mt-8">
+          Verwaltung
+          <VDivider />
+        </div>
+
         <VListItem to="/admin/teams">
           <VListItemTitle>
             <VIcon>mdi-account-group</VIcon>
             Teams
           </VListItemTitle>
         </VListItem>
+
         <VListItem to="/admin/clients">
           <VListItemTitle>
             <VIcon>mdi-account</VIcon>
@@ -53,14 +72,23 @@
       </template>
     </VNavigationDrawer>
 
-    <VAppBar>
+    <VAppBar border="b" flat>
       <VToolbarTitle>
         <VBtn icon @click="drawer = !drawer">
           <VIcon>mdi-menu</VIcon>
         </VBtn>
-        
+
         {{ route.meta.title }}
       </VToolbarTitle>
+
+      {{ {
+        [Phase.Idle]: 'Warten',
+        [Phase.Break]: 'Pause',
+        [Phase.Media]: 'Hinweisrunde',
+        [Phase.Vote]: 'Abstimmung',
+        [Phase.Work]: 'Arbeitsphase',
+        [Phase.Quiz]: 'Quiz',
+      }[game.phase as string] ?? game.phase }} | <Timer />
 
       <VBtn>
         Logout
@@ -104,7 +132,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { useAdmin } from '../../store/admin';
 import { Role } from '../../../shared/roles';
@@ -113,6 +141,9 @@ import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import TutorialCard from '../../components/admin/TutorialCard.vue';
 import TimedProgress from '../../components/TimedProgress.vue';
+import { useGameManager } from '@/store/gameManager';
+import Timer from '@/components/Timer.vue';
+import { Phase } from '../../../shared/phase';
 
 const route = useRoute();
 const drawer = ref(!useDisplay().mdAndDown.value);
@@ -120,22 +151,25 @@ const drawer = ref(!useDisplay().mdAndDown.value);
 const logoutDialog = ref(false);
 const tutorialDialog = ref(false);
 
+const game = useGameManager();
 const auth = useAuthManager();
 const admin = useAdmin();
 
 onMounted(() => {
   if (auth.role === Role.Admin) {
     admin.initAdmin();
+    game.initGameManager();
   }
 
   document.documentElement.classList.add('admin');
   document.body.classList.add('admin');
 
-  return () => {
+  onBeforeUnmount(() => {
     admin.deinitAdmin();
+    game.deinitGameManager();
     document.documentElement.classList.remove('admin');
     document.body.classList.remove('admin');
-  };
+  });
 });
 
 async function logout() {

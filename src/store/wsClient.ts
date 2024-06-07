@@ -4,6 +4,8 @@ import { ref } from "vue";
 export const useWsClient = defineStore('wsClient', () => {
   const ws = ref<WebSocket | null>(null)
 
+  const secure = window.location.protocol === 'https:'
+
   const status = ref<'disconnected' | 'connecting' | 'connected' | 'reconnecting'>('disconnected')
 
   function connect(i = 0) {
@@ -13,7 +15,8 @@ export const useWsClient = defineStore('wsClient', () => {
 
     status.value = 'connecting'
 
-    ws.value = new WebSocket(`ws://${window.location.host}/api/ws`)
+    
+    ws.value = new WebSocket(`${secure ? 'wss' : 'ws'}://${window.location.host}/api/ws`)
 
     ws.value.addEventListener('open', () => {
       console.log('%c[WebSocket]', 'color: purple', 'Connected')
@@ -71,8 +74,14 @@ export const useWsClient = defineStore('wsClient', () => {
   }
 
   function handleMessage(event: MessageEvent) {
-    const data = JSON.parse(event.data)
-    messageListeners.value.forEach((listener) => listener(data))
+    
+    try {
+      const data = JSON.parse(event.data)
+      console.log('%c[WebSocket]', 'color: purple', data)
+      messageListeners.value.forEach((listener) => listener(data))
+    } catch (e) {
+      console.error('%c[WebSocket]', 'color: purple', e)
+    }
   }
 
   function onAction(action: string, callback: (data: any) => void) {
@@ -114,6 +123,15 @@ export const useWsClient = defineStore('wsClient', () => {
     })
   }
 
+  function once (action: string) {
+    return new Promise<any>((resolve) => {
+      const off = onAction(action, (data) => {
+        off()
+        resolve(data)
+      })
+    })
+  }
+
   return {
     ws,
     connect,
@@ -126,5 +144,6 @@ export const useWsClient = defineStore('wsClient', () => {
     get,
     post,
     status,
+    once
   }
 })

@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useWsClient } from "./wsClient";
 import { Role } from "../../shared/roles";
 import { idGen } from "../../shared/random";
+import { CueJson } from "../../shared/cue"
 
 export interface AlertOptions {
   id: string
@@ -54,12 +55,18 @@ export const useAdmin = defineStore('admin', () => {
         removedAlerts.forEach((teamId) => {
           closeAlert(`help:${teamId}`)
         })
-      })
+      }),
+      ws.onAction('cues', (c) => {
+        cues.value = c.cues
+        cueIndex.value = c.current
+        recordIndex.value = c.record
+      }),
     ]
 
     ws.send('getTeams')
     ws.send('getClients')
     ws.send('getHelpRequests')
+    ws.send('getCues')
   }
 
   function deinitAdmin () {
@@ -206,6 +213,66 @@ export const useAdmin = defineStore('admin', () => {
 
   // #endregion
 
+  // #region Timer
+  function pauseTimer () {
+    ws.send('pauseTimer')
+  }
+
+  function resumeTimer () {
+    ws.send('resumeTimer')
+  }
+
+  function setDuration (duration: number) {
+    ws.send('setDuration', { duration })
+  }
+
+  function setTime (time: number) {
+    ws.send('setTime', { time })
+  }
+  // #endregion
+
+  // #region Cue
+  const cues = ref<CueJson[]>([])
+  const cueIndex = ref<number>(0)
+  const recordIndex = ref<number>(0)
+
+  function startRecord () {
+    ws.send('startRecord')
+  }
+
+  function stopRecord () {
+    ws.send('stopRecord')
+  }
+
+  function skipRecord () {
+    ws.send('skipRecord')
+  }
+
+  function skipCue () {
+    ws.send('skipCue')
+  }
+
+  function startCue (index: number) {
+    ws.send('startCue', { index })
+  }
+
+  function stopCue () {
+    ws.send('stopCue')
+  }
+
+  function addCue (cue: CueJson) {
+    ws.send('addCue', { cue })
+  }
+
+  function replaceCue (index: number, cue: CueJson) {
+    ws.send('replaceCue', { index, cue })
+  }
+
+  function removeCue (index: number) {
+    ws.send('removeCue', { index })
+  }
+  // #endregion
+
   return {
     initAdmin,
     deinitAdmin,
@@ -221,6 +288,23 @@ export const useAdmin = defineStore('admin', () => {
     teams,
     clients,
     alerts,
-    alert
+    alert,
+    closeAlert,
+    pauseTimer,
+    resumeTimer,
+    setDuration,
+    setTime,
+
+    cues,
+    cueIndex,
+    startRecord,
+    stopRecord,
+    skipRecord,
+    skipCue,
+    startCue,
+    stopCue,
+    addCue,
+    replaceCue,
+    removeCue
   }
 })

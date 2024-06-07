@@ -7,6 +7,39 @@
       }]"
   >
     <div class="app-nav-btn__icon-bg">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64">
+        <path class="outline" stroke-width="2" opacity="0.6" d="M1 14.414 14.414 1H63v48.586L49.586 63H1V14.414Z"/>
+        <path class="background" d="M4 16.25 16.25 4H60v43.75L47.75 60H4V16.25Z"/>
+
+        <defs>
+          <linearGradient id="socialBg" x1="0" x2="64" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#fdbe2a"/>
+            <stop offset=".50" stop-color="#f22b1d"/>
+            <stop offset="1" stop-color="#b91df2"/>
+          </linearGradient>
+          <linearGradient id="searchBg" x1="0" x2="0" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#024eff"/>
+            <stop offset="1" stop-color="#cc00ff"/>
+          </linearGradient>
+          <linearGradient id="chatBg" x1="0" x2="0" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#177241"/>
+            <stop offset="1" stop-color="#8FDD22"/>
+          </linearGradient>
+          <linearGradient id="mailBg" x1="0" x2="0" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#90105b"/>
+            <stop offset="1" stop-color="#ff0000"/>
+          </linearGradient>
+          <linearGradient id="filesBg" x1="0" x2="0" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#974a0f"/>
+            <stop offset="1" stop-color="#ffc800"/>
+          </linearGradient>
+          <linearGradient id="toolsBg" x1="0" x2="0" y1="64" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#49324d"/>
+            <stop offset="1" stop-color="#6C7E83"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
       <VIcon class="app-nav-btn__icon">{{ icon }}</VIcon>
     </div>
     <span class="app-nav-btn__name">
@@ -59,11 +92,12 @@ defineProps<{
   }
 
   &__icon {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     color: white;
+    text-shadow: 0 0.1rem 0.15rem #3c01315b;
 
     @media screen and (max-width: 768px) {
-      font-size: 1.5rem;
+      font-size: 1.7rem;
     }
   }
 
@@ -86,19 +120,18 @@ defineProps<{
     justify-content: center;
     width: 4rem;
     height: 4rem;
-    outline-offset: -.4rem;
-    // box-shadow: inset 0 0 0 0.2rem #fff3;
-    clip-path: polygon(makePolygon(0rem, .75rem));
-    clip-rule: evenodd;
-    background: var(--bg);
-    
+
     will-change: transform;
     transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-    
+
+    svg {
+      position: absolute;
+      inset: 0;
+    }
+
     @media screen and (max-width: 768px) {
       width: 2.5rem;
       height: 2.5rem;
-      clip-path: polygon(makePolygon(0rem, .5rem));
     }
 
     &::before {
@@ -137,7 +170,6 @@ defineProps<{
         left: 50%;
       }
     }
-
   }
   
   &__name {
@@ -149,28 +181,75 @@ defineProps<{
   }
 
   &--files {
-    --bg: linear-gradient(#ffc800, #971c0f);
     color: #ffc800;
+
+    svg .outline {
+      stroke: url(#filesBg);
+    }
+
+    svg .background {
+      fill: url(#filesBg);
+    }
   }
 
   &--chat {
-    --bg: linear-gradient(#25D366, #02515b);
-    color: #25D366;
+    color: #8fdd22;
+
+    svg .outline {
+      stroke: url(#chatBg);
+    }
+
+    svg .background {
+      fill: url(#chatBg);
+    }
   }
 
   &--social {
-    --bg: linear-gradient(#1DA1F2, #551366);
-    color: #1DA1F2;
+    color: #f21dc7;
+
+    svg .outline {
+      stroke: url(#socialBg);
+    }
+
+    svg .background {
+      fill: url(#socialBg);
+    }
+  }
+
+  &--search {
+    color: #cc00ff;
+
+    svg .outline {
+      stroke: url(#searchBg);
+    }
+
+    svg .background {
+      fill: url(#searchBg);
+    }
   }
 
   &--mail {
-    --bg: linear-gradient(#ff0000, #860450);
     color: #ff0000;
+
+    svg .outline {
+      stroke: url(#mailBg);
+    }
+
+    svg .background {
+      fill: url(#mailBg);
+    }
   }
 
   &--tools {
-    --bg: linear-gradient(#6c7e83, #321936);
     color: #6c7e83;
+
+    svg .outline {
+      stroke: url(#toolsBg);
+    }
+
+    svg .background {
+      fill: url(#toolsBg);
+    }
   }
 }
 </style>

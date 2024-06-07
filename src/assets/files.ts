@@ -1,4 +1,4 @@
-import { File } from '../../shared/files/file';
+import { File } from "@/model/files/file";
 
 export const files: File[] = [
   {

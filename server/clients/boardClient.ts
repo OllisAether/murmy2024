@@ -1,5 +1,6 @@
 import { Role } from "../../shared/roles";
-import { WebSocketClient } from "./client";
+import { Game } from "../game/game";
+import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
 
 export class BoardClient extends WebSocketClient {
@@ -11,5 +12,11 @@ export class BoardClient extends WebSocketClient {
     userAgent?: string
   ) {
     super(ws, id, userAgent);
+
+    const game = Game.get();
+
+    ws.on('message', handleActions([
+      ...genericActions(this),
+    ]));
   }
 }

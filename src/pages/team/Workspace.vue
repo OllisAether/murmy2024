@@ -1,9 +1,9 @@
 <template>
   <VLayout class="workspace">
     <VNavigationDrawer
-      :persistent="display.smAndUp.value"
-      :permanent="display.smAndUp.value"
-      :mobile="display.smAndDown.value"
+      :persistent="display.mdAndUp.value"
+      :permanent="display.mdAndUp.value"
+      :mobile="display.mdAndDown.value"
       width="400"
     >
       <VToolbar color="transparent" border="b">
@@ -13,22 +13,28 @@
       </VToolbar>
 
       <VList nav>
-        <VListItem>
+        <VListItem
+          v-for="suspect in suspects"
+          :key="suspect.id"
+        >
           <template #prepend>
             <VImg
               cover
-              width="128"
+              width="96"
               :aspect-ratio="3/4"
               rounded="lg"
               class="mr-4"
               color="grey-darken-2"
+              :src="suspect.person?.suspectImgUrl ? game.getAsset(suspect.person?.id + '-suspectImg')?.content : undefined"
             >
               <div class="d-flex h-100 align-center justify-center">
                 <VIcon size="48">mdi-help</VIcon>
               </div>
             </VImg>
           </template>
-          John Doe
+          <h2>
+            {{ suspect.person?.name }}
+          </h2>
         </VListItem>
       </VList>
     </VNavigationDrawer>
@@ -43,9 +49,18 @@
 import { useAuthManager } from '../../store/authManager';
 import Workarea from '../../components/game/Workarea.vue';
 import { useDisplay } from 'vuetify';
+import { useGameManager } from '@/store/gameManager';
+import { computed } from 'vue';
 
 const display = useDisplay()
 const auth = useAuthManager()
+const game = useGameManager()
+
+const suspects = computed(() => game.suspects.map(suspect => ({
+  id: suspect.personId,
+  entries: suspect,
+  person: game.getPerson(suspect.personId),
+})))
 </script>
 
 <style lang="scss" scoped>

@@ -95,6 +95,7 @@
           :length="4"
           :type="'number'"
           :error="!!logoutError"
+          autofocus
         />
 
         <p class="mb-2 text-error">
@@ -118,10 +119,10 @@
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
 import { useDisplay } from 'vuetify';
-import router from '../../router';
+import router from '@/router';
 
 const display = useDisplay()
 
@@ -196,14 +197,16 @@ function logout () {
   auth.logout()
 }
 
+watch(() => game.phase, () => {
+  router.push('/team')
+})
+
 onMounted(() => {
-  useGameManager().initGameManager()
+  game.initGameManager()
 
-  router.push('/team/workspace')
-
-  return () => {
-    useGameManager().deinitGameManager()
-  }
+  onBeforeUnmount(() => {
+    game.deinitGameManager()
+  })
 })
 
 const helpIsError = ref(false)

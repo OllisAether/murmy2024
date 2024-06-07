@@ -1,7 +1,7 @@
 @import './fonts';
 
 body, html {
-  background: #0a0a0a;
+  background: black;
   color: white;
 }
 
@@ -53,4 +53,29 @@ body:not(.admin) {
   position: fixed;
   overflow: hidden;
   inset: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.app-layout {
+  height: 100%;
+  font-family: 'SF Pro Text', sans-serif;
+
+  & > .v-toolbar {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    padding-top: 4rem;
+  }
+
+  & > .v-main {
+    position: absolute;
+    inset: 0;
+    padding-top: 8rem;
+    height: 100%;
+    overflow: auto;
+  }
 }

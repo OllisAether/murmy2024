@@ -56,7 +56,8 @@ export const useAuthManager = defineStore('authManager', () => {
     switch (data.type) {
       case Role.Admin:
         role.value = Role.Admin
-        if (router.currentRoute.value.name !== 'admin') {
+        if (router.currentRoute.value.matched
+          .some(r => !(r.meta.allowedRoles as Role[])?.includes?.(Role.Admin))) {
           router.push('/admin')
         }
         break

@@ -7,10 +7,10 @@
     "dev": "concurrently \"npm run watch:server\" \"vite --host\" \"npm run serve\"",
     "serve": "NODE_ENV=development nodemon dist/server/index.cjs --watch dist/server",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vue-tsc && vite build",
+    "build:client": "vue-tsc && vite build --mode=production",
     "build:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws",
     "watch:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws --watch",
-    "start": "cd dist/server && PORT=8080 node index.cjs"
+    "start": "cd dist/server && PORT=80 node index.cjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -21,6 +21,8 @@
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
     "json5": "^2.2.3",
+    "moment": "^2.30.1",
+    "node-persist": "^4.0.1",
     "pg": "^8.11.5",
     "pinia": "^2.1.7",
     "ua-parser-js": "^1.0.37",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@types/express-ws": "^3.0.4",
     "@types/node": "^20.12.12",
+    "@types/node-persist": "^3.1.8",
     "@types/ua-parser-js": "^0.7.39",
     "@types/vue-router": "^2.0.0",
     "@vitejs/plugin-vue": "^5.0.4",
@@ -40,6 +43,7 @@
     "sass": "^1.77.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-plugin-mkcert": "^1.17.5",
     "vite-svg-loader": "^5.1.0",
     "vue-tsc": "^2.0.6"
   }

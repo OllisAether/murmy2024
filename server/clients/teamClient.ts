@@ -1,6 +1,6 @@
 import { Role } from "../../shared/roles";
 import { Game } from "../game/game";
-import { WebSocketClient, handleActions } from "./client";
+import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
 
 export class TeamClient extends WebSocketClient {
@@ -15,11 +15,14 @@ export class TeamClient extends WebSocketClient {
   ) {
     super(ws, id, userAgent);
 
+    const game = Game.get();
+
     ws.on('message', handleActions([
+      ...genericActions(this),
       {
         action: 'help',
         handler: () => {
-          const success = Game.get().addHelpRequest(this.teamId);
+          const success = game.addHelpRequest(this.teamId);
 
           if (success) {
             this.send('help:response', {
@@ -30,6 +33,29 @@ export class TeamClient extends WebSocketClient {
               success: false,
               message: 'Hilfe ist bereits auf dem Weg'
             });
+          }
+        }
+      },
+      {
+        action: 'vote',
+        handler: (payload) => {
+          const vote = payload
+
+          if (typeof vote !== 'number') {
+            this.send('vote:response', {
+              success: false,
+              message: 'Invalid Format'
+            })
+            return
+          }
+
+          const success = game.addVote(this.teamId, vote)
+
+          if (!success) {
+            this.send('vote:response', {
+              success: false,
+              message: 'Team already voted'
+            })
           }
         }
       }

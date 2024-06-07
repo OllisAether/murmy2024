@@ -12,20 +12,20 @@
     <div class="divider"></div>
 
     <AppNavBtn
+      @click="change('search')"
+      type="search"
+      :active="active === 'search'"
+      icon="mdi-web"
+    >
+      Web
+    </AppNavBtn>
+    <AppNavBtn
       @click="change('chat')"
       type="chat"
       :active="active === 'chat'"
-      icon="mdi-whatsapp"
+      icon="mdi-chat"
     >
       ChatsApp
-    </AppNavBtn>
-    <AppNavBtn
-      @click="change('social')"
-      type="social"
-      :active="active === 'social'"
-      icon="mdi-twitter"
-    >
-      Zwitter
     </AppNavBtn>
     <AppNavBtn
       @click="change('mail')"
@@ -33,7 +33,7 @@
       :active="active === 'mail'"
       icon="mdi-email"
     >
-      E-Mail
+      Swiftmail
     </AppNavBtn>
 
     <div class="divider"></div>

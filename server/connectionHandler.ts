@@ -1,9 +1,7 @@
 import { Request } from "express";
 import WebSocket from "ws";
-import { WebSocketClient } from "./clients/client";
 import { GenericClient } from "./clients/genericClient";
 import { Game } from "./game/game";
-import { couldStartTrivia } from "typescript";
 
 export function handleConnection (ws: WebSocket, req: Request) {
   const game = Game.get();
@@ -19,8 +17,6 @@ export function handleConnection (ws: WebSocket, req: Request) {
   client.userAgent = userAgents ? userAgents.toString() : 'Unknown';
 
   game.addClient(client);
-
-  console.log('Client ID:', client.id);
 
   client.send('connected', { id: client.id });
 

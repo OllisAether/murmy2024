@@ -3,9 +3,11 @@ import { validateCode } from "../../shared/teamcode";
 import { Game } from "../game/game";
 import { Team } from "../game/team";
 import { idGen } from "../../shared/random";
-import { WebSocketClient, handleActions } from "./client";
+import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
-import { TeamClient } from "./teamClient";
+import { TeamClient } from "./teamClient"
+import { CueJson } from "../../shared/cue"
+import { fromCueJson, validateCueJson } from "../game/cue/cueJson";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -17,7 +19,11 @@ export class AdminClient extends WebSocketClient {
   ) {
     super(ws, id, userAgents);
 
+    const game = Game.get();
+
     ws.on('message', handleActions([
+      ...genericActions(this),
+
       // #region Team management
       {
         action: 'addTeam',
@@ -62,7 +68,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          if (Game.get().getTeams().find((t) => t.name === name)) {
+          if (game.getTeams().find((t) => t.name === name)) {
             console.error('Name already exists', name);
 
             this.send('addTeam:response', {
@@ -73,7 +79,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          if (Game.get().getTeams().find((t) => t.code === code)) {
+          if (game.getTeams().find((t) => t.code === code)) {
             console.error('Code already exists', code);
 
             this.send('addTeam:response', {
@@ -84,13 +90,13 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          Game.get().addTeam(new Team(
+          game.addTeam(new Team(
             idGen(),
             payload.name,
             payload.code
           ));
 
-          this.send('teams', Game.get().getTeams());
+          this.send('teams', game.getTeams());
 
           this.send('addTeam:response', {
             success: true,
@@ -141,7 +147,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          const team = Game.get().getTeams().find((t) => t.id === id);
+          const team = game.getTeams().find((t) => t.id === id);
 
           if (!team) {
             console.error('Team not found', id);
@@ -154,7 +160,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          if (Game.get().getTeams().find((t) => t.name === name && t.id !== id)) {
+          if (game.getTeams().find((t) => t.name === name && t.id !== id)) {
             console.error('Name already exists', name);
 
             this.send('editTeam:response', {
@@ -165,7 +171,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          if (Game.get().getTeams().find((t) => t.code === code && t.id !== id)) {
+          if (game.getTeams().find((t) => t.code === code && t.id !== id)) {
             console.error('Code already exists', code);
 
             this.send('editTeam:response', {
@@ -179,9 +185,9 @@ export class AdminClient extends WebSocketClient {
           team.name = name;
           team.code = code;
 
-          Game.get().saveTeams();
+          game.saveTeams();
 
-          this.send('teams', Game.get().getTeams());
+          this.send('teams', game.getTeams());
 
           this.send('editTeam:response', {
             success: true,
@@ -195,7 +201,7 @@ export class AdminClient extends WebSocketClient {
 
           const id = payload.id;
 
-          const team = Game.get().getTeams().find((t) => t.id === id);
+          const team = game.getTeams().find((t) => t.id === id);
 
           if (!team) {
             console.error('Team not found', id);
@@ -208,9 +214,9 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          Game.get().removeTeam(team);
+          game.removeTeam(team);
 
-          this.send('teams', Game.get().getTeams());
+          this.send('teams', game.getTeams());
 
           this.send('removeTeam:response', {
             success: true,
@@ -220,8 +226,8 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'getTeams',
         handler: () => {
-          console.log('Getting teams', Game.get().getTeams());
-          this.send('teams', Game.get().getTeams());
+          console.log('Getting teams', game.getTeams());
+          this.send('teams', game.getTeams());
         }
       },
       // #endregion
@@ -230,7 +236,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'getClients',
         handler: () => {
-          Game.get().sendClientsToAdmins(this);
+          game.sendClientsToAdmins(this);
         }
       },
       {
@@ -240,7 +246,7 @@ export class AdminClient extends WebSocketClient {
 
           const id = payload.id;
 
-          const client = Game.get().getClient(id);
+          const client = game.getClient(id);
 
           if (!client) {
             console.error('Client not found', id);
@@ -253,7 +259,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          Game.get().removeClient(client);
+          game.removeClient(client);
           client.disconnect()
 
           this.send('kickClient:response', {
@@ -268,7 +274,7 @@ export class AdminClient extends WebSocketClient {
 
           const id = payload.id;
 
-          const client = Game.get().getClient(id);
+          const client = game.getClient(id);
 
           if (!client) {
             console.error('Client not found', id);
@@ -296,7 +302,7 @@ export class AdminClient extends WebSocketClient {
           const clientId = payload.clientId;
           const teamId = payload.teamId;
 
-          if (Game.get().getClients().find((c) => c.type === Role.Team && (c as TeamClient).teamId === teamId)) {
+          if (game.getClients().find((c) => c.type === Role.Team && (c as TeamClient).teamId === teamId)) {
             console.error('Team already linked to a client', teamId);
 
             this.send('setClientTeam:response', {
@@ -307,7 +313,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          Game.get().promoteClientToTeam(clientId, teamId);
+          game.promoteClientToTeam(clientId, teamId);
         }
       },
       {
@@ -317,7 +323,7 @@ export class AdminClient extends WebSocketClient {
 
           const clientId = payload.clientId;
 
-          if (Game.get().getClients().find((c) => c.type === Role.Board)) {
+          if (game.getClients().find((c) => c.type === Role.Board)) {
             console.error('Board already exists');
 
             this.send('setClientBoard:response', {
@@ -328,7 +334,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          Game.get().promoteClientToBoard(clientId);
+          game.promoteClientToBoard(clientId);
         }
       },
       // #endregion
@@ -337,7 +343,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'getHelpRequests',
         handler: () => {
-          Game.get().sendHelpRequestsToAdmins(this);
+          game.sendHelpRequestsToAdmins(this);
         }
       },
       {
@@ -347,16 +353,126 @@ export class AdminClient extends WebSocketClient {
 
           const teamId = payload.teamId;
 
-          Game.get().removeHelpRequest(teamId);
+          game.removeHelpRequest(teamId);
         }
       },
+      // #endregion
 
+      // #region Cue
       {
-        action: 'logout',
+        action: 'startRecord',
         handler: () => {
-          Game.get().removeClient(this);
+          game.startRecord();
+        }
+      },
+      {
+        action: 'stopRecord',
+        handler: () => {
+          game.stopRecord();
+        }
+      },
+      {
+        action: 'skipRecord',
+        handler: () => {
+          game.skipRecord();
+        }
+      },
+      {
+        action: 'skipCue',
+        handler: () => {
+          game.skipCue();
+        }
+      },
+      {
+        action: 'startCue',
+        handler: (payload) => {
+          const index = payload.index;
+
+          if (typeof index !== 'number') {
+            console.error('Invalid payload', payload);
+
+            this.send('startCue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.startCue(index);
+        }
+      },
+      {
+        action: 'stopCue',
+        handler: () => {
+          game.stopCue();
+        }
+      },
+      {
+        action: 'addCue',
+        handler: (payload) => {
+          const cueJson: CueJson = payload
+
+          if (!validateCueJson(cueJson)) {
+            console.error('Invalid cue', cueJson);
+
+            this.send('addCue:response', {
+              success: false,
+              message: 'Invalid cue'
+            });
+
+            return
+          }
+
+          game.addCue(fromCueJson(cueJson));
+        }
+      },
+      {
+        action: 'replaceCue',
+        handler: (payload) => {
+          const index = payload.index;
+          const cueJson: CueJson = payload.cue
+
+          if (typeof index !== 'number' || !validateCueJson(cueJson)) {
+            console.error('Invalid payload', payload);
+
+            this.send('replaceCue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.replaceCue(index, fromCueJson(cueJson));
+        }
+      },
+      {
+        action: 'removeCue',
+        handler: (payload) => {
+          const index = payload.index;
+
+          if (typeof index !== 'number') {
+            console.error('Invalid payload', payload);
+
+            this.send('removeCue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.removeCue(index);
+        }
+      },
+      {
+        action: 'getCues',
+        handler: () => {
+          game.sendCuesToAdmins(this);
         }
       }
+      // #endregion
     ]))
   }
 }

@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router"
 import { useAuthManager } from "./store/authManager"
 import { watch } from "vue"
 import { Role } from "../shared/roles"
+import LoginPage from "./pages/LoginPage.vue"
+import { Phase } from "../shared/phase"
+import { useGameManager } from "./store/gameManager"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -9,7 +12,7 @@ const router = createRouter({
     {
       name: "login",
       path: "/login/:code?",
-      component: () => import("./pages/LoginPage.vue"),
+      component: LoginPage,
 
       meta: {
         allowedRoles: [Role.Unauthorized],
@@ -18,7 +21,20 @@ const router = createRouter({
     {
       name: "team",
       path: "/team",
-      redirect: "/team/home",
+      redirect () {
+        const game = useGameManager()
+
+        switch (game.phase) {
+          case Phase.Idle:
+            return "/team/home"
+          case Phase.Work:
+            return "/team/workspace"
+          case Phase.Break:
+            return "/team/break"
+          default:
+            return "/team/home"
+        }
+      },
       component: () => import("./pages/team/MainPage.vue"),
 
       meta: {
@@ -29,10 +45,69 @@ const router = createRouter({
         {
           path: "home",
           component: () => import("./pages/team/Home.vue"),
+
+          meta: {
+            phase: Phase.Idle,
+          }
         },
         {
-          path: 'workspace',
+          path: "workspace",
+          redirect: "/team/workspace/files",
+
+          meta: {
+            phase: Phase.Work,
+          }
+        },
+        {
+          name: "workspace",
+          path: 'workspace/:space(phone|files|tools)',
           component: () => import("./pages/team/Workspace.vue"),
+
+          meta: {
+            phase: Phase.Work,
+          },
+
+          children: [
+            {
+              path: "chat",
+              name: "chat",
+              component: () => import("./pages/team/chat/Home.vue"),
+            },
+            {
+              path: "chat/:id",
+              name: "chatRoom",
+              component: () => import("./pages/team/chat/Chat.vue"),
+              meta: {
+                depth: 1,
+              },
+            },
+            {
+              path: "search",
+              name: "search",
+              component: () => import("./pages/team/search/Home.vue"),
+            },
+            {
+              path: "search/:id",
+              name: "searchResult",
+              component: () => import("./pages/team/search/Result.vue"),
+              meta: {
+                depth: 1,
+              },
+            },
+            {
+              path: "mail",
+              name: "mail",
+              component: () => import("./pages/team/mail/Home.vue"),
+            }
+          ],
+        },
+        {
+          path: "break",
+          component: () => import("./pages/team/Break.vue"),
+
+          meta: {
+            phase: Phase.Break,
+          }
         }
       ]
     },
@@ -66,6 +141,13 @@ const router = createRouter({
           component: () => import("./pages/admin/Clients.vue"),
           meta: {
             title: "Clients"
+          },
+        },
+        {
+          path: "cue",
+          component: () => import("./pages/admin/Cue.vue"),
+          meta: {
+            title: "Cue"
           },
         }
       ],
@@ -148,5 +230,35 @@ router.beforeEach(async (to, _, next) => {
     next()
   }
 })
+
+router.beforeEach(async (to, _, next) => {
+  const auth = useAuthManager()
+
+  if (auth.role === Role.Team) {
+    const game = useGameManager()
+
+    if (game.loading) {
+      console.log("Waiting for game to load")
+      game.initGameManager()
+
+      await new Promise<void>((resolve) => {
+        watch(() => game.loading, () => {
+          if (!game.loading) resolve()
+        }, { once: true })
+      })
+    }
+
+    console.log("Phase check", to.meta.phase, game.phase)
+
+    if (to.meta.phase && to.meta.phase !== game.phase) {
+      next("/team")
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
 
 export default router

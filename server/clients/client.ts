@@ -2,6 +2,7 @@ import WebSocket from 'ws';
 import { AdminClient } from './adminClient';
 import { Role } from '../../shared/roles';
 import { GenericClient } from './genericClient';
+import { Game } from '../game/game';
 
 export abstract class WebSocketClient {
   abstract type: Role;
@@ -31,6 +32,34 @@ export abstract class WebSocketClient {
     this.ws.removeAllListeners();
     return new GenericClient(this.ws, this.id, this.userAgent);
   }
+}
+
+export function genericActions (client: WebSocketClient): {
+  action: string,
+  handler: (payload: any) => void
+}[] {
+  const game = Game.get();
+
+  return [
+    {
+      action: 'getTimer',
+      handler: () => {
+        game.sendTimerToClients(client);
+      }
+    },
+    {
+      action: 'timeSync',
+      handler: () => {
+        client.send('timeSync:response', Date.now());
+      }
+    },
+    {
+      action: 'getPhase',
+      handler: () => {
+        game.sendPhaseToClients();
+      }
+    }
+  ]
 }
 
 export function handleActions (actions: {
