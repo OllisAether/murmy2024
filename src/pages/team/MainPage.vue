@@ -197,7 +197,7 @@ function logout () {
   auth.logout()
 }
 
-watch(() => game.phase, () => {
+watch(() => game.phase.type, () => {
   router.push('/team')
 })
 

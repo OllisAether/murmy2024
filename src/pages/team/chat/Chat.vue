@@ -1,6 +1,6 @@
 <template>
   <VThemeProvider theme="light">
-    <VLayout class="chat-room">
+    <VLayout class="chat-room" v-if="chat">
       <VToolbar
         color="white"
         class="chat-room__toolbar px-2"
@@ -17,12 +17,12 @@
           </VAvatar>
         </VBtn>
         <VToolbarTitle class="chat-page__title ml-2" >
-          Chats
+          {{ game.getChatName(chat) }}
         </VToolbarTitle>
-        <VBtn icon>
+        <VBtn icon disabled>
           <VIcon>mdi-phone</VIcon>
         </VBtn>
-        <VBtn icon>
+        <VBtn icon disabled>
           <VIcon>mdi-video</VIcon>
         </VBtn>
       </VToolbar>
@@ -30,22 +30,21 @@
       <VMain class="chat-room__content">
         <div>
           <template
-            v-for="(message, i) in messages"
+            v-for="(message, i) in chat.messages"
             :key="i"
           >
-            <div v-if="message.date" class="text-center my-4">
+            <div v-if="message.date.join('') !== chat.messages[i - 1]?.date.join('')" class="text-center my-4">
               <VChip>
-                {{ message.date }}
+                {{ getDate(message.date) }}
               </VChip>
             </div>
             
             <VRow
-              v-else
-              :justify="message.sender === 'me' ? 'end' : 'start'"
+              :justify="message.sender === game.currentChatUser ? 'end' : 'start'"
               class="ma-4"
             >
               <VCard
-                :color="message.sender === 'me' ? 'green-darken-1' : 'grey-lighten-2'"
+                :color="message.sender === game.currentChatUser ? 'green-darken-1' : 'grey-lighten-2'"
                 class="chat-room__message"
                 flat
               >
@@ -53,7 +52,7 @@
                   {{ message.content }}
                 </span>
                 <span class="chat-room__message__time">
-                  {{ message.time }}
+                  {{ getTime(message.time) }}
                 </span>
               </VCard>
             </VRow>
@@ -77,158 +76,41 @@
 
 <script setup lang="ts">
 import router from '@/router';
-import { ref } from 'vue';
+import { useGameManager } from '@/store/gameManager';
+import { computed, onBeforeMount } from 'vue';
+import { useRoute } from 'vue-router';
 
-const messages = ref([
-  { date: '20. Mai' },
-  {
-    sender: 'me',
-    content: 'Hey, how are you?',
-    time: '12:00',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'I am fine, thank you!',
-    time: '12:01',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'What are you doing?',
-    time: '12:02',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'I am working on a new project.',
-    time: '12:03',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'That sounds interesting!',
-    time: '12:04',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'Yes, it is.',
-    time: '12:05',
-    read: 'read'
-  },
-  { date: '21. Mai' },
-  {
-    sender: 'me',
-    content: 'Can you tell me more about it?',
-    time: '12:06',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'Sure, I will send you the details later.',
-    time: '12:07',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'Thank you!',
-    time: '12:08',
-    read: 'delivered'
-  },
-  {
-    sender: 'other',
-    content: 'You are welcome!',
-    time: '12:09',
-    read: 'sent'
-  },
-  {
-    sender: 'me',
-    content: 'Bye!',
-    time: '12:10',
-    read: 'sent'
-  },
-  {
-    sender: 'other',
-    content: 'Bye!',
-    time: '12:11',
-    read: 'read'
-  },
-  { date: '22. Mai' },
-  {
-    sender: 'me',
-    content: 'Hey, how are you?',
-    time: '12:00',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'I am fine, thank you!',
-    time: '12:01',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'What are you doing?',
-    time: '12:02',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'I am working on a new project.',
-    time: '12:03',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'That sounds interesting!',
-    time: '12:04',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'Yes, it is.',
-    time: '12:05',
-    read: 'read'
-  },
-  { date: '23. Mai' },
-  {
-    sender: 'me',
-    content: 'Can you tell me more about it?',
-    time: '12:06',
-    read: 'read'
-  },
-  {
-    sender: 'other',
-    content: 'Sure, I will send you the details later.',
-    time: '12:07',
-    read: 'read'
-  },
-  {
-    sender: 'me',
-    content: 'Thank you!',
-    time: '12:08',
-    read: 'delivered'
-  },
-  {
-    sender: 'other',
-    content: 'You are welcome!',
-    time: '12:09',
-    read: 'sent'
-  },
-  {
-    sender: 'me',
-    content: 'Bye!',
-    time: '12:10',
-    read: 'sent'
-  },
-  {
-    sender: 'other',
-    content: 'Bye!',
-    time: '12:11',
-    read: 'read'
+const route = useRoute();
+const game = useGameManager();
+
+const chat = computed(() => game.getChat(route.params.chat as string));
+
+onBeforeMount(() => {
+  if (!chat.value?.id || (chat.value?.id && !game.hasPermissionForChat(chat.value.id))) {
+    router.push({ name: 'chat' });
   }
-]);
+});
+
+function getDate(date: [number, number]) {
+  return `${date[0]}. ${[
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember'
+  ][date[1]]}`;
+}
+
+function getTime (time: [number, number]) {
+  return `${time[0]}:${time[1]}`;
+}
 </script>
 
 <style scoped lang="scss">

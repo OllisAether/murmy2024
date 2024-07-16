@@ -49,7 +49,7 @@
             </VListItem>
           </VList>
         </VCard>
-        <VCard>
+        <VCard class="mb-6">
           <VToolbar>
             <VToolbarTitle>
               <VIcon>mdi-account-group</VIcon>
@@ -85,20 +85,10 @@
             </VListItem>
           </VList>
         </VCard>
+        <GameControl />
       </VCol>
       <VCol :cols="12" :md="8">
-        <VCard>
-          <VToolbar>
-            <VToolbarTitle>
-              <VIcon>mdi-view-dashboard</VIcon>
-              Dashboard
-            </VToolbarTitle>
-          </VToolbar>
-
-          <VCardText>
-            asdf
-          </VCardText>
-        </VCard>
+        <MediaControl />
       </VCol>
     </VRow>
   </VContainer>
@@ -106,6 +96,8 @@
 
 <script lang="ts" setup>
 import { useAdmin } from '../../store/admin'
+import GameControl from '@/components/admin/GameControl.vue';
+import MediaControl from '@/components/admin/MediaControl.vue';
 
 const admin = useAdmin()
 </script>

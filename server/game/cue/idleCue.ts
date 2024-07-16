@@ -1,4 +1,3 @@
-import { id } from "vuetify/locale";
 import { CueType } from "../../../shared/cue";
 import { Phase } from "../../../shared/phase";
 import { Cue } from "./cue";
@@ -21,15 +20,11 @@ export class IdleCue extends Cue {
       }
     }
   }
-
-  public getRecordNextFnById (id: string) {
-    return undefined
-  }
-
+  
   public toJSON () {
     return {
       type: this.type,
-      unlockClues: this.unlockClues,
+      unlockFiles: this.unlockFiles,
       duration: this.duration
     }
   }

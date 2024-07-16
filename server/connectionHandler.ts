@@ -4,6 +4,8 @@ import { GenericClient } from "./clients/genericClient";
 import { Game } from "./game/game";
 
 export function handleConnection (ws: WebSocket, req: Request) {
+  console.log('Established connection');
+
   const game = Game.get();
   
   const client = new GenericClient(ws);

@@ -11,14 +11,14 @@
 
     <div class="divider"></div>
 
-    <AppNavBtn
+    <!-- <AppNavBtn
       @click="change('search')"
       type="search"
       :active="active === 'search'"
       icon="mdi-web"
     >
       Web
-    </AppNavBtn>
+    </AppNavBtn> -->
     <AppNavBtn
       @click="change('chat')"
       type="chat"

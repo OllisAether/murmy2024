@@ -7,20 +7,30 @@ body, html {
 
 // prevent user selection
 :not(input, textarea, select, button, [contenteditable]) {
-  user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+   -khtml-user-select: none; /* Konqueror */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; 
 }
 
-/* prevent pull-to-refresh for Safari 16+ */
-@media screen and (pointer: coarse) {
-  @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none)  {
-    html:not(.admin) {
-      min-height: 100%;
-      overscroll-behavior-y: none;
-    }
-  }
+.touch-action-none {
+  touch-action: none;
 }
-/* prevent pull-to-refresh for Safari 9~15 */
-@media screen and (pointer: coarse) {
+
+// /* prevent pull-to-refresh for Safari 16+ */
+// @media screen and (pointer: coarse) and (not (display-mode: standalone)) {
+//   @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none)  {
+//     html:not(.admin) {
+//       min-height: 100%;
+//       overscroll-behavior-y: none;
+//     }
+//   }
+// }
+
+// /* prevent pull-to-refresh for Safari 9~15 */
+@media screen and (pointer: coarse) and (not (display-mode: standalone)) {
   @supports (-webkit-backdrop-filter: blur(1px)) and (not (overscroll-behavior-y: none))  {
     html:not(.admin) {
       height: 100%;
@@ -42,14 +52,14 @@ body:not(.admin) {
   overflow: hidden;
 }
 
-// /* prevent pinch-zoom for Chrome 36+, Safari 13+ */
-// * {
-//   // overflow: hidden;
-//   touch-action: pan-x pan-y;
-//   // min-height: 100%; /* prevent pinch-zoom at page bottom */
-// }
+/* prevent pinch-zoom for Chrome 36+, Safari 13+ */
+* {
+  // overflow: hidden;
+  touch-action: pan-x pan-y;
+  // min-height: 100%; /* prevent pinch-zoom at page bottom */
+}
 
-#app {
+:not(.admin) #app {
   position: fixed;
   overflow: hidden;
   inset: 0;
@@ -77,5 +87,11 @@ body:not(.admin) {
     padding-top: 8rem;
     height: 100%;
     overflow: auto;
+  }
+}
+
+.no-transition {
+  .v-slider-track__background, .v-slider-track__fill, .v-slider-thumb {
+    transition: none;
   }
 }

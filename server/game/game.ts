@@ -3,7 +3,6 @@ import { WebSocketClient } from "../clients/client"
 import { Team } from "./team"
 import { GenericClient } from "../clients/genericClient"
 import { AdminClient } from "../clients/adminClient"
-import { BoardClient } from "../clients/boardClient"
 import { TeamClient } from "../clients/teamClient"
 import { Role } from "../../shared/roles"
 import { Database } from "../database"
@@ -11,11 +10,12 @@ import { Timer } from "../timer"
 import { Phase } from "../../shared/phase"
 import { Cue, CueNext, CueObject, CueRecord, CueRecordJson, PhaseOptions } from "./cue/cue"
 import { IdleCue } from "./cue/idleCue"
-import { BreakCue } from "./cue/breakCue"
 import { VoteCue } from "./cue/voteCue"
-import { CueJson, CueType, VoteOptions } from "../../shared/cue"
+import { CueJson, VoteOption, VoteOptions } from "../../shared/cue"
 import { JsonArray, JsonMap } from "../../shared/json"
 import { fromCueJson } from "./cue/cueJson"
+import { duration } from "moment"
+import { WorkCue } from "./cue/workCue"
 
 export class Game {
   private adminPassword: string
@@ -64,14 +64,15 @@ export class Game {
     const teams = (Database.get().getCollection('teams')?.teams as JsonArray)?.map?.((t) => ({
       id: (t as JsonMap)?.id as string,
       name: (t as JsonMap)?.name as string,
-      code: (t as JsonMap)?.code as string
+      code: (t as JsonMap)?.code as string,
+      meta: (t as JsonMap)?.meta as JsonMap
     }))
 
     if (!teams) {
       return
     }
 
-    this.teams = teams.map((t) => new Team(t.id, t.name, t.code))
+    this.teams = teams.map((t) => new Team(t.id, t.name, t.code, t.meta))
   }
 
   addTeam(team: Team) {
@@ -395,6 +396,8 @@ export class Game {
       return
     }
 
+    console.log('Loading timer', timer)
+
     switch (timer.state) {
       case 'stopped':
         this.timer.stop()
@@ -409,28 +412,51 @@ export class Game {
         this.timer.setTime(timer.currentTime)
         this.timer.resume()
         break
+      default:
+        console.error('Invalid timer state', timer.state)
     }
+  }
+
+  pauseTimer() {
+    this.timer.pause()
+  }
+
+  resumeTimer() {
+    this.timer.resume()
+  }
+
+  setDuration(duration: number) {
+    this.timer.setDuration(duration)
+  }
+
+  setTime(time: number) {
+    this.timer.setTime(time)
   }
 
   timerFinished() {
     this.nextRecord()
     this.sendTimerToClients()
+    this.saveTimer()
   }
 
   timerStarted() {
     this.sendTimerToClients()
+    this.saveTimer()
   }
 
   timerPaused() {
     this.sendTimerToClients()
+    this.saveTimer()
   }
 
   timerUpdated() {
     this.sendTimerToClients()
+    this.saveTimer()
   }
 
   timerStopped() {
     this.sendTimerToClients()
+    this.saveTimer()
   }
 
   timerTick() {
@@ -445,7 +471,10 @@ export class Game {
   sendPhaseToClients(client?: WebSocketClient) {
     console.log('Sending phase to clients')
 
-    const phase = this.currentPhase
+    const phase = {
+      type: this.currentPhase,
+      meta: this.phaseMeta
+    }
 
     if (client) {
       client.send('phase', phase)
@@ -509,9 +538,7 @@ export class Game {
   // #region Cue
   private cues: Cue[] = [
     new IdleCue(10000),
-    new VoteCue([
-      { media: 'asd' },
-    ], 30000),
+    new WorkCue(300000),
   ]
   private cueIndex: number = 0
   private currentCue: CueObject | undefined
@@ -523,7 +550,10 @@ export class Game {
     if (this.currentRecord) {
       console.log('[Cue] Next Record')
       try {
-        this.currentRecord = this.currentRecord.next?.() ?? undefined
+        this.currentRecord =
+          this.currentRecord?.next ??
+          this.currentCue?.next?.(this.currentRecord) ??
+          undefined
         this.recordIndex++
         this.recordId = this.currentRecord?.id ?? ''
       } catch (e) {
@@ -535,7 +565,7 @@ export class Game {
     } else if (this.currentCue) {
       console.log('[Cue] No Current Record. Setting from current cue')
 
-      this.currentRecord = this.currentCue?.record
+      this.currentRecord = this.currentCue?.next?.() ?? this.currentCue?.record
       this.recordIndex = 0
       this.recordId = this.currentRecord?.id ?? ''
     }
@@ -549,13 +579,13 @@ export class Game {
 
       this.cueIndex++
       this.currentCue = this.cues[this.cueIndex]?.init()
-      this.currentRecord = this.currentCue?.record
+      this.currentRecord = this.currentCue?.next?.() ?? this.currentCue?.record
 
       this.recordIndex = 0
       this.recordId = this.currentRecord?.id ?? ''
     }
 
-    if (!this.currentCue) {
+    if (!this.currentCue || !this.currentRecord) {
       console.log('[Cue] No Next Record. Returning to idle')
 
       this.cueIndex = 0
@@ -601,6 +631,10 @@ export class Game {
         this.timer.start(this.currentRecord.duration)
         return
       }
+    } else if (this.currentCue) {
+      console.log('[Cue] No current record. Starting from current cue')
+
+      this.currentCue = this.cues[this.cueIndex]?.init()
     } else {
       console.log('[Cue] No current record. Starting from the beginning')
 
@@ -649,7 +683,8 @@ export class Game {
     this.stopRecord()
     this.cueIndex = index
     this.currentCue = this.cues[this.cueIndex]?.init()
-    this.startRecord()
+    this.currentRecord = undefined
+    this.nextRecord()
   }
 
   stopCue () {
@@ -715,10 +750,15 @@ export class Game {
       delay: cues.record.delay,
       meta: cues.record.meta,
       options: cues.record.options,
-      next: cue.getRecordNextFnById(cues.record.id) ?? undefined
     } : undefined
+
+    if (this.currentRecord?.duration) {
+      this.currentCue.onStart && this.timer.onceStart(this.currentCue.onStart)
+      this.currentCue.onStop && this.timer.onceStopped(this.currentCue.onStop)
+      this.currentCue.onPaused && this.timer.onPause(this.currentCue.onPaused)
+    }
   }
-  
+
   sendCuesToAdmins (client?: WebSocketClient) {
     console.log('Sending cues to admins')
 
@@ -744,6 +784,8 @@ export class Game {
   }
 
   addCue (cue: Cue) {
+    console.log('[Cue] Adding cue', cue)
+
     this.cues.push(cue)
     this.sendCuesToAdmins()
     this.saveCues()
@@ -761,6 +803,18 @@ export class Game {
     }
 
     this.cues.splice(index, 1)
+  
+    if (this.cueIndex === index) {
+      this.currentCue = this.cues[this.cueIndex]?.init()
+      this.currentRecord = undefined
+      this.recordIndex = 0
+      this.recordId = ''
+    }
+
+    if (this.cueIndex > index) {
+      this.cueIndex--
+    }
+
     this.sendCuesToAdmins()
     this.saveCues()
   }
@@ -818,212 +872,347 @@ export class Game {
   // #endregion
 
   // #region Vote
-  collectingVotes?: {
-    options: VoteOptions,
-    paused: boolean,
-    ended: boolean
-  } = undefined
+  private vote: {
+    optionsPool: VoteOptions,
+    voteOptions: VoteOptions
+    votes: string[][],
+    winners: string[],
+    lastWinners: string[],
+    collecting: boolean
+  } = {
+    optionsPool: [],
+    voteOptions: [],
+    votes: [],
+    winners: [],
+    lastWinners: [],
+    collecting: false
+  }
 
-  votes: string[][] = []
-  winners: string[] = []
+  sendVoteToClients (client?: WebSocketClient) {
+    console.log('Sending vote to clients')
 
-  sendVotesToClients (client?: WebSocketClient) {
-    console.log('Sending votes to clients')
-
-    const votes = this.getVotes()
+    const vote = {
+      voteOptions: this.vote.voteOptions.map((v) => v.media),
+      votes: this.vote.votes.map((v) => v.length),
+      winners: this.vote.winners
+    }
 
     if (client) {
-      client.send('votes', votes)
+      client.send('vote', vote)
       return
     }
 
     this.clients
       .filter((c) => c.type !== Role.Unauthorized)
-      .forEach((c) => c.send('votes', votes))
+      .forEach((c) => c.send('vote', vote))
   }
 
   saveVote () {
     Database.get().saveCollection('vote', {
-      collectingVotes: this.collectingVotes,
-      votes: this.votes,
-      winners: this.winners
+      vote: this.vote
     })
   }
 
   loadVote () {
-    const vote = Database.get().getCollection('vote') as {
-      collectingVotes: {
-        options: VoteOptions,
-        paused: boolean,
-        ended: boolean
-      },
-      votes: string[][],
-      winners: string[]
-    }
+    const vote = Database.get().getCollection('vote') as Partial<{
+      vote: {
+        optionsPool: VoteOptions,
+        voteOptions: VoteOptions,
+        votes: string[][],
+        winners: string[],
+        lastWinners: string[],
+        collecting: boolean
+      }
+    }>
 
     if (!vote) {
       return
     }
 
-    this.collectingVotes = vote.collectingVotes
-    this.votes = vote.votes
-    this.winners = vote.winners
+    this.vote = {
+      optionsPool: vote.vote?.optionsPool ?? [],
+      voteOptions: vote.vote?.voteOptions ?? [],
+      votes: vote.vote?.votes ?? [],
+      winners: vote.vote?.winners ?? [],
+      lastWinners: vote.vote?.lastWinners ?? [],
+      collecting: vote.vote?.collecting ?? false
+    }
+
+    if (this.vote.voteOptions.length !== this.vote.votes.length) {
+      console.log('[Vote] Fixing votes length')
+      this.vote.votes = Array(this.vote.voteOptions.length).fill([]).map((v, i) => this.vote.votes[i] ?? v)
+    }
   }
 
-  startVote (options?: VoteOptions) {
-    const opt = options ?? this.collectingVotes?.options
+  startVote (voteOptions: VoteOptions, fromPool = false, preserveWinners = false) {
+    console.log('[Vote] Starting vote')
 
-    if (!opt) {
-      console.log('[Vote] No vote options provided')
-      return
+    const pool = [
+      ...(this.vote?.voteOptions ?? []),
+      ...voteOptions
+    ].filter((v, i, a) => a.findIndex((x) => x.media === v.media) === i)
+
+    this.vote = {
+      optionsPool: pool,
+      voteOptions: fromPool ? pool : voteOptions,
+      votes: Array(voteOptions.length).fill([]),
+      winners: [],
+      lastWinners: preserveWinners ? this.vote.winners : [],
+      collecting: true
     }
 
-    this.collectingVotes = {
-      options: [
-        ...(this.collectingVotes?.options ?? []),
-        ...opt
-      ].filter((v, i, a) => a.findIndex((t) => t.media === v.media) === i),
-      paused: false,
-      ended: false
-    }
-    this.votes = []
-
-    if (this.collectingVotes.options.length === 0) {
-      console.log('[Vote] No vote options provided')
-      this.timer.finish()
-      return
-    }
-
-    if (this.collectingVotes.options.length === 1) {
-      console.log('[Vote] Only one vote option provided')
-      this.winners = [this.collectingVotes.options[0].media]
-      this.timer.finish()
-      return
-    }
-
+    this.sendVoteToClients()
     this.saveVote()
   }
 
-  pauseVote () {
-    if (this.collectingVotes?.ended ?? !this.collectingVotes) {
-      console.log('[Vote] Failed to pause vote. No vote in progress')
+  endVote () {
+    if (!this.vote.collecting) {
+      console.log('[Vote] Failed to end vote. Vote already ended')
       return
     }
 
+    this.vote.collecting = false
+    const maxVotes = Math.max(...this.vote.votes.map((v) => v.length))
+
+    this.vote.winners = this.vote.votes
+      .map((v, i) => ({ media: this.vote.voteOptions[i].media, votes: v.length }))
+      .filter((v) => v.votes === maxVotes)
+      .map((v) => v.media)
+
+    this.sendVoteToClients()
     this.saveVote()
-  }
-
-  stopVote () {
-    if (this.collectingVotes?.ended ?? !this.collectingVotes) {
-      console.log('[Vote] Failed to stop vote. No vote in progress')
-      return
-    }
-
-    const results = this.getResults()
-    this.collectingVotes.ended = true
-    this.winners = results.winners.map((winner) => winner.media)
-
-    this.saveVote()
-    return results
-  }
-
-  getResults () {
-    const votes = this.getVotes()
-
-    const results = votes.map((vote) => vote.votes)
-    const max = Math.max(...results) ?? 0
-    const winners = votes.filter((vote) => vote.votes === max)
-
-    return {
-      winners,
-      votes
-    }
-  }
-
-  getVotes () {
-    if (!this.collectingVotes) {
-      return []
-    }
-
-    return this.collectingVotes?.options.map((option, i) => ({
-      media: option.media,
-      unlockClues: option.unlockClues,
-      votes: this.votes[i]?.length ?? 0
-    }))
-  }
-
-  addVote (team: string, vote: number) {
-    if (this.collectingVotes?.ended ?? !this.collectingVotes) {
-      console.log('[Vote] Failed to add vote. No vote in progress')
-      return false
-    }
-
-    if (this.votes.some(votes => votes.includes(team))) {
-      console.log('[Vote] Team ' + team + ' already voted')
-      return false
-    }
-
-    this.votes[vote].push(team)
-
-    // Every Team voted
-    if (this.teams.length === this.votes.reduce((acc, votes) => acc + votes.length, 0)) {
-      this.timer.finish()
-      this.stopVote()
-    }
-
-    return true
   }
 
   setRandomWinner () {
-    if (!this.collectingVotes) {
-      console.log('[Vote] Failed to set random winner. No vote has been made')
+    if (this.vote.collecting) {
+      console.log('[Vote] Failed to set random winner. Vote still collecting')
       return
     }
 
-    if (!this.collectingVotes.ended) {
-      console.log('[Vote] Failed to set random winner. Vote still in progress')
+    if (this.vote.winners.length === 0) {
+      console.log('[Vote] Failed to set random winner. No winners')
       return
     }
 
-    const results = this.getResults()
-
-    if (results.winners.length === 1) {
-      console.log('[Vote] Distinct winner already found')
+    if (this.vote.winners.length === 1) {
+      console.log('[Vote] Failed to set random winner. Only one winner')
       return
     }
 
-    const winner = results.winners[Math.floor(Math.random() * results.winners.length)]
-    this.winners = [winner.media]
+    console.log('[Vote] Setting random winner')
 
+    const winner = this.vote.winners[Math.floor(Math.random() * this.vote.winners.length)]
+
+    this.vote.winners = [winner]
+
+    this.sendVoteToClients()
     this.saveVote()
+  }
+
+  getVoteResults () {
+    return this.vote.winners
+  }
+
+  addVote (teamId: string, vote: number) {
+    if (!this.vote.collecting) {
+      console.log('[Vote] Failed to add vote. Vote not collecting')
+      return false
+    }
+
+    if (vote < 0 || vote >= this.vote.voteOptions.length) {
+      console.log('[Vote] Failed to add vote. Invalid vote', vote)
+      return false
+    }
+
+    if (this.vote.votes[vote]?.includes(teamId)) {
+      console.log('[Vote] Failed to add vote. Team already voted', teamId)
+      return false
+    }
+
+    if (!this.vote.votes[vote]) {
+      this.vote.votes[vote] = []
+    }
+
+    this.vote.votes[vote].push(teamId)
+    
+    if (this.teams.length === this.vote.votes.reduce((a, v) => a + v.length, 0)) {
+      this.endVote()
+      return true
+    }
+
+    this.sendVoteToClients()
+    this.saveVote()
+    return true
+  }
+
+  getVoted (teamId: string) {
+    const index = this.vote.votes.findIndex((v) => v.includes(teamId))
+    return index === -1 ? null : index
   }
   // #endregion
 
   // #region Media
-  media: string = ''
+  private currentMedia: string | null = null
 
   saveMedia () {
     Database.get().saveCollection('media', {
-      media: this.media
+      currentMedia: this.currentMedia
     })
   }
 
   loadMedia () {
     const media = Database.get().getCollection('media') as {
-      media: string
+      currentMedia: string
     }
 
     if (!media) {
       return
     }
 
-    this.media = media.media
+    this.currentMedia = media.currentMedia
   }
 
-  setMedia (media: string) {
-    this.media = media
-    this.saveMedia()
+  sendCurrentMediaToBoardAndAdmins (client?: WebSocketClient) {
+    console.log('Sending media to board and admins')
+
+    if (client) {
+      if (client.type !== Role.Admin && client.type !== Role.Board) {
+        console.log('Client is not an admin or board')
+        return
+      }
+
+      client.send('currentMedia', this.currentMedia)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Admin || c.type === Role.Board)
+      .forEach((c) => c.send('currentMedia', this.currentMedia))
   }
+
+  setMedia (media: string | null) {
+    this.currentMedia = media
+    this.saveMedia()
+    this.sendCurrentMediaToBoardAndAdmins()
+  }
+
+  mediaFinished () {
+    this.nextRecord()
+  }
+
+  playMedia () {
+    const board = this.clients.find((c) => c.type === Role.Board)
+
+    if (!board) {
+      console.log('[Media] Failed to play media. Board not connected')
+      return
+    }
+
+    if (!this.currentMedia) {
+      console.log('[Media] Failed to play media. No media set')
+      return
+    }
+
+    board.send('mediaControl', {
+      action: 'play'
+    })
+  }
+
+  pauseMedia () {
+    const board = this.clients.find((c) => c.type === Role.Board)
+
+    if (!board) {
+      console.log('[Media] Failed to pause media. Board not connected')
+      return
+    }
+
+    if (!this.currentMedia) {
+      console.log('[Media] Failed to pause media. No media set')
+      return
+    }
+
+    board.send('mediaControl', {
+      action: 'pause'
+    })
+  }
+
+  seekMedia (progress: number) {
+    const board = this.clients.find((c) => c.type === Role.Board)
+
+    if (!board) {
+      console.log('[Media] Failed to seek media. Board not connected')
+      return
+    }
+
+    if (!this.currentMedia) {
+      console.log('[Media] Failed to seek media. No media set')
+      return
+    }
+
+    board.send('mediaControl', {
+      action: 'seek',
+      progress
+    })
+  }
+
+  requestMedia () {
+    const board = this.clients.find((c) => c.type === Role.Board)
+
+    if (!board) {
+      console.log('[Media] Failed to request media duration. Board not connected')
+      return
+    }
+
+    if (!this.currentMedia) {
+      console.log('[Media] Failed to request media duration. No media set')
+      return
+    }
+
+    board.send('getMedia', this.currentMedia)
+  }
+
+  sendMediaDurationToAdmins (duration: number) {
+    console.log('Sending media duration to admins')
+
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => c.send('mediaDuration', duration))
+  }
+
+  sendMediaStateToAdmins (state: 'playing' | 'paused') {
+    console.log('Sending media state to admins')
+
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => c.send('mediaState', state))
+  }
+
+  sendMediaProgressToAdmins (progress: number) {
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => c.send('mediaProgress', progress))
+  }
+  // #endregion
+
+  // #region Clues
+  private clues: string[] = []
+
+  addClue (clue: string) {
+    this.clues.push(clue)
+  }
+
+  removeClue (clue: string) {
+    this.clues = this.clues.filter((c) => c !== clue)
+  }
+
+  addClues (clues: string[]) {
+    this.clues.push(...clues)
+  }
+
+  getClues () {
+    return this.clues
+  }
+  // #endregion
 
   // #region Singleton
   private static instance: Game

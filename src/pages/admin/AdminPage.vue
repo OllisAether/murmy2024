@@ -1,6 +1,11 @@
 <template>
   <VApp>
-    <VNavigationDrawer v-model="drawer">
+    <VNavigationDrawer 
+      v-model="drawer"
+      mobile-breakpoint="md"
+      :permanent="display.mdAndUp.value"
+      :persistent="display.mdAndUp.value"
+    >
       <VToolbar color="transparent" border="b">
         <VToolbarTitle>
           <VIcon>mdi-gamepad-variant</VIcon>
@@ -74,22 +79,38 @@
 
     <VAppBar border="b" flat>
       <VToolbarTitle>
-        <VBtn icon @click="drawer = !drawer">
+        <VBtn 
+          icon
+          @click="drawer = !drawer"
+          v-if="display.smAndDown.value"
+        >
           <VIcon>mdi-menu</VIcon>
         </VBtn>
 
         {{ route.meta.title }}
       </VToolbarTitle>
 
-      {{ {
-        [Phase.Idle]: 'Warten',
-        [Phase.Break]: 'Pause',
-        [Phase.Media]: 'Hinweisrunde',
-        [Phase.Vote]: 'Abstimmung',
-        [Phase.Work]: 'Arbeitsphase',
-        [Phase.Quiz]: 'Quiz',
-      }[game.phase as string] ?? game.phase }} | <Timer />
+      <template v-if="display.mdAndUp.value">
+        <VChip class="mr-2">
+          Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
+        </VChip>
+        <VChip class="mr-4">
+          Phase: {{ phaseToName(game.phase.type) }}
+        </VChip>
+      </template>
+      
+      <template v-if="display.smAndDown.value" #extension>
+        <VSpacer />
+        <VChip class="mr-2">
+          Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
+        </VChip>
+        <VChip>
+          Phase: {{ phaseToName(game.phase.type) }}
+        </VChip>
+        <VSpacer />
+      </template>
 
+      <Timer />
       <VBtn>
         Logout
 
@@ -143,10 +164,12 @@ import TutorialCard from '../../components/admin/TutorialCard.vue';
 import TimedProgress from '../../components/TimedProgress.vue';
 import { useGameManager } from '@/store/gameManager';
 import Timer from '@/components/Timer.vue';
-import { Phase } from '../../../shared/phase';
+import { phaseToName } from '../../../shared/phase';
+import { cueTypeToName } from '../../../shared/cue';
 
 const route = useRoute();
 const drawer = ref(!useDisplay().mdAndDown.value);
+const display = useDisplay();
 
 const logoutDialog = ref(false);
 const tutorialDialog = ref(false);

@@ -33,7 +33,15 @@
       <VListItem class="mb-4">
         <VListItemTitle><b>Telefonnummer</b></VListItemTitle>
         <VListItemSubtitle>
-          {{ person?.phone }}
+          <Collectable
+            v-if="person?.phone"
+            :person="person.id"
+            type="basic"
+            id="phone"
+            :value="person.phone"
+          >
+            {{ person?.phone }}
+          </Collectable>
         </VListItemSubtitle>
       </VListItem>
       <VListItem class="mb-4">

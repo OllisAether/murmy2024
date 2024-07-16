@@ -216,7 +216,7 @@ defineProps<{
     }
   }
 
-  &--search {
+  &--mail {
     color: #cc00ff;
 
     svg .outline {
@@ -228,17 +228,17 @@ defineProps<{
     }
   }
 
-  &--mail {
-    color: #ff0000;
+  // &--mail {
+  //   color: #ff0000;
 
-    svg .outline {
-      stroke: url(#mailBg);
-    }
+  //   svg .outline {
+  //     stroke: url(#mailBg);
+  //   }
 
-    svg .background {
-      fill: url(#mailBg);
-    }
-  }
+  //   svg .background {
+  //     fill: url(#mailBg);
+  //   }
+  // }
 
   &--tools {
     color: #6c7e83;

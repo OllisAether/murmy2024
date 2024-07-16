@@ -1,6 +1,6 @@
 <template>
   <VThemeProvider :theme="black ? 'dark' : 'light'" >
-    <VLayout class="app-tab-page app-layout">
+    <VLayout v-bind="$attrs" class="app-tab-page app-layout">
       <VToolbar
         :color="black ? 'black' : 'white'"
         class="app-tab-page__toolbar"

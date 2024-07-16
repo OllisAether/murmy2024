@@ -1,4 +1,4 @@
-import { CueJson, CueType, VoteOptions } from "../../../shared/cue"
+import { CueJson, CueType, VoteOption } from "../../../shared/cue"
 import { Phase } from "../../../shared/phase"
 import { Game } from "../game";
 import { Cue, CueNext, CueObject, CueRecord } from "./cue";
@@ -7,112 +7,100 @@ export class VoteCue extends Cue {
   type = CueType.Vote
 
   constructor (
-    private voteOptions: VoteOptions,
-    private duration?: number,
-    private tieBreakerDuration?: number
+    private voteOptions: VoteOption[],
+    private duration: number = 30000,
+    private tieBreakerDuration: number = 10000,
   ) {
     super();
   }
 
-  private resultNext (media: string): CueNext {
-    return () => ({
-      id: 'media',
-      phase: Phase.Media,
-      options: {
-        media
-      }
-    })
-  }
-
-  private createNext (voteCount: number): CueNext {
-    const game = Game.get()
-
-    return () => {
-      const results = game.getResults()
-
-      if (!results) {
-        console.error('[VoteCue] No results found')
-        return
-      }
-
-      if (results.winners.length === 0) {
-        console.error('[VoteCue] No winners found')
-        return
-      }
-
-      if (voteCount < 3 && results.winners.length > 1) {
-        // Tiebreaker
-        return {
-          id: `tiebreaker-${voteCount}`,
-          phase: Phase.Vote,
-          duration: this.tieBreakerDuration ?? 10000,
-          delay: 2000,
-          meta: {
-            tiebreaker: true
-          },
-          options: {
-            vote: results.winners.map(winner => ({
-              media: winner.media,
-              unlockClues: winner.unlockClues
-            }))
-          },
-          next: this.createNext(voteCount + 1)
-        }
-      } else if (results.winners.length === 1) {
-        // Winner
-        return {
-          id: 'result',
-          phase: Phase.VoteResult,
-          duration: 2000,
-          options: {
-            voteResult: game.winners[0]
-          },
-          next: this.resultNext(game.winners[0])
-        }
-      } else {
-        game.setRandomWinner()
-
-        return {
-          id: 'random',
-          phase: Phase.VoteResult,
-          duration: 3000,
-          options: {
-            voteResult: game.winners[0]
-          },
-          next: this.resultNext(game.winners[0])
-        }
-      }
-    }
-  }
-
   public init (): CueObject {
     return {
-      record: {
-        id: 'vote',
-        phase: Phase.Vote,
-        duration: this.duration ?? 30000,
-        options: {
-          vote: this.voteOptions
-        },
-        next: this.createNext(0)
-      }
-    }
-  }
+      next: (lastRecord) => {
+        console.log('[VoteCue] Next', lastRecord)
 
-  public getRecordNextFnById (id: string): void | CueNext {
-    switch (id) {
-      case 'vote':
-        return this.init().record.next
-      case 'tiebreaker-0':
-      case 'tiebreaker-1':
-      case 'tiebreaker-2':
-        const voteCount = parseInt(id.split('-')[1])
-        return this.createNext(voteCount)
-      case 'result':
-      case 'random':
-        return this.resultNext(Game.get().winners[0])
-      default:
-        return undefined
+        const game = Game.get()
+
+        function result(winners: string[]): CueRecord {
+          return {
+            id: 'result',
+            phase: Phase.VoteResult,
+            duration: 2000,
+            next: {
+              id: 'media',
+              phase: Phase.Media,
+              options: {
+                media: winners[0]
+              }
+            }
+          }
+        }
+
+        function random(winners: string[]): CueRecord {
+          game.setRandomWinner()
+
+          return {
+            id: 'random',
+            phase: Phase.VoteResult,
+            duration: 5000,
+            meta: {
+              random: winners
+            }
+          }
+        }
+
+        let winners: string[] = []
+        switch (lastRecord?.id) {
+          case 'vote':
+            game.endVote()
+            winners = game.getVoteResults()
+
+            if (winners.length === 1) {
+              return result(winners)
+            } else if (winners.length > 1) {
+              return {
+                id: 'result',
+                phase: Phase.VoteResult,
+                duration: 3000,
+                next: {
+                  id: 'tiebreaker',
+                  phase: Phase.Vote,
+                  duration: this.tieBreakerDuration,
+                  delay: 2000,
+                  meta: {
+                    tiebreaker: true
+                  },
+                  options: {
+                    vote: winners.map(winner => ({
+                      media: winner,
+                      unlockFiles: this.unlockFiles
+                    }))
+                  }
+                }
+              }
+            } else {
+              return random(winners)
+            }
+          case 'tiebreaker':
+            game.endVote()
+            winners = game.getVoteResults()
+
+            if (winners.length === 1) {
+              return result(winners)
+            } else {
+              return random(winners)
+            }
+          case undefined:
+            return {
+              id: 'vote',
+              phase: Phase.Vote,
+              duration: this.duration,
+              options: {
+                vote: this.voteOptions
+              }
+            }
+        }
+      }
     }
   }
 
@@ -120,10 +108,10 @@ export class VoteCue extends Cue {
     return {
       type: this.type,
       vote: {
-        voteOptions: this.voteOptions,
-        tieBreakerDuration: this.tieBreakerDuration ?? 10000
+        options: this.voteOptions,
+        tieBreakerDuration: this.tieBreakerDuration,
       },
-      unlockClues: this.unlockClues,
+      unlockFiles: this.unlockFiles,
       duration: this.duration,
     }
   }

@@ -4,18 +4,13 @@
       Willkommen<br>
     </span>
     {{ auth.team?.name }}
-
   </div>
-  <Timer />
 </template>
 
 <script lang="ts" setup>
-// import { useGameManager } from '@/store/gameManager';
-import Timer from '@/components/Timer.vue';
 import { useAuthManager } from '../../store/authManager';
 
 const auth = useAuthManager()
-// const game = useGameManager()
 </script>
 
 <style lang="scss" scoped>

@@ -39,7 +39,7 @@
     >
       <VListItem
         class="py-4"
-        :to="{ name: 'chat', params: { chat: chat.participants.join('-') } }"
+        :to="{ name: 'chatRoom', params: { chat: chat.id } }"
       >
         <template #prepend>
           <VAvatar color="grey-lighten-2">
@@ -49,7 +49,7 @@
 
         <VListItemTitle>
           <b>
-            {{ chat.name }}
+            {{ game.getChatName(chat as Chat) }}
           </b>
         </VListItemTitle>
         <VListItemSubtitle>
@@ -61,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import { Chat } from '@/model/chat/chat';
 import { useGameManager } from '@/store/gameManager';
 import { ref } from 'vue';
 

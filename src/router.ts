@@ -24,13 +24,17 @@ const router = createRouter({
       redirect () {
         const game = useGameManager()
 
-        switch (game.phase) {
+        switch (game.phase.type) {
           case Phase.Idle:
+          case Phase.Media:
             return "/team/home"
           case Phase.Work:
             return "/team/workspace"
           case Phase.Break:
             return "/team/break"
+          case Phase.Vote:
+          case Phase.VoteResult:
+            return "/team/vote"
           default:
             return "/team/home"
         }
@@ -74,7 +78,7 @@ const router = createRouter({
               component: () => import("./pages/team/chat/Home.vue"),
             },
             {
-              path: "chat/:id",
+              path: "chat/:chat",
               name: "chatRoom",
               component: () => import("./pages/team/chat/Chat.vue"),
               meta: {
@@ -107,6 +111,14 @@ const router = createRouter({
 
           meta: {
             phase: Phase.Break,
+          }
+        },
+        {
+          path: "vote",
+          component: () => import("./pages/team/Vote.vue"),
+
+          meta: {
+            phase: [Phase.Vote, Phase.VoteResult],
           }
         }
       ]
@@ -248,9 +260,12 @@ router.beforeEach(async (to, _, next) => {
       })
     }
 
-    console.log("Phase check", to.meta.phase, game.phase)
+    console.log("Phase check", to.meta.phase, game.phase.type)
 
-    if (to.meta.phase && to.meta.phase !== game.phase) {
+    if (to.meta.phase && Array.isArray(to.meta.phase)
+      ? !to.meta.phase.includes(game.phase.type)
+      : (to.meta.phase !== game.phase.type)
+    ) {
       next("/team")
     } else {
       next()

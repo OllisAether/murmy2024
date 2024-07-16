@@ -15,6 +15,15 @@ export class Database {
     await storage.init({
       dir: this.directory,
       stringify: (data) => JSON.stringify(data, null, 2),
+      parse: (data) => {
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          console.error('Error parsing data', e);
+          return {};
+        }
+      },
+      forgiveParseErrors: true,
     });
 
     await storage.forEach((datum) => {
@@ -24,7 +33,7 @@ export class Database {
   }
 
   getCollection (name: string) {
-    return this.collections[name];
+    return this.collections[name] ?? {};
   }
 
   async saveCollections () {

@@ -10,7 +10,7 @@
     "build:client": "vue-tsc && vite build --mode=production",
     "build:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws",
     "watch:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws --watch",
-    "start": "cd dist/server && PORT=80 node index.cjs"
+    "start": "cd dist/server && PORT=443 node index.cjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -26,6 +26,7 @@
     "pg": "^8.11.5",
     "pinia": "^2.1.7",
     "ua-parser-js": "^1.0.37",
+    "vite-plugin-pwa": "^0.20.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2",
     "vuetify": "^3.6.7"

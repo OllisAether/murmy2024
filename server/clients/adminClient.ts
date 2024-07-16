@@ -8,6 +8,7 @@ import WebSocket from 'ws';
 import { TeamClient } from "./teamClient"
 import { CueJson } from "../../shared/cue"
 import { fromCueJson, validateCueJson } from "../game/cue/cueJson";
+import { Timer } from "../timer";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -358,6 +359,59 @@ export class AdminClient extends WebSocketClient {
       },
       // #endregion
 
+      // #region Timer
+      {
+        action: 'pauseTimer',
+        handler: () => {
+          game.pauseTimer();
+        }
+      },
+      {
+        action: 'resumeTimer',
+        handler: () => {
+          game.resumeTimer();
+        }
+      },
+      {
+        action: 'setTime',
+        handler: (payload) => {
+          const time = payload.time;
+
+          if (typeof time !== 'number') {
+            console.error('Invalid payload', payload);
+
+            this.send('setTime:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+          
+          game.setTime(time);
+        }
+      },
+      {
+        action: 'setDuration',
+        handler: (payload) => {
+          const duration = payload.duration;
+
+          if (typeof duration !== 'number') {
+            console.error('Invalid payload', payload);
+
+            this.send('setDuration:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+          
+          game.setDuration(duration);
+        }
+      },
+      // #endregion
+
       // #region Cue
       {
         action: 'startRecord',
@@ -411,20 +465,20 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'addCue',
         handler: (payload) => {
-          const cueJson: CueJson = payload
+          const cueJson: CueJson = payload.cue
 
           if (!validateCueJson(cueJson)) {
-            console.error('Invalid cue', cueJson);
+            console.error('Invalid cue', cueJson)
 
             this.send('addCue:response', {
               success: false,
               message: 'Invalid cue'
-            });
+            })
 
             return
           }
 
-          game.addCue(fromCueJson(cueJson));
+          game.addCue(fromCueJson(cueJson))
         }
       },
       {
@@ -471,8 +525,41 @@ export class AdminClient extends WebSocketClient {
         handler: () => {
           game.sendCuesToAdmins(this);
         }
-      }
+      },
       // #endregion
+
+      // #region Media
+      {
+        action: 'playMedia',
+        handler: () => {
+          game.playMedia();
+        }
+      },
+      {
+        action: 'pauseMedia',
+        handler: () => {
+          game.pauseMedia();
+        }
+      },
+      {
+        action: 'seekMedia',
+        handler: (payload) => {
+          const time = payload.time;
+
+          if (typeof time !== 'number') {
+            console.error('Invalid payload', payload);
+            return;
+          }
+
+          game.seekMedia(time);
+        }
+      },
+      {
+        action: 'getMediaState',
+        handler: () => {
+          game.requestMedia();
+        }
+      },
     ]))
   }
 }

@@ -1,10 +1,21 @@
 <template>
-  <div class="loading" v-if="!game.assetsProgress.loaded">
+  <div class="loading" v-if="!game.assetsProgress.loaded || game.loading">
     <VProgressCircular indeterminate class="mb-1 mr-2"/>
     Lade ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
   </div>
 
-  <TitleScreen />
+  <template v-else>
+    <div class="interact-confirm" v-if="!game.interacted">
+      <VIcon size="64" class="mb-8">mdi-gesture-tap</VIcon><br>
+      Bitte interagiere mit dem Bildschirm, um fortzufahren.
+    </div>
+
+    <template v-else>
+      <MediaScreen v-if="game.phase.type === Phase.Media" />
+      <VoteScreen v-else-if="game.phase.type === Phase.Vote || game.phase.type === Phase.VoteResult" />
+      <TitleScreen v-else />
+    </template>
+  </template>
 
   <VDialog v-model="navigationDialog" max-width="300" :persistent="persistent">
     <VCard>
@@ -45,8 +56,12 @@ import { useEventListener } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
-import TitleScreen from './TitleScreen.vue';
 import { useGameManager } from '@/store/gameManager';
+import { Phase } from '../../../shared/phase';
+
+import TitleScreen from './TitleScreen.vue';
+import MediaScreen from './MediaScreen.vue';
+import VoteScreen from './VoteScreen.vue';
 
 const auth = useAuthManager()
 const game = useGameManager()
@@ -102,3 +117,21 @@ onMounted(() => {
   })
 })
 </script>
+
+<style scoped lang="scss">
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.interact-confirm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+</style>

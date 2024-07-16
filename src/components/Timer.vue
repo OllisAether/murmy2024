@@ -4,11 +4,11 @@
     'timer--warning': warning && remaining <= warningThreshold,
     'timer--fixed-width': fixedWidth
   }]">
-    <span class="timer__hours">
+    <span class="timer__minutes">
       {{ timeString[0] }}
     </span>
     <span class="timer__separator">:</span>
-    <span class="timer__minutes">
+    <span class="timer__seconds">
       {{ timeString[1] }}
     </span>
   </span>
@@ -20,8 +20,8 @@ import { useGameManager } from '@/store/gameManager'
 
 withDefaults(defineProps<{
   fixedWidth?: boolean
-  warning: boolean
-  warningThreshold: number
+  warning?: boolean
+  warningThreshold?: number
 }>(), {
   fixedWidth: false,
   warning: false,
@@ -32,6 +32,8 @@ const game = useGameManager()
 
 const remaining = computed(() => (game.timer.duration - game.timer.currentTime) / 1000)
 const timeString = computed(() => {
+  if (game.timer.state === 'stopped') return ['00', '00']
+
   const minutes = Math.floor(remaining.value / 60);
   const seconds = Math.floor(remaining.value % 60);
 
@@ -48,8 +50,8 @@ const timeString = computed(() => {
 .timer {
   white-space: nowrap;
 
-  &__hours,
-  &__minutes {
+  &__minutes,
+  &__seconds {
     display: inline-block;
 
     .timer--fixed-width & {
@@ -57,11 +59,11 @@ const timeString = computed(() => {
     }
   }
 
-  &__hours {
+  &__minutes {
     text-align: right;
   }
 
-  &__minutes {
+  &__seconds {
     text-align: left;
   }
 }

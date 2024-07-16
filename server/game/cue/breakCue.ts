@@ -28,7 +28,7 @@ export class BreakCue extends Cue {
   public toJSON () {
     return {
       type: this.type,
-      unlockClues: this.unlockClues,
+      unlockFiles: this.unlockFiles,
       duration: this.duration
     }
   }

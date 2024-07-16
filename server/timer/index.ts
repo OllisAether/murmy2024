@@ -86,6 +86,10 @@ export class Timer {
   }
 
   public resume() {
+    if (this.state === 'running') {
+      return
+    }
+
     console.log('[Timer] Resuming timer')
 
     this.state = 'running'
@@ -95,6 +99,10 @@ export class Timer {
   }
 
   public pause() {
+    if (this.state === 'paused') {
+      return
+    }
+
     console.log('[Timer] Pausing timer')
 
     this.state = 'paused'

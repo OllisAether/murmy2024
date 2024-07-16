@@ -56,7 +56,13 @@ export function genericActions (client: WebSocketClient): {
     {
       action: 'getPhase',
       handler: () => {
-        game.sendPhaseToClients();
+        game.sendPhaseToClients(client);
+      }
+    },
+    {
+      action: 'getVote',
+      handler: () => {
+        game.sendVoteToClients(client);
       }
     }
   ]

@@ -2,12 +2,18 @@
   <VCard class="login-card" max-width="500" min-width="300">
     <VToolbar>
       <VToolbarTitle>
-        <VIcon>mdi-shield-account</VIcon>
-        Admin Login
+        <template v-if="adminLoginRole === Role.Admin">
+          <VIcon>mdi-shield-account</VIcon>
+          Admin Login
+        </template>
+        <template v-else>
+          <VIcon>mdi-television</VIcon>
+          Board Login
+        </template>
       </VToolbarTitle>
     </VToolbar>
 
-    <VCardText v-if="!auth.adminLoginLoading">
+    <VCardText>
       <p class="mb-4">
         Wenn du ein Spieler bist, bitten wir dich herzlich, diesen Bereich zu verlassen :)
       </p>
@@ -17,10 +23,18 @@
         :mandatory="true"
         class="mb-4 w-100"
         variant="outlined"
+        rounded="lg"
         color="primary"
+        :disabled="auth.adminLoginLoading"
       >
-        <VBtn class="flex-grow-1" value="admin">Admin</VBtn>
-        <VBtn class="flex-grow-1" value="board">Board</VBtn>
+        <VBtn class="flex-grow-1" value="admin">
+          <VIcon class="mr-2">mdi-shield-account</VIcon>
+          Admin
+        </VBtn>
+        <VBtn class="flex-grow-1" value="board">
+          <VIcon class="mr-2">mdi-television</VIcon>
+          Board
+        </VBtn>
       </VBtnToggle>
 
       <p class="mb-4">
@@ -33,25 +47,36 @@
         type="password"
         variant="outlined"
         @keydown.enter="adminLogin"
-      />
+        :disabled="auth.adminLoginLoading"
+      >
+        <template #append>
+          <VBtn
+            @click="adminLogin"
+            :disabled="auth.adminLoginLoading"
+            icon
+            color="primary"
+            variant="text"
+          >
+            <VIcon>mdi-login-variant</VIcon>
+          </VBtn>
+        </template>
+      </VTextField>
 
       <p class="text-error">
         &nbsp;{{ auth.adminLoginError }}
       </p>
-    </VCardText>
-    <VCardText v-else>
-      <VProgressLinear indeterminate />
-    </VCardText>
 
-    <VCardActions>
-      <VSpacer />
-      <VBtn variant="tonal" color="primary" @click="adminLogin">
-        Login
-        <VIcon class="ml-2">
-          mdi-arrow-right
-        </VIcon>
-      </VBtn>
-    </VCardActions>
+      <p class="text-small text-grey text-right">
+        <em>
+          Client-ID: {{ auth.clientId }}
+        </em>
+      </p>
+
+      <VProgressLinear
+        v-if="auth.adminLoginLoading"
+        indeterminate
+      />
+    </VCardText>
   </VCard>
 </template>
 

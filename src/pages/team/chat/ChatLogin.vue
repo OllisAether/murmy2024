@@ -14,7 +14,7 @@
             Melde dich an, um mit deinen Freunden zu chatten.
           </div>
 
-          <VTextField
+          <TextField
             class="login-page__input mb-4"
             v-model="phone"
             label="Telefonnummer"
@@ -24,7 +24,7 @@
             :disabled="loading"
           />
 
-          <VTextField
+          <TextField
             class="login-page__input mb-4"
             v-model="password"
             label="Passwort"
@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import { ref } from 'vue';
+import TextField from '@/components/game/TextField.vue';
 
 const game = useGameManager();
 

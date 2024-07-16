@@ -21,7 +21,7 @@
     }"
   />
   <!-- Login -->
-  <ChatLogin theme="light" v-else />
+  <ChatLogin v-else />
 </template>
 
 <script setup lang="ts">

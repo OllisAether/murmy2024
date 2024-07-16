@@ -13,6 +13,12 @@
       </VToolbar>
 
       <VList nav>
+        <VListItem @pointerdown="pointerdown" class="touch-action-none">
+          <VListItemTitle>
+            Test
+          </VListItemTitle>
+        </VListItem>
+        
         <VListItem
           v-for="suspect in suspects"
           :key="suspect.id"
@@ -51,6 +57,7 @@ import Workarea from '../../components/game/Workarea.vue';
 import { useDisplay } from 'vuetify';
 import { useGameManager } from '@/store/gameManager';
 import { computed } from 'vue';
+import { useDrag } from '@/store/dragStore';
 
 const display = useDisplay()
 const auth = useAuthManager()
@@ -61,6 +68,11 @@ const suspects = computed(() => game.suspects.map(suspect => ({
   entries: suspect,
   person: game.getPerson(suspect.personId),
 })))
+
+const drag = useDrag()
+function pointerdown(event: PointerEvent) {
+  drag.startDrag('alice.doe@swiftmail.com', event)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -4,7 +4,7 @@ import { computed, readonly, ref, watch } from "vue";
 import { boardAssets, teamAssets } from "../assets/assets";
 import { files as fAsset } from "../assets/files";
 import { UAParser } from "ua-parser-js";
-import { accounts, chats } from "@/assets/chats";
+import { chatAccounts, chats, nameOverride } from "@/assets/chats";
 import { people } from "@/assets/people";
 import { ProfileEntryType, SuspectEntry, SuspectProfile } from "@/model/database/suspectProfile";
 import { Asset } from "@/model/asset";
@@ -12,9 +12,17 @@ import { useAuthManager } from "./authManager";
 import { Role } from "../../shared/roles";
 import { Phase } from "../../shared/phase";
 import { File } from "@/model/files/file";
+import { Chat } from "@/model/chat/chat";
+import { emailAccounts, emails } from "@/assets/emails";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
+
+  const interacted = ref(false)
+
+  window.addEventListener('pointerdown', () => {
+    interacted.value = true
+  }, { once: true })
 
   const loading = ref(false)
   const initialized = ref(false)
@@ -40,6 +48,19 @@ export const useGameManager = defineStore('gameManager', () => {
 
     console.log('Initializing GameManager')
 
+    switch (auth.role) {
+      case Role.Team:
+        await preloadAssets(teamAssets)
+        break
+      case Role.Board:
+        await preloadAssets(boardAssets)
+        await new Promise<void>(resolve => {
+          ws.once('currentMedia').then(resolve)
+          ws.send('getMedia')
+        })
+        break
+    }
+
     await new Promise<void>(resolve => {
       ws.once('timer').then(resolve)
       ws.send('getTimer')
@@ -53,14 +74,10 @@ export const useGameManager = defineStore('gameManager', () => {
       ws.send('getPhase')
     })
 
-    switch (auth.role) {
-      case Role.Team:
-        await preloadAssets(teamAssets)
-        break
-      case Role.Board:
-        await preloadAssets(boardAssets)
-        break
-    }
+    await new Promise<void>(resolve => {
+      ws.once('vote').then(resolve)
+      ws.send('getVote')
+    })
 
     loading.value = false
     initialized.value = true
@@ -89,6 +106,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Fullscreen
   const canFullscreen = ref(false)
+  const isPwa = ref(window.matchMedia('(display-mode: standalone)').matches)
 
   const ua = new UAParser(navigator.userAgent).getResult()
 
@@ -148,6 +166,10 @@ export const useGameManager = defineStore('gameManager', () => {
     assetsProgress.value.loadedAssets = 0
     assetsProgress.value.totalAssets = _assets.length
     assetsProgress.value.loaded = _assets.length === 0
+
+    if (_assets.length === 0) {
+      return Promise.resolve()
+    }
 
     assets.value = _assets.map(asset => ({
       ...asset,
@@ -339,10 +361,27 @@ export const useGameManager = defineStore('gameManager', () => {
   // #endregion
 
   // #region Phases
-  const phase = ref<Phase>(Phase.Idle)
+  const phase = ref<{
+    type: Phase,
+    meta: any
+  }>({
+    type: Phase.Idle,
+    meta: {}
+  })
 
-  ws.onAction('phase', (data: Phase) => {
-    phase.value = data
+  ws.onAction('phase', (data: {
+    type: Phase,
+    meta: any
+  }) => {
+    phase.value.meta = data.meta ?? {}
+    phase.value.type = data.type ?? Phase.Idle
+  })
+
+  watch(phase, async (value) => {
+    switch (value.type) {
+      case Phase.Vote:
+        voted.value = await ws.request('getVoted') ?? null
+    }
   })
   // #endregion
 
@@ -410,8 +449,21 @@ export const useGameManager = defineStore('gameManager', () => {
     localStorage.setItem('chatUser', user || '')
   })
 
+  function getChatName (chat: Chat) {
+    return chat.name ?? chat.participants
+      .filter(p => p !== currentChatUser.value)
+      .map(p => {
+        const account = getChatAccount(p)
+        return nameOverride[currentChatUser.value!]?.[p] ??
+          account?.displayname ??
+          p
+      })
+      .filter(x => x)
+      .join(', ')
+  }
+
   async function loginChat (phone: string, password: string) {
-    const account = accounts.find(account => {
+    const account = chatAccounts.find(account => {
       const person = getPerson(account.personId)
 
       if (!person) {
@@ -451,36 +503,186 @@ export const useGameManager = defineStore('gameManager', () => {
   })
 
   function getChatAccount (personId: string) {
-    return accounts.find(account => account.personId === personId)
+    return chatAccounts.find(account => account.personId === personId)
+  }
+
+  function getChat (id: string) {
+    return chats.find(chat => chat.id === id)
+  }
+
+  function hasPermissionForChat (id: string) {
+    const chat = getChat(id)
+    if (!chat) {
+      return false
+    }
+    return chat.participants.includes(currentChatUser.value!)
+  }
+  // #endregion
+
+  // #region Email
+  const currentEmailUser = ref<string | null>(localStorage.getItem('emailUser') || null)
+
+  watch(currentEmailUser, (user) => {
+    localStorage.setItem('emailUser', user || '')
+  })
+
+  async function loginEmail (email: string, password: string) {
+    const account = emailAccounts.find(account => {
+      const person = getPerson(account.personId)
+
+      if (!person) {
+        return false
+      }
+
+      return person.email?.toLowerCase() === email?.toLowerCase() && account.password === password
+    })
+
+    if (!account) {
+      await new Promise(resolve => setTimeout(resolve, 200))
+      return false
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 800))
+
+    currentEmailUser.value = account.personId
+    return true
+  }
+
+  function logoutEmail () {
+    currentEmailUser.value = null
+  }
+
+  const visibleEmails = computed(() => {
+    const user = currentEmailUser.value
+
+    if (!user) {
+      return []
+    }
+
+    return emails.filter(email => email.reciever.includes(user))
+  })
+  
+  function getEmailAccount (personId: string) {
+    return chatAccounts.find(account => account.personId === personId)
+  }
+
+  function getEmail (id: string) {
+    return emails.find(email => email.id === id)
+  }
+
+  function hasPermissionForEmail (id: string) {
+    const email = getEmail(id)
+    if (!email) {
+      return false
+    }
+    return email.reciever.includes(currentEmailUser.value!)
+  }
+  // #endregion
+
+  // #region Vote
+  const vote = ref<{
+    voteOptions: string[]
+    votes: number[]
+    winners: string[]
+  }>()
+
+  const voted = ref<number | null>(null)
+
+  ws.onAction('vote', (data) => {
+    vote.value = data
+  })
+
+  async function addVote (vote: number) {
+    const res = await ws.request('vote', { vote })
+
+    if (!res.success) {
+      console.error('Failed to vote', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    voted.value = vote
+    return { success: true }
+  }
+  // #endregion
+
+  // #region Media
+  const currentMedia = ref<string | null>(null)
+
+  ws.onAction('currentMedia', (data: string) => {
+    console.log('Current media', data)
+    currentMedia.value = data
+  })
+
+  function mediaFinished () {
+    ws.send('mediaFinished')
+  }
+
+  function mediaProgress (progress: number) {
+    ws.send('mediaProgress', { progress })
+  }
+
+  function mediaDuration (duration: number) {
+    ws.send('mediaDuration', { duration })
+  }
+
+  function mediaState (state: 'playing' | 'paused') {
+    ws.send('mediaState', { state })
   }
   // #endregion
 
   return {
+    interacted: readonly(interacted),
     loading: readonly(loading),
     initialized: readonly(initialized),
     initGameManager,
     deinitGameManager,
-    canFullscreen,
+    canFullscreen: readonly(canFullscreen),
+    isPwa: readonly(isPwa),
     toggleFullscreen,
     getHelp,
-    assetsProgress,
+    assetsProgress: readonly(assetsProgress),
     preloadAssets,
     getAsset,
-    files,
-    isFullscreen,
-    suspects,
+    files: readonly(files),
+    isFullscreen: readonly(isFullscreen),
+    suspects: readonly(suspects),
     unlockSuspect,
     addSuspectEntry,
     getSuspectEntry,
     isSuspectUnlocked,
     getPerson,
-    currentChatUser,
+
+    currentChatUser: readonly(currentChatUser),
     loginChat,
-    visibleChats,
+    visibleChats: readonly(visibleChats),
     logoutChat,
     getChatAccount,
+    getChatName,
+    getChat,
+    hasPermissionForChat,
+
+    currentEmailUser: readonly(currentEmailUser),
+    loginEmail,
+    visibleEmails: readonly(visibleEmails),
+    logoutEmail,
+    getEmailAccount,
+    getEmail,
+    hasPermissionForEmail,
+
     timer: readonly(timer),
     timeSync: readonly(timeSync),
-    phase: readonly(phase)
+    phase: readonly(phase),
+    currentMedia: readonly(currentMedia),
+    mediaFinished,
+    mediaProgress,
+    mediaDuration,
+    mediaState,
+
+    vote: readonly(vote),
+    voted: readonly(voted),
+    addVote
   }
 })

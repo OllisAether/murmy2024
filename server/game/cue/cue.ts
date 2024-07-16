@@ -7,7 +7,7 @@ export interface PhaseOptions extends JsonMap {
   media?: string
 }
 
-export type CueNext = () => CueRecord | void
+export type CueNext = (lastRecord?: CueRecord) => CueRecord | void
 
 export interface CueRecord {
   id: string,
@@ -16,7 +16,7 @@ export interface CueRecord {
   delay?: number,
   meta?: JsonMap,
   options?: PhaseOptions,
-  next?: CueNext
+  next?: CueRecord
 }
 
 export interface CueRecordJson extends JsonMap {
@@ -29,7 +29,8 @@ export interface CueRecordJson extends JsonMap {
 }
 
 export interface CueObject {
-  record: CueRecord
+  record?: CueRecord
+  next?: CueNext
   onStop?: () => void
   onPaused?: () => void
   onStart?: () => void
@@ -38,7 +39,7 @@ export interface CueObject {
 export abstract class Cue {
   abstract type: CueType
 
-  public unlockClues: string[] = []
+  public unlockFiles: string[] = []
 
   constructor () {}
 
@@ -46,5 +47,5 @@ export abstract class Cue {
 
   public abstract toJSON (): CueJson
   
-  public abstract getRecordNextFnById (id: string): CueNext | void
+  // public abstract getRecordNextFnById (id: string): CueNext | void
 }

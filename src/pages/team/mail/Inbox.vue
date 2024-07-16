@@ -1,8 +1,8 @@
 <template>
   <VList>
     <template
-      v-for="mail in mails"
-      :key="mail.from"
+      v-for="mail in game.visibleEmails"
+      :key="mail.id"
     >
       <VListItem class="py-4">
         <template #prepend>
@@ -13,7 +13,7 @@
 
         <VListItemTitle>
           <b>
-            {{ mail.from }}
+            {{ mail.id }}
           </b>
         </VListItemTitle>
         <VListItemSubtitle>
@@ -21,24 +21,20 @@
         </VListItemSubtitle>
       </VListItem>
     </template>
+
+    <VBtn
+      class="mt-4"
+      block
+      color="primary"
+      @click="game.logoutEmail"
+    >
+      Logout
+    </VBtn>
   </VList>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useGameManager } from '@/store/gameManager';
 
-const mails = ref([
-  {
-    from: 'John Doe',
-    subject: 'Hello',
-    date: '2021-10-01',
-    content: 'Hello, how are you?',
-  },
-  {
-    from: 'Jane Doe',
-    subject: 'Re: Hello',
-    date: '2021-10-02',
-    content: 'I am fine, thank you!',
-  },
-]);
+const game = useGameManager();
 </script>

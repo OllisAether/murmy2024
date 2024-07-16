@@ -1,6 +1,6 @@
 import { CueType } from "../../../shared/cue";
 import { Phase } from "../../../shared/phase";
-import { Cue } from "./cue";
+import { Cue, CueObject } from "./cue";
 
 export class TutorialCue extends Cue {
   type = CueType.Tutorial
@@ -9,24 +9,33 @@ export class TutorialCue extends Cue {
     super();
   }
 
-  public init () {
+  public init (): CueObject {
     return {
-      record: {
-        id: 'tutorial',
-        phase: Phase.Tutorial,
-        duration: 30000
+      next: (lastRecord) => {
+        switch (lastRecord?.id) {
+          case undefined:
+            return {
+              id: 'intro',
+              phase: Phase.Media,
+              options: {
+                media: 'intro'
+              }
+            }
+          case 'intro':
+            return {
+              id: 'tutorial',
+              phase: Phase.Tutorial,
+            }
+        }
       }
     }
   }
 
-  public getRecordNextFnById (id: string) {
-    return undefined
-  }
 
   public toJSON () {
     return {
       type: this.type,
-      unlockClues: this.unlockClues
+      unlockFiles: this.unlockFiles
     }
   }
 }

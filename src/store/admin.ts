@@ -61,12 +61,22 @@ export const useAdmin = defineStore('admin', () => {
         cueIndex.value = c.current
         recordIndex.value = c.record
       }),
+      ws.onAction('mediaProgress', (progress) => {
+        media.value.progress = progress
+      }),
+      ws.onAction('mediaDuration', (duration) => {
+        media.value.duration = duration
+      }),
+      ws.onAction('mediaState', (state) => {
+        media.value.state = state
+      })
     ]
 
     ws.send('getTeams')
     ws.send('getClients')
     ws.send('getHelpRequests')
     ws.send('getCues')
+    ws.send('getMediaState')
   }
 
   function deinitAdmin () {
@@ -273,6 +283,30 @@ export const useAdmin = defineStore('admin', () => {
   }
   // #endregion
 
+  // #region Media
+  const media = ref<{
+    progress: number
+    duration: number
+    state: 'playing' | 'paused'
+  }>({
+    progress: 0,
+    duration: 0,
+    state: 'paused'
+  })
+  
+  function playMedia () {
+    ws.send('playMedia')
+  }
+
+  function pauseMedia () {
+    ws.send('pauseMedia')
+  }
+
+  function seekMedia (time: number) {
+    ws.send('seekMedia', { time })
+  }
+  // #endregion
+
   return {
     initAdmin,
     deinitAdmin,
@@ -305,6 +339,11 @@ export const useAdmin = defineStore('admin', () => {
     stopCue,
     addCue,
     replaceCue,
-    removeCue
+    removeCue,
+
+    media,
+    playMedia,
+    pauseMedia,
+    seekMedia
   }
 })
