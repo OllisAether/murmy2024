@@ -20,14 +20,14 @@ body, html {
 }
 
 // /* prevent pull-to-refresh for Safari 16+ */
-// @media screen and (pointer: coarse) and (not (display-mode: standalone)) {
-//   @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none)  {
-//     html:not(.admin) {
-//       min-height: 100%;
-//       overscroll-behavior-y: none;
-//     }
-//   }
-// }
+@media screen and (pointer: coarse) and (not (display-mode: standalone)) {
+  @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none) {
+    html:not(.admin) {
+      min-height: 100%;
+      overscroll-behavior-y: none;
+    }
+  }
+}
 
 // /* prevent pull-to-refresh for Safari 9~15 */
 @media screen and (pointer: coarse) and (not (display-mode: standalone)) {

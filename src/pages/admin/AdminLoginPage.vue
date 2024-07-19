@@ -16,6 +16,12 @@
     <VCardText>
       <p class="mb-4">
         Wenn du ein Spieler bist, bitten wir dich herzlich, diesen Bereich zu verlassen :)
+        <br>
+        <br>
+        <router-link to="/login" class="text-primary">
+          Zurück zum Login
+          <VIcon>mdi-undo-variant</VIcon>
+        </router-link>
       </p>
 
       <VBtnToggle

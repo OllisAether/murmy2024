@@ -8,10 +8,13 @@ import { Database } from './database';
 import { createServer, Server } from 'https';
 import path from 'path';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 configDotenv({
-  path: '../../.env'
+  path: './.env'
 });
 
+console.log('Environment:', process.env);
 
 const port = process.env.PORT || 3000;
 
@@ -20,9 +23,9 @@ const port = process.env.PORT || 3000;
 
   let server: Server | undefined = undefined;
 
-  if (process.env.NODE_ENV !== 'development') {
-    const privateKeyPath = path.resolve(process.cwd(), '../../', process.env.SSL_KEY_PATH ?? '');
-    const certificatePath = path.resolve(process.cwd(), '../../', process.env.SSL_CERT_PATH ?? '');
+  if (!isDevelopment) {
+    const privateKeyPath = path.resolve(process.cwd(), process.env.SSL_KEY_PATH ?? '');
+    const certificatePath = path.resolve(process.cwd(), process.env.SSL_CERT_PATH ?? '');
 
     console.log('Loading SSL certificate and key');
 
@@ -58,7 +61,7 @@ const port = process.env.PORT || 3000;
   app.post('/api/login', game.handleLogin.bind(game))
   app.post('/api/admin/login', game.handleAdminLogin.bind(game))
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopment) {
     console.log('Development mode!');
 
     app.listen(port, () => {
