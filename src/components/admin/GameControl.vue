@@ -98,38 +98,7 @@
 
 
       <VLabel class="mb-2 mt-2">
-        Record-Steuerung
-      </VLabel>
-
-      <VBtnGroup
-        class="w-100"
-        divided
-        variant="outlined"
-        color="primary"
-      >
-      <VBtn
-        :disabled="game.timer.state !== 'stopped'"
-        class="flex-grow-1"
-        @click="admin.startRecord"
-      >
-        <VIcon>mdi-play-box-outline</VIcon>
-      </VBtn>
-        <VBtn
-          class="flex-grow-1"
-          @click="admin.stopRecord"
-        >
-          <VIcon>mdi-stop-circle-outline</VIcon>
-        </VBtn>
-        <VBtn
-          class="flex-grow-1"
-          @click="admin.skipRecord"
-        >
-          <VIcon>mdi-skip-next</VIcon>
-        </VBtn>
-      </VBtnGroup>
-
-      <VLabel class="mb-2 mt-4">
-        Cue-Steuerung
+        Playback-Steuerung
       </VLabel>
 
       <VBtnGroup
@@ -140,14 +109,20 @@
       >
         <VBtn
           class="flex-grow-1"
-          @click="admin.stopCue"
+          @click="admin.nextPlayback()"
         >
-          <VIcon>mdi-stop-circle-outline</VIcon>
+          <VIcon>mdi-filmstrip-box-multiple</VIcon>
+
+          <VIcon v-if="admin.currentPlaybackIndex >= 0">mdi-skip-next</VIcon>
+          <VIcon v-else>mdi-play</VIcon>
         </VBtn>
         <VBtn
           class="flex-grow-1"
-          @click="admin.skipCue"
+          @click="admin.nextCue()"
+          :disabled="admin.currentPlaybackIndex === -1"
         >
+
+          <VIcon>mdi-motion-play-outline</VIcon>
           <VIcon>mdi-skip-next</VIcon>
         </VBtn>
       </VBtnGroup>

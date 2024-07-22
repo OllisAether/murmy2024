@@ -14,8 +14,6 @@ configDotenv({
   path: './.env'
 });
 
-console.log('Environment:', process.env);
-
 const port = process.env.PORT || 3000;
 
 (async () => {

@@ -5,10 +5,7 @@ import { Team } from "../game/team";
 import { idGen } from "../../shared/random";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
-import { TeamClient } from "./teamClient"
-import { CueJson } from "../../shared/cue"
-import { fromCueJson, validateCueJson } from "../game/cue/cueJson";
-import { Timer } from "../timer";
+import { TeamClient } from "./teamClient";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -412,40 +409,53 @@ export class AdminClient extends WebSocketClient {
       },
       // #endregion
 
-      // #region Cue
+      // #region Playbacks & Cues
       {
-        action: 'startRecord',
+        action: 'nextPlayback',
         handler: () => {
-          game.startRecord();
+          game.cueManager.nextPlayback();
         }
       },
       {
-        action: 'stopRecord',
-        handler: () => {
-          game.stopRecord();
+        action: 'nextCue',
+        handler: (payload) => {
+          const index = payload.index;
+
+          if (typeof index !== 'number' && index !== undefined) {
+            console.error('Invalid payload', payload);
+
+            this.send('nextCue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.cueManager.nextCue(index);
         }
       },
       {
-        action: 'skipRecord',
+        action: 'getPlaybacks',
         handler: () => {
-          game.skipRecord();
+          game.sendPlaybacksToAdmins(this);
         }
       },
       {
-        action: 'skipCue',
+        action: 'getCurrentPlayback',
         handler: () => {
-          game.skipCue();
+          game.sendCurrentPlaybackToAdmins(this);
         }
       },
       {
-        action: 'startCue',
+        action: 'setCurrentPlayback',
         handler: (payload) => {
           const index = payload.index;
 
           if (typeof index !== 'number') {
             console.error('Invalid payload', payload);
 
-            this.send('startCue:response', {
+            this.send('setCurrentPlayback:response', {
               success: false,
               message: 'Invalid payload'
             });
@@ -453,77 +463,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          game.startCue(index);
-        }
-      },
-      {
-        action: 'stopCue',
-        handler: () => {
-          game.stopCue();
-        }
-      },
-      {
-        action: 'addCue',
-        handler: (payload) => {
-          const cueJson: CueJson = payload.cue
-
-          if (!validateCueJson(cueJson)) {
-            console.error('Invalid cue', cueJson)
-
-            this.send('addCue:response', {
-              success: false,
-              message: 'Invalid cue'
-            })
-
-            return
-          }
-
-          game.addCue(fromCueJson(cueJson))
-        }
-      },
-      {
-        action: 'replaceCue',
-        handler: (payload) => {
-          const index = payload.index;
-          const cueJson: CueJson = payload.cue
-
-          if (typeof index !== 'number' || !validateCueJson(cueJson)) {
-            console.error('Invalid payload', payload);
-
-            this.send('replaceCue:response', {
-              success: false,
-              message: 'Invalid payload'
-            });
-
-            return;
-          }
-
-          game.replaceCue(index, fromCueJson(cueJson));
-        }
-      },
-      {
-        action: 'removeCue',
-        handler: (payload) => {
-          const index = payload.index;
-
-          if (typeof index !== 'number') {
-            console.error('Invalid payload', payload);
-
-            this.send('removeCue:response', {
-              success: false,
-              message: 'Invalid payload'
-            });
-
-            return;
-          }
-
-          game.removeCue(index);
-        }
-      },
-      {
-        action: 'getCues',
-        handler: () => {
-          game.sendCuesToAdmins(this);
+          game.cueManager.setCurrentPlayback(index);
         }
       },
       // #endregion

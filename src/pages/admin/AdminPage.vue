@@ -34,10 +34,10 @@
           <VDivider />
         </div>
 
-        <VListItem to="/admin/cue">
+        <VListItem to="/admin/playbacks">
           <VListItemTitle>
-            <VIcon>mdi-play-box-multiple-outline</VIcon>
-            Cue
+            <VIcon>mdi-filmstrip-box-multiple</VIcon>
+            Playbacks
           </VListItemTitle>
         </VListItem>
 
@@ -90,16 +90,16 @@
         {{ route.meta.title }}
       </VToolbarTitle>
 
-      <template v-if="display.mdAndUp.value">
-        <VChip class="mr-2">
+      <!-- <template v-if="display.mdAndUp.value"> -->
+        <!-- <VChip class="mr-2">
           Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
-        </VChip>
+        </VChip> -->
         <VChip class="mr-4">
           Phase: {{ phaseToName(game.phase.type) }}
         </VChip>
-      </template>
+      <!-- </template> -->
       
-      <template v-if="display.smAndDown.value" #extension>
+      <!-- <template v-if="display.smAndDown.value" #extension>
         <VSpacer />
         <VChip class="mr-2">
           Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
@@ -108,7 +108,7 @@
           Phase: {{ phaseToName(game.phase.type) }}
         </VChip>
         <VSpacer />
-      </template>
+      </template> -->
 
       <Timer />
       <VBtn>
@@ -165,10 +165,9 @@ import TimedProgress from '../../components/TimedProgress.vue';
 import { useGameManager } from '@/store/gameManager';
 import Timer from '@/components/Timer.vue';
 import { phaseToName } from '../../../shared/phase';
-import { cueTypeToName } from '../../../shared/cue';
 
 const route = useRoute();
-const drawer = ref(!useDisplay().mdAndDown.value);
+const drawer = ref(!useDisplay().smAndDown.value);
 const display = useDisplay();
 
 const logoutDialog = ref(false);

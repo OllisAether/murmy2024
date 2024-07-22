@@ -4,6 +4,7 @@ import svgLoader from 'vite-svg-loader'
 import { readFileSync } from 'fs'
 import { configDotenv } from 'dotenv'
 import path from 'path'
+import mkCert from 'vite-plugin-mkcert'
 
 configDotenv({
   path: '.env'
@@ -14,6 +15,7 @@ export default defineConfig({
   plugins: [
     vue(),
     svgLoader(),
+    mkCert(),
     // VitePWA({
     //   registerType: 'autoUpdate',
     //   manifest: {
@@ -58,18 +60,18 @@ export default defineConfig({
         ws: true
       }
     },
-    https: (() => {
-      const privateKeyPath = path.resolve(process.cwd(), process.env.SSL_KEY_PATH ?? '');
-      const certificatePath = path.resolve(process.cwd(), process.env.SSL_CERT_PATH ?? '');
+    // https: (() => {
+    //   const privateKeyPath = path.resolve(process.cwd(), process.env.SSL_KEY_PATH ?? '');
+    //   const certificatePath = path.resolve(process.cwd(), process.env.SSL_CERT_PATH ?? '');
 
-      const key = readFileSync(privateKeyPath, 'utf8')
-      const cert = readFileSync(certificatePath, 'utf8')
+    //   const key = readFileSync(privateKeyPath, 'utf8')
+    //   const cert = readFileSync(certificatePath, 'utf8')
 
-      return {
-        key,
-        cert
-      }
-    })()
+    //   return {
+    //     key,
+    //     cert
+    //   }
+    // })()
   },
   resolve: {
     alias: {

@@ -8,14 +8,8 @@ import { Role } from "../../shared/roles"
 import { Database } from "../database"
 import { Timer } from "../timer"
 import { Phase } from "../../shared/phase"
-import { Cue, CueNext, CueObject, CueRecord, CueRecordJson, PhaseOptions } from "./cue/cue"
-import { IdleCue } from "./cue/idleCue"
-import { VoteCue } from "./cue/voteCue"
-import { CueJson, VoteOption, VoteOptions } from "../../shared/cue"
 import { JsonArray, JsonMap } from "../../shared/json"
-import { fromCueJson } from "./cue/cueJson"
-import { duration } from "moment"
-import { WorkCue } from "./cue/workCue"
+import { CueManager } from "./cue/CueManager"
 
 export class Game {
   private adminPassword: string
@@ -42,7 +36,7 @@ export class Game {
     this.loadTeams()
     this.loadTimer()
     this.loadPhase()
-    this.loadCues()
+    // this.loadCues()
     this.loadVote()
     this.loadMedia()
   }
@@ -355,6 +349,10 @@ export class Game {
   // #region Timer
   private timer: Timer = new Timer()
 
+  getTimer() {
+    return this.timer
+  }
+
   sendTimerToClients(client?: WebSocketClient) {
     console.log('Sending timer to clients')
 
@@ -434,7 +432,6 @@ export class Game {
   }
 
   timerFinished() {
-    this.nextRecord()
     this.sendTimerToClients()
     this.saveTimer()
   }
@@ -507,266 +504,41 @@ export class Game {
     this.phaseMeta = phase.meta
   }
 
-  setPhase(phase: Phase, options?: PhaseOptions, meta?: JsonMap) {
+  setPhase(phase: Phase, meta?: JsonMap) {
     this.currentPhase = phase
     this.phaseMeta = meta ?? {}
 
-    switch (phase) {
-      case Phase.Vote:
-        if (!options?.vote) {
-          console.log('[Cue] No vote options provided')
-          return
-        }
+    // switch (phase) {
+    //   case Phase.Vote:
+    //     if (!options?.vote) {
+    //       console.log('[Cue] No vote options provided')
+    //       return
+    //     }
 
-        this.startVote(options.vote)
-        break
-      case Phase.Media:
-        if (!options?.media) {
-          console.log('[Cue] No media provided')
-          return
-        }
+    //     this.startVote(options.vote)
+    //     break
+    //   case Phase.Media:
+    //     if (!options?.media) {
+    //       console.log('[Cue] No media provided')
+    //       return
+    //     }
 
-        this.setMedia(options.media)
-        break
-    }
+    //     this.setMedia(options.media)
+    //     break
+    // }
 
     this.savePhase()
     this.sendPhaseToClients()
   }
   // #endregion
 
-  // #region Cue
-  private cues: Cue[] = [
-    new IdleCue(10000),
-    new WorkCue(300000),
-  ]
-  private cueIndex: number = 0
-  private currentCue: CueObject | undefined
-  private currentRecord: CueRecord | undefined
-  private recordIndex: number = 0
-  private recordId: string = ''
+  // #region Playbacks & Cues
+  cueManager: CueManager = new CueManager()
 
-  nextRecord() {
-    if (this.currentRecord) {
-      console.log('[Cue] Next Record')
-      try {
-        this.currentRecord =
-          this.currentRecord?.next ??
-          this.currentCue?.next?.(this.currentRecord) ??
-          undefined
-        this.recordIndex++
-        this.recordId = this.currentRecord?.id ?? ''
-      } catch (e) {
-        console.error('[Cue] Failed to get next record. Returning to idle.\nError:', e)
-        this.currentRecord = undefined
-        this.recordIndex = 0
-        this.recordId = ''
-      }
-    } else if (this.currentCue) {
-      console.log('[Cue] No Current Record. Setting from current cue')
+  sendPlaybacksToAdmins (client?: WebSocketClient) {
+    console.log('Sending playbacks to admins')
 
-      this.currentRecord = this.currentCue?.next?.() ?? this.currentCue?.record
-      this.recordIndex = 0
-      this.recordId = this.currentRecord?.id ?? ''
-    }
-
-    if (!this.currentRecord) {
-      console.log('[Cue] No Next Record. Moving to next cue')
-
-      this.currentCue?.onStart && this.timer.offStart(this.currentCue?.onStart)
-      this.currentCue?.onStop && this.timer.offStopped(this.currentCue?.onStop)
-      this.currentCue?.onPaused && this.timer.offPause(this.currentCue?.onPaused)
-
-      this.cueIndex++
-      this.currentCue = this.cues[this.cueIndex]?.init()
-      this.currentRecord = this.currentCue?.next?.() ?? this.currentCue?.record
-
-      this.recordIndex = 0
-      this.recordId = this.currentRecord?.id ?? ''
-    }
-
-    if (!this.currentCue || !this.currentRecord) {
-      console.log('[Cue] No Next Record. Returning to idle')
-
-      this.cueIndex = 0
-      this.currentRecord = undefined
-      this.recordIndex = 0
-      this.recordId = ''
-
-      this.timer.stop()
-      this.setPhase(Phase.Idle)
-      this.sendCuesToAdmins()
-      this.saveCues()
-      return
-    }
-
-    console.log('[Cue] Starting', this.currentRecord.phase)
-
-    if (this.currentRecord.duration) {
-      this.currentCue.onStart && this.timer.onceStart(this.currentCue.onStart)
-      this.currentCue.onStop && this.timer.onceStopped(this.currentCue.onStop)
-      this.currentCue.onPaused && this.timer.onPause(this.currentCue.onPaused)
-
-      console.log('[Cue] Start Record', this.currentRecord.duration, this.currentRecord.delay)
-
-      this.timer.start(this.currentRecord.duration, this.currentRecord.delay)
-    }
-  
-    this.setPhase(this.currentRecord.phase, this.currentRecord.options, this.currentRecord.meta)
-
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
-
-  startRecord() {
-    if (this.timer.getState() !== 'stopped') {
-      console.log('[Cue] Failed to start next record. Phase already running')
-      return
-    }
-
-    if (this.currentRecord) {
-      if (this.currentRecord.duration) {
-        console.log('[Cue] Resume Record')
-        
-        this.timer.start(this.currentRecord.duration)
-        return
-      }
-    } else if (this.currentCue) {
-      console.log('[Cue] No current record. Starting from current cue')
-
-      this.currentCue = this.cues[this.cueIndex]?.init()
-    } else {
-      console.log('[Cue] No current record. Starting from the beginning')
-
-      this.cueIndex = 0
-      this.currentCue = this.cues[this.cueIndex]?.init()
-    }
-    this.nextRecord()
-  }
-
-  stopRecord() {
-    if (this.timer.getState() === 'stopped') {
-      console.log('[Cue] Failed to stop record. No phase running')
-      return
-    }
-
-    this.timer.stop()
-  }
-
-  skipRecord() {
-    console.log('[Cue] Skipping record')
-
-    this.stopRecord()
-    this.nextRecord()
-  }
-
-  skipCue () {
-    console.log('[Cue] Skipping cue')
-
-    this.stopRecord()
-    this.cueIndex++
-    this.currentCue = this.cues[this.cueIndex]?.init()
-    this.currentRecord = undefined
-    this.recordIndex = 0
-    this.recordId = ''
-    this.nextRecord()
-  }
-
-  startCue (index: number) {
-    if (index < 0 || index >= this.cues.length) {
-      console.log('[Cue] Failed to start cue. Invalid index', index)
-      return
-    }
-
-    console.log('[Cue] Starting cue', index)
-
-    this.stopRecord()
-    this.cueIndex = index
-    this.currentCue = this.cues[this.cueIndex]?.init()
-    this.currentRecord = undefined
-    this.nextRecord()
-  }
-
-  stopCue () {
-    console.log('[Cue] Stopping cue')
-
-    this.stopRecord()
-    this.currentCue?.onStop && this.currentCue.onStop()
-    this.currentRecord = undefined
-
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
-
-  saveCues () {
-    Database.get().saveCollection('cues', {
-      cues: this.cues.map((c) => c.toJSON()),
-      current: this.cueIndex,
-      record: this.currentRecord ? {
-        id: this.currentRecord.id,
-        phase: this.currentRecord.phase,
-        duration: this.currentRecord.duration,
-        delay: this.currentRecord.delay,
-        meta: this.currentRecord.meta,
-        options: this.currentRecord.options
-      } : undefined,
-      recordId: this.recordId,
-      recordIndex: this.recordIndex
-    })
-  }
-
-  loadCues () {
-    const cues = Database.get().getCollection('cues') as {
-      cues: CueJson[],
-      current: number,
-      record?: CueRecordJson,
-      recordId: string,
-      recordIndex: number
-    }
-
-    if (!cues) {
-      return
-    }
-
-    this.cues = cues.cues.map((c) => {
-      try {
-        return fromCueJson(c)
-      } catch (e) {
-        console.error('[Cue] Failed to load cue', c, '\nError:', e)
-        return new IdleCue()
-      }
-    })
-
-    const cue = this.cues[cues.current]
-
-    this.cueIndex = cues.current
-    this.currentCue = cue?.init()
-    this.recordIndex = cues.recordIndex
-    this.recordId = cues.recordId
-    this.currentRecord = cues.record ? {
-      id: cues.record.id,
-      phase: cues.record.phase ?? Phase.Idle,
-      duration: cues.record.duration,
-      delay: cues.record.delay,
-      meta: cues.record.meta,
-      options: cues.record.options,
-    } : undefined
-
-    if (this.currentRecord?.duration) {
-      this.currentCue.onStart && this.timer.onceStart(this.currentCue.onStart)
-      this.currentCue.onStop && this.timer.onceStopped(this.currentCue.onStop)
-      this.currentCue.onPaused && this.timer.onPause(this.currentCue.onPaused)
-    }
-  }
-
-  sendCuesToAdmins (client?: WebSocketClient) {
-    console.log('Sending cues to admins')
-
-    const cues = {
-      cues: this.cues.map((c) => c.toJSON()),
-      current: this.cueIndex,
-      record: this.recordIndex
-    }
+    const cues = this.cueManager.getPlaybacks()
 
     if (client) {
       if (client.type !== Role.Admin) {
@@ -774,7 +546,7 @@ export class Game {
         return
       }
 
-      client.send('cues', cues)
+      client.send('playbacks', cues)
       return
     }
 
@@ -783,91 +555,24 @@ export class Game {
       .forEach((c) => (c as AdminClient).send('cues', cues))
   }
 
-  addCue (cue: Cue) {
-    console.log('[Cue] Adding cue', cue)
+  sendCurrentPlaybackToAdmins (client?: WebSocketClient) {
+    console.log('Sending current playback to admins')
 
-    this.cues.push(cue)
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
+    const playback = this.cueManager.getCurrentPlayback()
 
-  removeCue (index: number) {
-    if (index < 0 || index >= this.cues.length) {
-      console.log('[Cue] Failed to remove cue. Invalid index', index)
+    if (client) {
+      if (client.type !== Role.Admin) {
+        console.log('Client is not an admin')
+        return
+      }
+
+      client.send('currentPlayback', playback)
       return
     }
 
-    if (this.cueIndex === index && this.timer.getState() !== 'stopped') {
-      console.log('[Cue] Failed to remove cue. Cue is currently running')
-      return
-    }
-
-    this.cues.splice(index, 1)
-  
-    if (this.cueIndex === index) {
-      this.currentCue = this.cues[this.cueIndex]?.init()
-      this.currentRecord = undefined
-      this.recordIndex = 0
-      this.recordId = ''
-    }
-
-    if (this.cueIndex > index) {
-      this.cueIndex--
-    }
-
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
-
-  replaceCue (index: number, cue: Cue) {
-    if (index < 0 || index >= this.cues.length) {
-      console.log('[Cue] Failed to replace cue. Invalid index', index)
-      return
-    }
-
-    if (this.cueIndex === index && this.timer.getState() !== 'stopped') {
-      console.log('[Cue] Failed to replace cue. Cue is currently running')
-      return
-    }
-
-    this.cues[index] = cue
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
-
-  moveCues (from: number, to: number) {
-    if (from < 0 || from >= this.cues.length) {
-      console.log('[Cue] Failed to move cues. Invalid from index', from)
-      return
-    }
-
-    if (to < 0 || to >= this.cues.length) {
-      console.log('[Cue] Failed to move cues. Invalid to index', to)
-      return
-    }
-
-    const cue = this.cues[from]
-    this.cues.splice(from, 1)
-    this.cues.splice(to, 0, cue)
-
-    if (this.cueIndex === from) {
-      this.cueIndex = to
-    }
-
-    if (this.cueIndex < to && this.cueIndex > from) {
-      this.cueIndex--
-    }
-
-    if (this.cueIndex > to && this.cueIndex < from) {
-      this.cueIndex++
-    }
-
-    this.sendCuesToAdmins()
-    this.saveCues()
-  }
-
-  getCues () {
-    return this.cues
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => (c as AdminClient).send('currentPlayback', playback))
   }
   // #endregion
 
@@ -1096,8 +801,12 @@ export class Game {
     this.sendCurrentMediaToBoardAndAdmins()
   }
 
+  mediaFinishedListeners: (() => void)[] = []
+  onMediaFinished (listener: () => void) {
+    this.mediaFinishedListeners.push(listener)
+  }
   mediaFinished () {
-    this.nextRecord()
+    this.mediaFinishedListeners.forEach((l) => l())
   }
 
   playMedia () {
