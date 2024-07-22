@@ -156,10 +156,10 @@ const router = createRouter({
           },
         },
         {
-          path: "cue",
-          component: () => import("./pages/admin/Cue.vue"),
+          path: "playbacks",
+          component: () => import("./pages/admin/Playbacks.vue"),
           meta: {
-            title: "Cue"
+            title: "Playbacks"
           },
         }
       ],

@@ -1,10 +1,10 @@
 
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { useWsClient } from "./wsClient";
 import { Role } from "../../shared/roles";
 import { idGen } from "../../shared/random";
-import { CueJson } from "../../shared/cue"
+import { Playback } from "../../shared/playback/Playback";
 
 export interface AlertOptions {
   id: string
@@ -56,10 +56,22 @@ export const useAdmin = defineStore('admin', () => {
           closeAlert(`help:${teamId}`)
         })
       }),
-      ws.onAction('cues', (c) => {
-        cues.value = c.cues
-        cueIndex.value = c.current
-        recordIndex.value = c.record
+      ws.onAction('playbacks', (pbs) => {
+        playbacks.value = pbs
+      }),
+      ws.onAction('currentPlayback', (payload: {
+        playback: number,
+        cue: number
+      }) => {
+        currentPlaybackIndex.value = payload.playback
+        currentCueIndex.value = payload.cue
+
+        indexUpdateQueue.value.push({
+          playback: payload.playback,
+          cue: payload.cue
+        })
+        if (updatingIndex) return
+        updatePlaybackIndex()
       }),
       ws.onAction('mediaProgress', (progress) => {
         media.value.progress = progress
@@ -75,7 +87,7 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getTeams')
     ws.send('getClients')
     ws.send('getHelpRequests')
-    ws.send('getCues')
+    ws.send('getPlaybacks')
     ws.send('getMediaState')
   }
 
@@ -241,45 +253,46 @@ export const useAdmin = defineStore('admin', () => {
   }
   // #endregion
 
-  // #region Cue
-  const cues = ref<CueJson[]>([])
-  const cueIndex = ref<number>(0)
-  const recordIndex = ref<number>(0)
+  // #region Playbacks & Cues
+  const playbacks = ref<Playback[]>([])
+  const currentPlaybackIndex = ref<number>(-1)
+  const currentCueIndex = ref<number>(-1)
 
-  function startRecord () {
-    ws.send('startRecord')
+  const indexUpdateQueue = ref<{
+    playback: number
+    cue: number
+  }[]>([])
+
+  const delayedCurrentPlaybackIndex = ref<number>(-1)
+  const delayedCurrentCueIndex = ref<number>(-1)
+  let updatingIndex = false
+  function updatePlaybackIndex () {
+    updatingIndex = true
+    const next = indexUpdateQueue.value.shift()
+
+    if (!next) {
+      updatingIndex = false
+      return
+    }
+
+    console.log('Updating index', next)
+
+    delayedCurrentPlaybackIndex.value = next.playback
+    delayedCurrentCueIndex.value = next.cue
+
+    setTimeout(updatePlaybackIndex, 10)
   }
 
-  function stopRecord () {
-    ws.send('stopRecord')
+  function nextPlayback () {
+    ws.send('nextPlayback')
   }
 
-  function skipRecord () {
-    ws.send('skipRecord')
+  function nextCue (index?: number) {
+    ws.send('nextCue', { index })
   }
 
-  function skipCue () {
-    ws.send('skipCue')
-  }
-
-  function startCue (index: number) {
-    ws.send('startCue', { index })
-  }
-
-  function stopCue () {
-    ws.send('stopCue')
-  }
-
-  function addCue (cue: CueJson) {
-    ws.send('addCue', { cue })
-  }
-
-  function replaceCue (index: number, cue: CueJson) {
-    ws.send('replaceCue', { index, cue })
-  }
-
-  function removeCue (index: number) {
-    ws.send('removeCue', { index })
+  function setCurrentPlayback (index: number) {
+    ws.send('setCurrentPlayback', { index })
   }
   // #endregion
 
@@ -329,17 +342,14 @@ export const useAdmin = defineStore('admin', () => {
     setDuration,
     setTime,
 
-    cues,
-    cueIndex,
-    startRecord,
-    stopRecord,
-    skipRecord,
-    skipCue,
-    startCue,
-    stopCue,
-    addCue,
-    replaceCue,
-    removeCue,
+    playbacks,
+    currentPlaybackIndex,
+    currentCueIndex,
+    delayedCurrentPlaybackIndex,
+    delayedCurrentCueIndex,
+    nextPlayback,
+    nextCue,
+    setCurrentPlayback,
 
     media,
     playMedia,

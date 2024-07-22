@@ -38,6 +38,10 @@ export class Database {
 
   async saveCollections () {
     for (const [name, collection] of Object.entries(this.collections)) {
+      if (!collection) {
+        continue;
+      }
+
       await this.saveCollection(name, collection);
     }
   }

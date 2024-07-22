@@ -95,3 +95,9 @@ body:not(.admin) {
     transition: none;
   }
 }
+
+@media screen and (max-width: 768px) {
+  html.admin {
+    font-size: 12px !important;
+  }
+}
