@@ -18,15 +18,15 @@ export class BoardClient extends WebSocketClient {
     ws.on('message', handleActions([
       ...genericActions(this),
       {
-        action: 'getMedia',
+        action: 'boardSkip',
         handler: () => {
-          game.sendCurrentMediaToBoardAndAdmins(this);
+          game.boardSkip();
         }
       },
       {
-        action: 'mediaFinished',
+        action: 'getMedia',
         handler: () => {
-          game.mediaFinished();
+          game.sendCurrentMediaToBoardAndAdmins(this);
         }
       },
       {

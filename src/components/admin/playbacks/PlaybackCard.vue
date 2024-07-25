@@ -40,7 +40,11 @@
         class="mr-2"
         size="small"
       >
-        {{ admin.currentCueIndex + 1 }} / {{ playback.cues.length }}
+        <template v-if="admin.currentPlaybackIndex === index">
+          {{ admin.currentCueIndex + 1 }}
+        </template>
+        <template v-else>0</template>
+        / {{ playback.cues.length }}
       </VChip>
       <VBtn
         icon

@@ -74,3 +74,18 @@ const port = process.env.PORT || 3000;
     });
   }
 })();
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+
+  Database.get().createBackup('uncaughtException', true);
+})
+
+process.on('SIGINT', async () => {
+  console.log('Caught interrupt signal. Saving collections and creating backup.');
+
+  await Database.get().saveCollections();
+  await Database.get().createBackup('SIGINT', true);
+
+  process.exit();
+});

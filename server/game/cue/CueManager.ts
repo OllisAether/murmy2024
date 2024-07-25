@@ -3,22 +3,63 @@ import { Cue } from "../../../shared/cue/Cue";
 import { CueHandle } from "./CueHandle";
 import { FieldReference } from "../../../shared/cue/FieldRefrence";
 import { Idle } from "../../../shared/playback/idle";
+import { Vote } from "../../../shared/playback/vote";
 import { Playback } from "../../../shared/playback/Playback";
 import { getHandle } from "./registeredCueTypes";
 import { Game } from "../game";
+import { Database } from "../../database";
 
 export class CueManager {
   currentPlayback: Playback | null = null
   currentPlaybackIndex: number = -1
 
   currentCue: Cue | null = null
+  currentCueMeta: JsonMap = {}
   currentCueIndex: number = -1
   currentCueHandle: CueHandle | null = null
 
   private playbacks: Playback[] = [
     Idle(),
-    Idle(10000)
+    Idle(10000),
+    Vote()
   ]
+
+  public save () {
+    Database.get().saveCollection('playbacks', {
+      playbacks: this.playbacks as Playback[] ?? [],
+      currentPlaybackIndex: this.currentPlaybackIndex ?? -1,
+
+      currentCueIndex: this.currentCueIndex ?? -1,
+      currentCueMeta: this.currentCueMeta ?? {}
+    })
+  }
+
+  public load () {
+    const data = Database.get().getCollection('playbacks')
+
+    if (data === null) {
+      console.error('[CueManager] No data found')
+      return
+    }
+
+    this.playbacks = data?.playbacks as Playback[] ?? this.playbacks
+    this.currentPlaybackIndex = (data?.currentPlaybackIndex as number) ?? -1
+    this.currentCueIndex = (data?.currentCueIndex as number) ?? -1
+    this.currentCueMeta = data?.currentCueMeta as JsonMap ?? {}
+
+    console.log(`[CueManager] Load playbacks & cue`, data)
+
+    if (this.currentPlaybackIndex >= 0) {
+      console.log(`[CueManager] Init playback ${this.currentPlaybackIndex}`)
+      this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
+
+      if (this.currentCueIndex >= 0) {
+        this.nextCue(this.currentCueIndex, this.currentCueMeta)
+      }
+    }
+
+    Game.get().sendCurrentPlaybackToAdmins()
+  }
 
   public getPlaybacks(): Playback[] {
     return this.playbacks
@@ -56,6 +97,7 @@ export class CueManager {
     this.currentCueIndex = -1
 
     Game.get().sendCurrentPlaybackToAdmins()
+    this.save()
   }
 
   /**
@@ -79,6 +121,9 @@ export class CueManager {
       this.currentCueIndex = -1
 
       Game.get().sendCurrentPlaybackToAdmins()
+      this.save()
+
+      Database.get().createBackup('End of playbacks')
       return
     }
 
@@ -92,7 +137,10 @@ export class CueManager {
     } else {
       this.manualTriggerOverride = false
       Game.get().sendCurrentPlaybackToAdmins()
+      this.save()
     }
+
+    Database.get().createBackup(`Next playback ${this.currentPlaybackIndex} ${this.currentPlayback?.name}`)
   }
 
   public deinitCurrentCue(): void {
@@ -101,6 +149,7 @@ export class CueManager {
       this.currentCueHandle?.stop()
       this.currentCue = null
       this.currentCueHandle = null
+      this.currentCueMeta = {}
     }
   }
 
@@ -134,6 +183,7 @@ export class CueManager {
     }
 
     this.currentCue = this.currentPlayback.cues[this.currentCueIndex]
+    this.currentCueMeta = meta ?? {}
 
     // Init next cue
     this.currentCueHandle = getHandle(this.currentCue.type)
@@ -143,25 +193,31 @@ export class CueManager {
       return
     }
 
+    console.log(`[CueManager] Init cue ${this.currentCueIndex} of playback ${this.currentPlaybackIndex}`)
+
     const index = this.currentCueIndex
     const playback = this.currentPlayback
     const options = this.currentCue.options ?? {}
 
     Game.get().sendCurrentPlaybackToAdmins()
+    this.save()
 
     this.currentCueHandle.start(this.nextCue.bind(this), {
       index,
       playback,
       getFieldValue: (ref) => this.getFieldValue(ref, playback),
       options,
-      meta: meta ?? {}
+      meta: this.currentCueMeta
     })
   }
 
   globalVariables: Record<string, () => JsonContent> = {
     'vote': () => {
+      const game = Game.get()
+      const voteManager = game.voteManager
+
       return {
-        vote: 'yes'
+        results: voteManager.getResults(),
       }
     }
   }
@@ -179,6 +235,8 @@ export class CueManager {
       ?? this.globalVariables[variable]?.()
       ?? null
 
+      console.log(`[CueManager] Get field value for ${ref}`)
+
     if (value === null) {
       console.error(`[CueManager] No variable found for ${variable}`)
       return null
@@ -191,7 +249,7 @@ export class CueManager {
       }
 
       if (typeof value !== 'object') {
-        console.error(`[CueManager] Field reference ${ref} is not an object or array`)
+        console.error(`[CueManager] Field reference ${key} is not an object or array`, value)
         return null
       }
 
@@ -199,7 +257,7 @@ export class CueManager {
         const index = parseInt(key, 10)
 
         if (isNaN(index)) {
-          console.error(`[CueManager] Field reference ${ref} is not an array index`)
+          console.error(`[CueManager] Field reference ${index} is not an array index`)
           return null
         }
 

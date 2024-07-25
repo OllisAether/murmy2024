@@ -468,6 +468,47 @@ export class AdminClient extends WebSocketClient {
       },
       // #endregion
 
+      // #region Vote
+      {
+        action: 'addVoteOption',
+        handler: (payload) => {
+          console.log('Adding vote option', payload);
+
+          const title = payload.title;
+          const image = payload.image;
+          const description = payload.description;
+          const unlockClues = payload.unlockClues;
+          const addToPool = payload.addToPool;
+          const media = payload.media;
+
+          if (typeof title !== 'string') {
+            console.error('Invalid payload', payload);
+
+            this.send('addVoteOption:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.voteManager.addOptions([{
+            id: idGen(),
+            title,
+            image,
+            description,
+            unlockClues,
+            addToPool,
+            media
+          }]);
+
+          this.send('addVoteOption:response', {
+            success: true,
+          });
+        }
+      },
+      // #endregion
+
       // #region Media
       {
         action: 'playMedia',

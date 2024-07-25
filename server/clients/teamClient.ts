@@ -39,9 +39,9 @@ export class TeamClient extends WebSocketClient {
       {
         action: 'vote',
         handler: (payload) => {
-          const vote = payload.vote;
+          const vote = payload.option;
 
-          if (typeof vote !== 'number') {
+          if (typeof vote !== 'string') {
             console.log('Invalid vote', vote)
             this.send('vote:response', {
               success: false,
@@ -50,7 +50,7 @@ export class TeamClient extends WebSocketClient {
             return
           }
 
-          const success = game.addVote(this.teamId, vote)
+          const success = game.voteManager.vote(this.teamId, vote)
 
           if (!success) {
             this.send('vote:response', {
@@ -63,18 +63,6 @@ export class TeamClient extends WebSocketClient {
             vote: vote,
             success: true
           })
-        }
-      },
-      {
-        action: 'getVoted',
-        handler: () => {
-          const voted = game.getVoted(this.teamId)
-
-          if (voted !== null) {
-            this.send('getVoted:response', voted)
-          } else {
-            this.send('getVoted:response', null)
-          }
         }
       }
     ]));

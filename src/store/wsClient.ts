@@ -15,7 +15,6 @@ export const useWsClient = defineStore('wsClient', () => {
 
     status.value = 'connecting'
 
-    
     ws.value = new WebSocket(`${secure ? 'wss' : 'ws'}://${window.location.host}/api/ws`)
 
     ws.value.addEventListener('open', () => {

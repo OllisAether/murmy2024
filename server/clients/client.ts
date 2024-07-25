@@ -1,5 +1,4 @@
 import WebSocket from 'ws';
-import { AdminClient } from './adminClient';
 import { Role } from '../../shared/roles';
 import { GenericClient } from './genericClient';
 import { Game } from '../game/game';
@@ -60,9 +59,21 @@ export function genericActions (client: WebSocketClient): {
       }
     },
     {
-      action: 'getVote',
+      action: 'getVoteSession',
       handler: () => {
-        game.sendVoteToClients(client);
+        game.sendVoteSessionToClients(client);
+      }
+    },
+    {
+      action: 'getVotePools',
+      handler: () => {
+        game.sendVotePoolsToClients(client);
+      }
+    },
+    {
+      action: 'getVoteOptions',
+      handler: () => {
+        game.sendVoteOptionsToClients(client);
       }
     }
   ]
@@ -72,7 +83,7 @@ export function handleActions (actions: {
   action: string,
   handler: (payload: any) => void
 }[]) {
-  return (message) => {
+  return (message: any) => {
     const { action, payload } = JSON.parse(message.toString());
     
     const actionHandler = actions.find((a) => a.action === action);
