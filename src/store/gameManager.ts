@@ -14,6 +14,7 @@ import { Phase } from "../../shared/phase";
 import { File } from "@/model/files/file";
 import { Chat } from "@/model/chat/chat";
 import { emailAccounts, emails } from "@/assets/emails";
+import { VoteOption, VoteSession } from "../../shared/vote";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -75,8 +76,16 @@ export const useGameManager = defineStore('gameManager', () => {
     })
 
     await new Promise<void>(resolve => {
-      ws.once('vote').then(resolve)
-      ws.send('getVote')
+      ws.once('voteSession').then(resolve)
+      ws.send('getVoteSession')
+    })
+    await new Promise<void>(resolve => {
+      ws.once('votePools').then(resolve)
+      ws.send('getVotePools')
+    })
+    await new Promise<void>(resolve => {
+      ws.once('voteOptions').then(resolve)
+      ws.send('getVoteOptions')
     })
 
     loading.value = false
@@ -182,6 +191,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
         if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
           assetsProgress.value.loaded = true
+          console.log('%c[GameManager]', 'color: #4CAF50', 'All assets loaded')
           resolve()
         }
       }
@@ -204,16 +214,16 @@ export const useGameManager = defineStore('gameManager', () => {
             const objectURL = URL.createObjectURL(blob)
 
             asset.content = objectURL
-            console.log('Loaded asset', asset.url, objectURL)
+            console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
             finishAsset()
           } else {
-            console.error('Failed to load asset', asset.url)
+            console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
             finishAsset()
           }
         }
 
         xhr.onerror = function () {
-          console.error('Failed to load asset', asset.url)
+          console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
 
           finishAsset()
         }
@@ -375,13 +385,6 @@ export const useGameManager = defineStore('gameManager', () => {
   }) => {
     phase.value.meta = data.meta ?? {}
     phase.value.type = data.type ?? Phase.Idle
-  })
-
-  watch(phase, async (value) => {
-    switch (value.type) {
-      case Phase.Vote:
-        voted.value = await ws.request('getVoted') ?? null
-    }
   })
   // #endregion
 
@@ -581,30 +584,91 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Vote
   const vote = ref<{
-    voteOptions: string[]
-    votes: number[]
-    winners: string[]
-  }>()
+    pools: Record<string, string[]>,
+    session: VoteSession | null
+  }>({
+    pools: {},
+    session: null
+  })
+  const voteOptions = ref<VoteOption[]>([])
 
-  const voted = ref<number | null>(null)
-
-  ws.onAction('vote', (data) => {
-    vote.value = data
+  ws.onAction('votePools', (data: Record<string, string[]>) => {
+    vote.value.pools = data
   })
 
-  async function addVote (vote: number) {
-    const res = await ws.request('vote', { vote })
+  ws.onAction('voteSession', (data: VoteSession) => {
+    vote.value.session = data ?? null
+  })
 
-    if (!res.success) {
-      console.error('Failed to vote', res.message)
-      return {
-        success: false,
-        message: res.message as string
+  ws.onAction('voteOptions', (data: VoteOption[]) => {
+    voteOptions.value = data
+  })
+
+  const voted = computed(() => {
+    if (!vote.value.session) return false
+
+    const id = useAuthManager().team?.id ?? ''
+
+    if (vote.value.session.isTiebreaker) {
+      if (!vote.value.session.tiebreakerVotes) {
+        return false
       }
+
+      return Object.keys(vote.value.session.tiebreakerVotes)
+        .find(option => vote.value.session!.tiebreakerVotes![option].includes(id)) ?? false
     }
 
-    voted.value = vote
-    return { success: true }
+    if (vote.value.session.isRandom) {
+      return false
+    }
+
+    return Object.keys(vote.value.session.votes)
+      .find(option => vote.value.session!.votes[option].includes(id)) ?? false
+  })
+
+  const pool = computed(() => {
+    const pools = vote.value.pools
+    const session = vote.value.session satisfies VoteSession | null
+
+    if (!session) {
+      return []
+    }
+
+    if (session.isTiebreaker) {
+      return session.tiebreakerCandidates ?? []
+    }
+
+    return pools[session.pool]
+  })
+
+  const candidates = computed(() => {
+    return pool.value?.map((candidate) => {
+      const option = voteOptions.value
+        .find((option) => option.id === candidate)
+      
+      if (!option) {
+        return null
+      }
+
+      const votes = vote.value.session?.isTiebreaker
+        ? vote.value.session.tiebreakerVotes?.[candidate] ?? []
+        : vote.value.session?.votes[candidate] ?? []
+
+      return {
+        ...option,
+        votes
+      }
+    }).filter((candidate) => !!candidate)
+  })
+
+  function addVote (option: string) {
+    ws.send('vote', { option })
+  }
+  // #endregion
+
+  // #region Board Skip
+  function triggerBoardSkip () {
+    ws.send('boardSkip')
   }
   // #endregion
 
@@ -675,14 +739,20 @@ export const useGameManager = defineStore('gameManager', () => {
     timer: readonly(timer),
     timeSync: readonly(timeSync),
     phase: readonly(phase),
+
+    triggerBoardSkip,
+
     currentMedia: readonly(currentMedia),
     mediaFinished,
     mediaProgress,
     mediaDuration,
     mediaState,
 
-    vote: readonly(vote),
-    voted: readonly(voted),
+    vote,
+    voteOptions,
+    voted,
+    pool,
+    candidates,
     addVote
   }
 })

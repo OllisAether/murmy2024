@@ -2,6 +2,7 @@ import { FieldReference } from "../cue/FieldRefrence";
 import { Playback } from "./Playback";
 import { condition } from "../cue/Condition";
 import { cueType } from "../cue/CueTypes";
+import { Phase } from "../phase";
 
 export const Idle = (duration?: number): Playback => ({
   name: 'Idle',
@@ -10,7 +11,7 @@ export const Idle = (duration?: number): Playback => ({
     {
       type: cueType.SetPhase,
       options: {
-        phase: 'idle'
+        phase: Phase.Idle
       }
     },
     {

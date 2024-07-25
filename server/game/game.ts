@@ -10,6 +10,7 @@ import { Timer } from "../timer"
 import { Phase } from "../../shared/phase"
 import { JsonArray, JsonMap } from "../../shared/json"
 import { CueManager } from "./cue/CueManager"
+import { VoteManager } from "./vote/voteManager"
 
 export class Game {
   private adminPassword: string
@@ -37,8 +38,10 @@ export class Game {
     this.loadTimer()
     this.loadPhase()
     // this.loadCues()
-    this.loadVote()
+    // this.loadVote()
     this.loadMedia()
+    this.voteManager.load()
+    this.cueManager.load()
   }
 
   // #region Teams
@@ -56,17 +59,25 @@ export class Game {
 
   loadTeams() {
     const teams = (Database.get().getCollection('teams')?.teams as JsonArray)?.map?.((t) => ({
-      id: (t as JsonMap)?.id as string,
-      name: (t as JsonMap)?.name as string,
-      code: (t as JsonMap)?.code as string,
-      meta: (t as JsonMap)?.meta as JsonMap
+      id: (t as JsonMap)?.id as string | undefined,
+      name: (t as JsonMap)?.name as string | undefined,
+      code: (t as JsonMap)?.code as string | undefined,
+      active: ((t as JsonMap)?.active ?? true) as boolean,
+      meta: ((t as JsonMap)?.meta ?? {}) as JsonMap
     }))
 
     if (!teams) {
       return
     }
 
-    this.teams = teams.map((t) => new Team(t.id, t.name, t.code, t.meta))
+    this.teams = teams.map((t) => {
+      if (!t.id || !t.name || !t.code) {
+        console.error('Invalid team data', t)
+        return null
+      }
+
+      return new Team(t.id, t.name, t.code, t.active, t.meta)
+    }).filter((t) => t) as Team[]
   }
 
   addTeam(team: Team) {
@@ -577,182 +588,75 @@ export class Game {
   // #endregion
 
   // #region Vote
-  private vote: {
-    optionsPool: VoteOptions,
-    voteOptions: VoteOptions
-    votes: string[][],
-    winners: string[],
-    lastWinners: string[],
-    collecting: boolean
-  } = {
-    optionsPool: [],
-    voteOptions: [],
-    votes: [],
-    winners: [],
-    lastWinners: [],
-    collecting: false
-  }
+  voteManager: VoteManager = new VoteManager()
 
-  sendVoteToClients (client?: WebSocketClient) {
-    console.log('Sending vote to clients')
+  sendVotePoolsToClients(client?: WebSocketClient) {
+    console.log('Sending vote pools to clients')
 
-    const vote = {
-      voteOptions: this.vote.voteOptions.map((v) => v.media),
-      votes: this.vote.votes.map((v) => v.length),
-      winners: this.vote.winners
-    }
-
+    const pools = this.voteManager.getPools()
     if (client) {
-      client.send('vote', vote)
+      client.send('votePools', pools)
       return
     }
 
     this.clients
       .filter((c) => c.type !== Role.Unauthorized)
-      .forEach((c) => c.send('vote', vote))
+      .forEach((c) => c.send('votePools', pools))
   }
 
-  saveVote () {
-    Database.get().saveCollection('vote', {
-      vote: this.vote
+  sendVoteSessionToClients(client?: WebSocketClient) {
+    console.log('Sending vote session to clients')
+
+    const session = this.voteManager.getActiveSession()
+
+    if (client) {
+      client.send('voteSession', session)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type !== Role.Unauthorized)
+      .forEach((c) => c.send('voteSession', session))
+  }
+
+  sendVoteOptionsToClients(client?: WebSocketClient) {
+    console.log('Sending vote options to clients')
+
+    const options = this.voteManager.getVoteOptions()
+
+    if (client) {
+      client.send('voteOptions', options)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type !== Role.Unauthorized)
+      .forEach((c) => c.send('voteOptions', options))
+  }
+  // #endregion
+
+  // #region Board Skip
+  boardSkipListeners: (() => void)[] = []
+  boardSkip () {
+    this.boardSkipListeners.forEach((l) => l())
+  }
+
+  onBoardSkip (listener: () => void) {
+    this.boardSkipListeners.push(listener)
+
+    return () => {
+      this.offBoardSkip(listener)
+    }
+  }
+  offBoardSkip (listener: () => void) {
+    this.boardSkipListeners = this.boardSkipListeners.filter((l) => l !== listener)
+  }
+  onceBoardSkip (listener: () => void) {
+    const off = this.onBoardSkip(() => {
+      off()
+      listener()
     })
-  }
-
-  loadVote () {
-    const vote = Database.get().getCollection('vote') as Partial<{
-      vote: {
-        optionsPool: VoteOptions,
-        voteOptions: VoteOptions,
-        votes: string[][],
-        winners: string[],
-        lastWinners: string[],
-        collecting: boolean
-      }
-    }>
-
-    if (!vote) {
-      return
-    }
-
-    this.vote = {
-      optionsPool: vote.vote?.optionsPool ?? [],
-      voteOptions: vote.vote?.voteOptions ?? [],
-      votes: vote.vote?.votes ?? [],
-      winners: vote.vote?.winners ?? [],
-      lastWinners: vote.vote?.lastWinners ?? [],
-      collecting: vote.vote?.collecting ?? false
-    }
-
-    if (this.vote.voteOptions.length !== this.vote.votes.length) {
-      console.log('[Vote] Fixing votes length')
-      this.vote.votes = Array(this.vote.voteOptions.length).fill([]).map((v, i) => this.vote.votes[i] ?? v)
-    }
-  }
-
-  startVote (voteOptions: VoteOptions, fromPool = false, preserveWinners = false) {
-    console.log('[Vote] Starting vote')
-
-    const pool = [
-      ...(this.vote?.voteOptions ?? []),
-      ...voteOptions
-    ].filter((v, i, a) => a.findIndex((x) => x.media === v.media) === i)
-
-    this.vote = {
-      optionsPool: pool,
-      voteOptions: fromPool ? pool : voteOptions,
-      votes: Array(voteOptions.length).fill([]),
-      winners: [],
-      lastWinners: preserveWinners ? this.vote.winners : [],
-      collecting: true
-    }
-
-    this.sendVoteToClients()
-    this.saveVote()
-  }
-
-  endVote () {
-    if (!this.vote.collecting) {
-      console.log('[Vote] Failed to end vote. Vote already ended')
-      return
-    }
-
-    this.vote.collecting = false
-    const maxVotes = Math.max(...this.vote.votes.map((v) => v.length))
-
-    this.vote.winners = this.vote.votes
-      .map((v, i) => ({ media: this.vote.voteOptions[i].media, votes: v.length }))
-      .filter((v) => v.votes === maxVotes)
-      .map((v) => v.media)
-
-    this.sendVoteToClients()
-    this.saveVote()
-  }
-
-  setRandomWinner () {
-    if (this.vote.collecting) {
-      console.log('[Vote] Failed to set random winner. Vote still collecting')
-      return
-    }
-
-    if (this.vote.winners.length === 0) {
-      console.log('[Vote] Failed to set random winner. No winners')
-      return
-    }
-
-    if (this.vote.winners.length === 1) {
-      console.log('[Vote] Failed to set random winner. Only one winner')
-      return
-    }
-
-    console.log('[Vote] Setting random winner')
-
-    const winner = this.vote.winners[Math.floor(Math.random() * this.vote.winners.length)]
-
-    this.vote.winners = [winner]
-
-    this.sendVoteToClients()
-    this.saveVote()
-  }
-
-  getVoteResults () {
-    return this.vote.winners
-  }
-
-  addVote (teamId: string, vote: number) {
-    if (!this.vote.collecting) {
-      console.log('[Vote] Failed to add vote. Vote not collecting')
-      return false
-    }
-
-    if (vote < 0 || vote >= this.vote.voteOptions.length) {
-      console.log('[Vote] Failed to add vote. Invalid vote', vote)
-      return false
-    }
-
-    if (this.vote.votes[vote]?.includes(teamId)) {
-      console.log('[Vote] Failed to add vote. Team already voted', teamId)
-      return false
-    }
-
-    if (!this.vote.votes[vote]) {
-      this.vote.votes[vote] = []
-    }
-
-    this.vote.votes[vote].push(teamId)
-    
-    if (this.teams.length === this.vote.votes.reduce((a, v) => a + v.length, 0)) {
-      this.endVote()
-      return true
-    }
-
-    this.sendVoteToClients()
-    this.saveVote()
-    return true
-  }
-
-  getVoted (teamId: string) {
-    const index = this.vote.votes.findIndex((v) => v.includes(teamId))
-    return index === -1 ? null : index
+    return off
   }
   // #endregion
 

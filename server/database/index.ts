@@ -1,8 +1,8 @@
-import { accessSync, mkdirSync, writeFileSync } from "fs";
-import { readFile, readdir } from "fs/promises";
 import path from "path";
 import storage from "node-persist";
 import { JsonMap } from "../../shared/json";
+import fs from "fs/promises";
+import moment from "moment";
 
 export class Database {
   collections: Record<string, JsonMap> = {};
@@ -42,12 +42,38 @@ export class Database {
         continue;
       }
 
-      await this.saveCollection(name, collection);
+      await this.saveCollection(name, collection, false);
     }
   }
 
-  async saveCollection (name: string, collection: JsonMap) {
+  async saveCollection (name: string, collection: JsonMap, writeChanges = true) {
+    // console.log('[Database] Saving collection', name);
+    if (writeChanges) {
+      this.collections[name] = collection;
+    }
+
     await storage.setItem(name, collection);
+  }
+
+  lastBackup: number = 0;
+  backupInterval: number = 1000 * 60; // 1 minute
+  async createBackup (reason: string, force = false) {
+    if (!force && Date.now() - this.lastBackup < this.backupInterval) {
+      return;
+    }
+
+    console.log('[Database] Creating backup for', reason);
+
+    const backupDir = path.resolve(this.directory, '../backup');
+
+    const backupDirFiles = path.resolve(backupDir, moment().format('HH-mm-ss_DD-MM-YYYY') + `_${reason.replace(/[^a-zA-Z0-9]/gi, '_')}`);
+    await fs.mkdir(backupDirFiles, { recursive: true });
+
+    for (const file of await fs.readdir(this.directory)) {
+      await fs.copyFile(path.resolve(this.directory, file), path.resolve(backupDirFiles, file));
+    }
+
+    this.lastBackup = Date.now();
   }
 
   // #region Singleton

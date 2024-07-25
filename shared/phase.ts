@@ -4,7 +4,6 @@ export enum Phase {
   Work = 'work',
   Media = 'media',
   Vote = 'vote',
-  VoteResult = 'voteResult',
   Quiz = 'quiz',
   Tutorial = 'tutorial',
 }
@@ -15,7 +14,6 @@ export const phaseNameMap = {
   [Phase.Work]: 'Arbeitsphase',
   [Phase.Media]: 'Medienphase',
   [Phase.Vote]: 'Abstimmung',
-  [Phase.VoteResult]: 'Abstimmungsergebnis',
   [Phase.Quiz]: 'Quiz',
   [Phase.Tutorial]: 'Tutorial',
 }

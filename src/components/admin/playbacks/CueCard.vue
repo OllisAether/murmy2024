@@ -1,66 +1,72 @@
 <template>
-  <VCard
-    :class="['ml-' + depth * 8,{
-      'mt-1': index !== 0,
-    }]"
-    flat
-  >
-    <VToolbar
-      :color="active ? 'primary' : 'transparent'"
-      :class="{
-        'toolbar-transition': !active
-      }"
-      density="compact"
-      @click="detailsShown = !detailsShown"
+  <div class="d-flex justify-stretch">
+    <VDivider
+      v-for="_ in depth"
+      class="mx-4"
+      vertical
+      color="grey-darken-4"
+      opacity="1"
+      thickness="2"
+    />
+    <VCard
+      :class="['flex-grow-1', {
+        'mt-1': index !== 0,
+      }]"
+      flat
     >
-      <VToolbarTitle class="text-body-1">
-        <VIcon class="mr-2">
-          {{ cueIconMap[cue.type] ?? 'mdi-help' }}
+      <VToolbar
+        :color="active ? 'primary' : 'transparent'"
+        :class="{
+          'toolbar-transition': !active
+        }"
+        density="compact"
+        @click="detailsShown = !detailsShown"
+      >
+        <VToolbarTitle class="text-body-1">
+          <VIcon class="mr-2">
+            {{ cueIconMap[cue.type] ?? 'mdi-help' }}
+          </VIcon>
+          {{ cue.type }}
+          <template v-if="cue.type === cueType.SetPhase">
+            to
+            <VChip size="small">
+              {{ cue.options?.phase ?? 'No Phase' }}
+            </VChip>
+          </template>
+          <template v-if="cue.type === cueType.StartTimer">
+            with
+            <VChip size="small">
+              {{ cue.options?.duration ?? 'No Duration' }}
+            </VChip>
+          </template>
+          <template v-if="([
+            cueType.If,
+            cueType.ElseIf,
+          ] as CueTypes[]).includes(cue.type)">
+            <span class="ml-2">
+              {{ (cue.options?.condition && conditionToString(cue.options.condition)) ?? 'No Condition' }}
+            </span>
+          </template>
+        </VToolbarTitle>
+        <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type]).length">
+          {{ detailsShown ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
         </VIcon>
-        {{ cue.type }}
-
-        <template v-if="cue.type === cueType.SetPhase">
-          to
-          <VChip size="small">
-            {{ cue.options?.phase ?? 'No Phase' }}
-          </VChip>
-        </template>
-
-        <template v-if="cue.type === cueType.StartTimer">
-          with
-          <VChip size="small">
-            {{ cue.options?.duration ?? 'No Duration' }}
-          </VChip>
-        </template>
-
-        <template v-if="([
-          cueType.If,
-          cueType.ElseIf,
-        ] as CueTypes[]).includes(cue.type)">
-          <span class="ml-2">
-            {{ (cue.options?.condition && conditionToString(cue.options.condition)) ?? 'No Condition' }}
-          </span>
-        </template>
-      </VToolbarTitle>
-      <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type]).length">
-        {{ detailsShown ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
-      </VIcon>
-    </VToolbar>
-
-    <VExpandTransition>
-      <div v-if="cue.options && detailsShown">
-        <VCardText>
-          <VChip
-            v-for="(value, key) in cue.options"
-            :key="key"
-            class="mr-2"
-          >
-            {{ key }}: {{ value }}
-          </VChip>
-        </VCardText>
-      </div>
-    </VExpandTransition>
-  </VCard>
+      </VToolbar>
+      <VExpandTransition>
+        <div v-if="cue.options && detailsShown">
+          <VCardText>
+            <VChip
+              v-for="(value, key) in cue.options"
+              :key="key"
+              class="mr-2"
+            >
+              {{ key }}: {{ value }}
+            </VChip>
+          </VCardText>
+        </div>
+      </VExpandTransition>
+    </VCard>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -71,6 +77,7 @@ import { Playback } from '../../../../shared/playback/Playback';
 import { Cue } from '../../../../shared/cue/Cue';
 import { computed, ref } from 'vue';
 import { cueSettingsMap } from '@/../shared/cue/cueSettings';
+import { VDivider } from 'vuetify/components';
 
 const props = defineProps<{
   playback: Playback

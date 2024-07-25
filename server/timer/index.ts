@@ -1,5 +1,5 @@
 export class Timer {
-  private startTime: number | null
+  private startTime: number | null = null
   private currentTime: number = 0
   private duration: number = 60 * 1000
   private state: 'stopped' | 'running' | 'paused' = 'stopped'
@@ -31,7 +31,7 @@ export class Timer {
   }
 
   private INTERVAL_TIME = 500
-  private interval: NodeJS.Timeout
+  private interval: NodeJS.Timeout | null = null
   private startInterval() {
     if (this.interval) {
       clearInterval(this.interval)
@@ -49,7 +49,9 @@ export class Timer {
     }, this.INTERVAL_TIME)
   }
   private stopInterval() {
-    clearInterval(this.interval)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 
   setDuration(duration: number) {

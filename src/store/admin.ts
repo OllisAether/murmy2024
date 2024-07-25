@@ -88,6 +88,7 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getClients')
     ws.send('getHelpRequests')
     ws.send('getPlaybacks')
+    ws.send('getCurrentPlayback')
     ws.send('getMediaState')
   }
 
@@ -280,7 +281,7 @@ export const useAdmin = defineStore('admin', () => {
     delayedCurrentPlaybackIndex.value = next.playback
     delayedCurrentCueIndex.value = next.cue
 
-    setTimeout(updatePlaybackIndex, 10)
+    requestAnimationFrame(updatePlaybackIndex)
   }
 
   function nextPlayback () {

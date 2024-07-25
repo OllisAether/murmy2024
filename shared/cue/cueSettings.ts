@@ -35,5 +35,39 @@ export const cueSettingsMap: Record<CueTypes, {
   },
   [cueType.Else]: {},
   [cueType.EndIf]: {},
-  [cueType.Break]: {}
+  [cueType.Break]: {},
+  [cueType.AddVoteOptions]: {
+    pool: {
+      type: 'string',
+      default: null
+    },
+    options: {
+      type: 'condition',
+      default: null
+    }
+  },
+  [cueType.ClearVotePool]: {
+    pool: {
+      type: 'string',
+      default: null
+    }
+  },
+  [cueType.OpenVote]: {
+    pool: {
+      type: 'string',
+      default: null
+    },
+    pauseOnOpen: {
+      type: 'boolean',
+      default: false
+    }
+  },
+  [cueType.CloseVote]: {},
+  [cueType.StartTiebreaker]: {},
+  [cueType.SetRandomWinner]: {},
+  [cueType.EndVote]: {},
+  [cueType.PauseVote]: {},
+  [cueType.ResumeVote]: {},
+  [cueType.WaitForVote]: {},
+  [cueType.WaitForBoardSkip]: {},
 }

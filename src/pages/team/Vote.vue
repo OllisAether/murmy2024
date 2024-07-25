@@ -1,17 +1,18 @@
 <template>
   <div>
     <VContainer>
-      <VList nav bg-color="transparent">
+      {{ game.voted }}
+      <VList>
         <VListItem
-          v-for="(option, i) in game.vote?.voteOptions ?? []"
-          :key="i"
-          @click="vote(i)"
+          v-for="candidate in game.candidates"
+          :key="candidate.id"
+          @click="vote(candidate.id)"
           color="primary"
-          :active="game.voted === i"
-          :disabled="game.voted !== null"
+          :active="game.voted === candidate.id"
+          :disabled="game.voted !== false"
         >
           <VListItemTitle>
-            {{ mediaMap[option]?.displayName ?? option }}
+            {{ candidate }}
           </VListItemTitle>
         </VListItem>
       </VList>
@@ -20,13 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { mediaMap } from '@/assets/media';
 import { useGameManager } from '@/store/gameManager';
 
 const game = useGameManager()
 
-function vote (index: number) {
-  if (game.voted !== null) return
-  game.addVote(index)
+function vote (option: string) {
+  game.addVote(option)
 }
 </script>

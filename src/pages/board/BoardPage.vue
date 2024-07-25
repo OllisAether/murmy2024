@@ -12,7 +12,7 @@
 
     <template v-else>
       <MediaScreen v-if="game.phase.type === Phase.Media" />
-      <VoteScreen v-else-if="game.phase.type === Phase.Vote || game.phase.type === Phase.VoteResult" />
+      <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
       <TitleScreen v-else />
     </template>
   </template>
