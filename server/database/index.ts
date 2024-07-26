@@ -55,10 +55,15 @@ export class Database {
     await storage.setItem(name, collection);
   }
 
+  createBackups: boolean = true;
   lastBackup: number = 0;
   backupInterval: number = 1000 * 60; // 1 minute
   async createBackup (reason: string, force = false) {
     if (!force && Date.now() - this.lastBackup < this.backupInterval) {
+      return;
+    }
+
+    if (!this.createBackups) {
       return;
     }
 
@@ -78,10 +83,12 @@ export class Database {
 
   // #region Singleton
   private static instance: Database;
-  public static get() {
+  public static get(createBackups = true) {
     if (!Database.instance) {
       Database.instance = new Database(path.resolve(__dirname, '../saved'));
     }
+
+    Database.instance.createBackups = createBackups;
 
     return Database.instance;
   }

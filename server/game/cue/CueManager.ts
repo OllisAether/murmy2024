@@ -4,6 +4,7 @@ import { CueHandle } from "./CueHandle";
 import { FieldReference } from "../../../shared/cue/FieldRefrence";
 import { Idle } from "../../../shared/playback/idle";
 import { Vote } from "../../../shared/playback/vote";
+import { Work } from "../../../shared/playback/work";
 import { Playback } from "../../../shared/playback/Playback";
 import { getHandle } from "./registeredCueTypes";
 import { Game } from "../game";
@@ -21,12 +22,13 @@ export class CueManager {
   private playbacks: Playback[] = [
     Idle(),
     Idle(10000),
-    Vote()
+    Vote(),
+    Work(),
   ]
 
   public save () {
     Database.get().saveCollection('playbacks', {
-      playbacks: this.playbacks as Playback[] ?? [],
+      playbacks: this.playbacks ?? [],
       currentPlaybackIndex: this.currentPlaybackIndex ?? -1,
 
       currentCueIndex: this.currentCueIndex ?? -1,
@@ -37,15 +39,34 @@ export class CueManager {
   public load () {
     const data = Database.get().getCollection('playbacks')
 
-    if (data === null) {
+    if (!data) {
       console.error('[CueManager] No data found')
       return
     }
 
-    this.playbacks = data?.playbacks as Playback[] ?? this.playbacks
-    this.currentPlaybackIndex = (data?.currentPlaybackIndex as number) ?? -1
-    this.currentCueIndex = (data?.currentCueIndex as number) ?? -1
-    this.currentCueMeta = data?.currentCueMeta as JsonMap ?? {}
+    if (!Array.isArray(data.playbacks) || 
+      data.playbacks.some((p) =>
+          p === null ||
+          typeof p !== 'object' ||
+          Array.isArray(p) ||
+          !p.name ||
+          !p.trigger ||
+          !Array.isArray(p.cues) ||
+          p.cues.some((c) =>
+            c === null ||
+            typeof c !== 'object' ||
+            Array.isArray(c) ||
+            !c.type
+          ) ||
+          !p.fields)) {
+      console.error('[CueManager] No playbacks found')
+      return
+    }
+
+    // this.playbacks = data.playbacks as Playback[] ?? this.playbacks
+    this.currentPlaybackIndex = data.currentPlaybackIndex as number ?? -1
+    this.currentCueIndex = data.currentCueIndex as number ?? -1
+    this.currentCueMeta = data.currentCueMeta as JsonMap ?? {}
 
     console.log(`[CueManager] Load playbacks & cue`, data)
 

@@ -1,27 +1,71 @@
+// Sora
 @font-face {
-  font-family: 'Nightcore';
-  src: url('../assets/fonts/Nightcore.ttf') format('truetype');
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'SF Pro Text';
-  src: url('../assets/fonts/SF-Pro-Text-Bold.otf') format('opentype');
+  font-family: 'Sora';
+  src: url('../assets/fonts/Sora-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
+// Good Times
 @font-face {
-  font-family: 'SF Pro Text';
-  src: url('../assets/fonts/SF-Pro-Text-Regular.otf') format('opentype');
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Light.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Light Italic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Book.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Book Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'SF Pro Display';
-  src: url('../assets/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'Good Times';
+  src: url('../assets/fonts/Good Times Bold Italic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
 }

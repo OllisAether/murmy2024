@@ -1,10 +1,4 @@
-import { Asset } from "@/model/asset";
-
-export interface Media {
-  name: string
-  displayName: string
-  asset: Asset
-}
+import { Media } from "@/model/media"
 
 export const media: Media[] = [
   {

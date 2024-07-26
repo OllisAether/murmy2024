@@ -2,18 +2,11 @@ import { defineStore } from "pinia";
 import { useWsClient } from "./wsClient";
 import { computed, readonly, ref, watch } from "vue";
 import { boardAssets, teamAssets } from "../assets/assets";
-import { files as fAsset } from "../assets/files";
 import { UAParser } from "ua-parser-js";
-import { chatAccounts, chats, nameOverride } from "@/assets/chats";
-import { people } from "@/assets/people";
-import { ProfileEntryType, SuspectEntry, SuspectProfile } from "@/model/database/suspectProfile";
 import { Asset } from "@/model/asset";
 import { useAuthManager } from "./authManager";
 import { Role } from "../../shared/roles";
 import { Phase } from "../../shared/phase";
-import { File } from "@/model/files/file";
-import { Chat } from "@/model/chat/chat";
-import { emailAccounts, emails } from "@/assets/emails";
 import { VoteOption, VoteSession } from "../../shared/vote";
 
 export const useGameManager = defineStore('gameManager', () => {
@@ -388,200 +381,6 @@ export const useGameManager = defineStore('gameManager', () => {
   })
   // #endregion
 
-  // #region Suspect Database
-  const suspects = ref<SuspectProfile[]>([])
-
-  function getPerson (id: string) {
-    return people.find(person => person.id === id)
-  }
-
-  function unlockSuspect (person: string) {
-    const suspect = suspects.value.find(suspect => suspect.personId === person)
-
-    if (suspect) {
-      return
-    }
-
-    suspects.value.push({
-      personId: person,
-      basic: [],
-      accounts: [],
-      pictures: [],
-      hobbies: []
-    })
-  }
-
-  function addSuspectEntry (person: string, type: ProfileEntryType, entry: SuspectEntry, unlocksSuspect?: boolean) {
-    const suspect = suspects.value.find(suspect => suspect.personId === person)
-
-    if (!suspect) {
-      if (unlocksSuspect) {
-        unlockSuspect(person)
-        return addSuspectEntry(person, type, entry)
-      }
-
-      return
-    }
-
-    suspect[type].push(entry)
-  }
-
-  function getSuspectEntry (person: string, type: ProfileEntryType, id: string) {
-    const suspect = suspects.value.find(suspect => suspect.personId === person)
-
-    if (!suspect) {
-      return
-    }
-
-    return suspect[type].find(entry => entry.id === id)
-  }
-
-  function isSuspectUnlocked (person: string) {
-    return suspects.value.find(suspect => suspect.personId === person) !== undefined
-  }
-  // #endregion
-
-  // #region Files
-  const files = ref<File[]>(fAsset)
-  // #endregion
-
-  // #region Chat
-  const currentChatUser = ref<string | null>(localStorage.getItem('chatUser') || null)
-
-  watch(currentChatUser, (user) => {
-    localStorage.setItem('chatUser', user || '')
-  })
-
-  function getChatName (chat: Chat) {
-    return chat.name ?? chat.participants
-      .filter(p => p !== currentChatUser.value)
-      .map(p => {
-        const account = getChatAccount(p)
-        return nameOverride[currentChatUser.value!]?.[p] ??
-          account?.displayname ??
-          p
-      })
-      .filter(x => x)
-      .join(', ')
-  }
-
-  async function loginChat (phone: string, password: string) {
-    const account = chatAccounts.find(account => {
-      const person = getPerson(account.personId)
-
-      if (!person) {
-        return false
-      }
-
-      // Replace Spaces, Dashes, etc. with nothing
-      const personPhone = person.phone?.replace(/[\s-]/g, '')
-      const _phone = phone.replace(/[\s-]/g, '')
-
-      return personPhone === _phone && account.password === password
-    })
-
-    if (!account) {
-      await new Promise(resolve => setTimeout(resolve, 200))
-      return false
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 800))
-
-    currentChatUser.value = account.personId
-    return true
-  }
-
-  function logoutChat () {
-    currentChatUser.value = null
-  }
-
-  const visibleChats = computed(() => {
-    const user = currentChatUser.value
-
-    if (!user) {
-      return []
-    }
-
-    return chats.filter(chat => chat.participants.includes(user))
-  })
-
-  function getChatAccount (personId: string) {
-    return chatAccounts.find(account => account.personId === personId)
-  }
-
-  function getChat (id: string) {
-    return chats.find(chat => chat.id === id)
-  }
-
-  function hasPermissionForChat (id: string) {
-    const chat = getChat(id)
-    if (!chat) {
-      return false
-    }
-    return chat.participants.includes(currentChatUser.value!)
-  }
-  // #endregion
-
-  // #region Email
-  const currentEmailUser = ref<string | null>(localStorage.getItem('emailUser') || null)
-
-  watch(currentEmailUser, (user) => {
-    localStorage.setItem('emailUser', user || '')
-  })
-
-  async function loginEmail (email: string, password: string) {
-    const account = emailAccounts.find(account => {
-      const person = getPerson(account.personId)
-
-      if (!person) {
-        return false
-      }
-
-      return person.email?.toLowerCase() === email?.toLowerCase() && account.password === password
-    })
-
-    if (!account) {
-      await new Promise(resolve => setTimeout(resolve, 200))
-      return false
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 800))
-
-    currentEmailUser.value = account.personId
-    return true
-  }
-
-  function logoutEmail () {
-    currentEmailUser.value = null
-  }
-
-  const visibleEmails = computed(() => {
-    const user = currentEmailUser.value
-
-    if (!user) {
-      return []
-    }
-
-    return emails.filter(email => email.reciever.includes(user))
-  })
-  
-  function getEmailAccount (personId: string) {
-    return chatAccounts.find(account => account.personId === personId)
-  }
-
-  function getEmail (id: string) {
-    return emails.find(email => email.id === id)
-  }
-
-  function hasPermissionForEmail (id: string) {
-    const email = getEmail(id)
-    if (!email) {
-      return false
-    }
-    return email.reciever.includes(currentEmailUser.value!)
-  }
-  // #endregion
-
   // #region Vote
   const vote = ref<{
     pools: Record<string, string[]>,
@@ -697,6 +496,10 @@ export const useGameManager = defineStore('gameManager', () => {
   }
   // #endregion
 
+  // #region Suspect Database
+  const suspects = ref<string[]>([])
+  // #endregion
+
   return {
     interacted: readonly(interacted),
     loading: readonly(loading),
@@ -710,31 +513,8 @@ export const useGameManager = defineStore('gameManager', () => {
     assetsProgress: readonly(assetsProgress),
     preloadAssets,
     getAsset,
-    files: readonly(files),
+    
     isFullscreen: readonly(isFullscreen),
-    suspects: readonly(suspects),
-    unlockSuspect,
-    addSuspectEntry,
-    getSuspectEntry,
-    isSuspectUnlocked,
-    getPerson,
-
-    currentChatUser: readonly(currentChatUser),
-    loginChat,
-    visibleChats: readonly(visibleChats),
-    logoutChat,
-    getChatAccount,
-    getChatName,
-    getChat,
-    hasPermissionForChat,
-
-    currentEmailUser: readonly(currentEmailUser),
-    loginEmail,
-    visibleEmails: readonly(visibleEmails),
-    logoutEmail,
-    getEmailAccount,
-    getEmail,
-    hasPermissionForEmail,
 
     timer: readonly(timer),
     timeSync: readonly(timeSync),

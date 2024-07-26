@@ -7,59 +7,62 @@
   <RouterView v-else />
 
   <div class="controls">
-    <VBtn
+    <Btn
       v-if="game.canFullscreen"
       class="fullscreen-button"
-      icon
       @click="game.toggleFullscreen"
-      :small="display.mdAndDown.value"
+      square
     >
       <VIcon>{{ game.isFullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
-    </VBtn>
-    <VBtn
+    </Btn>
+    <Btn
       class="help-button"
-      icon
-      :small="display.mdAndDown.value"
+      square
     >
-      <VIcon>mdi-account-question</VIcon>
+      <VIcon size="small">mdi-account-question</VIcon>
 
-      <VDialog activator="parent" v-model="helpDialog" max-width="500">
-        <VCard>
-          <VToolbar>
+      <VDialog activator="parent" v-model="helpDialog" max-width="500" transition="scale-transition">
+        <VCard color="transparent" style="overflow: visible;">
+          <SkewBox
+            style="
+              position: absolute;
+              inset: -1rem -2rem;
+            "
+            :rounded-corners="8"
+            :skew="5"
+          />
+
+          <VToolbar color="transparent">
             <VToolbarTitle>
-              <VIcon>mdi-account-question</VIcon>
+              <VIcon class="mr-2">mdi-account-question</VIcon>
               Hilfe anfordern
             </VToolbarTitle>
-            <VBtn icon @click="helpDialog = false">
+            
+            <VBtn icon @click="helpDialog = false" :rounded="false" :ripple="false">
               <VIcon>mdi-close</VIcon>
             </VBtn>
           </VToolbar>
-
-          <VCardText>
+          <VCardText style="position: relative;">
             <p class="mb-2">
               Falls ihr <b>technische Probleme</b> habt, könnt ihr hier die Spielleitung zu eurem Tisch rufen.
             </p>
-
-            <p class="mb-2">
+            <p class="mb-8">
               <b>
                 Wir werden euch keine Hinweise zum Spiel geben!
               </b>
             </p>
-
-            <VBtn
-              variant="tonal"
-              color="primary"
+            <Btn
+              color="#A23946"
               class="w-100"
               @click="help"
               :loading="helpLoading"
             >
               Hilfe anfordern
-            </VBtn>
-
+            </Btn>
             <p
               v-if="helpMessage"
               :class="{
-                'mt-2': true,
+                'mt-7': true,
                 'text-error': helpIsError,
                 'text-success': !helpIsError
               }"
@@ -69,7 +72,7 @@
           </VCardText>
         </VCard>
       </VDialog>
-    </VBtn>
+    </Btn>
   </div>
 
   <VDialog v-model="logoutDialog" max-width="300">
@@ -123,6 +126,8 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
 import { useDisplay } from 'vuetify';
 import router from '@/router';
+import Btn from '@/components/Btn.vue';
+import SkewBox from '@/components/SkewBox.vue';
 
 const display = useDisplay()
 
@@ -170,8 +175,6 @@ useEventListener('pointerdown', (event) => {
       logoutDialog.value = true
     }, { once: true })
   }
-
-  // console.log('Sequence:', sequenceIndex, corner)
 
   clearTimeout(clearSequenceTimeout)
   clearSequenceTimeout = setTimeout(() => {
@@ -244,7 +247,6 @@ async function help () {
   right: 1rem;
   
   display: flex;
-  gap: 0.5rem;
   flex-flow: row nowrap;
 
   @media screen and (max-width: 768px) {

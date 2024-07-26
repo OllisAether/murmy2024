@@ -1,15 +1,24 @@
 <template>
-  <VCard class="login-card" max-width="350" width="100%" rounded="lg">
-    <VToolbar>
+  <VCard class="login-card" color="transparent" max-width="350" width="100%" style="overflow: visible;">
+    <SkewBox
+      style="
+        position: absolute;
+        inset: -1rem -1.5rem;
+      "
+      :skew="5"
+      :rounded-corners="8"
+    />
+
+    <VToolbar color="transparent">
       <VToolbarTitle>
-        <VIcon>mdi-account-group</VIcon>
+        <VIcon class="mr-2">mdi-account-group</VIcon>
         Team Login
       </VToolbarTitle>
     </VToolbar>
 
-    <VCardText>
-      <p class="mb-4">
-        Auf deinem Einführungsbogen findest du einen 6-stelligen Code, den du hier eingeben kannst.
+    <VCardText style="position: relative;">
+      <p class="mb-6">
+        Auf eurem <b class="text-primary">Einführungsbogen</b> findet ihr einen 6-stelligen Code, den ihr hier eingeben könnt.
       </p>
 
       <VOtpInput
@@ -94,6 +103,7 @@ import { useAuthManager } from '../store/authManager'
 import { codeLength, codeRegex } from '../../shared/teamcode';
 import { useRoute } from 'vue-router';
 import { useGameManager } from '../store/gameManager';
+import SkewBox from '@/components/SkewBox.vue';
 
 const route = useRoute()
 const auth = useAuthManager()

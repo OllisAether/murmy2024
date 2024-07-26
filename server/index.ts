@@ -51,7 +51,7 @@ const port = process.env.PORT || 3000;
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  await Database.get().loadCollections();
+  await Database.get(!isDevelopment).loadCollections();
   const game = Game.get();
 
   app.ws('/api/ws', handleConnection);
