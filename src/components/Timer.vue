@@ -1,8 +1,7 @@
 <template>
   <span :class="['timer', {
     'timer--paused': game.timer.state === 'paused',
-    'timer--warning': warning && remaining <= warningThreshold,
-    'timer--fixed-width': fixedWidth
+    'timer--warning': warning
   }]">
     <span class="timer__minutes">
       <span :class="['timer__digit', {
@@ -31,14 +30,10 @@
 import { computed, ref, watch } from 'vue'
 import { useGameManager } from '@/store/gameManager'
 
-withDefaults(defineProps<{
-  fixedWidth?: boolean
+const props = withDefaults(defineProps<{
   warning?: boolean
-  warningThreshold?: number
 }>(), {
-  fixedWidth: false,
-  warning: false,
-  warningThreshold: 10
+  warning: true
 })
 
 const game = useGameManager()
@@ -60,6 +55,18 @@ const delayedTimeString = ref(timeString.value)
 
 watch(timeString, (val) => {
   setTimeout(() => delayedTimeString.value = val, changeBackDelay / 2)
+})
+
+const warningThresholdStep = [60, 30, 10, 5, 3, 1]
+const warningThreshold = computed(() => {
+  return warningThresholdStep.find(step => game.timer.duration / 2000 > step) ?? 0
+})
+const warning = computed(() => {
+  if (props.warning) {
+    return remaining.value <= warningThreshold.value
+  }
+
+  return false
 })
 
 const change = ref([
@@ -108,6 +115,19 @@ watch(timeString, (val, old) => {
     }
   }
 
+  &--warning {
+    animation: warningBlink 1s infinite;
+
+    @keyframes warningBlink {
+      0%, 100% {
+        color: inherit;
+      }
+      50% {
+        color: #ff677e;
+      }
+    }
+  }
+
   &__pause-indicator {
     position: absolute;
     top: 50%;
@@ -121,10 +141,6 @@ watch(timeString, (val, old) => {
   &__seconds {
     display: inline-block;
     line-height: 1;
-
-    .timer--fixed-width & {
-      width: 1.5em;
-    }
     clip-path: inset(0);
   }
 

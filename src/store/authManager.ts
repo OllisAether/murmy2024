@@ -58,7 +58,7 @@ export const useAuthManager = defineStore('authManager', () => {
         role.value = Role.Admin
         if (router.currentRoute.value.matched
           .some(r => !(r.meta.allowedRoles as Role[])?.includes?.(Role.Admin))) {
-          router.push('/admin')
+          router.replace('/admin')
         }
         break
       case Role.Board:
@@ -68,7 +68,7 @@ export const useAuthManager = defineStore('authManager', () => {
           pw: data.password
         }))
         if (router.currentRoute.value.name !== 'board') {
-          router.push('/board')
+          router.replace('/board')
         }
         break
       case Role.Team:
@@ -82,14 +82,14 @@ export const useAuthManager = defineStore('authManager', () => {
           pw: data.teamCode
         }))
         if (router.currentRoute.value.name !== 'team') {
-          router.push('/team')
+          router.replace('/team')
         }
         break
       default:
         team.value = null
         role.value = Role.Unauthorized
         if (router.currentRoute.value.name !== 'login') {
-          router.push('/login')
+          router.replace('/login')
         }
     }
   })
@@ -171,7 +171,7 @@ export const useAuthManager = defineStore('authManager', () => {
     role.value = Role.Unauthorized
     team.value = null
     clientId.value = null
-    router.push('/login')
+    router.replace('/login')
 
     await wsClient.disconnect()
 

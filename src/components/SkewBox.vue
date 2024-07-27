@@ -76,11 +76,11 @@ const root = ref<HTMLElement | null>(null)
 const sqrtEighth = Math.sqrt(0.125)
 
 const props = withDefaults(defineProps<{
-  cornerCut: number
-  displaceDistance: number
-  roundedCorners: number
-  color: string
-  skew: number
+  cornerCut?: number
+  displaceDistance?: number
+  roundedCorners?: number
+  color?: string
+  skew?: number
 }>(), {
   cornerCut: 16,
   roundedCorners: 4,

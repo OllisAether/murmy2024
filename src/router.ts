@@ -33,7 +33,6 @@ const router = createRouter({
           case Phase.Break:
             return "/team/break"
           case Phase.Vote:
-          case Phase.VoteResult:
             return "/team/vote"
           default:
             return "/team/home"
@@ -55,55 +54,13 @@ const router = createRouter({
           }
         },
         {
-          path: "workspace",
-          redirect: "/team/workspace/files",
-
-          meta: {
-            phase: Phase.Work,
-          }
-        },
-        {
           name: "workspace",
-          path: 'workspace/:space(phone|files|tools)',
+          path: 'workspace',
           component: () => import("./pages/team/Workspace.vue"),
 
           meta: {
             phase: Phase.Work,
           },
-
-          children: [
-            {
-              path: "chat",
-              name: "chat",
-              component: () => import("./pages/team/chat/Home.vue"),
-            },
-            {
-              path: "chat/:chat",
-              name: "chatRoom",
-              component: () => import("./pages/team/chat/Chat.vue"),
-              meta: {
-                depth: 1,
-              },
-            },
-            {
-              path: "search",
-              name: "search",
-              component: () => import("./pages/team/search/Home.vue"),
-            },
-            {
-              path: "search/:id",
-              name: "searchResult",
-              component: () => import("./pages/team/search/Result.vue"),
-              meta: {
-                depth: 1,
-              },
-            },
-            {
-              path: "mail",
-              name: "mail",
-              component: () => import("./pages/team/mail/Home.vue"),
-            }
-          ],
         },
         {
           path: "break",
@@ -118,7 +75,7 @@ const router = createRouter({
           component: () => import("./pages/team/Vote.vue"),
 
           meta: {
-            phase: [Phase.Vote, Phase.VoteResult],
+            phase: Phase.Vote,
           }
         }
       ]

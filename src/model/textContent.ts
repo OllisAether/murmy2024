@@ -1,4 +1,4 @@
-import { Entry } from "./suspectDatabase/entry"
+import { Entry } from "../../shared/suspectDatabase/entry"
 
 export interface TextContent {
   style?:

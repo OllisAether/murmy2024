@@ -22,7 +22,7 @@
       <VIcon size="small">mdi-account-question</VIcon>
 
       <VDialog activator="parent" v-model="helpDialog" max-width="500" transition="scale-transition">
-        <VCard color="transparent" style="overflow: visible;">
+        <VCard color="transparent" elevation="0" style="overflow: visible;">
           <SkewBox
             style="
               position: absolute;
@@ -201,7 +201,7 @@ function logout () {
 }
 
 watch(() => game.phase.type, () => {
-  router.push('/team')
+  router.replace('/team')
 })
 
 onMounted(() => {

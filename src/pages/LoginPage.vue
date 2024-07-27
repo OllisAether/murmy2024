@@ -1,5 +1,12 @@
 <template>
-  <VCard class="login-card" color="transparent" max-width="350" width="100%" style="overflow: visible;">
+  <VCard
+    class="login-card"
+    color="transparent"
+    elevation="0"
+    max-width="350"
+    width="100%"
+    style="overflow: visible;"
+  >
     <SkewBox
       style="
         position: absolute;

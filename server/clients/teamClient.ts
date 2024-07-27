@@ -1,4 +1,5 @@
 import { Role } from "../../shared/roles";
+import { Entry } from "../../shared/suspectDatabase/entry";
 import { Game } from "../game/game";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
@@ -63,6 +64,35 @@ export class TeamClient extends WebSocketClient {
             vote: vote,
             success: true
           })
+        }
+      },
+      {
+        action: 'suspectDatabaseEntry',
+        handler: (payload) => {
+          const game = Game.get();
+          const entry: Entry = payload.entry;
+
+          if (!entry || typeof entry !== 'object') {
+            console.error('[TeamClient] Invalid entry', entry)
+            this.send('suspectDatabaseEntry:response', {
+              success: false,
+              message: 'Invalid Format'
+            })
+            return
+          }
+
+          game.suspectDatabaseManager.addEntry(this.teamId, entry)
+
+          this.send('suspectDatabaseEntry:response', {
+            success: true
+          })
+        }
+      },
+      {
+        action: 'getSuspectDatabase',
+        handler: () => {
+          const game = Game.get();
+          game.sendSuspectDatabaseToTeams(this);
         }
       }
     ]));

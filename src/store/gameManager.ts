@@ -8,6 +8,7 @@ import { useAuthManager } from "./authManager";
 import { Role } from "../../shared/roles";
 import { Phase } from "../../shared/phase";
 import { VoteOption, VoteSession } from "../../shared/vote";
+import { Entry } from "../../shared/suspectDatabase/entry";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -497,7 +498,15 @@ export const useGameManager = defineStore('gameManager', () => {
   // #endregion
 
   // #region Suspect Database
-  const suspects = ref<string[]>([])
+  const databaseEntries = ref<Entry[]>([])
+
+  ws.onAction('suspectDatabase', (entrys: Entry[]) => {
+    databaseEntries.value = entrys
+  })
+
+  function addDatabaseEntry (entry: Entry) {
+    ws.send('suspectDatabaseEntry', { entry })
+  }
   // #endregion
 
   return {
@@ -533,6 +542,9 @@ export const useGameManager = defineStore('gameManager', () => {
     voted,
     pool,
     candidates,
-    addVote
+    addVote,
+
+    databaseEntries,
+    addDatabaseEntry
   }
 })

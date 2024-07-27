@@ -11,6 +11,7 @@ import { Phase } from "../../shared/phase"
 import { JsonArray, JsonMap } from "../../shared/json"
 import { CueManager } from "./cue/CueManager"
 import { VoteManager } from "./vote/voteManager"
+import { SuspectDatabaseManager } from "./suspectDatabase/suspectDatabaseManager"
 
 export class Game {
   private adminPassword: string
@@ -42,6 +43,7 @@ export class Game {
     this.loadMedia()
     this.voteManager.load()
     this.cueManager.load()
+    this.suspectDatabaseManager.load()
   }
 
   // #region Teams
@@ -100,6 +102,10 @@ export class Game {
 
   getTeams(): Team[] {
     return this.teams
+  }
+
+  getTeamClient (teamId: string): TeamClient | null {
+    return (this.clients.find((c) => c.type === Role.Team && (c as TeamClient).teamId === teamId) ?? null) as TeamClient | null
   }
   // #endregion
 
@@ -807,23 +813,45 @@ export class Game {
   }
   // #endregion
 
-  // #region Clues
-  private clues: string[] = []
+  // #region Suspect Database
+  suspectDatabaseManager: SuspectDatabaseManager = new SuspectDatabaseManager()
 
-  addClue (clue: string) {
-    this.clues.push(clue)
+  sendSuspectDatabasesToAdmins (client?: WebSocketClient) {
+    console.log('Sending suspect database to admins')
+
+    const database = this.suspectDatabaseManager.getDatabases()
+
+    if (client) {
+      if (client.type !== Role.Admin) {
+        console.log('Client is not an admin')
+        return
+      }
+
+      client.send('suspectDatabases', database)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => (c as AdminClient).send('suspectDatabases', database))
   }
 
-  removeClue (clue: string) {
-    this.clues = this.clues.filter((c) => c !== clue)
-  }
+  sendSuspectDatabaseToTeams (client?: WebSocketClient) {
+    console.log('Sending suspect database to teams')
 
-  addClues (clues: string[]) {
-    this.clues.push(...clues)
-  }
+    if (client) {
+      if (client.type !== Role.Team) {
+        console.log('Client is not a team')
+        return
+      }
 
-  getClues () {
-    return this.clues
+      client.send('suspectDatabase', this.suspectDatabaseManager.getDatabase((client as TeamClient).teamId))
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Team)
+      .forEach((c) => (c as TeamClient).send('suspectDatabases', this.suspectDatabaseManager.getDatabase((c as TeamClient).teamId)))
   }
   // #endregion
 

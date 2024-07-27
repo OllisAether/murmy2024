@@ -2,6 +2,11 @@ import { Asset } from '@/model/asset';
 import { media } from './media';
 
 export const teamAssets: Asset[] = [
+  {
+    name: 'sasha',
+    type: 'image',
+    url: '/sasha.png'
+  }
 ]
 
 export const boardAssets: Asset[] = [

@@ -14,11 +14,23 @@
           </svg>
         </div>
         <div class="sus-db__suspects">
-          <div></div>
+          <div
+            v-for="suspect in suspects"
+            :key="suspect.id"
+            class="sus-db__suspects__suspect"
+          >
+            <img :src="game.getAsset('sasha')?.content">
+            {{ suspect.name }}
+          </div>
         </div>
+
+        {{ 
+          game.databaseEntries
+        }}
       </div>
     </Transition>
     <button
+      ref="btn"
       :class="['sus-db__expand-collapse-btn', {
         'sus-db__expand-collapse-btn--open': open
       }]" @click="open = !open">
@@ -30,10 +42,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, useModel, watch } from 'vue';
 import Timer from './Timer.vue';
+import { useSwipe } from '@vueuse/core';
+import { suspects } from '@/assets/suspects';
+import { useGameManager } from '@/store/gameManager';
 
-const open = ref(true);
+const game = useGameManager()
+
+const props = defineProps<{
+  open?: boolean
+}>();
+
+const open = useModel(props, 'open');
+
+const btn = ref<HTMLElement | null>(null);
+
+const swipe = useSwipe(btn);
+
+watch(swipe.direction, () => {
+  if (swipe.direction.value === 'left') {
+    open.value = false;
+  } else if (swipe.direction.value === 'right') {
+    open.value = true;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -48,6 +81,7 @@ const open = ref(true);
 
   &__wrapper {
     position: relative;
+    box-shadow: 0 0 10rem rgba(0, 0, 0, 0.5);
   }
 
   &__shapes {
@@ -111,6 +145,15 @@ const open = ref(true);
     color: $stroke;
     border-left: none;
     border-radius: 0 .5rem .5rem 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50rem;
+      left: -1rem;
+      right: -1rem;
+      bottom: -50rem;
+    }
 
     &--open {
       .sus-db__expand-collapse-btn__icon {
