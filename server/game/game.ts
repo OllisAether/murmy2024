@@ -12,6 +12,7 @@ import { JsonArray, JsonMap } from "../../shared/json"
 import { CueManager } from "./cue/CueManager"
 import { VoteManager } from "./vote/voteManager"
 import { SuspectDatabaseManager } from "./suspectDatabase/suspectDatabaseManager"
+import { ClueManager } from "./clueManager/clueManager"
 
 export class Game {
   private adminPassword: string
@@ -852,6 +853,33 @@ export class Game {
     this.clients
       .filter((c) => c.type === Role.Team)
       .forEach((c) => (c as TeamClient).send('suspectDatabases', this.suspectDatabaseManager.getDatabase((c as TeamClient).teamId)))
+  }
+  // #endregion
+
+  // #region Clues
+  clueManager: ClueManager = new ClueManager()
+
+  sendCluesToClients(client?: WebSocketClient) {
+    console.log('Sending clues to clients')
+
+    if (client) {
+      client.send('clues', {
+        availableClues: this.clueManager.getAvailableClues(),
+        unlockedClues: client.type === Role.Team
+          ? this.clueManager.getUnlockedClues((client as TeamClient).teamId)
+          : undefined
+      })
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type !== Role.Unauthorized)
+      .forEach((c) => c.send('clues', {
+        availableClues: this.clueManager.getAvailableClues(),
+        unlockedClues: c.type === Role.Team
+          ? this.clueManager.getUnlockedClues((c as TeamClient).teamId)
+          : undefined
+      }))
   }
   // #endregion
 

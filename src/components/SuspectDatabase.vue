@@ -24,9 +24,7 @@
           </div>
         </div>
 
-        {{ 
-          game.databaseEntries
-        }}
+        {{ game.databaseEntries }}
       </div>
     </Transition>
     <button

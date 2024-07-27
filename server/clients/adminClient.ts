@@ -541,6 +541,25 @@ export class AdminClient extends WebSocketClient {
           game.requestMedia();
         }
       },
+      // #endregion
+    
+      // #region Suspect Database
+      {
+        action: 'getSuspectDatabases',
+        handler: () => {
+          game.sendSuspectDatabasesToAdmins(this);
+        }
+      },
+      // #endregion
+      
+      // #region Clues
+      {
+        action: 'getClues',
+        handler: () => {
+          game.sendCluesToClients(this);
+        }
+      },
+      // #endregion
     ]))
   }
 }

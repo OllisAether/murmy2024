@@ -94,6 +94,42 @@ export class TeamClient extends WebSocketClient {
           const game = Game.get();
           game.sendSuspectDatabaseToTeams(this);
         }
+      },
+      {
+        action: 'getClues',
+        handler: () => {
+          const game = Game.get();
+          game.sendCluesToClients(this);
+        }
+      },
+      {
+        action: 'unlockClue',
+        handler: (payload) => {
+          const clueId = payload.clueId;
+
+          if (typeof clueId !== 'string') {
+            console.error('[TeamClient] Invalid clueId', clueId)
+            this.send('unlockClue:response', {
+              success: false,
+              message: 'Invalid Format'
+            })
+            return
+          }
+
+          const success = game.clueManager.unlockClue(this.teamId, clueId)
+
+          if (!success) {
+            this.send('unlockClue:response', {
+              success: false,
+              message: 'Clue not available'
+            })
+            return
+          }
+
+          this.send('unlockClue:response', {
+            success: true
+          })
+        }
       }
     ]));
   }
