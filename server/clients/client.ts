@@ -75,7 +75,13 @@ export function genericActions (client: WebSocketClient): {
       handler: () => {
         game.sendVoteOptionsToClients(client);
       }
-    }
+    },
+    {
+      action: 'getClues',
+      handler: () => {
+        game.sendCluesToClients(client);
+      }
+    },
   ]
 }
 

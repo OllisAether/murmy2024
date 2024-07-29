@@ -12,7 +12,7 @@
         <span class="workspace__ep">
           <VIcon size="1em">
             mdi-star-four-points-circle
-          </VIcon> 40
+          </VIcon> {{ game.clues.investigationCoins }}
         </span>
       </div>
 
@@ -20,6 +20,43 @@
         <VBtn @click="addEntry" color="primary">
           Eintrag hinzufügen
         </VBtn>
+
+        {{ game.clues }}
+
+        <div
+          v-for="id in game.clues.available"
+          :key="id"
+        >
+          {{ clues.find(c => c.id === id) }}
+          <img
+            v-if="game.clues.unlocked.includes(id)"
+            style="width: 15rem;"
+            :src="game.getAsset(clues.find(c => c.id === id)?.image?.assetId ?? '')?.content"
+          >
+
+          <VBtn>
+            Open Dialog
+            <VDialog activator="parent">
+
+              <VCard>
+                <VCardTitle>
+                  {{ clues.find(c => c.id === id)?.title }}
+                </VCardTitle>
+                <VCardText>
+                  {{ clues.find(c => c.id === id)}}
+                  <img
+                    v-if="game.clues.unlocked.includes(id)"
+                    style="width: 100%;"
+                    :src="game.getAsset(clues.find(c => c.id === id)?.image?.assetId ?? '')?.content"
+                  >
+                </VCardText>
+              </VCard>
+            </VDialog>
+          </VBtn>
+          <VBtn @click="game.unlockClue(id)" color="primary">
+            Freischalten
+          </VBtn>
+        </div>
       </div>
     </div>
   </VLayout>
@@ -30,6 +67,7 @@ import SuspectDatabase from '@/components/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { ref } from 'vue';
+import { clues } from '@/../shared/assets/clues';
 
 const databaseExpanded = ref(true);
 

@@ -96,13 +96,6 @@ export class TeamClient extends WebSocketClient {
         }
       },
       {
-        action: 'getClues',
-        handler: () => {
-          const game = Game.get();
-          game.sendCluesToClients(this);
-        }
-      },
-      {
         action: 'unlockClue',
         handler: (payload) => {
           const clueId = payload.clueId;

@@ -81,6 +81,14 @@ export const useGameManager = defineStore('gameManager', () => {
       ws.once('voteOptions').then(resolve)
       ws.send('getVoteOptions')
     })
+    await new Promise<void>(resolve => {
+      ws.once('suspectDatabase').then(resolve)
+      ws.send('getSuspectDatabase')
+    })
+    await new Promise<void>(resolve => {
+      ws.once('clues').then(resolve)
+      ws.send('getClues')
+    })
 
     loading.value = false
     initialized.value = true
@@ -158,15 +166,18 @@ export const useGameManager = defineStore('gameManager', () => {
   const assetsProgress = ref<{
     loaded: boolean
     loadedAssets: number
+    progresses: Record<string, number>
     totalAssets: number
   }>({
     loaded: false,
     loadedAssets: 0,
+    progresses: {},
     totalAssets: 0
   })
   const assets = ref<Asset[]>([])
   function preloadAssets (_assets: Asset[]) {
     assetsProgress.value.loadedAssets = 0
+    assetsProgress.value.progresses = {}
     assetsProgress.value.totalAssets = _assets.length
     assetsProgress.value.loaded = _assets.length === 0
 
@@ -180,8 +191,9 @@ export const useGameManager = defineStore('gameManager', () => {
     }))
 
     return new Promise<void>((resolve) => {
-      function finishAsset () {
+      function finishAsset (asset: Asset) {
         assetsProgress.value.loadedAssets++
+        assetsProgress.value.progresses[asset.name] = 1
 
         if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
           assetsProgress.value.loaded = true
@@ -191,8 +203,10 @@ export const useGameManager = defineStore('gameManager', () => {
       }
 
       for (const asset of assets.value) {
+        assetsProgress.value.progresses[asset.name] = 0
+
         if (asset.content !== undefined) {
-          finishAsset()
+          finishAsset(asset)
           continue
         }
 
@@ -200,6 +214,12 @@ export const useGameManager = defineStore('gameManager', () => {
 
         xhr.open('GET', asset.url, true)
         xhr.responseType = 'blob'
+
+        xhr.onprogress = function (event) {
+          if (event.lengthComputable) {
+            assetsProgress.value.progresses[asset.name] = event.loaded / event.total
+          }
+        }
 
         xhr.onload = async function () {
           if (xhr.status === 200) {
@@ -209,17 +229,17 @@ export const useGameManager = defineStore('gameManager', () => {
 
             asset.content = objectURL
             console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
-            finishAsset()
+            finishAsset(asset)
           } else {
             console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
-            finishAsset()
+            finishAsset(asset)
           }
         }
 
         xhr.onerror = function () {
           console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
 
-          finishAsset()
+          finishAsset(asset)
         }
 
         xhr.send()
@@ -304,7 +324,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
       // console.log('Timer:', timer.value.currentTime)
 
-      timer.value.currentTime = Math.max(0, Math.min(timer.value.duration, Date.now() - (timer.value.startTime || 0)))
+      timer.value.currentTime = Math.max(0, Math.min(timer.value.duration, Date.now() - (timer.value.startTime || 0) + timeSync.value.diff))
     }
 
     timerInterval = requestAnimationFrame(updateTimer)
@@ -509,6 +529,30 @@ export const useGameManager = defineStore('gameManager', () => {
   }
   // #endregion
 
+  // #region Clues
+  const clues = ref<{
+    available: string[]
+    unlocked: string[]
+    investigationCoins: number
+  }>({
+    available: [],
+    unlocked: [],
+    investigationCoins: 0
+  })
+
+  ws.onAction('clues', (data: {
+    available: string[]
+    unlocked: string[]
+    investigationCoins: number
+  }) => {
+    clues.value = data
+  })
+
+  function unlockClue (clueId: string) {
+    ws.send('unlockClue', { clueId })
+  }
+  // #endregion
+
   return {
     interacted: readonly(interacted),
     loading: readonly(loading),
@@ -545,6 +589,9 @@ export const useGameManager = defineStore('gameManager', () => {
     addVote,
 
     databaseEntries,
-    addDatabaseEntry
+    addDatabaseEntry,
+
+    clues,
+    unlockClue
   }
 })

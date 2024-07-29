@@ -1,7 +1,10 @@
 <template>
   <div class="loading" v-if="!game.assetsProgress.loaded">
     <VProgressCircular indeterminate class="mb-1 mr-2"/>
-    Lade ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
+    Lade {{ loadProgress }}%
+    <span class="text-small">
+      ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
+    </span>
   </div>
 
   <RouterView v-else />
@@ -122,14 +125,14 @@
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
-import { useDisplay } from 'vuetify';
+// import { useDisplay } from 'vuetify';
 import router from '@/router';
 import Btn from '@/components/Btn.vue';
 import SkewBox from '@/components/SkewBox.vue';
 
-const display = useDisplay()
+// const display = useDisplay()
 
 const auth = useAuthManager()
 const game = useGameManager()
@@ -236,6 +239,13 @@ async function help () {
   }
   helpLoading.value = false
 }
+
+const loadProgress = computed(() => {
+  return Math.round(
+    (Object.values(game.assetsProgress.progresses)
+      .reduce((acc, val) => acc + val, 0) / game.assetsProgress.totalAssets)
+    * 100)
+})
 </script>
 
 <style scoped lang="scss">

@@ -23,6 +23,19 @@ export class CueManager {
     Idle(),
     Idle(10000),
     Vote(),
+    {
+      name: 'Add investigation coins',
+      trigger: 'auto',
+      cues: [
+        {
+          type: 'AddInvestigationCoins',
+          options: {
+            amount: 100
+          }
+        }
+      ],
+      fields: {}
+    },
     Work(),
   ]
 

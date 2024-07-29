@@ -22,6 +22,7 @@ export class ClueManager {
   }
 
   load () {
+    console.log('[ClueManager] Loading data')
     const data = Database.get().getCollection('clues')
     
     if (!data) {
@@ -37,7 +38,7 @@ export class ClueManager {
 
     if (!data.unlockedClues ||
       typeof data.unlockedClues !== 'object' ||
-      !Array.isArray(data.unlockedClues) ||
+      Array.isArray(data.unlockedClues) ||
       Object.keys(data.unlockedClues).some(teamId => !Array.isArray((data.unlockedClues as Record<string, any>)[teamId])
         || (data.unlockedClues as Record<string, any>)
           .some((clueId: any) => typeof clueId !== 'string'))) {
@@ -51,8 +52,9 @@ export class ClueManager {
     }
 
     if (typeof data.usedInvestigationCoins !== 'object' ||
-      !Array.isArray(data.usedInvestigationCoins) ||
-      Object.keys(data.usedInvestigationCoins).some(teamId => typeof (data.usedInvestigationCoins as Record<string, any>)[teamId] !== 'number')) {
+      Array.isArray(data.usedInvestigationCoins) ||
+      Object.keys(data.usedInvestigationCoins!)
+        .some(teamId => typeof (data.usedInvestigationCoins as Record<string, any>)[teamId] !== 'number')) {
       console.error('[ClueManager] Invalid usedInvestigationCoins data', data.usedInvestigationCoins)
       return
     }

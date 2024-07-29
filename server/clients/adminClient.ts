@@ -551,15 +551,6 @@ export class AdminClient extends WebSocketClient {
         }
       },
       // #endregion
-      
-      // #region Clues
-      {
-        action: 'getClues',
-        handler: () => {
-          game.sendCluesToClients(this);
-        }
-      },
-      // #endregion
     ]))
   }
 }

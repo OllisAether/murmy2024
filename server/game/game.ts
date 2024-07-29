@@ -39,12 +39,11 @@ export class Game {
     this.loadTeams()
     this.loadTimer()
     this.loadPhase()
-    // this.loadCues()
-    // this.loadVote()
     this.loadMedia()
     this.voteManager.load()
     this.cueManager.load()
     this.suspectDatabaseManager.load()
+    this.clueManager.load()
   }
 
   // #region Teams
@@ -864,9 +863,12 @@ export class Game {
 
     if (client) {
       client.send('clues', {
-        availableClues: this.clueManager.getAvailableClues(),
-        unlockedClues: client.type === Role.Team
+        available: this.clueManager.getAvailableClues(),
+        unlocked: client.type === Role.Team
           ? this.clueManager.getUnlockedClues((client as TeamClient).teamId)
+          : undefined,
+        investigationCoins: client.type === Role.Team
+          ? this.clueManager.getInvestigationCoins((client as TeamClient).teamId)
           : undefined
       })
       return
@@ -875,9 +877,12 @@ export class Game {
     this.clients
       .filter((c) => c.type !== Role.Unauthorized)
       .forEach((c) => c.send('clues', {
-        availableClues: this.clueManager.getAvailableClues(),
-        unlockedClues: c.type === Role.Team
+        available: this.clueManager.getAvailableClues(),
+        unlocked: c.type === Role.Team
           ? this.clueManager.getUnlockedClues((c as TeamClient).teamId)
+          : undefined,
+        investigationCoins: c.type === Role.Team
+          ? this.clueManager.getInvestigationCoins((c as TeamClient).teamId)
           : undefined
       }))
   }

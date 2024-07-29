@@ -70,4 +70,10 @@ export const cueSettingsMap: Record<CueTypes, {
   [cueType.ResumeVote]: {},
   [cueType.WaitForVote]: {},
   [cueType.WaitForBoardSkip]: {},
+  [cueType.AddInvestigationCoins]: {
+    amount: {
+      type: 'number',
+      default: null
+    }
+  }
 }

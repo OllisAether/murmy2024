@@ -6,6 +6,7 @@ import { StartTimer } from "./StartTimer";
 import { WaitForBoardSkip, WaitForSkip } from "./WaitForSkip";
 import { WaitForTimer } from "./WaitForTimer";
 import { AddVoteOptions, ClearVotePool, CloseVote, EndVote, OpenVote, PauseVote, ResumeVote, SetRandomWinner, StartTiebreaker, WaitForVote } from "./Vote";
+import { AddInvestigationCoins } from "./Clue";
 
 export const cueTypes = {
   StartTimer,
@@ -32,7 +33,10 @@ export const cueTypes = {
   EndVote,
   PauseVote,
   ResumeVote,
-  WaitForVote
+  WaitForVote,
+
+  // Clue
+  AddInvestigationCoins
 }
 
 export function getHandle (type: CueTypes): CueHandle {
