@@ -7,7 +7,7 @@
     >
       {{ candidate }}
 
-      {{ candidate.votes.length }} / {{ game.vote.session?.totalPossibleVotes }}
+      {{ candidate.votes?.length }} / {{ game.vote.session?.totalPossibleVotes }}
     </div>
     <div v-if="nextTiebreaker">
       Tiebreaker

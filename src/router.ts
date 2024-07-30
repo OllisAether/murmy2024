@@ -124,7 +124,7 @@ const router = createRouter({
     {
       name: "adminLogin",
       path: "/admin/login",
-      component: () => import("./pages/admin/AdminLoginPage.vue"),
+      component: () => import("./pages/AdminLoginPage.vue"),
 
       meta: {
         allowedRoles: [Role.Unauthorized],

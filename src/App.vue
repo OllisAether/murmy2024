@@ -35,7 +35,7 @@
     </VAlert>
   </VContainer>
 
-  <VFadeTransition>
+  <!-- <VFadeTransition>
     <div
       v-if="drag.currentDrag"
       class="drag-item"
@@ -52,7 +52,7 @@
         {{ drag.currentDrag.data }}
       </div>
     </div>
-  </VFadeTransition>
+  </VFadeTransition> -->
 </template>
 
 <script lang="ts" setup>
@@ -60,14 +60,14 @@ import { VAlert, VContainer, VProgressLinear } from 'vuetify/components';
 import { useAuthManager } from './store/authManager';
 import { useWsClient } from './store/wsClient';
 import { useGameManager } from './store/gameManager';
-import { useDrag } from './store/dragStore';
+// import { useDrag } from './store/dragStore';
 
 useAuthManager()
 useGameManager()
 const ws = useWsClient()
 ws.connect()
 
-const drag = useDrag()
+// const drag = useDrag()
 </script>
 
 <style lang="scss" scoped>

@@ -227,6 +227,14 @@ export const useGameManager = defineStore('gameManager', () => {
 
             const objectURL = URL.createObjectURL(blob)
 
+            const metadata = await new Promise((resolve, reject) => {
+              const img = new Image()
+              img.onload = () => resolve({ width: img.width, height: img.height })
+              img.onerror = reject
+              img.src = objectURL
+            })
+
+            asset.metadata = metadata
             asset.content = objectURL
             console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
             finishAsset(asset)
@@ -478,7 +486,9 @@ export const useGameManager = defineStore('gameManager', () => {
         ...option,
         votes
       }
-    }).filter((candidate) => !!candidate)
+    }).filter((candidate) => !!candidate) as (VoteOption & {
+      votes: string[]
+    })[] ?? []
   })
 
   function addVote (option: string) {
@@ -518,10 +528,16 @@ export const useGameManager = defineStore('gameManager', () => {
   // #endregion
 
   // #region Suspect Database
-  const databaseEntries = ref<Entry[]>([])
+  const database = ref<{
+    entries: Entry[]
+  }>({
+    entries: []
+  })
 
-  ws.onAction('suspectDatabase', (entrys: Entry[]) => {
-    databaseEntries.value = entrys
+  ws.onAction('suspectDatabase', (db: {
+    entries: Entry[]
+  }) => {
+    database.value = db
   })
 
   function addDatabaseEntry (entry: Entry) {
@@ -588,7 +604,7 @@ export const useGameManager = defineStore('gameManager', () => {
     candidates,
     addVote,
 
-    databaseEntries,
+    database,
     addDatabaseEntry,
 
     clues,

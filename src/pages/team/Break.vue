@@ -41,7 +41,7 @@ const resumeTime = computed(() => {
   top: 50%;
   width: 100%;
   transform: translateY(-55%);
-  font-family: $fontPhoneDisplay;
+  font-family: $fontDisplay;
   line-height: 1.2;
   padding: 0 1rem;
 

@@ -3,83 +3,54 @@
     <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" />
 
     <div class="workspace__main">
-      <div class="workspace__tl-indicators">
-        <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
-          <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
-            <Timer class="workspace__timer" />
-          </div>
-        </VExpandXTransition>
-        <span class="workspace__ep">
-          <VIcon size="1em">
-            mdi-star-four-points-circle
-          </VIcon> {{ game.clues.investigationCoins }}
-        </span>
+      <div class="workspace__indicators">
+        <div class="workspace__indicators__left">
+          <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
+            <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
+              <Timer class="workspace__timer" />
+            </div>
+          </VExpandXTransition>
+          <span class="workspace__ep">
+            <VIcon size="1em">
+              mdi-star-four-points-circle
+            </VIcon> {{ game.clues.investigationCoins }}
+          </span>
+        </div>
+        <div class="workspace__indicators__center">
+          <span class="workspace__teamname">
+            {{ auth.team?.name }}
+          </span>
+        </div>
       </div>
 
+      <BlurGradient class="workspace__blur-gradient" />
+
       <div class="workspace__content">
-        <VBtn @click="addEntry" color="primary">
-          Eintrag hinzufügen
-        </VBtn>
+        <!-- {{ game.clues }} -->
 
-        {{ game.clues }}
-
-        <div
-          v-for="id in game.clues.available"
-          :key="id"
-        >
-          {{ clues.find(c => c.id === id) }}
-          <img
-            v-if="game.clues.unlocked.includes(id)"
-            style="width: 15rem;"
-            :src="game.getAsset(clues.find(c => c.id === id)?.image?.assetId ?? '')?.content"
-          >
-
-          <VBtn>
-            Open Dialog
-            <VDialog activator="parent">
-
-              <VCard>
-                <VCardTitle>
-                  {{ clues.find(c => c.id === id)?.title }}
-                </VCardTitle>
-                <VCardText>
-                  {{ clues.find(c => c.id === id)}}
-                  <img
-                    v-if="game.clues.unlocked.includes(id)"
-                    style="width: 100%;"
-                    :src="game.getAsset(clues.find(c => c.id === id)?.image?.assetId ?? '')?.content"
-                  >
-                </VCardText>
-              </VCard>
-            </VDialog>
-          </VBtn>
-          <VBtn @click="game.unlockClue(id)" color="primary">
-            Freischalten
-          </VBtn>
-        </div>
+        <ClueCard
+          v-for="clue in game.clues.available"
+          :key="clue"
+          :clueId="clue"
+        />
       </div>
     </div>
   </VLayout>
 </template>
 
 <script setup lang="ts">
-import SuspectDatabase from '@/components/SuspectDatabase.vue';
+import BlurGradient from '@/components/BlurGradient.vue';
+import ClueCard from '@/components/team/ClueCard.vue';
+import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';
+import { useAuthManager } from '@/store/authManager';
 import { useGameManager } from '@/store/gameManager';
 import { ref } from 'vue';
-import { clues } from '@/../shared/assets/clues';
 
 const databaseExpanded = ref(true);
 
 const game = useGameManager();
-
-function addEntry () {
-  game.addDatabaseEntry({
-    matterId: 'test',
-    suspectId: 'sasha.monterero',
-    title: 'Testeintrag',
-  });
-}
+const auth = useAuthManager();
 </script>
 
 <style lang="scss" scoped>
@@ -96,7 +67,7 @@ function addEntry () {
   &__main {
     flex: 1;
     position: relative;
-    overflow-y: auto;
+    // overflow-y: auto;
 
     &::before {
       content: '';
@@ -109,20 +80,44 @@ function addEntry () {
     }
   }
 
-  &__tl-indicators {
+  &__indicators {
     position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
-    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5rem;
+
+    &__left {
+      z-index: 2000;
+      position: absolute;
+      inset: 1.5rem auto 1.5rem 1.5rem;
+      display: flex;
+      line-height: 2rem;
+    }
+
+    &__center {
+      z-index: 2;
+      position: absolute;
+      top: 1.5rem;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      line-height: 2rem;
+    }
+  }
+
+  &__blur-gradient {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5rem;
   }
 
   &__timer {
     margin-right: 1.5rem;
     font-size: 2rem;
-  }
-
-  &__timer-wrapper {
-    transform: translateY(-.4rem);
   }
 
   &__ep {
@@ -131,6 +126,21 @@ function addEntry () {
   }
 
   &__content {
+    overflow-y: auto;
+    height: 100%;
+    max-width: calc(100vw - 25rem);
+    margin: 0 auto;
+    padding: 6rem 8rem;
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    justify-content: center;
+  }
+
+  &__teamname {
+    font-size: 2rem;
+    font-family: $fontDisplay;
+    font-weight: 300;
   }
 }
 </style>

@@ -1,10 +1,29 @@
-import { cueTypes } from "../../server/game/cue/registeredCueTypes";
+export type CueTypes = keyof typeof cueType
 
-export type CueTypes = keyof typeof cueTypes
+export enum cueType {
+  StartTimer = "StartTimer",
+  SetPhase = "SetPhase",
 
-export const cueType: {
-  [key in CueTypes]: key
-} = Object.fromEntries(
-  (Object.keys(cueTypes) as CueTypes[])
-    .map(key => [key, key]) as [CueTypes, CueTypes][]
-) as { [key in CueTypes]: key }
+  WaitForTimer = "WaitForTimer",
+  WaitForSkip = "WaitForSkip",
+  WaitForBoardSkip = "WaitForBoardSkip",
+
+  If = "If",
+  ElseIf = "ElseIf",
+  Else = "Else",
+  EndIf = "EndIf",
+  Break = "Break",
+
+  OpenVote = "OpenVote",
+  CloseVote = "CloseVote",
+  AddVoteOptions = "AddVoteOptions",
+  ClearVotePool = "ClearVotePool",
+  StartTiebreaker = "StartTiebreaker",
+  SetRandomWinner = "SetRandomWinner",
+  EndVote = "EndVote",
+  PauseVote = "PauseVote",
+  ResumeVote = "ResumeVote",
+  WaitForVote = "WaitForVote",
+
+  AddInvestigationCoins = "AddInvestigationCoins"
+}

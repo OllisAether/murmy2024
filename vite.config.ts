@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
 import { readFileSync } from 'fs'
 import { configDotenv } from 'dotenv'
-import path from 'path'
 import mkCert from 'vite-plugin-mkcert'
+import vuetify from 'vite-plugin-vuetify'
 
 configDotenv({
   path: '.env'
@@ -14,6 +14,7 @@ configDotenv({
 export default defineConfig({
   plugins: [
     vue(),
+    vuetify(),
     svgLoader(),
     mkCert(),
     // VitePWA({
@@ -36,18 +37,33 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks (id) {
-          if (id.includes('/pages/admin')) {
-            return 'admin'
+          if (id.endsWith('AdminLoginPage.vue')) {
+            return 'adminLogin'
           }
-          if (id.includes('/pages/board')) {
-            return 'board'
+
+          if (id.includes('/server')) {
+            return 'server'
           }
-          if (id.includes('/pages/team')) {
-            return 'team'
+          if (id.includes('/@vue') || id.includes('/vuetify')) {
+            return 'vendor'
           }
           if (id.includes('node_modules')) {
             return 'vendor'
           }
+          if (id.includes('/shared')) {
+            return 'index'
+            // return 'shared'
+          }
+          if (id.includes('/admin')) {
+            return 'admin'
+          }
+          if (id.includes('/board')) {
+            return 'board'
+          }
+          if (id.includes('/team')) {
+            return 'team'
+          }
+          return 'index'
         }
       }
     },

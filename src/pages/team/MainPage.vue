@@ -15,12 +15,14 @@
       class="fullscreen-button"
       @click="game.toggleFullscreen"
       square
+      color="#fff2"
     >
       <VIcon>{{ game.isFullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
     </Btn>
     <Btn
       class="help-button"
       square
+      color="#fff2"
     >
       <VIcon size="small">mdi-account-question</VIcon>
 
@@ -40,7 +42,7 @@
               <VIcon class="mr-2">mdi-account-question</VIcon>
               Hilfe anfordern
             </VToolbarTitle>
-            
+
             <VBtn icon @click="helpDialog = false" :rounded="false" :ripple="false">
               <VIcon>mdi-close</VIcon>
             </VBtn>
@@ -123,17 +125,19 @@
 </template>
 
 <script setup lang="ts">
+console.log('Skewbox')
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
 // import { useDisplay } from 'vuetify';
-import router from '@/router';
+import { useRouter } from 'vue-router';
 import Btn from '@/components/Btn.vue';
 import SkewBox from '@/components/SkewBox.vue';
 
 // const display = useDisplay()
 
+const router = useRouter()
 const auth = useAuthManager()
 const game = useGameManager()
 
@@ -255,9 +259,11 @@ const loadProgress = computed(() => {
   position: fixed;
   top: 1rem;
   right: 1rem;
+  z-index: 9999;
   
   display: flex;
   flex-flow: row nowrap;
+  gap: .5rem;
 
   @media screen and (max-width: 768px) {
     top: .5rem;

@@ -88,8 +88,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useAuthManager } from '../../store/authManager'
-import { Role } from '../../../shared/roles';
+import { useAuthManager } from '@/store/authManager'
+import { Role } from '@/../shared/roles';
 
 const auth = useAuthManager()
 

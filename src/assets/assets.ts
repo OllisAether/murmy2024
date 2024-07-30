@@ -10,7 +10,7 @@ export const teamAssets: Asset[] = [
   {
     name: 'clue1',
     type: 'image',
-    url: '/test.png'
+    url: '/clue1.png'
   }
 ]
 

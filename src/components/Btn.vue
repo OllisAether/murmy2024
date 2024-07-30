@@ -1,6 +1,7 @@
 <template>
   <button :class="['btn', {
     'btn--square': square,
+    'btn--disabled': $attrs.disabled
   }]">
     <SkewBox
       class="btn__box"
@@ -27,6 +28,14 @@ defineProps<{
   position: relative;
   padding: 1rem 2rem;
   line-height: 1rem;
+
+  &--disabled {
+    pointer-events: none;
+
+    .btn__content {
+      opacity: 0.3;
+    }
+  }
 
   &__box {
     position: absolute;

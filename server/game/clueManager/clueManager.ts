@@ -31,7 +31,7 @@ export class ClueManager {
 
     if (!data.availableClues ||
       !Array.isArray(data.availableClues) ||
-      data.availableClues.some((clueId: any) => typeof clueId !== 'string')) {
+      data.availableClues?.some((clueId: any) => typeof clueId !== 'string')) {
       console.error('[ClueManager] Invalid availableClues data', data.availableClues)
       return
     }
@@ -39,9 +39,10 @@ export class ClueManager {
     if (!data.unlockedClues ||
       typeof data.unlockedClues !== 'object' ||
       Array.isArray(data.unlockedClues) ||
-      Object.keys(data.unlockedClues).some(teamId => !Array.isArray((data.unlockedClues as Record<string, any>)[teamId])
-        || (data.unlockedClues as Record<string, any>)
-          .some((clueId: any) => typeof clueId !== 'string'))) {
+      Object.keys(data.unlockedClues)
+        ?.some(teamId => !Array.isArray((data.unlockedClues as Record<string, any>)?.[teamId])
+        || (data.unlockedClues as Record<string, any>)?.[teamId]
+          ?.some((clueId: any) => typeof clueId !== 'string'))) {
       console.error('[ClueManager] Invalid unlockedClues data', data.unlockedClues)
       return
     }
@@ -54,12 +55,15 @@ export class ClueManager {
     if (typeof data.usedInvestigationCoins !== 'object' ||
       Array.isArray(data.usedInvestigationCoins) ||
       Object.keys(data.usedInvestigationCoins!)
-        .some(teamId => typeof (data.usedInvestigationCoins as Record<string, any>)[teamId] !== 'number')) {
+        ?.some(teamId => typeof (data.usedInvestigationCoins as Record<string, any>)?.[teamId] !== 'number')) {
       console.error('[ClueManager] Invalid usedInvestigationCoins data', data.usedInvestigationCoins)
       return
     }
 
     this.availableClues = data.availableClues as string[]
+    this.unlockedClues = data.unlockedClues as Record<string, string[]>
+    this.givenInvestigationCoins = data.givenInvestigationCoins
+    this.usedInvestigationCoins = data.usedInvestigationCoins as Record<string, number>
   }
 
   getAvailableClues() {

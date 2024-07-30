@@ -34,6 +34,8 @@ export class SuspectDatabaseManager {
       console.error("[SuspectDatabaseManager] Invalid data", data)
       return
     }
+
+    this.databases = data as { [teamId: string]: SuspectDatabase }
   }
 
   public getDatabase (teamId: string): SuspectDatabase {
@@ -55,6 +57,11 @@ export class SuspectDatabaseManager {
 
     if (!this.databases[teamId]) {
       this.databases[teamId] = { entries: [] }
+    }
+
+    if (this.databases[teamId].entries.some((e) => e.matterId === entry.matterId)) {
+      console.error("[SuspectDatabaseManager] Entry already exists", entry.matterId)
+      return
     }
 
     this.databases[teamId].entries.push(entry)

@@ -66,11 +66,11 @@ const port = process.env.PORT || 3000;
       console.log(`Server listening on port ${port}`);
     });
   } else {
-    app.use(express.static('../client'));
+    app.use(express.static(path.resolve(__dirname, '../client')));
 
     // Serve the index.html file for all other routes
     app.get('*', (req, res) => {
-      res.sendFile('./index.html', { root: '../client' });
+      res.sendFile('./index.html', { root: path.resolve(__dirname, '../client') });
     });
   }
 })();

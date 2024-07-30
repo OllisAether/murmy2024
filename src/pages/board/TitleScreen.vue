@@ -71,7 +71,7 @@ const countdown = computed(() => {
 }
 
 .countdown {
-  font-family: $fontPhoneDisplay;
+  font-family: $fontDisplay;
   position: absolute;
   top: 40%;
   left: 50%;

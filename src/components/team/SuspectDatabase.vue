@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        {{ game.databaseEntries }}
+        {{ game.database }}
       </div>
     </Transition>
     <button
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref, useModel, watch } from 'vue';
-import Timer from './Timer.vue';
+import Timer from '../Timer.vue';
 import { useSwipe } from '@vueuse/core';
 import { suspects } from '@/assets/suspects';
 import { useGameManager } from '@/store/gameManager';
@@ -68,7 +68,7 @@ watch(swipe.direction, () => {
 </script>
 
 <style lang="scss" scoped>
-@import '../scss/vars';
+@import '@/scss/vars';
 
 .sus-db {
   background: $surface;
@@ -76,7 +76,7 @@ watch(swipe.direction, () => {
   height: 100%;
   border-right: 1px solid $stroke;
   position: relative;
-
+  
   &__wrapper {
     position: relative;
     box-shadow: 0 0 10rem rgba(0, 0, 0, 0.5);
@@ -120,13 +120,13 @@ watch(swipe.direction, () => {
   }
 
   &__timer {
+    z-index: 999;
     font-size: 2rem;
     font-weight: 300;
     mask-image: linear-gradient(black, rgba(0, 0, 0, 0.25));
   }
 
   &__expand-collapse-btn {
-    z-index: 1;
     position: absolute;
     top: 50%;
     left: 100%;

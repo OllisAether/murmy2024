@@ -6,6 +6,7 @@ export const clues: Clue<ClueTypes>[] = [
     type: 'image',
     cost: 10,
     title: 'Clue 1',
+    description: 'A clue that will help you solve the mystery.',
     thumbnailAssetId: 'clue1',
     image: {
       assetId: 'clue1',

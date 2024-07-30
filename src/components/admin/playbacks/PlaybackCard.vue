@@ -106,7 +106,7 @@ const props = defineProps<{
 
 const trigger = computed({
   get: () => props.playback.trigger,
-  set: (value: string) => {
+  set: () => {
     // props.playback.trigger = value
   }
 })
