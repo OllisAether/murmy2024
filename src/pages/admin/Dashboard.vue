@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAdmin } from '../../store/admin'
+import { useAdmin } from '../../store/admin/index'
 import GameControl from '@/components/admin/GameControl.vue';
 import MediaControl from '@/components/admin/MediaControl.vue';
 

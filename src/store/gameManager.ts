@@ -29,6 +29,7 @@ export const useGameManager = defineStore('gameManager', () => {
     const auth = useAuthManager()
 
     if (auth.loading) {
+      console.log('Waiting for auth to load')
       await new Promise<void>(resolve => watch(auth, (value) => {
         if (!value.loading) {
           resolve()
@@ -42,41 +43,6 @@ export const useGameManager = defineStore('gameManager', () => {
 
     console.log('Initializing GameManager')
 
-    switch (auth.role) {
-      case Role.Team:
-        const teamRes = await fetch('/api/assets/team')
-          .catch((e) => {
-            console.error('Failed to fetch team assets', e)
-            return null
-          })
-
-        if (!teamRes) {
-          break
-        }
-
-        const teamAssets: Asset[] = await teamRes.json()
-        await preloadAssets(teamAssets)
-        break
-      case Role.Board:
-        const boardRes = await fetch('/api/assets/board')
-          .catch((e) => {
-            console.error('Failed to fetch board assets', e)
-            return null
-          })
-
-        if (!boardRes) {
-          break
-        }
-
-        const boardAssets: Asset[] = await boardRes.json()
-        await preloadAssets(boardAssets)
-        await new Promise<void>(resolve => {
-          ws.once('currentMedia').then(resolve)
-          ws.send('getMedia')
-        })
-        break
-    }
-
     await new Promise<void>(resolve => {
       ws.once('timer').then(resolve)
       ws.send('getTimer')
@@ -85,31 +51,100 @@ export const useGameManager = defineStore('gameManager', () => {
     startTimeSync()
     syncTime()
 
-    await new Promise<void>(resolve => {
-      ws.once('phase').then(resolve)
-      ws.send('getPhase')
-    })
+    if (auth.role === Role.Team) {
+      await new Promise<void>(resolve => {
+        ws.once('suspectDatabase').then(() => {
+          console.log('Fetched suspectDatabase')
+          resolve()
+        })
+        ws.send('getSuspectDatabase')
+      })
+    }
 
-    await new Promise<void>(resolve => {
-      ws.once('voteSession').then(resolve)
-      ws.send('getVoteSession')
-    })
-    await new Promise<void>(resolve => {
-      ws.once('votePools').then(resolve)
-      ws.send('getVotePools')
-    })
-    await new Promise<void>(resolve => {
-      ws.once('voteOptions').then(resolve)
-      ws.send('getVoteOptions')
-    })
-    await new Promise<void>(resolve => {
-      ws.once('suspectDatabase').then(resolve)
-      ws.send('getSuspectDatabase')
-    })
-    await new Promise<void>(resolve => {
-      ws.once('clues').then(resolve)
-      ws.send('getClues')
-    })
+    await Promise.all([
+      new Promise<void>(resolve => {
+        ws.once('phase').then(() => {
+          console.log('Fetched phase')
+          resolve()
+        })
+        ws.send('getPhase')
+      }),
+      new Promise<void>(resolve => {
+        ws.once('voteSession').then(() => {
+          console.log('Fetched voteSession')
+          resolve()
+        })
+        ws.send('getVoteSession')
+      }),
+      new Promise<void>(resolve => {
+        ws.once('votePools').then(() => {
+          console.log('Fetched votePools')
+          resolve()
+        })
+        ws.send('getVotePools')
+      }),
+      new Promise<void>(resolve => {
+        ws.once('voteOptions').then(() => {
+          console.log('Fetched voteOptions')
+          resolve()
+        })
+        ws.send('getVoteOptions')
+      }),
+      new Promise<void>(resolve => {
+        ws.once('clues').then(() => {
+          console.log('Fetched clues')
+          resolve()
+        })
+        ws.send('getClues')
+      }),
+      (async () => {
+        switch (auth.role) {
+          case Role.Team:
+            console.log('Fetching team assets')
+            const teamRes = await fetch('/api/assets/team')
+              .catch((e) => {
+                console.error('Failed to fetch team assets', e)
+                return null
+              })
+
+            if (!teamRes) {
+              break
+            }
+
+            const teamAssets: Asset[] = await teamRes.json()
+            await preloadAssets(teamAssets)
+            break
+          case Role.Board:
+            console.log('Fetching board assets')
+            const boardRes = await fetch('/api/assets/board')
+              .catch((e) => {
+                console.error('Failed to fetch board assets', e)
+                return null
+              })
+
+            if (!boardRes) {
+              break
+            }
+
+            const boardAssets: Asset[] = await boardRes.json()
+            await preloadAssets(boardAssets)
+            await new Promise<void>(resolve => {
+              ws.once('currentMedia').then(resolve)
+              ws.send('getMedia')
+            })
+            break
+          case Role.Admin:
+            console.log('Fetching admin assets')
+            const { useAdmin } = await import('./admin')
+            const admin = useAdmin()
+            await preloadAssets(
+              admin.assets.team.concat(admin.assets.shared, admin.assets.board)
+                .filter((asset) => !asset.url.endsWith('.mp4'))
+            )
+            break
+        }
+      })()
+    ])
 
     loading.value = false
     initialized.value = true
@@ -185,11 +220,13 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Assets
   const assetsProgress = ref<{
+    loading: boolean
     loaded: boolean
     loadedAssets: number
     progresses: Record<string, number>
     totalAssets: number
   }>({
+    loading: false,
     loaded: false,
     loadedAssets: 0,
     progresses: {},
@@ -197,6 +234,7 @@ export const useGameManager = defineStore('gameManager', () => {
   })
   const assets = ref<Asset[]>([])
   function preloadAssets (_assets: Asset[]) {
+    assetsProgress.value.loading = true
     assetsProgress.value.loadedAssets = 0
     assetsProgress.value.progresses = {}
     assetsProgress.value.totalAssets = _assets.length
@@ -211,13 +249,14 @@ export const useGameManager = defineStore('gameManager', () => {
       content: undefined
     }))
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(async (resolve) => {
       function finishAsset (asset: Asset) {
         assetsProgress.value.loadedAssets++
         assetsProgress.value.progresses[asset.name] = 1
 
         if (assetsProgress.value.loadedAssets === assetsProgress.value.totalAssets) {
           assetsProgress.value.loaded = true
+          assetsProgress.value.loading = false
           console.log('%c[GameManager]', 'color: #4CAF50', 'All assets loaded')
           resolve()
         }
@@ -235,33 +274,11 @@ export const useGameManager = defineStore('gameManager', () => {
 
         xhr.open('GET', asset.url, true)
         xhr.responseType = 'blob'
+        xhr.setRequestHeader('Cache-Control', 'public, max-age=31536000')
 
         xhr.onprogress = function (event) {
           if (event.lengthComputable) {
             assetsProgress.value.progresses[asset.name] = event.loaded / event.total
-          }
-        }
-
-        xhr.onload = async function () {
-          if (xhr.status === 200) {
-            const blob = xhr.response
-
-            const objectURL = URL.createObjectURL(blob)
-
-            const metadata = await new Promise((resolve, reject) => {
-              const img = new Image()
-              img.onload = () => resolve({ width: img.width, height: img.height })
-              img.onerror = reject
-              img.src = objectURL
-            })
-
-            asset.metadata = metadata
-            asset.content = objectURL
-            console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
-            finishAsset(asset)
-          } else {
-            console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
-            finishAsset(asset)
           }
         }
 
@@ -272,6 +289,47 @@ export const useGameManager = defineStore('gameManager', () => {
         }
 
         xhr.send()
+
+        await new Promise<void>((resolve) => {
+          xhr.onload = async function () {
+            if (xhr.status === 200) {
+              const blob = xhr.response
+
+              const objectURL = URL.createObjectURL(blob)
+
+              const metadata = await new Promise((resolve, reject) => {
+                if (blob.type.startsWith('image')) {
+                  const img = new Image()
+                  img.onload = () => resolve({
+                    mime: blob.type,
+                    width: img.width,
+                    height: img.height
+                  })
+                  img.onerror = reject
+                  img.src = objectURL
+                  return
+                } else {
+                  resolve({
+                    mime: blob.type
+                  })
+                }
+              }).catch((e) => {
+                console.error('Failed to load metadata', blob.type, e)
+                return {}
+              })
+
+              asset.metadata = metadata
+              asset.content = objectURL
+              console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
+              finishAsset(asset)
+            } else {
+              console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
+              finishAsset(asset)
+            }
+
+            resolve()
+          }
+        })
       }
     })
   }

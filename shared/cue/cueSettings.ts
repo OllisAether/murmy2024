@@ -1,58 +1,57 @@
-import { cueType, CueTypes } from './CueTypes';
+import { CueType, CueTypes } from './CueTypes';
 
-export const cueSettingsMap: Record<CueTypes, {
-  [key: string]: {
-    type: 'string' | 'number' | 'phase' | 'condition' | 'boolean',
-    default: string | number | null | boolean
+export const cueSettingsMap: {
+  [cue in CueTypes]?: {
+    [key: string]: {
+      type: 'string' | 'number' | 'phase' | 'condition' | 'boolean',
+      default: string | number | null | boolean
+    }
   }
-}> = {
-  [cueType.SetPhase]: {
+} = {
+  [CueType.SetPhase]: {
     phase: {
       type: 'phase',
       default: null
     }
   },
-  [cueType.StartTimer]: {
+  [CueType.StartTimer]: {
     duration: {
       type: 'number',
       default: null
     }
   },
-  [cueType.WaitForTimer]: {},
-  [cueType.WaitForSkip]: {},
 
-  [cueType.If]: {
+  [CueType.If]: {
     condition: {
       type: 'condition',
       default: null
     }
   },
-  [cueType.ElseIf]: {
+  [CueType.ElseIf]: {
     condition: {
       type: 'condition',
       default: null
     }
   },
-  [cueType.Else]: {},
-  [cueType.EndIf]: {},
-  [cueType.Break]: {},
-  [cueType.AddVoteOptions]: {
-    pool: {
-      type: 'string',
-      default: null
-    },
+  [CueType.AddVoteOptions]: {
     options: {
-      type: 'condition',
+      type: 'string',
       default: null
     }
   },
-  [cueType.ClearVotePool]: {
+  [CueType.RemoveVoteOption]: {
+    options: {
+      type: 'string',
+      default: null
+    }
+  },
+  [CueType.ClearVotePool]: {
     pool: {
       type: 'string',
       default: null
     }
   },
-  [cueType.OpenVote]: {
+  [CueType.OpenVote]: {
     pool: {
       type: 'string',
       default: null
@@ -62,15 +61,7 @@ export const cueSettingsMap: Record<CueTypes, {
       default: false
     }
   },
-  [cueType.CloseVote]: {},
-  [cueType.StartTiebreaker]: {},
-  [cueType.SetRandomWinner]: {},
-  [cueType.EndVote]: {},
-  [cueType.PauseVote]: {},
-  [cueType.ResumeVote]: {},
-  [cueType.WaitForVote]: {},
-  [cueType.WaitForBoardSkip]: {},
-  [cueType.AddInvestigationCoins]: {
+  [CueType.AddInvestigationCoins]: {
     amount: {
       type: 'number',
       default: null

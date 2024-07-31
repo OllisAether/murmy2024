@@ -1,5 +1,32 @@
 <template>
-  <RouterView v-if="ws.status === 'connected'" />
+  <template v-if="ws.status === 'connected'">
+    <VFadeTransition>
+      <div
+        class="loading"
+        v-if="!game.assetsProgress.loaded &&
+          game.assetsProgress.loading &&
+          auth.role !== Role.Admin
+        "
+      >
+        <div class="d-flex align-center mb-2">
+          <span>
+            <VProgressCircular indeterminate class="mb-1 mr-2"/>
+            Lade {{ loadProgress }}%
+          </span>
+
+          <VSpacer />
+
+          <span>
+            {{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }}
+          </span>
+        </div>
+
+        <VProgressLinear :model-value="loadProgress" class="mb-1 mr-2 loading__progress" :max="100"/>
+      </div>
+
+      <RouterView v-else />
+    </VFadeTransition>
+  </template>
   <VContainer v-else>
     <VAlert
       class="ws-status"
@@ -34,25 +61,6 @@
       </template>
     </VAlert>
   </VContainer>
-
-  <!-- <VFadeTransition>
-    <div
-      v-if="drag.currentDrag"
-      class="drag-item"
-      :style="{
-        top: drag.currentDrag.pos.y + 'px',
-        left: drag.currentDrag.pos.x + 'px',
-      }"
-    >
-      <VIcon size="16">
-        mdi-arrow-collapse-down
-      </VIcon>
-
-      <div>
-        {{ drag.currentDrag.data }}
-      </div>
-    </div>
-  </VFadeTransition> -->
 </template>
 
 <script lang="ts" setup>
@@ -60,17 +68,25 @@ import { VAlert, VContainer, VProgressLinear } from 'vuetify/components';
 import { useAuthManager } from './store/authManager';
 import { useWsClient } from './store/wsClient';
 import { useGameManager } from './store/gameManager';
-// import { useDrag } from './store/dragStore';
+import { computed } from 'vue';
+import { Role } from '../shared/roles';
 
-useAuthManager()
-useGameManager()
+const auth = useAuthManager()
+const game = useGameManager()
 const ws = useWsClient()
 ws.connect()
 
-// const drag = useDrag()
+const loadProgress = computed(() => {
+  return Math.round(
+    (Object.values(game.assetsProgress.progresses)
+      .reduce((acc, val) => acc + val, 0) / game.assetsProgress.totalAssets)
+    * 100)
+})
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .ws-status {
   position: absolute;
   width: calc(100% - 2rem);
@@ -80,33 +96,18 @@ ws.connect()
   transform: translate(-50%, -50%);
 }
 
-.drag-item {
+.loading {
+  font-family: $fontDisplay;
   position: fixed;
-  z-index: 99999;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
 
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.9);
-  transform: translate(-50%, -50%);
-
-  pointer-events: none;
-
-  div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    white-space: nowrap;
-    width: max-content;
-    box-shadow: 0 0 1rem rgba(black, 0.5);
-    transform: translate(-50%, -150%);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    background: rgba(#111, 0.9);
-    color: white;
+  &__progress {
+    transition: none;
   }
 }
 </style>

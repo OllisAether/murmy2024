@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin/index';
 import TeamCard from './TeamCard.vue';
 
 const props = defineProps<{

@@ -22,7 +22,7 @@
         <VIcon>mdi-flag-triangle</VIcon>
       </VChip>
 
-      <VToolbarTitle>
+      <VToolbarTitle class="mx-0">
         {{ playback.name }}
 
         <VChip
@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { Playback } from '@/../shared/playback/Playback';
 import CueCard from './CueCard.vue';
-import { useAdmin } from '@/store/admin';
+import { useAdmin } from '@/store/admin/index';
 import { computed, ref } from 'vue';
 
 const admin = useAdmin()

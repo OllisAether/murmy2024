@@ -88,7 +88,7 @@
 import { computed } from 'vue';
 import { Role } from '../../../shared/roles';
 import ClientListItem from '../../components/admin/ClientListItem.vue';
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin/index';
 import { useAuthManager } from '../../store/authManager';
 
 const admin = useAdmin()

@@ -1,13 +1,11 @@
 <template>
-  <div class="loading" v-if="!game.assetsProgress.loaded">
-    <VProgressCircular indeterminate class="mb-1 mr-2"/>
-    Lade {{ loadProgress }}%
-    <span class="text-small">
-      ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
-    </span>
-  </div>
-
-  <RouterView v-else />
+  <RouterView>
+    <template #default="{ Component }">
+      <VFadeTransition mode="out-in">
+        <component :is="Component" />
+      </VFadeTransition>
+    </template>
+  </RouterView>
 
   <div class="controls">
     <Btn
@@ -128,7 +126,7 @@
 console.log('Skewbox')
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useGameManager } from '../../store/gameManager';
 // import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
@@ -243,13 +241,6 @@ async function help () {
   }
   helpLoading.value = false
 }
-
-const loadProgress = computed(() => {
-  return Math.round(
-    (Object.values(game.assetsProgress.progresses)
-      .reduce((acc, val) => acc + val, 0) / game.assetsProgress.totalAssets)
-    * 100)
-})
 </script>
 
 <style scoped lang="scss">
@@ -271,14 +262,5 @@ const loadProgress = computed(() => {
     transform-origin: top right;
     transform: scale(0.75);
   }
-}
-
-.loading {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 2rem;
-  font-size: 2rem;
-  font-weight: bold;
 }
 </style>

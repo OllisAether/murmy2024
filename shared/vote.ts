@@ -5,8 +5,11 @@ export interface VoteOption extends JsonMap {
   title: string,
   image?: string,
   description?: string,
-  unlockClues?: string[],
-  addToPool?: Record<string, string>
+
+  // After option is selected, the following will be added
+  removeSelf?: boolean,
+  availableClues?: string[],
+  options?: Record<string, string[]>
   media?: string
 }
 
@@ -40,4 +43,6 @@ export interface VoteResults extends JsonMap {
   votes: Record<string, number>
   winners: string[]
   next: "tiebreaker" | "random" | null
+  
+  finalWinner?: VoteOption
 }

@@ -1,4 +1,4 @@
-import { cueType } from '../cue/CueTypes';
+import { CueType } from '../cue/CueTypes';
 import { Phase } from '../phase';
 import { Playback } from './Playback';
 
@@ -7,18 +7,18 @@ export const Work = (): Playback => ({
   trigger: 'auto',
   cues: [
     {
-      type: cueType.SetPhase,
+      type: CueType.SetPhase,
       options: {
         phase: Phase.Work,
       },
     },
     {
-      type: cueType.StartTimer,
+      type: CueType.StartTimer,
       options: {
         duration: 1000 * 60 * 10,
       },
     },
-    { type: cueType.WaitForTimer },
+    { type: CueType.WaitForTimer },
   ],
   fields: {
   },

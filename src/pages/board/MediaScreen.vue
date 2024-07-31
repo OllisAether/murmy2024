@@ -9,7 +9,7 @@
       class="media__video"
       autoplay
       @ended="finished"
-      :src="game.getAsset(mediaMap[game.currentMedia].asset.name)?.content"
+      :src="game.getAsset(game.currentMedia)?.content"
     />
     <div class="media__controls">
       <VBtn
@@ -40,7 +40,6 @@
 </template>
 
 <script lang="ts" setup>
-import { mediaMap } from '@/assets/media';
 import BoardScreen from '@/components/board/BoardScreen.vue';
 import { useGameManager } from '@/store/gameManager'
 import { useWsClient } from '@/store/wsClient';

@@ -15,7 +15,20 @@
       </VToolbar>
 
       <VCardText>
-        Team-ID: {{ id }}
+        <template v-if="team">
+          Team-ID: {{ id }}
+        </template>
+        <VTextField
+          v-else
+          v-model="id"
+          label="ID"
+          required
+          variant="outlined"
+          :rules="[
+            (v: string) => !!v || 'ID darf nicht leer sein',
+          ]"
+        />
+
         <VTextField
           class="mb-4 mt-4"
           v-model="name"

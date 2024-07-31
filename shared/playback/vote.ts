@@ -1,5 +1,5 @@
 import { condition } from '../cue/Condition'
-import { cueType } from '../cue/CueTypes'
+import { CueType } from '../cue/CueTypes'
 import { FieldReference } from '../cue/FieldRefrence'
 import { Phase } from '../phase'
 import { Playback } from './Playback'
@@ -9,64 +9,82 @@ export const Vote = (): Playback => ({
   trigger: 'auto',
   cues: [
     {
-      type: cueType.SetPhase,
+      type: CueType.SetPhase,
       options: {
         phase: Phase.Vote
       }
     },
     {
-      type: cueType.AddVoteOptions,
-      options: {
-        pool: 'main',
-        options: [
-          'yes',
-          'no'
-        ] satisfies string[]
-      }
-    },
-    {
-      type: cueType.OpenVote,
+      type: CueType.OpenVote,
       options: {
         pool: 'main',
         title: 'Vote'
       }
     },
     {
-      type: cueType.StartTimer,
+      type: CueType.StartTimer,
       options: {
-        duration: 5000
+        duration: FieldReference('duration')
       }
     },
-    { type: cueType.WaitForVote },
-    { type: cueType.EndVote },
-    { type: cueType.WaitForBoardSkip },
+    { type: CueType.WaitForVote },
+    { type: CueType.EndVote },
+    { type: CueType.WaitForBoardSkip },
     {
-      type: cueType.If,
+      type: CueType.If,
       options: {
         condition: condition(FieldReference('vote.results.next'), '==', 'tiebreaker')
       }
     },
-    { type: cueType.StartTiebreaker },
+    { type: CueType.StartTiebreaker },
     {
-      type: cueType.StartTimer,
+      type: CueType.StartTimer,
       options: {
-        duration: 5000
+        duration: FieldReference('tiebreakerDuration')
       }
     },
-    { type: cueType.WaitForVote },
-    { type: cueType.EndVote },
+    { type: CueType.WaitForVote },
+    { type: CueType.EndVote },
     {
-      type: cueType.If,
+      type: CueType.If,
       options: {
         condition: condition(FieldReference('vote.results.next'), '==', 'random')
       }
     },
-    { type: cueType.SetRandomWinner },
-    { type: cueType.WaitForBoardSkip },
-    { type: cueType.EndIf },
-    { type: cueType.EndIf },
-    { type: cueType.CloseVote },
+    { type: CueType.SetRandomWinner },
+    { type: CueType.WaitForBoardSkip },
+    { type: CueType.EndIf },
+    { type: CueType.EndIf },
+    { type: CueType.CloseVote },
+    {
+      type: CueType.AddVoteOptions,
+      options: {
+        options: FieldReference('vote.results.finalWinner.options')
+      }
+    },
+    {
+      type: CueType.If,
+      options: {
+        condition: condition(FieldReference('vote.results.finalWinner.removeSelf'), '==', true)
+      }
+    },
+    {
+      type: CueType.RemoveVoteOption,
+      options: {
+        pool: FieldReference('vote.session.pool'),
+        option: FieldReference('vote.results.finalWinner.id')
+      }
+    },
+    { type: CueType.EndIf },
+    {
+      type: CueType.AddClue,
+      options: {
+        clue: FieldReference('vote.results.finalWinner.clue')
+      }
+    }
   ],
   fields: {
+    duration: 5000,
+    tiebreakerDuration: 5000
   }
 })

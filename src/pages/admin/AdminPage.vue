@@ -1,14 +1,13 @@
 <template>
   <VApp>
-    <VNavigationDrawer 
+    <VNavigationDrawer
       v-model="drawer"
       mobile-breakpoint="md"
       :permanent="display.mdAndUp.value"
       :persistent="display.mdAndUp.value"
     >
       <VToolbar color="transparent" border="b">
-        <VToolbarTitle>
-          <VIcon>mdi-gamepad-variant</VIcon>
+        <VToolbarTitle class="title">
           Gamemaster
         </VToolbarTitle>
       </VToolbar>
@@ -29,8 +28,27 @@
           </template>
         </VListItem>
 
-        <div class="mb-2 mt-8">
-          Spiel ablauf
+        <div class="divider">
+          <span>Umfrage</span>
+          <VDivider />
+        </div>
+        
+        <VListItem to="/admin/pools">
+          <VListItemTitle>
+            <VIcon>mdi-vote</VIcon>
+            Pools
+          </VListItemTitle>
+        </VListItem>
+
+        <VListItem to="/admin/candidates">
+          <VListItemTitle>
+            <VIcon>mdi-account-star</VIcon>
+            Kandidaten
+          </VListItemTitle>
+        </VListItem>
+
+        <div class="divider">
+          <span>Spielablauf</span>
           <VDivider />
         </div>
 
@@ -41,8 +59,8 @@
           </VListItemTitle>
         </VListItem>
 
-        <div class="mb-2 mt-8">
-          Verwaltung
+        <div class="divider">
+          <span>Verwaltung</span>
           <VDivider />
         </div>
 
@@ -73,12 +91,30 @@
               <TutorialCard @close="tutorialDialog = false" />
             </VDialog>
           </VListItem>
+          <VListItem @click="">
+            <VListItemTitle>
+              <VIcon>mdi-logout</VIcon>
+              Logout
+            </VListItemTitle>
+
+            <VDialog v-model="logoutDialog" activator="parent" max-width="400">
+              <VCard title="Logout">
+                <VCardText>
+                  <p>bist du sicher, dass du dich ausloggen möchtest?</p>
+                </VCardText>
+                <VCardActions>
+                  <VBtn @click="logoutDialog = false">Abbrechen</VBtn>
+                  <VBtn variant="tonal" color="primary" @click="logout">Logout</VBtn>
+                </VCardActions>
+              </VCard>
+            </VDialog>
+          </VListItem>
         </VList>
       </template>
     </VNavigationDrawer>
 
     <VAppBar border="b" flat>
-      <VToolbarTitle>
+      <VToolbarTitle class="title">
         <VBtn 
           icon
           @click="drawer = !drawer"
@@ -90,42 +126,21 @@
         {{ route.meta.title }}
       </VToolbarTitle>
 
-      <!-- <template v-if="display.mdAndUp.value"> -->
-        <!-- <VChip class="mr-2">
-          Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
-        </VChip> -->
-        <VChip class="mr-4">
-          Phase: {{ phaseToName(game.phase.type) }}
-        </VChip>
-      <!-- </template> -->
-      
-      <!-- <template v-if="display.smAndDown.value" #extension>
-        <VSpacer />
-        <VChip class="mr-2">
-          Cue: {{ cueTypeToName(admin.cues[admin.cueIndex]?.type) ?? 'Keine Cue'}}
-        </VChip>
-        <VChip>
-          Phase: {{ phaseToName(game.phase.type) }}
-        </VChip>
-        <VSpacer />
-      </template> -->
+      <Timer class="mr-4"/>
 
-      <Timer />
-      <VBtn>
-        Logout
+      <template #extension>
+        <div class="px-4">
+          <VChip v-if="game.assetsProgress.loading" class="mr-2">
+            <VProgressCircular indeterminate class="mr-2" size="16" />
+            Lade Assets im Hintergrund
+            ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
+          </VChip>
 
-        <VDialog v-model="logoutDialog" activator="parent" max-width="400">
-          <VCard title="Logout">
-            <VCardText>
-              <p>bist du sicher, dass du dich ausloggen möchtest?</p>
-            </VCardText>
-            <VCardActions>
-              <VBtn @click="logoutDialog = false">Abbrechen</VBtn>
-              <VBtn variant="tonal" color="primary" @click="logout">Logout</VBtn>
-            </VCardActions>
-          </VCard>
-        </VDialog>
-      </VBtn>
+          <VChip class="mr-2">
+            Phase: {{ phaseToName(game.phase.type) }}
+          </VChip>
+        </div>
+      </template>
     </VAppBar>
 
     <VMain class="main">
@@ -155,7 +170,7 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin/index';
 import { Role } from '../../../shared/roles';
 import { VBtn, VIcon, VNavigationDrawer, VToolbar } from 'vuetify/components';
 import { useRoute } from 'vue-router';
@@ -180,7 +195,6 @@ const admin = useAdmin();
 onMounted(() => {
   if (auth.role === Role.Admin) {
     admin.initAdmin();
-    game.initGameManager();
   }
 
   document.documentElement.classList.add('admin');
@@ -188,7 +202,6 @@ onMounted(() => {
 
   onBeforeUnmount(() => {
     admin.deinitAdmin();
-    game.deinitGameManager();
     document.documentElement.classList.remove('admin');
     document.body.classList.remove('admin');
   });
@@ -201,6 +214,8 @@ async function logout() {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .alerts {
   position: absolute;
   top: 1rem;
@@ -214,6 +229,19 @@ async function logout() {
   &-wrapper {
     z-index: 100;
     position: relative;
+  }
+}
+
+.title {
+  font-family: $fontDisplay;
+}
+
+.divider {
+  font-family: $fontDisplay;
+  margin: 1.5rem 0 .5rem;
+
+  span {
+    padding: 0 .5rem;
   }
 }
 </style>

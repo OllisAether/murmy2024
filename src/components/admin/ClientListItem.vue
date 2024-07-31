@@ -165,7 +165,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin/index';
 import { Role } from '../../../shared/roles';
 import { VIcon } from 'vuetify/components';
 import { useAuthManager } from '../../store/authManager';

@@ -851,7 +851,7 @@ export class Game {
 
     this.clients
       .filter((c) => c.type === Role.Team)
-      .forEach((c) => (c as TeamClient).send('suspectDatabases', this.suspectDatabaseManager.getDatabase((c as TeamClient).teamId)))
+      .forEach((c) => (c as TeamClient).send('suspectDatabase', this.suspectDatabaseManager.getDatabase((c as TeamClient).teamId)))
   }
   // #endregion
 

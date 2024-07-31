@@ -27,28 +27,28 @@
             {{ cueIconMap[cue.type] ?? 'mdi-help' }}
           </VIcon>
           {{ cue.type }}
-          <template v-if="cue.type === cueType.SetPhase">
+          <template v-if="cue.type === CueType.SetPhase">
             to
             <VChip size="small">
               {{ cue.options?.phase ?? 'No Phase' }}
             </VChip>
           </template>
-          <template v-if="cue.type === cueType.StartTimer">
+          <template v-if="cue.type === CueType.StartTimer">
             with
             <VChip size="small">
               {{ cue.options?.duration ?? 'No Duration' }}
             </VChip>
           </template>
           <template v-if="([
-            cueType.If,
-            cueType.ElseIf,
+            CueType.If,
+            CueType.ElseIf,
           ] as CueTypes[]).includes(cue.type)">
             <span class="ml-2">
               {{ (cue.options?.condition && conditionToString(cue.options.condition)) ?? 'No Condition' }}
             </span>
           </template>
         </VToolbarTitle>
-        <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type]).length">
+        <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type] ?? {}).length">
           {{ detailsShown ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
         </VIcon>
       </VToolbar>
@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 import { conditionToString } from '@/utils/conditionToString';
-import { cueType, CueTypes } from '../../../../shared/cue/CueTypes';
+import { CueType, CueTypes } from '../../../../shared/cue/CueTypes';
 import { cueIconMap } from '@/utils/cueIcon';
 import { Playback } from '../../../../shared/playback/Playback';
 import { Cue } from '../../../../shared/cue/Cue';
@@ -89,14 +89,14 @@ const props = defineProps<{
 const detailsShown = ref(false);
 
 const increase: CueTypes[] = [
-  cueType.If
+  CueType.If
 ]
 const decrease: CueTypes[] = [
-  cueType.EndIf
+  CueType.EndIf
 ]
 const decreaseIncrease: CueTypes[] = [
-  cueType.ElseIf,
-  cueType.Else
+  CueType.ElseIf,
+  CueType.Else
 ]
 
 const depth = computed(() => {

@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAdmin } from '@/store/admin';
+import { useAdmin } from '@/store/admin/index';
 import { useGameManager } from '@/store/gameManager';
 import { computed } from 'vue';
 import Duration from '@/components/Duration.vue';

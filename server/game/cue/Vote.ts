@@ -54,23 +54,52 @@ export class AddVoteOptions extends CueHandle {
 
     const option = ctx.options
 
-    const pool = ctx.getFieldValue(option.pool)
-
-    if (!pool || typeof pool !== 'string') {
-      console.error('[Cue: AddVoteOption] Invalid pool', pool)
-      next()
-      return
-    }
-
-    const options = ctx.getFieldValue(option.options) as string[] | undefined
+    const options = ctx.getFieldValue(option.options) as Record<string, string[]> | undefined
 
     if (!options) {
-      console.error('[Cue: AddVoteOption] Invalid option', option)
+      console.error('[Cue: AddVoteOption] Invalid options', options)
       next()
       return
     }
 
-    voteManager.addOptionsToPool(pool, options)
+    Object.keys(options).forEach((pool) => {
+      const opts = options[pool]
+
+      if (!opts || !Array.isArray(opts) || opts.some(opt => typeof opt !== 'string')) {
+        console.error('[Cue: AddVoteOption] Invalid options', options)
+        return
+      }
+
+      voteManager.addOptionsToPool(pool, opts)
+    })
+
+    next()
+  }
+  public stop(): void {}
+}
+
+export class RemoveVoteOption extends CueHandle {
+  public start(next: CueHandleNext, ctx: CueHandleCtx<JsonMap>): void {
+    const game = Game.get()
+    const voteManager = game.voteManager
+
+    const options = ctx.options
+    const pool = ctx.getFieldValue(options.pool)
+    const option = ctx.getFieldValue(options.option)
+
+    if (!pool || typeof pool !== 'string') {
+      console.error('[Cue: RemoveVoteOption] Invalid pool', pool)
+      next()
+      return
+    }
+
+    if (!option || typeof option !== 'string') {
+      console.error('[Cue: RemoveVoteOption] Invalid option', option)
+      next()
+      return
+    }
+
+    voteManager.removeOptionFromPool(pool, option)
 
     next()
   }

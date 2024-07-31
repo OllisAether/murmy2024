@@ -61,72 +61,96 @@ const port = process.env.PORT || 3000;
   app.post('/api/login', game.handleLogin.bind(game))
   app.post('/api/admin/login', game.handleAdminLogin.bind(game))
 
+  //#region Assets
+  function walk(dir) {
+    return new Promise<string[]>((resolve, reject) => {
+      let results: string[] = [];
+      fs.readdir(dir, function(err, list) {
+        if (err) return reject(err);
+
+        var pending = list.length;
+
+        if (!pending) return resolve(results);
+
+        list.forEach(function(file) {
+          const filepath = path.resolve(dir, file);
+
+          fs.stat(filepath, function(err, stat) {
+            if (stat && stat.isDirectory()) {
+              walk(filepath).then((res) => {
+                results = results.concat(res);
+                if (!--pending) resolve(results);
+              });
+            } else {
+              results.push(filepath);
+              if (!--pending) resolve(results);
+            }
+          });
+        });
+      });
+    });
+  };
+
+  const assetPath = path.resolve(__dirname, '../client/clues');
+
+  const sharedAssetPath = path.resolve(assetPath, 'shared');
+  const sharedAssets: Asset[] = (await walk(sharedAssetPath)
+    .catch((err) => {
+      console.error('Error walking directory:', err);
+      return [];
+    }))
+    .map((asset) => ({
+      name: path.relative(sharedAssetPath, asset),
+      url: `/clues/shared/${path.relative(sharedAssetPath, asset)}`
+    }));
+
+  const teamAssetPath = path.resolve(assetPath, 'team')
+  const teamAssets: Asset[] = (await walk(teamAssetPath)
+    .catch((err) => {
+      console.error('Error walking directory:', err);
+      return [];
+    }))
+    .map((asset) => ({
+      name: path.relative(teamAssetPath, asset),
+      url: `/clues/team/${path.relative(teamAssetPath, asset)}`
+    }));
+
+  const boardAssetPath = path.resolve(assetPath, 'board')
+  const boardAssets: Asset[] = (await walk(boardAssetPath)
+    .catch((err) => {
+      console.error('Error walking directory:', err);
+      return [];
+    }))
+    .map((asset) => ({
+      name: path.relative(boardAssetPath, asset),
+      url: `/clues/board/${path.relative(boardAssetPath, asset)}`
+    }));
 
   app.get('/api/assets/:type', async (req, res) => {
     const type = req.params.type;
+    
+    if (type === 'all') {
+      res.json({
+        shared: sharedAssets,
+        team: teamAssets,
+        board: boardAssets
+      });
+
+      return;
+    }
 
     if (!['team', 'board'].includes(type)) {
       res.status(400).send('Invalid type');
       return;
     }
 
-    function walk(dir) {
-      return new Promise<string[]>((resolve, reject) => {
-        let results: string[] = [];
-        fs.readdir(dir, function(err, list) {
-          if (err) return reject(err);
-
-          var pending = list.length;
-
-          if (!pending) return resolve(results);
-
-          list.forEach(function(file) {
-            const filepath = path.resolve(dir, file);
-
-            fs.stat(filepath, function(err, stat) {
-              if (stat && stat.isDirectory()) {
-                walk(filepath).then((res) => {
-                  results = results.concat(res);
-                  if (!--pending) resolve(results);
-                });
-              } else {
-                results.push(filepath);
-                if (!--pending) resolve(results);
-              }
-            });
-          });
-        });
-      });
-    };
-
-    const assetPath = path.resolve(__dirname, '../client/clues');
-
-    const sharedAssetPath = path.resolve(assetPath, 'shared');
-    const sharedAssets: Asset[] = (await walk(sharedAssetPath)
-      .catch((err) => {
-        console.error('Error walking directory:', err);
-        return [];
-      }))
-      .map((asset) => ({
-        name: path.relative(sharedAssetPath, asset),
-        url: `/clues/shared/${path.relative(sharedAssetPath, asset)}`
-      }));
-
-    const typeAssetPath = path.resolve(assetPath, type)
-    const assets: Asset[] = (await walk(typeAssetPath)
-      .catch((err) => {
-        console.error('Error walking directory:', err);
-        return [];
-      }))
-      .map((asset) => ({
-        name: path.relative(typeAssetPath, asset),
-        url: `/clues/${type}/${path.relative(typeAssetPath, asset)}`
-      }));
-
     res.json(
-      sharedAssets.concat(assets)
+      sharedAssets.concat(
+        type === 'team' ? teamAssets : boardAssets
+      )
     );
   });
+  //#endregion
 
   if (isDevelopment) {
     console.log('Development mode!');

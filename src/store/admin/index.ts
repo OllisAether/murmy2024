@@ -1,10 +1,13 @@
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useWsClient } from "./wsClient";
-import { Role } from "../../shared/roles";
-import { idGen } from "../../shared/random";
-import { Playback } from "../../shared/playback/Playback";
+import { useWsClient } from "../wsClient";
+import { Role } from "../../../shared/roles";
+import { idGen } from "../../../shared/random";
+import { Playback } from "../../../shared/playback/Playback";
+import { Asset } from "../../../shared/asset";
+import { VoteOption } from "../../../shared/vote";
+import { useGameManager } from "../gameManager";
 
 export interface AlertOptions {
   id: string
@@ -21,8 +24,8 @@ export const useAdmin = defineStore('admin', () => {
   const ws = useWsClient()
 
   let actions: (() => void)[] = []
-  function initAdmin () {
-    console.log('Admin initialized')
+  async function initAdmin () {
+    console.log('Initializing Admin')
 
     actions = [
       ws.onAction('teams', (t) => {
@@ -90,13 +93,47 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getPlaybacks')
     ws.send('getCurrentPlayback')
     ws.send('getMediaState')
+
+    await getAssets()
+    console.log('Assets loaded')
+
+    await useGameManager().initGameManager()
   }
 
   function deinitAdmin () {
-    console.log('Admin deinitialized')
+    console.log('Deinitializing Admin')
 
     actions.forEach((a) => a())
+
+    useGameManager().deinitGameManager()
   }
+
+  // #region Assets
+  const assets = ref<{
+    team: Asset[],
+    shared: Asset[]
+    board: Asset[]
+  }>({
+    team: [],
+    shared: [],
+    board: []
+  })
+
+  async function getAssets () {
+    const res = await fetch('/api/assets/all')
+      .catch((err) => {
+        console.error('Failed to fetch assets', err)
+        return null
+      })
+
+    if (!res) return
+
+    const data = await res.json()
+    assets.value.team = data.team
+    assets.value.shared = data.shared
+    assets.value.board = data.board
+  }
+  // #endregion
 
   // #region Team management
   const teams = ref<{
@@ -233,7 +270,6 @@ export const useAdmin = defineStore('admin', () => {
   function closeAlert (id: string) {
     alerts.value = alerts.value.filter((a) => a.id !== id)
   }
-
   // #endregion
 
   // #region Timer
@@ -251,6 +287,106 @@ export const useAdmin = defineStore('admin', () => {
 
   function setTime (time: number) {
     ws.send('setTime', { time })
+  }
+  // #endregion
+
+  // #region Vote
+  async function addVoteOption (option: VoteOption) {
+    const res = await ws.request('addVoteOption', { option })
+
+    if (!res.success) {
+      console.error('Failed to add vote option', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function editVoteOption (option: VoteOption) {
+    const res = await ws.request('editVoteOption', { option })
+
+    if (!res.success) {
+      console.error('Failed to edit vote option', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function removeVoteOption (id: string) {
+    const res = await ws.request('removeVoteOption', { id })
+
+    if (!res.success) {
+      console.error('Failed to remove vote option', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function addPool (pool: string) {
+    const res = await ws.request('addPool', { pool })
+
+    if (!res.success) {
+      console.error('Failed to add pool', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function removePool (pool: string) {
+    const res = await ws.request('removePool', { pool })
+
+    if (!res.success) {
+      console.error('Failed to remove pool', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function addOptionToPool (pool: string, option: string) {
+    const res = await ws.request('addOptionToPool', { pool, option })
+
+    if (!res.success) {
+      console.error('Failed to add option to pool', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
+  async function removeOptionFromPool (pool: string, option: string) {
+    const res = await ws.request('removeOptionFromPool', { pool, option })
+
+    if (!res.success) {
+      console.error('Failed to remove option from pool', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
   }
   // #endregion
 
@@ -324,6 +460,9 @@ export const useAdmin = defineStore('admin', () => {
   return {
     initAdmin,
     deinitAdmin,
+    
+    assets,
+
     addTeam,
     editTeam,
     removeTeam,
@@ -342,6 +481,14 @@ export const useAdmin = defineStore('admin', () => {
     resumeTimer,
     setDuration,
     setTime,
+
+    addVoteOption,
+    editVoteOption,
+    removeVoteOption,
+    addPool,
+    removePool,
+    addOptionToPool,
+    removeOptionFromPool,
 
     playbacks,
     currentPlaybackIndex,

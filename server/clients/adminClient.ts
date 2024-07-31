@@ -6,6 +6,7 @@ import { idGen } from "../../shared/random";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
 import { TeamClient } from "./teamClient";
+import { VoteOption } from "../../shared/vote";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -28,10 +29,11 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log('Adding team', payload);
 
+          const id = payload.id;
           const name = payload.name;
           const code = payload.code;
 
-          if (typeof name !== 'string' || typeof code !== 'string') {
+          if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string') {
             console.error('Invalid payload', payload);
 
             this.send('addTeam:response', {
@@ -42,7 +44,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          if (name.length === 0 || code.length === 0) {
+          if (name.length === 0 || code.length === 0 || id.length === 0) {
             console.error('Some fields are empty', payload);
 
             this.send('addTeam:response', {
@@ -88,10 +90,21 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
+          if (game.getTeams().find((t) => t.id === id)) {
+            console.error('ID already exists', id);
+
+            this.send('addTeam:response', {
+              success: false,
+              message: 'ID already exists'
+            });
+
+            return;
+          }
+
           game.addTeam(new Team(
-            idGen(),
-            payload.name,
-            payload.code
+            id,
+            name,
+            code
           ));
 
           this.send('teams', game.getTeams());
@@ -474,17 +487,129 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log('Adding vote option', payload);
 
-          const title = payload.title;
-          const image = payload.image;
-          const description = payload.description;
-          const unlockClues = payload.unlockClues;
-          const addToPool = payload.addToPool;
-          const media = payload.media;
+          const option = payload.option as VoteOption;
 
-          if (typeof title !== 'string') {
+          if (typeof option.title !== 'string' || option.title.length === 0 ||
+              typeof option.id !== 'string' || option.id.length === 0 ||
+              (option.description && typeof option.description !== 'string') ||
+              (option.image && typeof option.image !== 'string') ||
+              (option.media && typeof option.media !== 'string') ||
+              (option.removeSelf && typeof option.removeSelf !== 'boolean') ||
+              (option.availableClues && (!Array.isArray(option.availableClues) ||
+                option.availableClues.some(c => typeof c !== 'string'))) ||
+              (option.options && (typeof option.options !== 'object' ||
+                Object.keys(option.options).some(k => typeof k !== 'string' ||
+                  !Array.isArray(option.options![k]) || option.options![k].some(o => typeof o !== 'string')
+              )))) {
             console.error('Invalid payload', payload);
 
             this.send('addVoteOption:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+            return
+          }
+
+          if (game.voteManager.getVoteOptions().find((o) => o.id === option.id)) {
+            console.error('ID already exists', option.id);
+
+            this.send('addVoteOption:response', {
+              success: false,
+              message: 'ID already exists'
+            });
+
+            return;
+          }
+
+          game.voteManager.addOptions([option]);
+
+          this.send('addVoteOption:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'editVoteOption',
+        handler: (payload) => {
+          console.log('Editing vote option', payload);
+
+          const option = payload.option as VoteOption;
+
+          if (typeof option.title !== 'string' || option.title.length === 0 ||
+              typeof option.id !== 'string' || option.id.length === 0 ||
+              (option.description && typeof option.description !== 'string') ||
+              (option.image && typeof option.image !== 'string') ||
+              (option.media && typeof option.media !== 'string') ||
+              (option.removeSelf && typeof option.removeSelf !== 'boolean') ||
+              (option.availableClues && (!Array.isArray(option.availableClues) ||
+                option.availableClues.some(c => typeof c !== 'string'))) ||
+              (option.options && (typeof option.options !== 'object' ||
+                Object.keys(option.options).some(k => typeof k !== 'string' ||
+                  !Array.isArray(option.options![k]) || option.options![k].some(o => typeof o !== 'string')
+              )))) {
+            console.error('Invalid payload', payload.option);
+
+            this.send('editVoteOption:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+            return
+          }
+
+          if (!game.voteManager.getVoteOptions().find((o) => o.id === option.id)) {
+            console.error('ID not found', option.id);
+
+            this.send('editVoteOption:response', {
+              success: false,
+              message: 'ID not found'
+            });
+
+            return;
+          }
+
+          game.voteManager.editOption(option);
+
+          this.send('editVoteOption:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'removeVoteOption',
+        handler: (payload) => {
+          console.log('Removing vote option', payload);
+
+          const id = payload.id;
+
+          if (!game.voteManager.getVoteOptions().find((o) => o.id === id)) {
+            console.error('ID not found', id);
+
+            this.send('removeVoteOption:response', {
+              success: false,
+              message: 'ID not found'
+            });
+
+            return;
+          }
+
+          game.voteManager.removeOption(id);
+
+          this.send('removeVoteOption:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'addPool',
+        handler: (payload) => {
+          console.log('Adding pool', payload);
+
+          const pool = payload.pool;
+
+          if (typeof pool !== 'string' || pool.length === 0) {
+            console.error('Invalid payload', payload);
+
+            this.send('addPool:response', {
               success: false,
               message: 'Invalid payload'
             });
@@ -492,17 +617,88 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          game.voteManager.addOptions([{
-            id: idGen(),
-            title,
-            image,
-            description,
-            unlockClues,
-            addToPool,
-            media
-          }]);
+          game.voteManager.addPool(pool);
 
-          this.send('addVoteOption:response', {
+          this.send('addPool:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'removePool',
+        handler: (payload) => {
+          console.log('Removing pool', payload);
+
+          const pool = payload.pool;
+
+          if (typeof pool !== 'string' || pool.length === 0) {
+            console.error('Invalid payload', payload);
+
+            this.send('removePool:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.voteManager.removePool(pool);
+
+          this.send('removePool:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'addOptionToPool',
+        handler: (payload) => {
+          console.log('Adding option to pool', payload);
+
+          const pool = payload.pool;
+          const option = payload.option;
+
+          if (typeof pool !== 'string' || pool.length === 0 ||
+              typeof option !== 'string' || option.length === 0) {
+            console.error('Invalid payload', payload);
+
+            this.send('addOptionToPool:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.voteManager.addOptionsToPool(pool, [option]);
+
+          this.send('addOptionToPool:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'removeOptionFromPool',
+        handler: (payload) => {
+          console.log('Removing option from pool', payload);
+
+          const pool = payload.pool;
+          const option = payload.option;
+
+          if (typeof pool !== 'string' || pool.length === 0 ||
+              typeof option !== 'string' || option.length === 0) {
+            console.error('Invalid payload', payload);
+
+            this.send('removeOptionFromPool:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.voteManager.removeOptionFromPool(pool, option);
+
+          this.send('removeOptionFromPool:response', {
             success: true,
           });
         }

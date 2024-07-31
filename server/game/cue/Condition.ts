@@ -2,7 +2,7 @@ import { JsonContent, JsonMap } from "../../../shared/json";
 import { CueHandle, CueHandleCtx, CueHandleNext } from "./CueHandle";
 import { FieldReference } from "../../../shared/cue/FieldRefrence";
 import { Condition, ConditionOrValue, ModifiedConditionOrValue, modifierFunctions, operatorFunctions } from "../../../shared/cue/Condition";
-import { cueType } from "../../../shared/cue/CueTypes";
+import { CueType } from "../../../shared/cue/CueTypes";
 
 export function evaluateCondition(ctx: CueHandleCtx<{
   condition: ConditionOrValue
@@ -66,11 +66,11 @@ export class If extends CueHandle {
       for (let i = ctx.index + 1; i < ctx.playback.cues.length; i++) {
         const cue = ctx.playback.cues[i]
 
-        if (cue.type === cueType.If) {
+        if (cue.type === CueType.If) {
           ignore++
         }
 
-        if (cue.type === cueType.ElseIf || cue.type ===  cueType.Else || cue.type === cueType.EndIf) {
+        if (cue.type === CueType.ElseIf || cue.type ===  CueType.Else || cue.type === CueType.EndIf) {
           if (ignore === 0) {
             console.log('[Cue: If] Found ElseIf or Else or EndIf', cue)
 
@@ -80,7 +80,7 @@ export class If extends CueHandle {
             return
           }
 
-          if (cue.type === cueType.EndIf) {
+          if (cue.type === CueType.EndIf) {
             ignore--
           }
         }
@@ -114,11 +114,11 @@ export class ElseIf extends If {
     for (let i = ctx.index + 1; i < ctx.playback.cues.length; i++) {
       const cue = ctx.playback.cues[i]
 
-      if (cue.type === cueType.If) {
+      if (cue.type === CueType.If) {
         ignore++
       }
 
-      if (cue.type === cueType.ElseIf || cue.type === cueType.Else || cue.type === cueType.EndIf) {
+      if (cue.type === CueType.ElseIf || cue.type === CueType.Else || cue.type === CueType.EndIf) {
         if (ignore === 0) {
           next(i, {
             dontSkip: true
@@ -126,7 +126,7 @@ export class ElseIf extends If {
           return
         }
 
-        if (cue.type === cueType.EndIf) {
+        if (cue.type === CueType.EndIf) {
           ignore--
         }
       }
@@ -147,11 +147,11 @@ export class Else extends CueHandle {
     for (let i = ctx.index + 1; i < ctx.playback.cues.length; i++) {
       const cue = ctx.playback.cues[i]
 
-      if (cue.type === cueType.If) {
+      if (cue.type === CueType.If) {
         ignore++
       }
 
-      if (cue.type === cueType.ElseIf || cue.type === cueType.Else || cue.type === cueType.EndIf) {
+      if (cue.type === CueType.ElseIf || cue.type === CueType.Else || cue.type === CueType.EndIf) {
         if (ignore === 0) {
           next(i, {
             dontSkip: true
@@ -159,7 +159,7 @@ export class Else extends CueHandle {
           return
         }
 
-        if (cue.type === cueType.EndIf) {
+        if (cue.type === CueType.EndIf) {
           ignore--
         }
       }
@@ -182,11 +182,11 @@ export class Break extends CueHandle {
     for (let i = ctx.index + 1; i < ctx.playback.cues.length; i++) {
       const cue = ctx.playback.cues[i]
 
-      if (cue.type === cueType.If) {
+      if (cue.type === CueType.If) {
         ignore++
       }
 
-      if (cue.type === cueType.EndIf) {
+      if (cue.type === CueType.EndIf) {
         if (ignore === 0) {
           next(i)
           return

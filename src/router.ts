@@ -118,6 +118,20 @@ const router = createRouter({
           meta: {
             title: "Playbacks"
           },
+        },
+        {
+          path: "pools",
+          component: () => import("./pages/admin/VotePools.vue"),
+          meta: {
+            title: "Pools"
+          },
+        },
+        {
+          path: "candidates",
+          component: () => import("./pages/admin/VoteOptions.vue"),
+          meta: {
+            title: "Kandidaten"
+          },
         }
       ],
     },

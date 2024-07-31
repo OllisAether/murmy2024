@@ -252,6 +252,7 @@ export class CueManager {
 
       return {
         results: voteManager.getResults(),
+        session: voteManager.getActiveSession()
       }
     }
   }

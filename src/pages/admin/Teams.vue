@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAdmin } from '../../store/admin';
+import { useAdmin } from '../../store/admin/index';
 import AddTeamCard from '../../components/admin/TeamCard.vue'
 import TeamListItem from '../../components/admin/TeamListItem.vue'
 import { ref } from 'vue';

@@ -1,8 +1,8 @@
 import { JsonContent, JsonMap } from "../json"
-import { CueTypes } from "./CueTypes"
+import { CueType } from "./CueTypes"
 import { FieldReference } from "./FieldRefrence"
 
 export interface Cue extends JsonMap {
-  type: CueTypes
+  type: CueType
   options?: Record<string, JsonContent | FieldReference>
 }

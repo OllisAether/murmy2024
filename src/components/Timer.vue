@@ -1,7 +1,8 @@
 <template>
   <span :class="['timer', {
     'timer--paused': game.timer.state === 'paused',
-    'timer--warning': warning
+    'timer--warning': warning,
+    'timer--normal': normal
   }]">
     <span class="timer__minutes">
       <span :class="['timer__digit', {
@@ -32,8 +33,10 @@ import { useGameManager } from '@/store/gameManager'
 
 const props = withDefaults(defineProps<{
   warning?: boolean
+  normal?: boolean
 }>(), {
-  warning: true
+  warning: true,
+  normal: false
 })
 
 const game = useGameManager()
@@ -125,6 +128,14 @@ watch(timeString, (val, old) => {
       50% {
         color: #ff677e;
       }
+    }
+  }
+
+  &--normal {
+    font-family: inherit;
+
+    .timer__digit {
+      width: fit-content;
     }
   }
 

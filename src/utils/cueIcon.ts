@@ -1,29 +1,30 @@
-import { cueType, CueTypes } from "../../shared/cue/CueTypes";
+import { CueType, CueTypes } from "../../shared/cue/CueTypes";
 
 export const cueIconMap: {
   [key in CueTypes]?: string
 } = {
-  [cueType.SetPhase]: 'mdi-label-outline',
-  [cueType.StartTimer]: 'mdi-timer-sand',
+  [CueType.SetPhase]: 'mdi-label-outline',
+  [CueType.StartTimer]: 'mdi-timer-sand',
 
-  [cueType.WaitForTimer]: 'mdi-timer-sand-empty',
-  [cueType.WaitForSkip]: 'mdi-skip-next',
-  [cueType.WaitForBoardSkip]: 'mdi-television-play',
+  [CueType.WaitForTimer]: 'mdi-timer-sand-empty',
+  [CueType.WaitForSkip]: 'mdi-skip-next',
+  [CueType.WaitForBoardSkip]: 'mdi-television-play',
 
-  [cueType.If]: 'mdi-filter-variant',
-  [cueType.ElseIf]: 'mdi-call-split',
-  [cueType.Else]: 'mdi-arrow-right-bottom',
-  [cueType.EndIf]: 'mdi-filter-variant-remove',
-  [cueType.Break]: 'mdi-debug-step-out',
+  [CueType.If]: 'mdi-filter-variant',
+  [CueType.ElseIf]: 'mdi-call-split',
+  [CueType.Else]: 'mdi-arrow-right-bottom',
+  [CueType.EndIf]: 'mdi-filter-variant-remove',
+  [CueType.Break]: 'mdi-debug-step-out',
 
-  [cueType.AddVoteOptions]: 'mdi-pen-plus',
-  [cueType.ClearVotePool]: 'mdi-delete',
-  [cueType.OpenVote]: 'mdi-chart-box-multiple',
-  [cueType.CloseVote]: 'mdi-minus-box-multiple',
-  [cueType.PauseVote]: 'mdi-pause-box-multiple',
-  [cueType.ResumeVote]: 'mdi-play-box-multiple',
-  [cueType.StartTiebreaker]: 'mdi-trophy-variant',
-  [cueType.SetRandomWinner]: 'mdi-clover',
-  [cueType.EndVote]: 'mdi-close-box-multiple',
-  [cueType.WaitForVote]: 'mdi-text-box-check',
+  [CueType.AddVoteOptions]: 'mdi-pen-plus',
+  [CueType.RemoveVoteOption]: 'mdi-pen-minus',
+  [CueType.ClearVotePool]: 'mdi-delete',
+  [CueType.OpenVote]: 'mdi-chart-box-multiple',
+  [CueType.CloseVote]: 'mdi-minus-box-multiple',
+  [CueType.PauseVote]: 'mdi-pause-box-multiple',
+  [CueType.ResumeVote]: 'mdi-play-box-multiple',
+  [CueType.StartTiebreaker]: 'mdi-trophy-variant',
+  [CueType.SetRandomWinner]: 'mdi-clover',
+  [CueType.EndVote]: 'mdi-close-box-multiple',
+  [CueType.WaitForVote]: 'mdi-text-box-check',
 }

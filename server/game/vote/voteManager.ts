@@ -80,14 +80,45 @@ export class VoteManager {
     return this.voteOptions
   }
 
+  addPool (pool: string) {
+    console.log(`[VoteManager] Add pool ${pool}`)
+
+    this.pools[pool] = new Set()
+
+    Game.get().sendVotePoolsToClients()
+    this.savePools()
+  }
+
+  removePool (pool: string) {
+    console.log(`[VoteManager] Remove pool ${pool}`)
+
+    delete this.pools[pool]
+
+    Game.get().sendVotePoolsToClients()
+    this.savePools()
+  }
+
   addOptionsToPool (pool: string, option: string[]) {
     console.log(`[VoteManager] Add options to pool ${pool}`, option)
 
     if (!this.pools[pool]) {
-      this.pools[pool] = new Set()
+      this.addPool(pool)
     }
 
     option.forEach(o => this.pools[pool].add(o))
+
+    Game.get().sendVotePoolsToClients()
+    this.savePools()
+  }
+
+  removeOptionFromPool (pool: string, option: string) {
+    console.log(`[VoteManager] Remove options from pool ${pool}`, option)
+
+    if (!this.pools[pool]) {
+      return
+    }
+
+    this.pools[pool].delete(option)
 
     Game.get().sendVotePoolsToClients()
     this.savePools()
@@ -97,6 +128,31 @@ export class VoteManager {
     console.log(`[VoteManager] Add options`, options)
 
     this.voteOptions.push(...options)
+
+    Game.get().sendVoteOptionsToClients()
+    this.saveVoteOptions()
+  }
+
+  editOption (option: VoteOption) {
+    console.log(`[VoteManager] Edit option`, option)
+
+    const index = this.voteOptions.findIndex(o => o.id === option.id)
+
+    if (index === -1) {
+      console.error(`[VoteManager] Option not found`)
+      return
+    }
+
+    this.voteOptions[index] = option
+
+    Game.get().sendVoteOptionsToClients()
+    this.saveVoteOptions()
+  }
+
+  removeOption (optionId: string) {
+    console.log(`[VoteManager] Remove option ${optionId}`)
+
+    this.voteOptions = this.voteOptions.filter(o => o.id !== optionId)
 
     Game.get().sendVoteOptionsToClients()
     this.saveVoteOptions()
@@ -450,14 +506,13 @@ export class VoteManager {
       )
       : null
 
-    const results: {
-      votes: Record<string, number>
-      winners: string[]
-      next: 'tiebreaker' | 'random' | null
-    } = {
+    const results: VoteResults = {
       votes,
       winners,
-      next
+      next,
+      finalWinner: winners.length === 1
+        ? this.voteOptions.find(o => o.id === winners[0])
+        : undefined
     }
 
     return results
