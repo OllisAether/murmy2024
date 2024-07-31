@@ -25,14 +25,16 @@
 
       <BlurGradient class="workspace__blur-gradient" />
 
-      <div class="workspace__content">
-        <!-- {{ game.clues }} -->
-
-        <ClueCard
-          v-for="clue in game.clues.available"
-          :key="clue"
-          :clueId="clue"
-        />
+      <div class="workspace__scroller">
+        <div class="workspace__content">
+          <!-- {{ game.clues }} -->
+        
+          <ClueCard
+            v-for="clue in game.clues.available"
+            :key="clue"
+            :clueId="clue"
+          />
+        </div>
       </div>
     </div>
   </VLayout>
@@ -125,9 +127,13 @@ const auth = useAuthManager();
     font-family: $fontDisplay;
   }
 
-  &__content {
+  &__scroller {
+    flex: 1;
     overflow-y: auto;
     height: 100%;
+  }
+
+  &__content {
     max-width: calc(100vw - 25rem);
     margin: 0 auto;
     padding: 6rem 8rem;

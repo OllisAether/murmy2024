@@ -73,7 +73,7 @@
       :close-on-back="true"
       height="100%"
       width="100%"
-      transition="slide-y-reverse-transition"
+      transition="fade-transition"
     >
       <div class="clue-card__clue-display">
         <div class="clue-card__clue-display__name">
@@ -84,6 +84,12 @@
             <ClueImageViewer
               :assetIds="([clue.image?.assetId].filter(x => x) as string[])"
               :entries="clue.image?.entries"
+            />
+          </template>
+          <template v-else>
+            <ClueImageViewer
+              :assetIds="clue.imageStack?.assetIds"
+              :entries="clue.imageStack?.entries"
             />
           </template>
         </div>
@@ -123,8 +129,14 @@ const isAffordable = computed(() => game.clues.investigationCoins >= (clue?.cost
 
 const showBuyConfirmation = ref(false);
 
-function unlockClue() {
-  game.unlockClue(props.clueId);
+async function unlockClue() {
+  const res = await game.unlockClue(props.clueId);
+
+  console.log(res);
+  if (res.success) {
+    showBuyConfirmation.value = false;
+    showClue.value = true;
+  }
 }
 
 const showClue = ref(false);
@@ -154,7 +166,7 @@ function openClue() {
     width: 100%;
     position: relative;
     transform-origin: bottom center;
-    transition: transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     .clue-card--confirmation & {
       transform: scale(1.2)translateY(-.5rem);
@@ -163,10 +175,11 @@ function openClue() {
   
   &__title {
     padding: 1rem 1rem 0 0;
+    font-size: .8rem;
     opacity: 0.5;
 
-    transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1),
-                transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: opacity .3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     .clue-card--unlocked & {
       opacity: 1;
@@ -174,7 +187,7 @@ function openClue() {
 
     .clue-card--confirmation & {
       opacity: 1;
-      transform: scale(1.5)translateY(-.25rem);
+      transform: scale(1.2)translateY(-.25rem);
     }
   }
 
@@ -235,8 +248,11 @@ function openClue() {
   }
 
   &__thumbnail {
+    display: block;
     pointer-events: none;
-    width: calc(100% - 2rem);
+    position: absolute;
+    inset: 0;
+    width: 100%;
     height: 100%;
     transform: translate(-.75rem, -.5rem);
     object-fit: contain;
@@ -256,6 +272,7 @@ function openClue() {
       line-height: 2rem;
       padding: 1.5rem;
       font-family: $fontDisplay;
+      font-weight: 300;
     }
 
     &__content {

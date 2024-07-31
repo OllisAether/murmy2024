@@ -121,7 +121,7 @@ export class ClueManager {
     this.save()
   }
 
-  unlockClue(teamId: string, clueId: string) {
+  unlockClue(teamId: string, clueId: string): boolean {
     if (!this.availableClues.includes(clueId)) {
       console.error(`[ClueManager] Clue ${clueId} is not available`)
       return false
@@ -166,5 +166,7 @@ export class ClueManager {
 
     game.sendCluesToClients(team)
     this.save()
+
+    return true
   }
 }

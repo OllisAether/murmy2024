@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import { useWsClient } from "./wsClient";
 import { computed, readonly, ref, watch } from "vue";
-import { boardAssets, teamAssets } from "../assets/assets";
 import { UAParser } from "ua-parser-js";
-import { Asset } from "@/model/asset";
+import { Asset } from "@/../shared/asset";
 import { useAuthManager } from "./authManager";
 import { Role } from "../../shared/roles";
 import { Phase } from "../../shared/phase";
@@ -45,9 +44,31 @@ export const useGameManager = defineStore('gameManager', () => {
 
     switch (auth.role) {
       case Role.Team:
+        const teamRes = await fetch('/api/assets/team')
+          .catch((e) => {
+            console.error('Failed to fetch team assets', e)
+            return null
+          })
+
+        if (!teamRes) {
+          break
+        }
+
+        const teamAssets: Asset[] = await teamRes.json()
         await preloadAssets(teamAssets)
         break
       case Role.Board:
+        const boardRes = await fetch('/api/assets/board')
+          .catch((e) => {
+            console.error('Failed to fetch board assets', e)
+            return null
+          })
+
+        if (!boardRes) {
+          break
+        }
+
+        const boardAssets: Asset[] = await boardRes.json()
         await preloadAssets(boardAssets)
         await new Promise<void>(resolve => {
           ws.once('currentMedia').then(resolve)
@@ -564,8 +585,8 @@ export const useGameManager = defineStore('gameManager', () => {
     clues.value = data
   })
 
-  function unlockClue (clueId: string) {
-    ws.send('unlockClue', { clueId })
+  async function unlockClue (clueId: string) {
+    return await ws.request('unlockClue', { clueId })
   }
   // #endregion
 
