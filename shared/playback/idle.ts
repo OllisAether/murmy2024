@@ -3,15 +3,17 @@ import { Playback } from "./Playback";
 import { condition } from "../cue/Condition";
 import { CueType } from "../cue/CueTypes";
 import { Phase } from "../phase";
+import { JsonMap } from "../json";
 
-export const Idle = (duration?: number): Playback => ({
-  name: 'Idle',
+export const Idle = (duration?: number | FieldReference, meta?: JsonMap | FieldReference): Playback => ({
+  name: 'Wartephase',
   trigger: 'auto',
   cues: [
     {
       type: CueType.SetPhase,
       options: {
-        phase: Phase.Idle
+        phase: Phase.Idle,
+        meta: FieldReference('meta')
       }
     },
     {
@@ -32,6 +34,7 @@ export const Idle = (duration?: number): Playback => ({
     { type: CueType.EndIf }
   ],
   fields: {
-    duration: duration
+    duration: duration ?? 0,
+    meta: meta ?? {}
   }
 })

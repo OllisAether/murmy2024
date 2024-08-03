@@ -66,5 +66,17 @@ export const cueSettingsMap: {
       type: 'number',
       default: null
     }
-  }
+  },
+  [CueType.AddClues]: {
+    amount: {
+      type: 'number',
+      default: null
+    }
+  },
+  [CueType.SetMedia]: {
+    media: {
+      type: 'string',
+      default: null
+    }
+  },
 }

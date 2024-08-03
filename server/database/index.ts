@@ -52,7 +52,10 @@ export class Database {
       this.collections[name] = collection;
     }
 
-    await storage.setItem(name, collection);
+    await storage.setItem(name, collection)
+      .catch((e) => {
+        console.error('Error saving collection', name, e);
+      });
   }
 
   createBackups: boolean = true;
@@ -75,7 +78,10 @@ export class Database {
     await fs.mkdir(backupDirFiles, { recursive: true });
 
     for (const file of await fs.readdir(this.directory)) {
-      await fs.copyFile(path.resolve(this.directory, file), path.resolve(backupDirFiles, file));
+      await fs.copyFile(path.resolve(this.directory, file), path.resolve(backupDirFiles, file))
+        .catch((e) => {
+          console.error('Error copying file', file, e);
+        });
     }
 
     this.lastBackup = Date.now();

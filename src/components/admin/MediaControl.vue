@@ -13,6 +13,16 @@
           <VIcon>{{ admin.media.state === 'playing' ? 'mdi-pause' : 'mdi-play' }}</VIcon>
         </VBtn>
 
+        <VBtn
+          icon
+          :disabled="game.phase.type !== 'media'"
+          @click="skipMedia"
+          variant="text"
+        >
+          <VIcon>mdi-skip-next</VIcon>
+        </VBtn>
+
+
         <VSlider
           class="no-transition"
           :disabled="game.phase.type !== 'media'"
@@ -80,6 +90,10 @@ function playPause () {
   } else {
     admin.playMedia()
   }
+}
+
+function skipMedia () {
+  admin.skipMedia()
 }
 </script>
 

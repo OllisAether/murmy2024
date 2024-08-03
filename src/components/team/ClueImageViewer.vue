@@ -50,7 +50,6 @@
         :disabled="currentPage === 0"
         square
         @click="currentPage--"
-        color="#888"
         class="clue-image-viewer__prev-button"
       >
         <VIcon>mdi-chevron-left</VIcon>
@@ -59,7 +58,6 @@
         :disabled="currentPage === assets.length - 1"
         square
         @click="currentPage++"
-        color="#888"
         class="clue-image-viewer__next-button"
       >
         <VIcon>mdi-chevron-right</VIcon>

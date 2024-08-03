@@ -8,6 +8,7 @@ import { Playback } from "../../../shared/playback/Playback";
 import { Asset } from "../../../shared/asset";
 import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
+import { JsonMap } from "../../../shared/json";
 
 export interface AlertOptions {
   id: string
@@ -59,8 +60,12 @@ export const useAdmin = defineStore('admin', () => {
           closeAlert(`help:${teamId}`)
         })
       }),
-      ws.onAction('playbacks', (pbs) => {
+      ws.onAction('playbacks', ({
+        playbacks: pbs,
+        manualTriggerOverride: mto
+      }) => {
         playbacks.value = pbs
+        manualTriggerOverride.value = mto
       }),
       ws.onAction('currentPlayback', (payload: {
         playback: number,
@@ -395,6 +400,8 @@ export const useAdmin = defineStore('admin', () => {
   const currentPlaybackIndex = ref<number>(-1)
   const currentCueIndex = ref<number>(-1)
 
+  const manualTriggerOverride = ref<boolean>(false)
+
   const indexUpdateQueue = ref<{
     playback: number
     cue: number
@@ -431,6 +438,18 @@ export const useAdmin = defineStore('admin', () => {
   function setCurrentPlayback (index: number) {
     ws.send('setCurrentPlayback', { index })
   }
+
+  function setPlaybackFields (index: number, fields: JsonMap) {
+    ws.send('setPlaybackFields', { index, fields })
+  }
+
+  function setPlaybackTrigger (index: number, trigger: 'auto' | 'manual') {
+    ws.send('setPlaybackTrigger', { index, trigger })
+  }
+
+  function setManualTriggerOverride (value: boolean) {
+    ws.send('setManualTriggerOverride', { value })
+  }
   // #endregion
 
   // #region Media
@@ -454,6 +473,14 @@ export const useAdmin = defineStore('admin', () => {
 
   function seekMedia (time: number) {
     ws.send('seekMedia', { time })
+  }
+
+  function setMedia (media: string) {
+    ws.send('setMedia', { media })
+  }
+
+  function skipMedia () {
+    ws.send('skipMedia')
   }
   // #endregion
 
@@ -493,15 +520,21 @@ export const useAdmin = defineStore('admin', () => {
     playbacks,
     currentPlaybackIndex,
     currentCueIndex,
+    manualTriggerOverride,
     delayedCurrentPlaybackIndex,
     delayedCurrentCueIndex,
     nextPlayback,
     nextCue,
     setCurrentPlayback,
+    setPlaybackFields,
+    setPlaybackTrigger,
+    setManualTriggerOverride,
 
     media,
     playMedia,
     pauseMedia,
-    seekMedia
+    seekMedia,
+    setMedia,
+    skipMedia
   }
 })

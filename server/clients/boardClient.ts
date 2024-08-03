@@ -71,6 +71,12 @@ export class BoardClient extends WebSocketClient {
 
           game.sendMediaProgressToAdmins(progress);
         }
+      },
+      {
+        action: 'mediaFinished',
+        handler: () => {
+          game.mediaFinished();
+        }
       }
     ]));
   }

@@ -48,7 +48,7 @@
         </VListItem>
 
         <div class="divider">
-          <span>Spielablauf</span>
+          <span>Spiel</span>
           <VDivider />
         </div>
 
@@ -56,6 +56,13 @@
           <VListItemTitle>
             <VIcon>mdi-filmstrip-box-multiple</VIcon>
             Playbacks
+          </VListItemTitle>
+        </VListItem>
+
+        <VListItem to="/admin/media">
+          <VListItemTitle>
+            <VIcon>mdi-movie</VIcon>
+            Media
           </VListItemTitle>
         </VListItem>
 

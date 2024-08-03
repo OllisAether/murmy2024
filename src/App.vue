@@ -24,7 +24,9 @@
         <VProgressLinear :model-value="loadProgress" class="mb-1 mr-2 loading__progress" :max="100"/>
       </div>
 
-      <RouterView v-else />
+      <template v-else>
+        <RouterView />
+      </template>
     </VFadeTransition>
   </template>
   <VContainer v-else>

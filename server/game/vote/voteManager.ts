@@ -173,6 +173,11 @@ export class VoteManager {
       return
     }
 
+    if (this.pools[opt.pool].size === 0) {
+      console.error(`[VoteManager] Pool is empty`)
+      return
+    }
+
     console.log(`[VoteManager] Open vote`, opt)
 
     if (this.activeSession) {
@@ -192,6 +197,21 @@ export class VoteManager {
 
       isTiebreaker: false,
       isRandom: false
+    }
+
+    if (this.pools[opt.pool].size === 1) {
+      // Skip vote if only one option
+      const option = Array.from(this.pools[opt.pool])[0]
+
+      this.activeSession.open = false
+      this.activeSession.isRandom = true
+      this.activeSession.winner = option
+
+      if (!this.activeSession.votes[option]) {
+        this.activeSession.votes[option] = []
+      }
+
+      this.activeSession.votes[option] = Game.get().getTeams().filter(t => t.active).map(t => t.id)
     }
 
     Game.get().sendVoteSessionToClients()
@@ -413,7 +433,7 @@ export class VoteManager {
         return false
       }
 
-      if (this.activeSession.tiebreakerVotes?.[optionId]?.includes(teamId)) {
+      if (Object.values(this.activeSession.tiebreakerVotes || {}).find(votes => votes.includes(teamId))) {
         console.error(`[VoteManager] Team already voted in tiebreaker`)
         return false
       }
@@ -430,7 +450,7 @@ export class VoteManager {
 
       this.activeSession.tiebreakerVotes[optionId].push(teamId)
     } else {
-      if (this.activeSession.votes[optionId]?.includes(teamId)) {
+      if (Object.values(this.activeSession.votes).find(votes => votes.includes(teamId))) {
         console.error(`[VoteManager] Team already voted`)
         return false
       }
@@ -485,10 +505,25 @@ export class VoteManager {
 
     console.log(`[VoteManager] Get results`)
 
-    const votes = Object.fromEntries(
-      (Array.from(this.pools[this.activeSession.pool]) as string[])
+    let votes: Record<string, number> = {}
+    if (this.activeSession.isRandom) {
+      return {
+        votes: {},
+        winners: [],
+        next: null,
+        finalWinner: this.voteOptions.find(o => o.id === this.activeSession!.winner)
+      } satisfies VoteResults
+    } else if (this.activeSession.isTiebreaker) {
+      votes = Object.fromEntries(
+        this.activeSession.tiebreakerCandidates
+          ?.map((optionId) => [optionId, this.activeSession!.tiebreakerVotes?.[optionId]?.length || 0]) || []
+      )
+    } else {
+      votes = Object.fromEntries(
+        (Array.from(this.pools[this.activeSession.pool]) as string[])
         .map((optionId) => [optionId, this.activeSession!.votes[optionId]?.length || 0])
-    )
+      )
+    }
 
     console.log(`[VoteManager] Votes`, votes)
 

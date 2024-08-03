@@ -8,6 +8,16 @@
       </VToolbar>
 
       <VCardText>
+        <VBtn
+          :color="admin.manualTriggerOverride ? 'primary' : ''"
+          variant="tonal"
+          class="w-100 mb-4"
+          @click="admin.setManualTriggerOverride(!admin.manualTriggerOverride)"
+        >
+          <VIcon>mdi-hand-back-left</VIcon>
+          Manuelle Trigger-Überschreibung {{ admin.manualTriggerOverride ? 'deaktivieren' : 'aktivieren' }}
+        </VBtn>
+
         <PlaybackCard
           v-for="(playback, i) in admin.playbacks"
           :playback="playback"

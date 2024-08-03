@@ -27,5 +27,8 @@ export enum CueType {
   WaitForVote = 'WaitForVote',
 
   AddInvestigationCoins = 'AddInvestigationCoins',
-  AddClue = 'AddClue',
+  AddClues = 'AddClues',
+
+  SetMedia = 'SetMedia',
+  WaitForMediaFinished = 'WaitForMediaFinished',
 }

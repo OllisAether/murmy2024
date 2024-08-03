@@ -20,11 +20,12 @@ export function evaluateCondition(ctx: CueHandleCtx<{
 
     // ModifiedConditionOrValue
     } else if ((value as ModifiedConditionOrValue).$modifier) {
-      const modifiedValue = value as ModifiedConditionOrValue
-      const _value = evaluateCondition(ctx, modifiedValue.$value)
+      const modifierValue = value as ModifiedConditionOrValue
+      const _value = evaluateCondition(ctx, modifierValue.$value)
 
-      return modifierFunctions[modifiedValue.$modifier](_value)
-
+      const modifiedValue = modifierFunctions[modifierValue.$modifier](_value)
+      console.log('[Cue: Condition] Modified value', modifiedValue)
+      return modifiedValue
     // Value
     } else {
       return value as JsonContent

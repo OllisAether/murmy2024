@@ -1,11 +1,11 @@
 <template>
-  <div class="board-screen">
+  <div class="screen-wrapper">
     <slot />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.board-screen {
+.screen-wrapper {
   position: absolute;
   inset: 0;
 }

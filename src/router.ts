@@ -50,7 +50,7 @@ const router = createRouter({
           component: () => import("./pages/team/Home.vue"),
 
           meta: {
-            phase: Phase.Idle,
+            phase: [Phase.Idle, Phase.Media],
           }
         },
         {
@@ -131,6 +131,13 @@ const router = createRouter({
           component: () => import("./pages/admin/VoteOptions.vue"),
           meta: {
             title: "Kandidaten"
+          },
+        },
+        {
+          path: "media",
+          component: () => import("./pages/admin/Media.vue"),
+          meta: {
+            title: "Media"
           },
         }
       ],

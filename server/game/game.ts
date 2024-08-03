@@ -525,25 +525,6 @@ export class Game {
     this.currentPhase = phase
     this.phaseMeta = meta ?? {}
 
-    // switch (phase) {
-    //   case Phase.Vote:
-    //     if (!options?.vote) {
-    //       console.log('[Cue] No vote options provided')
-    //       return
-    //     }
-
-    //     this.startVote(options.vote)
-    //     break
-    //   case Phase.Media:
-    //     if (!options?.media) {
-    //       console.log('[Cue] No media provided')
-    //       return
-    //     }
-
-    //     this.setMedia(options.media)
-    //     break
-    // }
-
     this.savePhase()
     this.sendPhaseToClients()
   }
@@ -563,13 +544,19 @@ export class Game {
         return
       }
 
-      client.send('playbacks', cues)
+      client.send('playbacks', {
+        playbacks: cues,
+        manualTriggerOverride: this.cueManager.getManualTriggerOverride()
+      })
       return
     }
 
     this.clients
       .filter((c) => c.type === Role.Admin)
-      .forEach((c) => (c as AdminClient).send('cues', cues))
+      .forEach((c) => (c as AdminClient).send('playbacks', {
+        playbacks: cues,
+        manualTriggerOverride: this.cueManager.getManualTriggerOverride(),
+      }))
   }
 
   sendCurrentPlaybackToAdmins (client?: WebSocketClient) {
@@ -706,6 +693,7 @@ export class Game {
   }
 
   setMedia (media: string | null) {
+    console.log('[Media] Setting media', media)
     this.currentMedia = media
     this.saveMedia()
     this.sendCurrentMediaToBoardAndAdmins()
@@ -714,9 +702,17 @@ export class Game {
   mediaFinishedListeners: (() => void)[] = []
   onMediaFinished (listener: () => void) {
     this.mediaFinishedListeners.push(listener)
+  
+    return () => {
+      this.offMediaFinished(listener)
+    }
   }
   mediaFinished () {
+    console.log('[Media] Media finished')
     this.mediaFinishedListeners.forEach((l) => l())
+  }
+  offMediaFinished (listener: () => void) {
+    this.mediaFinishedListeners = this.mediaFinishedListeners.filter((l) => l !== listener)
   }
 
   playMedia () {

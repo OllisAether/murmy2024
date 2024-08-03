@@ -2,7 +2,6 @@ import { Role } from "../../shared/roles";
 import { validateCode } from "../../shared/teamcode";
 import { Game } from "../game/game";
 import { Team } from "../game/team";
-import { idGen } from "../../shared/random";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
 import { TeamClient } from "./teamClient";
@@ -479,6 +478,75 @@ export class AdminClient extends WebSocketClient {
           game.cueManager.setCurrentPlayback(index);
         }
       },
+      {
+        action: 'setPlaybackFields',
+        handler: (payload) => {
+          const index = payload.index;
+          const fields = payload.fields;
+
+          if (typeof index !== 'number' || typeof fields !== 'object') {
+            console.error('Invalid payload', payload);
+
+            this.send('setPlaybackFields:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.cueManager.setPlaybackFields(index, fields);
+        }
+      },
+      {
+        action: 'setPlaybackTrigger',
+        handler: (payload) => {
+          const index = payload.index;
+          const trigger = payload.trigger;
+
+          if (typeof index !== 'number' || typeof trigger !== 'string' || ['auto', 'manual'].indexOf(trigger) === -1) {
+            console.error('Invalid payload', payload);
+
+            this.send('setPlaybackTrigger:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          console.log('Setting playback trigger', index, trigger);
+
+          game.cueManager.setPlaybackTrigger(index, trigger as 'auto' | 'manual');
+        }
+      },
+      {
+        action: 'getManualTriggerOverride',
+        handler: () => {
+          this.send('getManualTriggerOverride:response', {
+            value: game.cueManager.getManualTriggerOverride()
+          });
+        }
+      },
+      {
+        action: 'setManualTriggerOverride',
+        handler: (payload) => {
+          const value = payload.value;
+
+          if (typeof value !== 'boolean') {
+            console.error('Invalid payload', payload);
+
+            this.send('setManualTriggerOverride:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.cueManager.setManualTriggerOverride(value);
+        }
+      },
       // #endregion
 
       // #region Vote
@@ -713,6 +781,19 @@ export class AdminClient extends WebSocketClient {
         }
       },
       {
+        action: 'setMedia',
+        handler: (payload) => {
+          const media = payload.media;
+
+          if (typeof media !== 'string') {
+            console.error('Invalid payload', payload);
+            return;
+          }
+
+          game.setMedia(media);
+        }
+      },
+      {
         action: 'pauseMedia',
         handler: () => {
           game.pauseMedia();
@@ -729,6 +810,12 @@ export class AdminClient extends WebSocketClient {
           }
 
           game.seekMedia(time);
+        }
+      },
+      {
+        action: 'skipMedia',
+        handler: () => {
+          game.mediaFinished();
         }
       },
       {

@@ -16,16 +16,23 @@ export class AddInvestigationCoins extends CueHandle {
   public stop(): void {}
 }
 
-export class AddClue extends CueHandle {
+export class AddClues extends CueHandle {
   public start(next: CueHandleNext, ctx: CueHandleCtx<{
-    clueId?: string
+    clues?: string[]
   }>): void {
     const game = Game.get()
     
-    const clueId = ctx.options.clueId ?? ''
+    const availableClues = ctx.getFieldValue(ctx.options.clues) as string[]
 
-    game.clueManager.addClue(clueId)
+    console.log(`[AddClues] Adding clues`, availableClues)
 
+    if (!Array.isArray(availableClues) || availableClues.some(clueId => typeof clueId !== 'string')) {
+      console.error('[AddClues] ClueIds is not an array')
+      next()
+      return
+    }
+
+    game.clueManager.addClues(availableClues)
     next()
   }
   public stop(): void {}

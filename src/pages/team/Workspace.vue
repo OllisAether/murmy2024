@@ -1,47 +1,50 @@
 <template>
-  <VLayout class="workspace">
-    <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" />
+  <ScreenWrapper>
+    <VLayout class="workspace">
+      <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" />
 
-    <div class="workspace__main">
-      <div class="workspace__indicators">
-        <div class="workspace__indicators__left">
-          <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
-            <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
-              <Timer class="workspace__timer" />
-            </div>
-          </VExpandXTransition>
-          <span class="workspace__ep">
-            <VIcon size="1em">
-              mdi-star-four-points-circle
-            </VIcon> {{ game.clues.investigationCoins }}
-          </span>
+      <div class="workspace__main">
+        <div class="workspace__indicators">
+          <div class="workspace__indicators__left">
+            <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
+              <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
+                <Timer class="workspace__timer" />
+              </div>
+            </VExpandXTransition>
+            <span class="workspace__ep">
+              <VIcon size="1em">
+                mdi-star-four-points-circle
+              </VIcon> {{ game.clues.investigationCoins }}
+            </span>
+          </div>
+          <div class="workspace__indicators__center">
+            <span class="workspace__teamname">
+              {{ auth.team?.name }}
+            </span>
+          </div>
         </div>
-        <div class="workspace__indicators__center">
-          <span class="workspace__teamname">
-            {{ auth.team?.name }}
-          </span>
+
+        <BlurGradient class="workspace__blur-gradient" />
+
+        <div class="workspace__scroller">
+          <div class="workspace__content">
+            <!-- {{ game.clues }} -->
+          
+            <ClueCard
+              v-for="clue in game.clues.available"
+              :key="clue"
+              :clueId="clue"
+            />
+          </div>
         </div>
       </div>
-
-      <BlurGradient class="workspace__blur-gradient" />
-
-      <div class="workspace__scroller">
-        <div class="workspace__content">
-          <!-- {{ game.clues }} -->
-        
-          <ClueCard
-            v-for="clue in game.clues.available"
-            :key="clue"
-            :clueId="clue"
-          />
-        </div>
-      </div>
-    </div>
-  </VLayout>
+    </VLayout>
+  </ScreenWrapper>
 </template>
 
 <script setup lang="ts">
 import BlurGradient from '@/components/BlurGradient.vue';
+import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';

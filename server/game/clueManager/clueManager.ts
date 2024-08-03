@@ -114,8 +114,8 @@ export class ClueManager {
     this.save()
   }
 
-  addClue(clueId: string) {
-    this.availableClues.push(clueId)
+  addClues(clueIds: string[]) {
+    this.availableClues.push(...clueIds)
 
     Game.get().sendCluesToClients()
     this.save()

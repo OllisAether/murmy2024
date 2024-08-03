@@ -8,7 +8,7 @@
     }]"
   >
     <button class="clue-card__content" @click="openClue">
-      <SkewBox color="#777" :corner-cut="12"/>
+      <SkewBox color="#fff2" :corner-cut="12"/>
       
       <template v-if="isUnlocked">
         <img
@@ -45,9 +45,10 @@
     >
       <div class="clue-card__confirmation-overlay">
         <Btn
-          :color="isAffordable ? '#6f8' : '#888a'"
+          :color="isAffordable ? '#24AA6A' : '#fff2'"
           @click="unlockClue"
           :disabled="!isAffordable"
+          class="mr-3"
         >
           Bestätigen
           <span class="clue-card__confirmation-overlay-cost">
@@ -56,7 +57,7 @@
           </span>
         </Btn>
         <Btn
-          color="#888a"
+          color="#A23946"
           square
         >
           <VIcon>mdi-close</VIcon>
@@ -171,6 +172,13 @@ function openClue() {
     .clue-card--confirmation & {
       transform: scale(1.2)translateY(-.5rem);
     }
+  
+    & > :deep(.skew-box) {
+      position: absolute;
+      inset: 0;
+      opacity: .5;
+      z-index: -1;
+    }
   }
   
   &__title {
@@ -200,19 +208,12 @@ function openClue() {
   &__confirmation-overlay-cost {
     display: flex;
     align-items: center;
-    font-size: 1.25rem;
-    margin-left: 1.2rem;
+    transform: scale(1.25);
+    margin-left: 1.25rem;
 
     :deep(.v-icon) {
       margin-right: .25rem;
     }
-  }
-
-  :deep(.skew-box) {
-    position: absolute;
-    inset: 0;
-    opacity: .5;
-    z-index: -1;
   }
 
   &__lock {

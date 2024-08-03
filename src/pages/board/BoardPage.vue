@@ -1,20 +1,15 @@
 <template>
-  <div class="loading" v-if="!game.assetsProgress.loaded || game.loading">
-    <VProgressCircular indeterminate class="mb-1 mr-2"/>
-    Lade ({{ game.assetsProgress.loadedAssets }} / {{ game.assetsProgress.totalAssets }})...
+  <div class="interact-confirm" v-if="!game.interacted">
+    <VIcon size="64" class="mb-8">mdi-gesture-tap</VIcon><br>
+    Bitte interagiere mit dem Bildschirm, um fortzufahren.
   </div>
 
   <template v-else>
-    <div class="interact-confirm" v-if="!game.interacted">
-      <VIcon size="64" class="mb-8">mdi-gesture-tap</VIcon><br>
-      Bitte interagiere mit dem Bildschirm, um fortzufahren.
-    </div>
-
-    <template v-else>
+    <VFadeTransition mode="out-in">
       <MediaScreen v-if="game.phase.type === Phase.Media" />
       <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
       <TitleScreen v-else />
-    </template>
+    </VFadeTransition>
   </template>
 
   <VDialog v-model="navigationDialog" max-width="300" :persistent="persistent">

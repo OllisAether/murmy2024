@@ -1,11 +1,12 @@
 import { JsonContent, JsonMap } from '../json'
 import { FieldReference } from './FieldRefrence'
 
-export const modifierFunctions: Record<string, ModifierFunction> = {
+export const modifierFunctions = {
   'not': (value: JsonContent): JsonContent => !value,
+  'truthy': (value: JsonContent): JsonContent => !!value,
 }
 
-export const operatorFunctions: Record<string, OperatorFunction> = {
+export const operatorFunctions = {
   '==': (left: JsonContent, right: JsonContent): JsonContent => left === right,
   '!=': (left: JsonContent, right: JsonContent): JsonContent => left !== right,
   '>': (left: JsonContent, right: JsonContent): JsonContent => {

@@ -1,5 +1,5 @@
 <template>
-  <BoardScreen :class="{
+  <ScreenWrapper :class="{
     media: true,
     'media--show-controls': showControls
   }">
@@ -36,11 +36,11 @@
         {{ Math.floor(progress / 60) }}:{{ Math.floor(progress % 60).toString().padStart(2, '0') }} / {{ Math.floor((video?.duration || 0) / 60) }}:{{ Math.floor((video?.duration || 0) % 60).toString().padStart(2, '0') }}
       </div>
     </div>
-  </BoardScreen>
+  </ScreenWrapper>
 </template>
 
 <script lang="ts" setup>
-import BoardScreen from '@/components/board/BoardScreen.vue';
+import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import { useGameManager } from '@/store/gameManager'
 import { useWsClient } from '@/store/wsClient';
 import { useEventListener } from '@vueuse/core';

@@ -47,6 +47,12 @@
               {{ (cue.options?.condition && conditionToString(cue.options.condition)) ?? 'No Condition' }}
             </span>
           </template>
+
+          <template v-if="cue.type === CueType.SetMedia">
+            <span class="ml-2">
+              {{ cue.options?.media ?? 'No Media' }}
+            </span>
+          </template>
         </VToolbarTitle>
         <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type] ?? {}).length">
           {{ detailsShown ? 'mdi-chevron-up' : 'mdi-chevron-down' }}

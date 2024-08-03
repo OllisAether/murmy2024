@@ -270,11 +270,17 @@ export const useGameManager = defineStore('gameManager', () => {
           continue
         }
 
+        if (import.meta.env.DEV && useAuthManager().role !== Role.Team) {
+          console.log('%c[GameManager]', 'color: #4CAF50', 'Skipping asset preload', asset.name)
+          asset.content = asset.url
+          finishAsset(asset)
+          continue
+        }
+
         const xhr = new XMLHttpRequest()
 
         xhr.open('GET', asset.url, true)
         xhr.responseType = 'blob'
-        xhr.setRequestHeader('Cache-Control', 'public, max-age=31536000')
 
         xhr.onprogress = function (event) {
           if (event.lengthComputable) {
@@ -288,48 +294,44 @@ export const useGameManager = defineStore('gameManager', () => {
           finishAsset(asset)
         }
 
-        xhr.send()
+        xhr.onload = async function () {
+          if (xhr.status === 200) {
+            const blob = xhr.response
 
-        await new Promise<void>((resolve) => {
-          xhr.onload = async function () {
-            if (xhr.status === 200) {
-              const blob = xhr.response
+            const objectURL = URL.createObjectURL(blob)
 
-              const objectURL = URL.createObjectURL(blob)
+            const metadata = await new Promise((resolve, reject) => {
+              if (blob.type.startsWith('image')) {
+                const img = new Image()
+                img.onload = () => resolve({
+                  mime: blob.type,
+                  width: img.width,
+                  height: img.height
+                })
+                img.onerror = reject
+                img.src = objectURL
+                return
+              } else {
+                resolve({
+                  mime: blob.type
+                })
+              }
+            }).catch((e) => {
+              console.error('Failed to load metadata', blob.type, e)
+              return {}
+            })
 
-              const metadata = await new Promise((resolve, reject) => {
-                if (blob.type.startsWith('image')) {
-                  const img = new Image()
-                  img.onload = () => resolve({
-                    mime: blob.type,
-                    width: img.width,
-                    height: img.height
-                  })
-                  img.onerror = reject
-                  img.src = objectURL
-                  return
-                } else {
-                  resolve({
-                    mime: blob.type
-                  })
-                }
-              }).catch((e) => {
-                console.error('Failed to load metadata', blob.type, e)
-                return {}
-              })
-
-              asset.metadata = metadata
-              asset.content = objectURL
-              console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
-              finishAsset(asset)
-            } else {
-              console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
-              finishAsset(asset)
-            }
-
-            resolve()
+            asset.metadata = metadata
+            asset.content = objectURL
+            console.log('%c[GameManager]', 'color: #4CAF50', 'Loaded asset', asset)
+            finishAsset(asset)
+          } else {
+            console.error('%c[GameManager]', 'color: #4CAF50', 'Failed to load asset', asset.url)
+            finishAsset(asset)
           }
-        })
+        }
+
+        xhr.send()
       }
     })
   }

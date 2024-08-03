@@ -9,6 +9,8 @@ import { Playback } from "../../../shared/playback/Playback";
 import { getHandle } from "./registeredCueTypes";
 import { Game } from "../game";
 import { Database } from "../../database";
+import { AddInvestigationCoins } from "../../../shared/playback/investigationCoins";
+import { Media } from "../../../shared/playback/media";
 
 export class CueManager {
   currentPlayback: Playback | null = null
@@ -20,22 +22,13 @@ export class CueManager {
   currentCueHandle: CueHandle | null = null
 
   private playbacks: Playback[] = [
-    Idle(),
+    Idle(0, {
+      info: true
+    }),
     Idle(10000),
     Vote(),
-    {
-      name: 'Add investigation coins',
-      trigger: 'auto',
-      cues: [
-        {
-          type: 'AddInvestigationCoins',
-          options: {
-            amount: 100
-          }
-        }
-      ],
-      fields: {}
-    },
+    Media(),
+    AddInvestigationCoins(100),
     Work(),
   ]
 
@@ -106,9 +99,34 @@ export class CueManager {
     }
   }
 
+  public setPlaybackFields(playbackIndex: number, fields: JsonMap): void {
+    if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
+      console.error(`[CueManager] Playback index ${playbackIndex} out of bounds`)
+      return
+    }
+
+    this.playbacks[playbackIndex].fields = fields
+    Game.get().sendPlaybacksToAdmins()
+    this.save()
+  }
+
+  setPlaybackTrigger(playbackIndex: number, trigger: 'auto' | 'manual'): void {
+    if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
+      console.error(`[CueManager] Playback index ${playbackIndex} out of bounds`)
+      return
+    }
+
+    this.playbacks[playbackIndex].trigger = trigger
+    Game.get().sendPlaybacksToAdmins()
+    this.save()
+  }
+
   private manualTriggerOverride: boolean = false
   setManualTriggerOverride(value: boolean): void {
     this.manualTriggerOverride = value
+
+    Game.get().sendPlaybacksToAdmins()
+    this.save()
   }
 
   getManualTriggerOverride(): boolean {
@@ -171,6 +189,7 @@ export class CueManager {
     } else {
       this.manualTriggerOverride = false
       Game.get().sendCurrentPlaybackToAdmins()
+      Game.get().sendPlaybacksToAdmins()
       this.save()
     }
 
@@ -250,9 +269,14 @@ export class CueManager {
       const game = Game.get()
       const voteManager = game.voteManager
 
+      const activeSession = voteManager.getActiveSession()
+
       return {
         results: voteManager.getResults(),
-        session: voteManager.getActiveSession()
+        pool: activeSession
+          ? voteManager.getPools()[activeSession.pool]
+          : null,
+        session: activeSession
       }
     }
   }
@@ -270,7 +294,7 @@ export class CueManager {
       ?? this.globalVariables[variable]?.()
       ?? null
 
-      console.log(`[CueManager] Get field value for ${ref}`)
+      console.log(`[CueManager] Get field value for ${ref}`, value)
 
     if (value === null) {
       console.error(`[CueManager] No variable found for ${variable}`)
@@ -289,6 +313,11 @@ export class CueManager {
       }
 
       if (Array.isArray(value)) {
+        if (key === 'length') {
+          value = value.length
+          continue
+        }
+
         const index = parseInt(key, 10)
 
         if (isNaN(index)) {
@@ -301,6 +330,8 @@ export class CueManager {
         value = value[key]
       }
     }
+
+    console.log(`[CueManager] Get field value for ${ref}`, value)
 
     return value
   }

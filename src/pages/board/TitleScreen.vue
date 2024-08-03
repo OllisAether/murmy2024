@@ -1,8 +1,8 @@
 <template>
-  <BoardScreen>
+  <ScreenWrapper>
     <div
       :class="['title', {
-        'title--countdown': countdown !== null,
+        'title--countdown': game.timer.state !== 'stopped',
       }]">
       <span>(</span>
       <span>
@@ -15,27 +15,20 @@
     </div>
 
     <Transition name="countdown">
-      <div class="countdown" v-if="countdown !== null">
-        {{ countdown }}
+      <div class="countdown" v-if="game.timer.state !== 'stopped'">
+        <Timer />
       </div>
     </Transition>
-  </BoardScreen>
+  </ScreenWrapper>
 </template>
 
 <script setup lang="ts">
-import BoardScreen from '@/components/board/BoardScreen.vue';
+import ScreenWrapper from '@/components/ScreenWrapper.vue';
+import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed } from 'vue';
 
 const game = useGameManager()
 
-const countdown = computed(() => {
-  if (game.timer.state === 'stopped') return null
-
-  const remaining = game.timer.duration - game.timer.currentTime
-
-  return Math.floor(remaining / 1000)
-})
 </script>
 
 <style lang="scss" scoped>

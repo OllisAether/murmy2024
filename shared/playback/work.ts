@@ -3,7 +3,7 @@ import { Phase } from '../phase';
 import { Playback } from './Playback';
 
 export const Work = (): Playback => ({
-  name: 'Work',
+  name: 'Arbeitsphase',
   trigger: 'auto',
   cues: [
     {

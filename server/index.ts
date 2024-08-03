@@ -54,6 +54,11 @@ const port = process.env.PORT || 3000;
   app.use(express.urlencoded({ extended: true }));
 
   await Database.get(!isDevelopment).loadCollections();
+
+  if (isDevelopment) {
+    Database.get().createBackups = false;
+  }
+
   const game = Game.get();
 
   app.ws('/api/ws', handleConnection);

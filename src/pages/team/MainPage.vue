@@ -1,10 +1,8 @@
 <template>
-  <RouterView>
-    <template #default="{ Component }">
-      <VFadeTransition mode="out-in">
-        <component :is="Component" />
-      </VFadeTransition>
-    </template>
+  <RouterView v-slot="{ Component }">
+    <VFadeTransition>
+      <component :is="Component" />
+    </VFadeTransition>
   </RouterView>
 
   <div class="controls">
@@ -13,14 +11,12 @@
       class="fullscreen-button"
       @click="game.toggleFullscreen"
       square
-      color="#fff2"
     >
       <VIcon>{{ game.isFullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
     </Btn>
     <Btn
       class="help-button"
       square
-      color="#fff2"
     >
       <VIcon size="small">mdi-account-question</VIcon>
 
@@ -212,8 +208,16 @@ watch(() => game.phase.type, () => {
 onMounted(() => {
   game.initGameManager()
 
+  const viewport = document.querySelector('meta[name="viewport"]')
+
+  const before = viewport?.getAttribute('content')
+
+  viewport?.setAttribute('content', 'width=1500px, user-scalable=0')
+
   onBeforeUnmount(() => {
     game.deinitGameManager()
+
+    before && viewport?.setAttribute('content', before)
   })
 })
 
@@ -227,13 +231,11 @@ watch(helpDialog, () => {
 })
 
 async function help () {
-  helpIsError.value = false
-  helpMessage.value = ''
-
   helpLoading.value = true
   const res = await game.getHelp()
   
   if (res.success) {
+    helpIsError.value = false
     helpMessage.value = 'Hilfe wurde angefordert!'
   } else {
     helpIsError.value = true

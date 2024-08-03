@@ -27,4 +27,10 @@ export const cueIconMap: {
   [CueType.SetRandomWinner]: 'mdi-clover',
   [CueType.EndVote]: 'mdi-close-box-multiple',
   [CueType.WaitForVote]: 'mdi-text-box-check',
+
+  [CueType.AddInvestigationCoins]: 'mdi-star-four-points-circle',
+  [CueType.AddClues]: 'mdi-magnify-plus',
+
+  [CueType.SetMedia]: 'mdi-video',
+  [CueType.WaitForMediaFinished]: 'mdi-video-off',
 }
