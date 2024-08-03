@@ -11,7 +11,7 @@ export function Media (media?: string | FieldReference): Playback {
       {
         type: CueType.SetPhase,
         options: {
-          phase: Phase.Media,
+          phase: Phase.Idle
         }
       },
       {

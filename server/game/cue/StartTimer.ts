@@ -1,4 +1,5 @@
 import { JsonContent } from "../../../shared/json"
+import { colorize, Fg } from "../../console"
 import { Game } from "../game"
 import { CueHandle, CueHandleCtx, CueHandleNext } from "./CueHandle"
 
@@ -19,7 +20,7 @@ export class StartTimer extends CueHandle {
       typeof duration !== 'number' ||
       duration <= 0
     ) {
-      console.error('StartTimer: invalid duration', options.duration)
+      console.log(colorize('[Cue: StartTimer]', Fg.Magenta), 'Invalid duration', options.duration)
       next()
       return
     }

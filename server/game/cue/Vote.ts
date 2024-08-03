@@ -1,9 +1,13 @@
 import { JsonMap } from '../../../shared/json'
+import { colorize, Fg } from '../../console'
 import { Game } from '../game'
 import { CueHandle, CueHandleCtx, CueHandleNext } from './CueHandle'
 
 export class OpenVote extends CueHandle {
-  public start(next: CueHandleNext, ctx: CueHandleCtx<JsonMap>): void {
+  public start(next: CueHandleNext, ctx: CueHandleCtx<{
+    pool?: string,
+    title?: string
+  }>): void {
     const game = Game.get()
     const voteManager = game.voteManager
 
@@ -12,22 +16,22 @@ export class OpenVote extends CueHandle {
     const pool = ctx.getFieldValue(options.pool)
 
     if (!pool || typeof pool !== 'string') {
-      console.error('[Cue: OpenVote] Invalid pool', pool)
+      console.error(colorize('[Cue: OpenVote]', Fg.Magenta), 'Invalid pool', pool)
       next()
       return
     }
 
-    const title = ctx.getFieldValue(options.title)
+    const title = ctx.getFieldValue(options.title) as string | null | undefined
 
-    if (title !== undefined && typeof title !== 'string') {
-      console.error('[Cue: OpenVote] Invalid title', title)
+    if ((title ?? null) !== null && typeof title !== 'string') {
+      console.error(colorize('[Cue: OpenVote]', Fg.Magenta), 'Invalid title', title)
       next()
       return
     }
 
     voteManager.openVote({
       pool,
-      title
+      title: title ?? undefined
     })
 
     next()
@@ -57,7 +61,7 @@ export class AddVoteOptions extends CueHandle {
     const options = ctx.getFieldValue(option.options) as Record<string, string[]> | undefined
 
     if (!options) {
-      console.error('[Cue: AddVoteOption] Invalid options', options)
+      console.error(colorize('[Cue: AddVoteOption]', Fg.Magenta), 'Invalid options', options)
       next()
       return
     }
@@ -66,7 +70,7 @@ export class AddVoteOptions extends CueHandle {
       const opts = options[pool]
 
       if (!opts || !Array.isArray(opts) || opts.some(opt => typeof opt !== 'string')) {
-        console.error('[Cue: AddVoteOption] Invalid options', options)
+        console.error(colorize('[Cue: AddVoteOption]', Fg.Magenta), 'Invalid options', options)
         return
       }
 
@@ -88,13 +92,13 @@ export class RemoveVoteOption extends CueHandle {
     const option = ctx.getFieldValue(options.option)
 
     if (!pool || typeof pool !== 'string') {
-      console.error('[Cue: RemoveVoteOption] Invalid pool', pool)
+      console.error(colorize('[Cue: RemoveVoteOption]', Fg.Magenta), 'Invalid pool', pool)
       next()
       return
     }
 
     if (!option || typeof option !== 'string') {
-      console.error('[Cue: RemoveVoteOption] Invalid option', option)
+      console.error(colorize('[Cue: RemoveVoteOption]', Fg.Magenta), 'Invalid option', option)
       next()
       return
     }
@@ -116,7 +120,7 @@ export class ClearVotePool extends CueHandle {
     const pool = ctx.getFieldValue(options.pool)
 
     if (!pool || typeof pool !== 'string') {
-      console.error('[Cue: ClearVotePool] Invalid pool', pool)
+      console.error(colorize('[Cue: ClearVotePool]', Fg.Magenta), 'Invalid pool', pool)
       next()
       return
     }
@@ -203,6 +207,8 @@ export class WaitForVote extends CueHandle {
       next()
       this.off?.()
     })
+
+    console.log(colorize('[Cue: WaitForVote]', Fg.Magenta), 'Start')
 
     this.off = () => {
       offTimer()

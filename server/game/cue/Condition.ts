@@ -3,6 +3,7 @@ import { CueHandle, CueHandleCtx, CueHandleNext } from "./CueHandle";
 import { FieldReference } from "../../../shared/cue/FieldRefrence";
 import { Condition, ConditionOrValue, ModifiedConditionOrValue, modifierFunctions, operatorFunctions } from "../../../shared/cue/Condition";
 import { CueType } from "../../../shared/cue/CueTypes";
+import { colorize, Fg } from "../../console";
 
 export function evaluateCondition(ctx: CueHandleCtx<{
   condition: ConditionOrValue
@@ -24,7 +25,7 @@ export function evaluateCondition(ctx: CueHandleCtx<{
       const _value = evaluateCondition(ctx, modifierValue.$value)
 
       const modifiedValue = modifierFunctions[modifierValue.$modifier](_value)
-      console.log('[Cue: Condition] Modified value', modifiedValue)
+      console.log(colorize('[Cue: Condition]', Fg.Magenta), 'Modified value', modifiedValue)
       return modifiedValue
     // Value
     } else {
@@ -57,7 +58,7 @@ export class If extends CueHandle {
     const condition = options.condition as ConditionOrValue
 
     const evaluatedValue = evaluateCondition(ctx, condition)
-    console.log('[Cue: If] Evaluated value', evaluatedValue)
+    console.log(colorize('[Cue: Condition]', Fg.Magenta), 'Evaluated value', evaluatedValue)
 
     if (evaluatedValue) {
       next()
@@ -73,8 +74,6 @@ export class If extends CueHandle {
 
         if (cue.type === CueType.ElseIf || cue.type ===  CueType.Else || cue.type === CueType.EndIf) {
           if (ignore === 0) {
-            console.log('[Cue: If] Found ElseIf or Else or EndIf', cue)
-
             next(i, {
               dontSkip: true
             })
@@ -88,7 +87,7 @@ export class If extends CueHandle {
       }
 
       // No ElseIf or Else or EndIf found
-      console.error('[Cue: If] No ElseIf or Else or EndIf found')
+      console.error(colorize('[Cue: If]', Fg.Magenta), 'No ElseIf or Else or EndIf found')
       next()
     }
   }

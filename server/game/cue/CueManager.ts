@@ -11,6 +11,8 @@ import { Game } from "../game";
 import { Database } from "../../database";
 import { AddInvestigationCoins } from "../../../shared/playback/investigationCoins";
 import { Media } from "../../../shared/playback/media";
+import { VoteMainClue } from "../../../shared/playback/voteMainClue";
+import { colorize, Fg } from "../../console";
 
 export class CueManager {
   currentPlayback: Playback | null = null
@@ -25,7 +27,11 @@ export class CueManager {
     Idle(0, {
       info: true
     }),
-    Idle(10000),
+    Idle(10000, {
+      info: true
+    }),
+    VoteMainClue(),
+    Idle(),
     Vote(),
     Media(),
     AddInvestigationCoins(100),
@@ -46,7 +52,6 @@ export class CueManager {
     const data = Database.get().getCollection('playbacks')
 
     if (!data) {
-      console.error('[CueManager] No data found')
       return
     }
 
@@ -65,7 +70,7 @@ export class CueManager {
             !c.type
           ) ||
           !p.fields)) {
-      console.error('[CueManager] No playbacks found')
+      console.error(colorize('[CueManager]', Fg.Magenta), 'Invalid playbacks data')
       return
     }
 
@@ -74,10 +79,10 @@ export class CueManager {
     this.currentCueIndex = data.currentCueIndex as number ?? -1
     this.currentCueMeta = data.currentCueMeta as JsonMap ?? {}
 
-    console.log(`[CueManager] Load playbacks & cue`, data)
+    console.log(colorize('[CueManager]', Fg.Magenta), 'Load playbacks & cue')
 
     if (this.currentPlaybackIndex >= 0) {
-      console.log(`[CueManager] Init playback ${this.currentPlaybackIndex}`)
+      console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
       this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
 
       if (this.currentCueIndex >= 0) {
@@ -101,7 +106,7 @@ export class CueManager {
 
   public setPlaybackFields(playbackIndex: number, fields: JsonMap): void {
     if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
-      console.error(`[CueManager] Playback index ${playbackIndex} out of bounds`)
+      console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${playbackIndex} out of bounds`)
       return
     }
 
@@ -112,7 +117,7 @@ export class CueManager {
 
   setPlaybackTrigger(playbackIndex: number, trigger: 'auto' | 'manual'): void {
     if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
-      console.error(`[CueManager] Playback index ${playbackIndex} out of bounds`)
+      console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${playbackIndex} out of bounds`)
       return
     }
 
@@ -134,16 +139,16 @@ export class CueManager {
   }
 
   public setCurrentPlayback(index: number): void {
-    console.log(`[CueManager] Set current playback ${index}`)
+    console.log(colorize('[CueManager]', Fg.Magenta), `Set current playback ${index}`)
     this.deinitCurrentCue()
 
     if (index >= this.playbacks.length || index < 0) {
-      console.error(`[CueManager] Playback index ${index} out of bounds`)
+      console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${index} out of bounds`)
       return
     }
 
-    console.log(`[CueManager] Init playback ${this.currentPlaybackIndex}`)
-    
+    // console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
+
     this.currentPlaybackIndex = index
     this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
     this.currentCueIndex = -1
@@ -157,18 +162,18 @@ export class CueManager {
    * If there are no more playbacks, do nothing
    */
   public nextPlayback(): void {
-    console.log('[CueManager] Next playback')
+    console.log(colorize('[CueManager]', Fg.Magenta), 'Next playback')
     this.deinitCurrentCue()
 
     if (this.currentPlayback !== null) {
-      console.log('[CueManager] Deinit playback')
+      // console.log(colorize('[CueManager]', Fg.Magenta), 'Deinit playback')
       this.currentPlayback = null
     }
 
     this.currentPlaybackIndex++
 
     if (this.currentPlaybackIndex >= this.playbacks.length) {
-      console.error('[CueManager] No more playbacks')
+      console.warn(colorize('[CueManager]', Fg.Magenta), 'No more playbacks')
       this.currentPlaybackIndex = -1
       this.currentCueIndex = -1
 
@@ -179,12 +184,12 @@ export class CueManager {
       return
     }
 
-    console.log(`[CueManager] Init playback ${this.currentPlaybackIndex}`)
+    // console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
     this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
     this.currentCueIndex = -1
 
     if (!this.manualTriggerOverride && this.currentPlayback.trigger === 'auto') {
-      console.log('[CueManager] Auto trigger')
+      console.log(colorize('[CueManager]', Fg.Magenta), 'Auto trigger')
       this.nextCue()
     } else {
       this.manualTriggerOverride = false
@@ -198,7 +203,7 @@ export class CueManager {
 
   public deinitCurrentCue(): void {
     if (this.currentCue !== null) {
-      console.log('[CueManager] Deinit current cue')
+      // console.log(colorize('[CueManager]', Fg.Magenta), 'Deinit current cue')
       this.currentCueHandle?.stop()
       this.currentCue = null
       this.currentCueHandle = null
@@ -215,7 +220,7 @@ export class CueManager {
    */
   public nextCue(gotoIndex?: number, meta?: JsonMap) {
     if (this.currentPlayback === null) {
-      console.error('[CueManager] No current playback')
+      console.warn(colorize('[CueManager]', Fg.Magenta), 'No current playback')
       return
     }
 
@@ -229,7 +234,7 @@ export class CueManager {
     }
 
     if (this.currentCueIndex >= this.currentPlayback.cues.length) {
-      console.error('[CueManager] No more cues. Next playback')
+      // console.warn(colorize('[CueManager]', Fg.Magenta), 'No more cues. Next playback')
       this.currentCueIndex = -1
       this.nextPlayback()
       return
@@ -242,11 +247,11 @@ export class CueManager {
     this.currentCueHandle = getHandle(this.currentCue.type)
 
     if (this.currentCueHandle === null) {
-      console.error(`[CueManager] No handle for cue type ${this.currentCue.type}`)
+      console.error(colorize('[CueManager]', Fg.Magenta), `No handle for cue type ${this.currentCue.type}`)
       return
     }
 
-    console.log(`[CueManager] Init cue ${this.currentCueIndex} of playback ${this.currentPlaybackIndex}`)
+    console.log(colorize('[CueManager]', Fg.Magenta), `Init cue ${this.currentCueIndex} of playback ${this.currentPlaybackIndex}`)
 
     const index = this.currentCueIndex
     const playback = this.currentPlayback
@@ -294,21 +299,21 @@ export class CueManager {
       ?? this.globalVariables[variable]?.()
       ?? null
 
-      console.log(`[CueManager] Get field value for ${ref}`, value)
+      // console.log(colorize('[CueManager]', Fg.Magenta), `Get field value for ${ref}`, value)
 
     if (value === null) {
-      console.error(`[CueManager] No variable found for ${variable}`)
+      console.error(colorize('[CueManager]', Fg.Magenta), `No variable found for ${variable}`)
       return null
     }
 
     for (const key of path.slice(1)) {
       if (value === null) {
-        console.error(`[CueManager] No variable found for ${variable}`)
+        console.error(colorize('[CueManager]', Fg.Magenta), `No variable found for ${variable}`)
         return null
       }
 
       if (typeof value !== 'object') {
-        console.error(`[CueManager] Field reference ${key} is not an object or array`, value)
+        console.error(colorize('[CueManager]', Fg.Magenta), `Field reference ${key} is not an object or array`, value)
         return null
       }
 
@@ -321,7 +326,7 @@ export class CueManager {
         const index = parseInt(key, 10)
 
         if (isNaN(index)) {
-          console.error(`[CueManager] Field reference ${index} is not an array index`)
+          console.error(colorize('[CueManager]', Fg.Magenta), `Field reference ${index} is not an array index`)
           return null
         }
 
@@ -331,8 +336,8 @@ export class CueManager {
       }
     }
 
-    console.log(`[CueManager] Get field value for ${ref}`, value)
+    console.log(colorize('[CueManager]', Fg.Magenta), `Get field value for ${ref}`, value)
 
-    return value
+    return this.getFieldValue(value, playback)
   }
 }

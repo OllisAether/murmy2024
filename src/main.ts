@@ -34,9 +34,14 @@ createApp(App)
   .use(router)
   .mount('#app')
 
-// Wakelock
-if ('wakeLock' in navigator) {
-  navigator.wakeLock.request('screen')
-    .then(() => console.log('Wake lock active'))
-    .catch(console.error)
-}
+// Prevent zooming on mobile devices
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault()
+})
+
+// Prevent double tap to zoom on mobile devices
+document.addEventListener('click', function (e) {
+  if (e.detail > 1) {
+    e.preventDefault()
+  }
+})

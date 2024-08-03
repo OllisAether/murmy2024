@@ -6,7 +6,7 @@ import { StartTimer } from "./StartTimer";
 import { WaitForBoardSkip, WaitForSkip } from "./WaitForSkip";
 import { WaitForTimer } from "./WaitForTimer";
 import { AddVoteOptions, ClearVotePool, CloseVote, EndVote, OpenVote, PauseVote, RemoveVoteOption, ResumeVote, SetRandomWinner, StartTiebreaker, WaitForVote } from "./Vote";
-import { AddClues, AddInvestigationCoins } from "./Clue";
+import { AddClues, AddInvestigationCoins, AssignMainClueType, AssignMainClueTypeRandomly, SetAssignFurtherMainClueTypesRandomly } from "./Clue";
 import { SetMedia, WaitForMediaFinished } from "./Media";
 
 export const CueTypes: Record<CueType, typeof CueHandle>= {
@@ -40,6 +40,9 @@ export const CueTypes: Record<CueType, typeof CueHandle>= {
   // Clue
   [CueType.AddInvestigationCoins]: AddInvestigationCoins,
   [CueType.AddClues]: AddClues,
+  [CueType.AssignMainClueType]: AssignMainClueType,
+  [CueType.AssignMainClueTypeRandomly]: AssignMainClueTypeRandomly,
+  [CueType.SetAssignFurtherMainClueTypesRandomly]: SetAssignFurtherMainClueTypesRandomly,
 
   // Media
   [CueType.SetMedia]: SetMedia,

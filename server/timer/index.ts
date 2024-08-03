@@ -1,3 +1,5 @@
+import { colorize, Fg } from "../console"
+
 export class Timer {
   private startTime: number | null = null
   private currentTime: number = 0
@@ -55,13 +57,13 @@ export class Timer {
   }
 
   setDuration(duration: number) {
-    console.log('[Timer] Setting Timer duration', duration)
+    console.log(colorize('[Timer]', Fg.Yellow), 'Setting Timer duration', duration)
     this.duration = duration
     this.emitUpdated()
   }
 
   setTime(time: number) {
-    console.log('[Timer] Setting Timer time', time)
+    console.log(colorize('[Timer]', Fg.Yellow), 'Setting Timer time', time)
 
     this.startTime = Date.now() - time
     this.currentTime = time
@@ -73,7 +75,7 @@ export class Timer {
       this.setDuration(duration)
     }
 
-    console.log('[Timer] Starting timer')
+    console.log(colorize('[Timer]', Fg.Yellow), 'Starting timer')
 
     this.state = 'running'
     this.startTime = Date.now() + 1000 + (delay ?? 0)
@@ -92,7 +94,7 @@ export class Timer {
       return
     }
 
-    console.log('[Timer] Resuming timer')
+    console.log(colorize('[Timer]', Fg.Yellow), 'Resuming timer')
 
     this.state = 'running'
     this.startTime = Date.now() - this.currentTime
@@ -105,7 +107,7 @@ export class Timer {
       return
     }
 
-    console.log('[Timer] Pausing timer')
+    console.log(colorize('[Timer]', Fg.Yellow), 'Pausing timer')
 
     this.state = 'paused'
     this.stopInterval()
@@ -114,7 +116,7 @@ export class Timer {
   }
 
   public stop() {
-    console.log('[Timer] Stopping timer', this.state)
+    console.log(colorize('[Timer]', Fg.Yellow), 'Stopping timer', this.state)
 
     this.state = 'stopped'
     this.stopInterval()
@@ -124,7 +126,7 @@ export class Timer {
   }
 
   public finish () {
-    console.log('[Timer] Finishing timer')
+    console.log(colorize('[Timer]', Fg.Yellow), 'Finishing timer')
 
     this.state = 'stopped'
     this.stopInterval()

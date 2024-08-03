@@ -8,6 +8,7 @@ import { Role } from "../../shared/roles";
 import { Phase } from "../../shared/phase";
 import { VoteOption, VoteSession } from "../../shared/vote";
 import { Entry } from "../../shared/suspectDatabase/entry";
+import { useWakeLock } from "@vueuse/core";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -97,6 +98,13 @@ export const useGameManager = defineStore('gameManager', () => {
         })
         ws.send('getClues')
       }),
+      new Promise<void>(resolve => {
+        ws.once('currentMedia').then(() => {
+          console.log('Fetched currentMedia')
+          resolve()
+        })
+        ws.send('getMedia')
+      }),
       (async () => {
         switch (auth.role) {
           case Role.Team:
@@ -128,10 +136,6 @@ export const useGameManager = defineStore('gameManager', () => {
 
             const boardAssets: Asset[] = await boardRes.json()
             await preloadAssets(boardAssets)
-            await new Promise<void>(resolve => {
-              ws.once('currentMedia').then(resolve)
-              ws.send('getMedia')
-            })
             break
           case Role.Admin:
             console.log('Fetching admin assets')
@@ -167,7 +171,6 @@ export const useGameManager = defineStore('gameManager', () => {
       ping: null,
       diff: 0
     }
-
     initialized.value = false
   }
 
@@ -628,16 +631,19 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Clues
   const clues = ref<{
+    mainClueType: 'phone' | 'diary' | null
     available: string[]
     unlocked: string[]
     investigationCoins: number
   }>({
+    mainClueType: null,
     available: [],
     unlocked: [],
     investigationCoins: 0
   })
 
   ws.onAction('clues', (data: {
+    mainClueType: 'phone' | 'diary' | null
     available: string[]
     unlocked: string[]
     investigationCoins: number
@@ -665,6 +671,7 @@ export const useGameManager = defineStore('gameManager', () => {
     getAsset,
     
     isFullscreen: readonly(isFullscreen),
+    wakelock: useWakeLock(),
 
     timer: readonly(timer),
     timeSync: readonly(timeSync),

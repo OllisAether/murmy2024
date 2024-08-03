@@ -9,12 +9,20 @@ import { createServer, Server } from 'https';
 import path from 'path';
 import fs from 'fs';
 import { Asset } from '../shared/asset';
+import {
+  colorize,
+  Fg,
+  Bg,
+  init as initConsole
+} from './console';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+initConsole()
 configDotenv({
   path: './.env'
 });
+
 
 const port = process.env.PORT || 3000;
 
@@ -27,10 +35,10 @@ const port = process.env.PORT || 3000;
     const privateKeyPath = path.resolve(process.cwd(), process.env.SSL_KEY_PATH ?? '');
     const certificatePath = path.resolve(process.cwd(), process.env.SSL_CERT_PATH ?? '');
 
-    console.log('Loading SSL certificate and key');
+    console.log(colorize('[Server]', Fg.Black, Bg.Gray), 'Loading SSL certificate and key');
 
-    console.log('Private Key Path:', privateKeyPath);
-    console.log('Certificate Path:', certificatePath);
+    console.log(colorize('[Server]', Fg.Black, Bg.Gray), 'Private Key Path:', privateKeyPath);
+    console.log(colorize('[Server]', Fg.Black, Bg.Gray), 'Certificate Path:', certificatePath);
 
     const [privateKey, certificate] = await Promise.all([
       readFile(privateKeyPath, 'utf8'),
@@ -43,7 +51,7 @@ const port = process.env.PORT || 3000;
     }, expressApp);
 
     server.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
+      console.log(colorize('[Server]', Fg.Black, Bg.Gray), `Server listening on port ${port}`);
     })
   }
 
@@ -101,7 +109,7 @@ const port = process.env.PORT || 3000;
   const sharedAssetPath = path.resolve(assetPath, 'shared');
   const sharedAssets: Asset[] = (await walk(sharedAssetPath)
     .catch((err) => {
-      console.error('Error walking directory:', err);
+      console.error(colorize('[Server]', Fg.Black, Bg.Gray), 'Error walking directory:', err);
       return [];
     }))
     .map((asset) => ({
@@ -112,7 +120,7 @@ const port = process.env.PORT || 3000;
   const teamAssetPath = path.resolve(assetPath, 'team')
   const teamAssets: Asset[] = (await walk(teamAssetPath)
     .catch((err) => {
-      console.error('Error walking directory:', err);
+      console.error(colorize('[Server]', Fg.Black, Bg.Gray), 'Error walking directory:', err);
       return [];
     }))
     .map((asset) => ({
@@ -123,7 +131,7 @@ const port = process.env.PORT || 3000;
   const boardAssetPath = path.resolve(assetPath, 'board')
   const boardAssets: Asset[] = (await walk(boardAssetPath)
     .catch((err) => {
-      console.error('Error walking directory:', err);
+      console.error(colorize('[Server]', Fg.Black, Bg.Gray), 'Error walking directory:', err);
       return [];
     }))
     .map((asset) => ({
@@ -158,10 +166,10 @@ const port = process.env.PORT || 3000;
   //#endregion
 
   if (isDevelopment) {
-    console.log('Development mode!');
+    console.log(colorize('[Server]', Fg.Black, Bg.Gray), 'Development mode!');
 
     app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
+      console.log(colorize('[Server]', Fg.Black, Bg.Gray), `Server listening on port ${port}`);
     });
   } else {
     app.use(express.static(path.resolve(__dirname, '../client')));
@@ -174,13 +182,13 @@ const port = process.env.PORT || 3000;
 })();
 
 process.on('uncaughtException', (err) => {
-  console.error('Uncaught exception:', err);
+  console.error(colorize('[Server]', Fg.Black, Bg.Gray), 'Uncaught exception:', err);
 
   Database.get().createBackup('uncaughtException', true);
 })
 
 process.on('SIGINT', async () => {
-  console.log('Caught interrupt signal. Saving collections and creating backup.');
+  console.log(colorize('[Server]', Fg.Black, Bg.Gray), 'Caught interrupt signal. Saving collections and creating backup.');
 
   await Database.get().saveCollections();
   await Database.get().createBackup('SIGINT', true);

@@ -70,7 +70,7 @@ import { VAlert, VContainer, VProgressLinear } from 'vuetify/components';
 import { useAuthManager } from './store/authManager';
 import { useWsClient } from './store/wsClient';
 import { useGameManager } from './store/gameManager';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { Role } from '../shared/roles';
 
 const auth = useAuthManager()
@@ -83,6 +83,20 @@ const loadProgress = computed(() => {
     (Object.values(game.assetsProgress.progresses)
       .reduce((acc, val) => acc + val, 0) / game.assetsProgress.totalAssets)
     * 100)
+})
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      game.wakelock.request('screen')
+    } else {
+      game.wakelock.release()
+    }
+  })
+
+  document.addEventListener('pointerdown', () => {
+    game.wakelock.request('screen')
+  })
 })
 </script>
 

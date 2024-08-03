@@ -1,5 +1,6 @@
 import { Role } from "../../shared/roles";
 import { Entry } from "../../shared/suspectDatabase/entry";
+import { colorize, Fg } from "../console";
 import { Game } from "../game/game";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
@@ -23,6 +24,7 @@ export class TeamClient extends WebSocketClient {
       {
         action: 'help',
         handler: () => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Requesting help');
           const success = game.addHelpRequest(this.teamId);
 
           if (success) {
@@ -40,10 +42,11 @@ export class TeamClient extends WebSocketClient {
       {
         action: 'vote',
         handler: (payload) => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Voting', payload);
           const vote = payload.option;
 
           if (typeof vote !== 'string') {
-            console.log('Invalid vote', vote)
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid vote', vote)
             this.send('vote:response', {
               success: false,
               message: 'Invalid Format'
@@ -69,11 +72,12 @@ export class TeamClient extends WebSocketClient {
       {
         action: 'suspectDatabaseEntry',
         handler: (payload) => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Adding suspect database entry', payload);
           const game = Game.get();
           const entry: Entry = payload.entry;
 
           if (!entry || typeof entry !== 'object') {
-            console.error('[TeamClient] Invalid entry', entry)
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid entry', entry)
             this.send('suspectDatabaseEntry:response', {
               success: false,
               message: 'Invalid Format'
@@ -98,10 +102,11 @@ export class TeamClient extends WebSocketClient {
       {
         action: 'unlockClue',
         handler: (payload) => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Unlocking clue', payload);
           const clueId = payload.clueId;
 
           if (typeof clueId !== 'string') {
-            console.error('[TeamClient] Invalid clueId', clueId)
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid clueId', clueId)
             this.send('unlockClue:response', {
               success: false,
               message: 'Invalid Format'

@@ -3,6 +3,7 @@ import storage from "node-persist";
 import { JsonMap } from "../../shared/json";
 import fs from "fs/promises";
 import moment from "moment";
+import { Bg, colorize, Fg } from "../console";
 
 export class Database {
   collections: Record<string, JsonMap> = {};
@@ -19,7 +20,7 @@ export class Database {
         try {
           return JSON.parse(data);
         } catch (e) {
-          console.error('Error parsing data', e);
+          console.error(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Error parsing data', e);
           return {};
         }
       },
@@ -27,7 +28,7 @@ export class Database {
     });
 
     await storage.forEach((datum) => {
-      console.log('Loading collection', datum.key);
+      console.log(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Loading collection', datum.key);
       this.collections[datum.key] = datum.value;
     });
   }
@@ -37,6 +38,7 @@ export class Database {
   }
 
   async saveCollections () {
+    console.log(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Saving all collections');
     for (const [name, collection] of Object.entries(this.collections)) {
       if (!collection) {
         continue;
@@ -47,14 +49,14 @@ export class Database {
   }
 
   async saveCollection (name: string, collection: JsonMap, writeChanges = true) {
-    // console.log('[Database] Saving collection', name);
+    // console.log(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Saving collection', name);
     if (writeChanges) {
       this.collections[name] = collection;
     }
 
     await storage.setItem(name, collection)
       .catch((e) => {
-        console.error('Error saving collection', name, e);
+        console.error(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Error saving collection', name, e);
       });
   }
 
@@ -70,7 +72,7 @@ export class Database {
       return;
     }
 
-    console.log('[Database] Creating backup for', reason);
+    console.log(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Creating backup for', reason);
 
     const backupDir = path.resolve(this.directory, '../backup');
 
@@ -80,7 +82,7 @@ export class Database {
     for (const file of await fs.readdir(this.directory)) {
       await fs.copyFile(path.resolve(this.directory, file), path.resolve(backupDirFiles, file))
         .catch((e) => {
-          console.error('Error copying file', file, e);
+          console.error(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Error copying file', file, e);
         });
     }
 

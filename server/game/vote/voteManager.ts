@@ -1,6 +1,8 @@
 import { Game } from '../game'
 import { VoteOption, VoteResults, VoteSession } from '../../../shared/vote'
 import { Database } from '../../database'
+import { JsonMap } from '../../../shared/json'
+import { colorize, Fg } from '../../console'
 
 export interface OpenVoteOptions {
   title?: string,
@@ -81,7 +83,7 @@ export class VoteManager {
   }
 
   addPool (pool: string) {
-    console.log(`[VoteManager] Add pool ${pool}`)
+    console.log(colorize('[VoteManager]', Fg.Green), `Add pool ${pool}`)
 
     this.pools[pool] = new Set()
 
@@ -90,7 +92,7 @@ export class VoteManager {
   }
 
   removePool (pool: string) {
-    console.log(`[VoteManager] Remove pool ${pool}`)
+    console.log(colorize('[VoteManager]', Fg.Green), `Remove pool ${pool}`)
 
     delete this.pools[pool]
 
@@ -99,7 +101,7 @@ export class VoteManager {
   }
 
   addOptionsToPool (pool: string, option: string[]) {
-    console.log(`[VoteManager] Add options to pool ${pool}`, option)
+    console.log(colorize('[VoteManager]', Fg.Green), `Add options to pool ${pool}`, option)
 
     if (!this.pools[pool]) {
       this.addPool(pool)
@@ -112,7 +114,7 @@ export class VoteManager {
   }
 
   removeOptionFromPool (pool: string, option: string) {
-    console.log(`[VoteManager] Remove options from pool ${pool}`, option)
+    console.log(colorize('[VoteManager]', Fg.Green), `Remove options from pool ${pool}`, option)
 
     if (!this.pools[pool]) {
       return
@@ -125,7 +127,7 @@ export class VoteManager {
   }
 
   addOptions (options: VoteOption[]) {
-    console.log(`[VoteManager] Add options`, options)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Add options', options)
 
     this.voteOptions.push(...options)
 
@@ -134,12 +136,12 @@ export class VoteManager {
   }
 
   editOption (option: VoteOption) {
-    console.log(`[VoteManager] Edit option`, option)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Edit option', option)
 
     const index = this.voteOptions.findIndex(o => o.id === option.id)
 
     if (index === -1) {
-      console.error(`[VoteManager] Option not found`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Option not found')
       return
     }
 
@@ -150,7 +152,7 @@ export class VoteManager {
   }
 
   removeOption (optionId: string) {
-    console.log(`[VoteManager] Remove option ${optionId}`)
+    console.log(colorize('[VoteManager]', Fg.Green), `Remove option ${optionId}`)
 
     this.voteOptions = this.voteOptions.filter(o => o.id !== optionId)
 
@@ -159,7 +161,7 @@ export class VoteManager {
   }
 
   clearPool (pool: string) {
-    console.log(`[VoteManager] Clear pool ${pool}`)
+    console.log(colorize('[VoteManager]', Fg.Green), `Clear pool ${pool}`)
 
     this.pools[pool].clear()
 
@@ -169,16 +171,21 @@ export class VoteManager {
 
   openVote (opt: OpenVoteOptions) {
     if (this.activeSession?.open) {
-      console.error(`[VoteManager] Vote already open`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Vote already open')
+      return
+    }
+
+    if (!this.pools[opt.pool]) {
+      console.error(colorize('[VoteManager]', Fg.Green), 'Pool not found')
       return
     }
 
     if (this.pools[opt.pool].size === 0) {
-      console.error(`[VoteManager] Pool is empty`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Pool is empty')
       return
     }
 
-    console.log(`[VoteManager] Open vote`, opt)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Open vote', opt)
 
     if (this.activeSession) {
       this.voteHistory.push(this.activeSession)
@@ -189,7 +196,7 @@ export class VoteManager {
       paused: opt.pauseOnOpen || false,
       pool: opt.pool,
 
-      title: opt.title,
+      title: opt.title ?? undefined,
 
       votes: {},
       passiveVotes: {},
@@ -220,11 +227,11 @@ export class VoteManager {
 
   closeVote () {
     if (!this.activeSession?.open) {
-      console.error(`[VoteManager] No open vote session`)
+      console.warn(colorize('[VoteManager]', Fg.Green), 'No open vote session')
       return
     }
 
-    console.log(`[VoteManager] Close vote`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Close vote')
 
     this.activeSession.open = false
 
@@ -239,11 +246,11 @@ export class VoteManager {
    */
   endVote () {
     if (!this.activeSession) {
-      console.error(`[VoteManager] No active vote session while ending vote`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No active vote session while ending vote')
       return
     }
 
-    console.log(`[VoteManager] End vote`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'End vote')
 
     this.activeSession.open = false
     this.activeSession.paused = false
@@ -257,7 +264,7 @@ export class VoteManager {
     const results = this.getResults()
 
     if (!results) {
-      console.error(`[VoteManager] No results available while ending vote`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No results available while ending vote')
       return
     }
 
@@ -277,28 +284,28 @@ export class VoteManager {
 
   startTiebreaker () {
     if (!this.activeSession) {
-      console.error(`[VoteManager] No active vote session while starting tiebreaker`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No active vote session while starting tiebreaker')
       return
     }
 
     if (this.activeSession?.isTiebreaker) {
-      console.error(`[VoteManager] Tiebreaker already started while starting tiebreaker`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Tiebreaker already started while starting tiebreaker')
       return
     }
 
     const results = this.getResults()
 
     if (!results) {
-      console.error(`[VoteManager] No results available while starting tiebreaker`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No results available while starting tiebreaker')
       return
     }
 
     if (results.next !== 'tiebreaker') {
-      console.error(`[VoteManager] Not a tiebreaker`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Not a tiebreaker')
       return
     }
 
-    console.log(`[VoteManager] Start tiebreaker`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Start tiebreaker')
 
     this.activeSession.isTiebreaker = true
     this.activeSession.tiebreakerCandidates = results.winners
@@ -311,28 +318,28 @@ export class VoteManager {
 
   setRandom () {
     if (!this.activeSession) {
-      console.error(`[VoteManager] No active vote session while setting random`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No active vote session while setting random')
       return
     }
 
     if (this.activeSession?.isRandom) {
-      console.error(`[VoteManager] Random already started`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Random already started')
       return
     }
 
     const results = this.getResults()
 
     if (!results) {
-      console.error(`[VoteManager] No results available while setting random`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No results available while setting random')
       return
     }
 
     if (results.next !== 'random') {
-      console.error(`[VoteManager] Not a random`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Not a random')
       return
     }
 
-    console.log(`[VoteManager] Set random winner`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Set random winner')
 
     const winner = results.winners[Math.floor(Math.random() * results.winners.length)]
 
@@ -346,11 +353,11 @@ export class VoteManager {
 
   pauseVote () {
     if (!this.activeSession?.open) {
-      console.error(`[VoteManager] No open vote session while pausing`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No open vote session while pausing')
       return
     }
 
-    console.log(`[VoteManager] Pause vote`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Pause vote')
 
     this.activeSession.paused = true
 
@@ -360,11 +367,11 @@ export class VoteManager {
 
   resumeVote () {
     if (!this.activeSession?.open) {
-      console.error(`[VoteManager] No open vote session while resuming`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No open vote session while resuming')
       return
     }
 
-    console.log(`[VoteManager] Resume vote`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Resume vote')
 
     this.activeSession.paused = false
 
@@ -374,34 +381,34 @@ export class VoteManager {
 
   vote(teamId: string, optionId: string): boolean {
     if (!this.activeSession?.open) {
-      console.error(`[VoteManager] No open vote session while voting`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No open vote session while voting')
       return false
     }
 
     const team = Game.get().getTeam(teamId)
 
     if (!team) {
-      console.error(`[VoteManager] Team not found`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Team not found')
       return false
     }
 
     if (!this.pools[this.activeSession.pool]) {
-      console.error(`[VoteManager] Pool not found`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Pool not found')
       return false
     }
 
     if (!this.pools[this.activeSession.pool].has(optionId)) {
-      console.error(`[VoteManager] Option not found`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Option not found')
       return false
     }
 
     if (this.activeSession.paused) {
-      console.error(`[VoteManager] Vote session paused`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Vote session paused')
       return false
     }
 
     if (!team.active) {
-      console.error(`[VoteManager] Team not active`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'Team not active')
 
       if (this.activeSession.isTiebreaker) {
         if (!this.activeSession.passiveTiebreakerVotes?.[optionId]) {
@@ -429,16 +436,16 @@ export class VoteManager {
 
     if (this.activeSession.isTiebreaker) {
       if (!this.activeSession.tiebreakerCandidates?.includes(optionId)) {
-        console.error(`[VoteManager] Option not in tiebreaker`)
+        console.error(colorize('[VoteManager]', Fg.Green), 'Option not in tiebreaker')
         return false
       }
 
       if (Object.values(this.activeSession.tiebreakerVotes || {}).find(votes => votes.includes(teamId))) {
-        console.error(`[VoteManager] Team already voted in tiebreaker`)
+        console.error(colorize('[VoteManager]', Fg.Green), 'Team already voted in tiebreaker')
         return false
       }
 
-      console.log(`[VoteManager] Team ${teamId} voted for tiebreaker option ${optionId}`)
+      console.log(colorize('[VoteManager]', Fg.Green), `Team ${teamId} voted for tiebreaker option ${optionId}`)
 
       if (!this.activeSession.tiebreakerVotes?.[optionId]) {
         if (!this.activeSession.tiebreakerVotes) {
@@ -451,11 +458,11 @@ export class VoteManager {
       this.activeSession.tiebreakerVotes[optionId].push(teamId)
     } else {
       if (Object.values(this.activeSession.votes).find(votes => votes.includes(teamId))) {
-        console.error(`[VoteManager] Team already voted`)
+        console.error(colorize('[VoteManager]', Fg.Green), 'Team already voted')
         return false
       }
 
-      console.log(`[VoteManager] Team ${teamId} voted for option ${optionId}`)
+      console.log(colorize('[VoteManager]', Fg.Green), `Team ${teamId} voted for option ${optionId}`)
       
       if (!this.activeSession.votes[optionId]) {
         this.activeSession.votes[optionId] = []
@@ -476,7 +483,7 @@ export class VoteManager {
 
   getVoteCount (option?: string) {
     if (!this.activeSession) {
-      console.error(`[VoteManager] No active vote session while getting vote count`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No active vote session while getting vote count')
       return
     }
 
@@ -499,11 +506,11 @@ export class VoteManager {
 
   getResults (): VoteResults | undefined {
     if (!this.activeSession) {
-      console.error(`[VoteManager] No active vote session while getting results`)
+      console.error(colorize('[VoteManager]', Fg.Green), 'No active vote session while getting results')
       return
     }
 
-    console.log(`[VoteManager] Get results`)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Get results')
 
     let votes: Record<string, number> = {}
     if (this.activeSession.isRandom) {
@@ -525,13 +532,13 @@ export class VoteManager {
       )
     }
 
-    console.log(`[VoteManager] Votes`, votes)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Votes', votes)
 
     const maxVotes = Math.max(...Object.values(votes))
     const winners = Object.keys(votes)
       .filter((key) => votes[key] === maxVotes)
 
-    console.log(`[VoteManager] Winners`, winners)
+    console.log(colorize('[VoteManager]', Fg.Green), 'Winners', winners)
 
     const next = winners.length > 1
       ? (

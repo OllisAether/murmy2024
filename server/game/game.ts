@@ -13,6 +13,7 @@ import { CueManager } from "./cue/CueManager"
 import { VoteManager } from "./vote/voteManager"
 import { SuspectDatabaseManager } from "./suspectDatabase/suspectDatabaseManager"
 import { ClueManager } from "./clueManager/clueManager"
+import { Bg, colorize, Fg } from "../console"
 
 export class Game {
   private adminPassword: string
@@ -74,7 +75,7 @@ export class Game {
 
     this.teams = teams.map((t) => {
       if (!t.id || !t.name || !t.code) {
-        console.error('Invalid team data', t)
+        console.warn('Invalid team data', t)
         return null
       }
 
@@ -113,7 +114,7 @@ export class Game {
   private clients: WebSocketClient[] = []
 
   sendClientsToAdmins(client?: AdminClient) {
-    console.log('[Clients] Sending clients to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending clients to admins')
 
     const clients = this.clients.map((c) => ({
       id: c.id,
@@ -133,10 +134,10 @@ export class Game {
   }
 
   addClient(client: WebSocketClient) {
-    console.log('[Clients] Adding client', client.id)
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Adding client', client.id)
 
     if (this.clients.some((c) => c.id === client.id)) {
-      console.log('[Clients] Client already exists', client.id)
+      console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Client already exists', client.id)
       return
     }
 
@@ -145,14 +146,14 @@ export class Game {
   }
 
   replaceClient(client: WebSocketClient) {
-    console.log('[Clients] Replacing client', client.id)
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Replacing client', client.id)
 
     this.clients = this.clients.map((c) => c.id === client.id ? client : c)
     this.sendClientsToAdmins()
   }
 
   removeClient(client: WebSocketClient) {
-    console.log('[Clients] Removing client', client.id)
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Removing client', client.id)
 
     this.clients = this.clients.filter((c) => c.id !== client.id)
     this.sendClientsToAdmins()
@@ -226,7 +227,7 @@ export class Game {
   private needsHelp: string[] = []
 
   sendHelpRequestsToAdmins(client?: AdminClient) {
-    console.log('Sending help requests to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending help requests to admins')
 
     const requests = this.needsHelp
 
@@ -241,7 +242,7 @@ export class Game {
   }
 
   addHelpRequest(id: string) {
-    console.log('Adding help request', id)
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Adding help request', id)
 
     if (this.needsHelp.includes(id)) {
       return false
@@ -254,7 +255,7 @@ export class Game {
   }
 
   removeHelpRequest(id: string) {
-    console.log('Removing help request', id)
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Removing help request', id)
 
     this.needsHelp = this.needsHelp.filter((i) => i !== id)
     this.sendHelpRequestsToAdmins()
@@ -276,13 +277,13 @@ export class Game {
     const client = this.getClient(clientId)
 
     if (!client) {
-      console.log('Client not found', clientId)
+      console.warn('Client not found', clientId)
       res.status(404).send('Client not found')
       return
     }
 
     if (client.type !== Role.Unauthorized) {
-      console.log('Client already logged in', clientId)
+      console.warn('Client already logged in', clientId)
       res.status(409).send('Client already logged in')
       return
     }
@@ -298,7 +299,7 @@ export class Game {
       (c) => c.type === 'team'
       && (c as TeamClient).teamId === team.id)
     ) {
-      console.log('Team already logged in', team.id)
+      console.warn('Team already logged in', team.id)
       res.status(409).send('Team already logged in')
       return
     }
@@ -318,26 +319,26 @@ export class Game {
     const client = this.getClient(clientId)
 
     if (!client) {
-      console.log('Client not found', clientId)
+      console.warn('Client not found', clientId)
       res.status(404).send('Client not found')
       return
     }
 
     if (client.type !== Role.Unauthorized) {
-      console.log('Client already logged in', clientId)
+      console.warn('Client already logged in', clientId)
       res.status(409).send('Client already logged in')
       return
     }
 
     if (role !== Role.Admin && role !== Role.Board) {
-      console.log('Invalid role', role)
+      console.warn('Invalid role', role)
       res.status(400).send('Invalid role')
       return
     }
 
     if (role === Role.Admin) {
       if (password !== this.adminPassword) {
-        console.log('Invalid password', password)
+        console.warn('Invalid password', password)
         res.status(403).send('Invalid password')
         return
       }
@@ -345,13 +346,13 @@ export class Game {
       this.promoteClientToAdmin(clientId)
     } else if (role === Role.Board) {
       if (password !== this.boardPassword) {
-        console.log('Invalid password', password)
+        console.warn('Invalid password', password)
         res.status(403).send('Invalid password')
         return
       }
 
       if (this.clients.some((c) => c.type === Role.Board)) {
-        console.log('Board already logged in')
+        console.warn('Board already logged in')
         res.status(409).send('Board already logged in')
         return
       }
@@ -371,7 +372,7 @@ export class Game {
   }
 
   sendTimerToClients(client?: WebSocketClient) {
-    console.log('Sending timer to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending timer to clients')
 
     const timer = {
       startTime: this.timer.getStartTime(),
@@ -410,8 +411,6 @@ export class Game {
     if (!timer) {
       return
     }
-
-    console.log('Loading timer', timer)
 
     switch (timer.state) {
       case 'stopped':
@@ -483,7 +482,7 @@ export class Game {
   phaseMeta: JsonMap = {}
 
   sendPhaseToClients(client?: WebSocketClient) {
-    console.log('Sending phase to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending phase to clients')
 
     const phase = {
       type: this.currentPhase,
@@ -534,13 +533,13 @@ export class Game {
   cueManager: CueManager = new CueManager()
 
   sendPlaybacksToAdmins (client?: WebSocketClient) {
-    console.log('Sending playbacks to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending playbacks to admins')
 
     const cues = this.cueManager.getPlaybacks()
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.log('Client is not an admin')
+        console.warn('Client is not an admin')
         return
       }
 
@@ -560,13 +559,13 @@ export class Game {
   }
 
   sendCurrentPlaybackToAdmins (client?: WebSocketClient) {
-    console.log('Sending current playback to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending current playback to admins')
 
     const playback = this.cueManager.getCurrentPlayback()
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.log('Client is not an admin')
+        console.warn('Client is not an admin')
         return
       }
 
@@ -584,7 +583,7 @@ export class Game {
   voteManager: VoteManager = new VoteManager()
 
   sendVotePoolsToClients(client?: WebSocketClient) {
-    console.log('Sending vote pools to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending vote pools to clients')
 
     const pools = this.voteManager.getPools()
     if (client) {
@@ -598,7 +597,7 @@ export class Game {
   }
 
   sendVoteSessionToClients(client?: WebSocketClient) {
-    console.log('Sending vote session to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending vote session to clients')
 
     const session = this.voteManager.getActiveSession()
 
@@ -613,7 +612,7 @@ export class Game {
   }
 
   sendVoteOptionsToClients(client?: WebSocketClient) {
-    console.log('Sending vote options to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending vote options to clients')
 
     const options = this.voteManager.getVoteOptions()
 
@@ -674,29 +673,28 @@ export class Game {
     this.currentMedia = media.currentMedia
   }
 
-  sendCurrentMediaToBoardAndAdmins (client?: WebSocketClient) {
-    console.log('Sending media to board and admins')
+  sendCurrentMediaToClients (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending media to clients')
 
     if (client) {
-      if (client.type !== Role.Admin && client.type !== Role.Board) {
-        console.log('Client is not an admin or board')
-        return
-      }
-
       client.send('currentMedia', this.currentMedia)
       return
     }
 
     this.clients
-      .filter((c) => c.type === Role.Admin || c.type === Role.Board)
+      .filter((c) => c.type !== Role.Unauthorized)
       .forEach((c) => c.send('currentMedia', this.currentMedia))
   }
 
+  getMedia () {
+    return this.currentMedia
+  }
+
   setMedia (media: string | null) {
-    console.log('[Media] Setting media', media)
+    console.log(colorize('[Media]', Fg.Cyan), 'Setting media', media)
     this.currentMedia = media
     this.saveMedia()
-    this.sendCurrentMediaToBoardAndAdmins()
+    this.sendCurrentMediaToClients()
   }
 
   mediaFinishedListeners: (() => void)[] = []
@@ -708,7 +706,8 @@ export class Game {
     }
   }
   mediaFinished () {
-    console.log('[Media] Media finished')
+    console.log(colorize('[Media]', Fg.Cyan), 'Media finished')
+    this.setMedia(null)
     this.mediaFinishedListeners.forEach((l) => l())
   }
   offMediaFinished (listener: () => void) {
@@ -719,12 +718,12 @@ export class Game {
     const board = this.clients.find((c) => c.type === Role.Board)
 
     if (!board) {
-      console.log('[Media] Failed to play media. Board not connected')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to play media. Board not connected')
       return
     }
 
     if (!this.currentMedia) {
-      console.log('[Media] Failed to play media. No media set')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to play media. No media set')
       return
     }
 
@@ -737,12 +736,12 @@ export class Game {
     const board = this.clients.find((c) => c.type === Role.Board)
 
     if (!board) {
-      console.log('[Media] Failed to pause media. Board not connected')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to pause media. Board not connected')
       return
     }
 
     if (!this.currentMedia) {
-      console.log('[Media] Failed to pause media. No media set')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to pause media. No media set')
       return
     }
 
@@ -755,12 +754,12 @@ export class Game {
     const board = this.clients.find((c) => c.type === Role.Board)
 
     if (!board) {
-      console.log('[Media] Failed to seek media. Board not connected')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to seek media. Board not connected')
       return
     }
 
     if (!this.currentMedia) {
-      console.log('[Media] Failed to seek media. No media set')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to seek media. No media set')
       return
     }
 
@@ -774,12 +773,12 @@ export class Game {
     const board = this.clients.find((c) => c.type === Role.Board)
 
     if (!board) {
-      console.log('[Media] Failed to request media duration. Board not connected')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to request media duration. Board not connected')
       return
     }
 
     if (!this.currentMedia) {
-      console.log('[Media] Failed to request media duration. No media set')
+      console.error(colorize('[Media]', Fg.Cyan), 'Failed to request media duration. No media set')
       return
     }
 
@@ -787,7 +786,7 @@ export class Game {
   }
 
   sendMediaDurationToAdmins (duration: number) {
-    console.log('Sending media duration to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending media duration to admins')
 
     this.clients
       .filter((c) => c.type === Role.Admin)
@@ -795,7 +794,7 @@ export class Game {
   }
 
   sendMediaStateToAdmins (state: 'playing' | 'paused') {
-    console.log('Sending media state to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending media state to admins')
 
     this.clients
       .filter((c) => c.type === Role.Admin)
@@ -813,13 +812,13 @@ export class Game {
   suspectDatabaseManager: SuspectDatabaseManager = new SuspectDatabaseManager()
 
   sendSuspectDatabasesToAdmins (client?: WebSocketClient) {
-    console.log('Sending suspect database to admins')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending suspect database to admins')
 
     const database = this.suspectDatabaseManager.getDatabases()
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.log('Client is not an admin')
+        console.warn('Client is not an admin')
         return
       }
 
@@ -833,11 +832,11 @@ export class Game {
   }
 
   sendSuspectDatabaseToTeams (client?: WebSocketClient) {
-    console.log('Sending suspect database to teams')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending suspect database to teams')
 
     if (client) {
       if (client.type !== Role.Team) {
-        console.log('Client is not a team')
+        console.warn('Client is not a team')
         return
       }
 
@@ -855,32 +854,56 @@ export class Game {
   clueManager: ClueManager = new ClueManager()
 
   sendCluesToClients(client?: WebSocketClient) {
-    console.log('Sending clues to clients')
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending clues to clients')
+
+    const getCluesObj = (client: WebSocketClient) => {
+      if (client.type === Role.Team) {
+        return {
+          mainClueType: this.clueManager.getMainClueType((client as TeamClient).teamId),
+          available: this.clueManager.getAvailableClues(),
+          unlocked: this.clueManager.getUnlockedClues((client as TeamClient).teamId),
+          investigationCoins: this.clueManager.getInvestigationCoins((client as TeamClient).teamId),
+        }
+      } else {
+        return {
+          available: this.clueManager.getAvailableClues(),
+        }
+      }
+    }
 
     if (client) {
-      client.send('clues', {
-        available: this.clueManager.getAvailableClues(),
-        unlocked: client.type === Role.Team
-          ? this.clueManager.getUnlockedClues((client as TeamClient).teamId)
-          : undefined,
-        investigationCoins: client.type === Role.Team
-          ? this.clueManager.getInvestigationCoins((client as TeamClient).teamId)
-          : undefined
-      })
+      client.send('clues', getCluesObj(client))
       return
     }
 
     this.clients
       .filter((c) => c.type !== Role.Unauthorized)
-      .forEach((c) => c.send('clues', {
-        available: this.clueManager.getAvailableClues(),
-        unlocked: c.type === Role.Team
-          ? this.clueManager.getUnlockedClues((c as TeamClient).teamId)
-          : undefined,
-        investigationCoins: c.type === Role.Team
-          ? this.clueManager.getInvestigationCoins((c as TeamClient).teamId)
-          : undefined
-      }))
+      .forEach((c) => c.send('clues', getCluesObj(c)))
+  }
+
+  sendCluesToAdmins (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending clues to admins')
+
+    const clues = {
+      available: this.clueManager.getAvailableClues(),
+      unlocked: this.clueManager.getUnlockedClues(),
+      investigationCoins: this.clueManager.getInvestigationCoins(),
+      mainClueType: this.clueManager.getMainClueType(),
+    }
+
+    if (client) {
+      if (client.type !== Role.Admin) {
+        console.warn('Client is not an admin')
+        return
+      }
+
+      client.send('clues', clues)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => (c as AdminClient).send('clues', clues))
   }
   // #endregion
 
@@ -895,9 +918,9 @@ export class Game {
 
       Game.instance.load()
 
-      console.log('Game created')
-      console.log('Admin password:', Game.instance.adminPassword)
-      console.log('Board password:', Game.instance.boardPassword)
+      console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Game created')
+      console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Admin password:', Game.instance.adminPassword)
+      console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Board password:', Game.instance.boardPassword)
     }
     return Game.instance
   }

@@ -6,7 +6,7 @@
 
   <template v-else>
     <VFadeTransition mode="out-in">
-      <MediaScreen v-if="game.phase.type === Phase.Media" />
+      <MediaScreen v-if="game.currentMedia !== null" />
       <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
       <TitleScreen v-else />
     </VFadeTransition>

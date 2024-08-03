@@ -1,4 +1,5 @@
 import { Role } from "../../shared/roles";
+import { colorize, Fg } from "../console";
 import { Game } from "../game/game";
 import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
@@ -20,22 +21,18 @@ export class BoardClient extends WebSocketClient {
       {
         action: 'boardSkip',
         handler: () => {
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Skipping board');
           game.boardSkip();
-        }
-      },
-      {
-        action: 'getMedia',
-        handler: () => {
-          game.sendCurrentMediaToBoardAndAdmins(this);
         }
       },
       {
         action: 'mediaDuration',
         handler: (payload) => {
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Received media duration', payload);
           const { duration } = payload;
 
           if (typeof duration !== 'number') {
-            console.log('Invalid duration', duration);
+            console.error(colorize('[Client: Board]', Fg.Blue), 'Invalid duration', duration);
             return;
           }
 
@@ -45,15 +42,16 @@ export class BoardClient extends WebSocketClient {
       {
         action: 'mediaState',
         handler: (payload) => {
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Received media state', payload);
           const { state } = payload;
 
           if (typeof state !== 'string') {
-            console.log('Invalid state', state);
+            console.error(colorize('[Client: Board]', Fg.Blue), 'Invalid state', state);
             return;
           }
 
           if (state !== 'playing' && state !== 'paused') {
-            console.log('Invalid state', state);
+            console.error(colorize('[Client: Board]', Fg.Blue), 'Invalid state', state);
             return;
           }
 
@@ -63,6 +61,7 @@ export class BoardClient extends WebSocketClient {
       {
         action: 'mediaProgress',
         handler: (payload) => {
+          // console.log(colorize('[Client: Board]', Fg.Blue), 'Received media progress', payload);
           const { progress } = payload;
 
           if (typeof progress !== 'number') {
@@ -75,6 +74,7 @@ export class BoardClient extends WebSocketClient {
       {
         action: 'mediaFinished',
         handler: () => {
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Received media finished');
           game.mediaFinished();
         }
       }

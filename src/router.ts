@@ -26,7 +26,6 @@ const router = createRouter({
 
         switch (game.phase.type) {
           case Phase.Idle:
-          case Phase.Media:
             return "/team/home"
           case Phase.Work:
             return "/team/workspace"
@@ -50,7 +49,7 @@ const router = createRouter({
           component: () => import("./pages/team/Home.vue"),
 
           meta: {
-            phase: [Phase.Idle, Phase.Media],
+            phase: Phase.Idle,
           }
         },
         {

@@ -23,6 +23,50 @@
             </template>
             
             <VListItemTitle>{{ media.name }}</VListItemTitle>
+
+            <template #append>
+              <VBtn
+                icon
+                variant="tonal"
+                size="small"
+                v-if="game.currentMedia !== media.name"
+                @click="admin.setMedia(media.name)"
+              >
+                <VIcon>mdi-play</VIcon>
+              </VBtn>
+              <template v-else>
+                <VBtn
+                  icon
+                  size="small"
+                  variant="tonal"
+                  color="primary"
+                  v-if="admin.media.state === 'playing'"
+                  @click="admin.pauseMedia"
+                >
+                  <VIcon>mdi-pause</VIcon>
+                </VBtn>
+                <VBtn
+                  icon
+                  size="small"
+                  variant="tonal"
+                  color="primary"
+                  v-else
+                  @click="admin.playMedia"
+                >
+                  <VIcon>mdi-play</VIcon>
+                </VBtn>
+                <VBtn
+                  icon
+                  size="small"
+                  variant="tonal"
+                  color="primary"
+                  @click="admin.skipMedia"
+                  class="ml-2"
+                >
+                  <VIcon>mdi-skip-next</VIcon>
+                </VBtn>
+              </template>
+            </template>
           </VListItem>
         </VList>
       </VCardText>
@@ -33,9 +77,9 @@
 <script setup lang="ts">
 import MediaControl from '@/components/admin/MediaControl.vue';
 import { useAdmin } from '@/store/admin/index';
-import { useGameManager } from '@/store/gameManager';
 import { computed } from 'vue';
 import { Asset } from '../../../shared/asset';
+import { useGameManager } from '@/store/gameManager';
 
 const admin = useAdmin()
 const game = useGameManager()

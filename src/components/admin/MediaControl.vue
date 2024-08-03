@@ -1,12 +1,12 @@
 <template>
   <VCard>
     <VCardText>
-      Media Control: {{ game.phase.type === 'media' ? game.currentMedia ?? '-/-' : '-/-' }}
+      Media Control: {{ game.currentMedia ?? '-/-' }}
 
       <div class="controls">
         <VBtn
           icon
-          :disabled="game.phase.type !== 'media'"
+          :disabled="!game.currentMedia"
           @click="playPause"
           variant="text"
         >
@@ -15,17 +15,16 @@
 
         <VBtn
           icon
-          :disabled="game.phase.type !== 'media'"
+          :disabled="!game.currentMedia"
           @click="skipMedia"
           variant="text"
         >
           <VIcon>mdi-skip-next</VIcon>
         </VBtn>
 
-
         <VSlider
           class="no-transition"
-          :disabled="game.phase.type !== 'media'"
+          :disabled="!game.currentMedia"
           v-model="progress"
           :max="duration"
           :min="0"
@@ -34,7 +33,7 @@
           @start="seekStart"
           @end="seekEnd"
         />
-        <Duration :duration="progress * 1000" /> / <Duration :duration="duration" />
+        <Duration :duration="progress * 1000" /> / <Duration :duration="duration * 1000" />
       </div>
     </VCardText>
   </VCard>
@@ -63,7 +62,7 @@ function seekEnd () {
 }
 
 const duration = computed(() => {
-  if (game.phase.type === 'media') {
+  if (game.currentMedia) {
     return admin.media.duration
   } else {
     return 0
@@ -72,7 +71,7 @@ const duration = computed(() => {
 
 const progress = computed({
   get: () => {
-    if (game.phase.type === 'media') {
+    if (game.currentMedia) {
       return admin.media.progress
     } else {
       return 0

@@ -211,6 +211,7 @@ function openClue() {
     transform: scale(1.25);
     margin-left: 1.25rem;
 
+    
     :deep(.v-icon) {
       margin-right: .25rem;
     }

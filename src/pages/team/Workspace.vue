@@ -28,8 +28,7 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
-            <!-- {{ game.clues }} -->
-          
+            {{ game.clues.mainClueType }}
             <ClueCard
               v-for="clue in game.clues.available"
               :key="clue"

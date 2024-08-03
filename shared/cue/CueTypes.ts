@@ -28,6 +28,9 @@ export enum CueType {
 
   AddInvestigationCoins = 'AddInvestigationCoins',
   AddClues = 'AddClues',
+  AssignMainClueType = 'AssignMainClueType',
+  AssignMainClueTypeRandomly = 'AssignMainClueTypeRandomly',
+  SetAssignFurtherMainClueTypesRandomly = 'SetAssignFurtherMainClueTypesRandomly',
 
   SetMedia = 'SetMedia',
   WaitForMediaFinished = 'WaitForMediaFinished',

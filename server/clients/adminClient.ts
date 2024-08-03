@@ -6,6 +6,7 @@ import { WebSocketClient, genericActions, handleActions } from "./client";
 import WebSocket from 'ws';
 import { TeamClient } from "./teamClient";
 import { VoteOption } from "../../shared/vote";
+import { colorize, Fg } from "../console";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -26,14 +27,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'addTeam',
         handler: (payload) => {
-          console.log('Adding team', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding team', payload);
 
           const id = payload.id;
           const name = payload.name;
           const code = payload.code;
 
           if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addTeam:response', {
               success: false,
@@ -44,7 +45,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (name.length === 0 || code.length === 0 || id.length === 0) {
-            console.error('Some fields are empty', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Some fields are empty', payload);
 
             this.send('addTeam:response', {
               success: false,
@@ -57,7 +58,7 @@ export class AdminClient extends WebSocketClient {
           const valid = validateCode(code);
 
           if (!valid.valid) {
-            console.error('Invalid code', code, valid.message);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid code', code, valid.message);
 
             this.send('addTeam:response', {
               success: false,
@@ -68,7 +69,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.getTeams().find((t) => t.name === name)) {
-            console.error('Name already exists', name);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Name already exists', name);
 
             this.send('addTeam:response', {
               success: false,
@@ -79,7 +80,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.getTeams().find((t) => t.code === code)) {
-            console.error('Code already exists', code);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Code already exists', code);
 
             this.send('addTeam:response', {
               success: false,
@@ -90,7 +91,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.getTeams().find((t) => t.id === id)) {
-            console.error('ID already exists', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'ID already exists', id);
 
             this.send('addTeam:response', {
               success: false,
@@ -116,14 +117,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'editTeam',
         handler: (payload) => {
-          console.log('Editing team', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Editing team', payload);
 
           const id = payload.id;
           const name = payload.name;
           const code = payload.code;
 
           if (typeof name !== 'string' || typeof code !== 'string') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('editTeam:response', {
               success: false,
@@ -134,7 +135,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (name.length === 0 || code.length === 0) {
-            console.error('Some fields are empty', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Some fields are empty', payload);
 
             this.send('editTeam:response', {
               success: false,
@@ -147,7 +148,7 @@ export class AdminClient extends WebSocketClient {
           const valid = validateCode(code);
 
           if (!valid.valid) {
-            console.error('Invalid code', code, valid.message);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid code', code, valid.message);
 
             this.send('editTeam:response', {
               success: false,
@@ -160,7 +161,7 @@ export class AdminClient extends WebSocketClient {
           const team = game.getTeams().find((t) => t.id === id);
 
           if (!team) {
-            console.error('Team not found', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Team not found', id);
 
             this.send('editTeam:response', {
               success: false,
@@ -171,7 +172,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.getTeams().find((t) => t.name === name && t.id !== id)) {
-            console.error('Name already exists', name);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Name already exists', name);
 
             this.send('editTeam:response', {
               success: false,
@@ -182,7 +183,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.getTeams().find((t) => t.code === code && t.id !== id)) {
-            console.error('Code already exists', code);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Code already exists', code);
 
             this.send('editTeam:response', {
               success: false,
@@ -207,14 +208,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'removeTeam',
         handler: (payload) => {
-          console.log('Removing team', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing team', payload);
 
           const id = payload.id;
 
           const team = game.getTeams().find((t) => t.id === id);
 
           if (!team) {
-            console.error('Team not found', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Team not found', id);
 
             this.send('removeTeam:response', {
               success: false,
@@ -236,7 +237,6 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'getTeams',
         handler: () => {
-          console.log('Getting teams', game.getTeams());
           this.send('teams', game.getTeams());
         }
       },
@@ -252,14 +252,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'kickClient',
         handler: (payload) => {
-          console.log('Kicking client', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Kicking client', payload);
 
           const id = payload.id;
 
           const client = game.getClient(id);
 
           if (!client) {
-            console.error('Client not found', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Client not found', id);
 
             this.send('kickClient:response', {
               success: false,
@@ -280,14 +280,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'logoutClient',
         handler: (payload) => {
-          console.log('Logging out client', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Logging out client', payload);
 
           const id = payload.id;
 
           const client = game.getClient(id);
 
           if (!client) {
-            console.error('Client not found', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Client not found', id);
 
             this.send('logoutClient:response', {
               success: false,
@@ -307,13 +307,13 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setClientTeam',
         handler: (payload) => {
-          console.log('Setting client team', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting client team', payload);
 
           const clientId = payload.clientId;
           const teamId = payload.teamId;
 
           if (game.getClients().find((c) => c.type === Role.Team && (c as TeamClient).teamId === teamId)) {
-            console.error('Team already linked to a client', teamId);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Team already linked to a client', teamId);
 
             this.send('setClientTeam:response', {
               success: false,
@@ -329,12 +329,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setClientBoard',
         handler: (payload) => {
-          console.log('Setting client board', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting client board', payload);
 
           const clientId = payload.clientId;
 
           if (game.getClients().find((c) => c.type === Role.Board)) {
-            console.error('Board already exists');
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Board already exists');
 
             this.send('setClientBoard:response', {
               success: false,
@@ -359,7 +359,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'removeHelpRequest',
         handler: (payload) => {
-          console.log('Removing help request', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing help request', payload);
 
           const teamId = payload.teamId;
 
@@ -372,22 +372,25 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'pauseTimer',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Pausing timer');
           game.pauseTimer();
         }
       },
       {
         action: 'resumeTimer',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Resuming timer');
           game.resumeTimer();
         }
       },
       {
         action: 'setTime',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting time', payload);
           const time = payload.time;
 
           if (typeof time !== 'number') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setTime:response', {
               success: false,
@@ -403,10 +406,11 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setDuration',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting duration', payload);
           const duration = payload.duration;
 
           if (typeof duration !== 'number') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setDuration:response', {
               success: false,
@@ -425,16 +429,18 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'nextPlayback',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Next playback');
           game.cueManager.nextPlayback();
         }
       },
       {
         action: 'nextCue',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Next cue', payload);
           const index = payload.index;
 
           if (typeof index !== 'number' && index !== undefined) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('nextCue:response', {
               success: false,
@@ -462,10 +468,11 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setCurrentPlayback',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting current playback', payload);
           const index = payload.index;
 
           if (typeof index !== 'number') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setCurrentPlayback:response', {
               success: false,
@@ -481,11 +488,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setPlaybackFields',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting playback fields', payload);
           const index = payload.index;
           const fields = payload.fields;
 
           if (typeof index !== 'number' || typeof fields !== 'object') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setPlaybackFields:response', {
               success: false,
@@ -501,11 +509,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'setPlaybackTrigger',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting playback trigger', payload);
           const index = payload.index;
           const trigger = payload.trigger;
 
           if (typeof index !== 'number' || typeof trigger !== 'string' || ['auto', 'manual'].indexOf(trigger) === -1) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setPlaybackTrigger:response', {
               success: false,
@@ -515,26 +524,17 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          console.log('Setting playback trigger', index, trigger);
-
           game.cueManager.setPlaybackTrigger(index, trigger as 'auto' | 'manual');
-        }
-      },
-      {
-        action: 'getManualTriggerOverride',
-        handler: () => {
-          this.send('getManualTriggerOverride:response', {
-            value: game.cueManager.getManualTriggerOverride()
-          });
         }
       },
       {
         action: 'setManualTriggerOverride',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting manual trigger override', payload);
           const value = payload.value;
 
           if (typeof value !== 'boolean') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setManualTriggerOverride:response', {
               success: false,
@@ -553,7 +553,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'addVoteOption',
         handler: (payload) => {
-          console.log('Adding vote option', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding vote option', payload);
 
           const option = payload.option as VoteOption;
 
@@ -569,7 +569,7 @@ export class AdminClient extends WebSocketClient {
                 Object.keys(option.options).some(k => typeof k !== 'string' ||
                   !Array.isArray(option.options![k]) || option.options![k].some(o => typeof o !== 'string')
               )))) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addVoteOption:response', {
               success: false,
@@ -579,7 +579,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (game.voteManager.getVoteOptions().find((o) => o.id === option.id)) {
-            console.error('ID already exists', option.id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'ID already exists', option.id);
 
             this.send('addVoteOption:response', {
               success: false,
@@ -599,7 +599,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'editVoteOption',
         handler: (payload) => {
-          console.log('Editing vote option', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Editing vote option', payload);
 
           const option = payload.option as VoteOption;
 
@@ -615,7 +615,7 @@ export class AdminClient extends WebSocketClient {
                 Object.keys(option.options).some(k => typeof k !== 'string' ||
                   !Array.isArray(option.options![k]) || option.options![k].some(o => typeof o !== 'string')
               )))) {
-            console.error('Invalid payload', payload.option);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload.option);
 
             this.send('editVoteOption:response', {
               success: false,
@@ -625,7 +625,7 @@ export class AdminClient extends WebSocketClient {
           }
 
           if (!game.voteManager.getVoteOptions().find((o) => o.id === option.id)) {
-            console.error('ID not found', option.id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'ID not found', option.id);
 
             this.send('editVoteOption:response', {
               success: false,
@@ -645,12 +645,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'removeVoteOption',
         handler: (payload) => {
-          console.log('Removing vote option', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing vote option', payload);
 
           const id = payload.id;
 
           if (!game.voteManager.getVoteOptions().find((o) => o.id === id)) {
-            console.error('ID not found', id);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'ID not found', id);
 
             this.send('removeVoteOption:response', {
               success: false,
@@ -670,12 +670,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'addPool',
         handler: (payload) => {
-          console.log('Adding pool', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding pool', payload);
 
           const pool = payload.pool;
 
           if (typeof pool !== 'string' || pool.length === 0) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addPool:response', {
               success: false,
@@ -695,12 +695,12 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'removePool',
         handler: (payload) => {
-          console.log('Removing pool', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing pool', payload);
 
           const pool = payload.pool;
 
           if (typeof pool !== 'string' || pool.length === 0) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('removePool:response', {
               success: false,
@@ -720,14 +720,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'addOptionToPool',
         handler: (payload) => {
-          console.log('Adding option to pool', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding option to pool', payload);
 
           const pool = payload.pool;
           const option = payload.option;
 
           if (typeof pool !== 'string' || pool.length === 0 ||
               typeof option !== 'string' || option.length === 0) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addOptionToPool:response', {
               success: false,
@@ -747,14 +747,14 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'removeOptionFromPool',
         handler: (payload) => {
-          console.log('Removing option from pool', payload);
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing option from pool', payload);
 
           const pool = payload.pool;
           const option = payload.option;
 
           if (typeof pool !== 'string' || pool.length === 0 ||
               typeof option !== 'string' || option.length === 0) {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('removeOptionFromPool:response', {
               success: false,
@@ -777,16 +777,18 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'playMedia',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Playing media');
           game.playMedia();
         }
       },
       {
         action: 'setMedia',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting media', payload);
           const media = payload.media;
 
           if (typeof media !== 'string') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
             return;
           }
 
@@ -796,16 +798,18 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'pauseMedia',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Pausing media');
           game.pauseMedia();
         }
       },
       {
         action: 'seekMedia',
         handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Seeking media', payload);
           const time = payload.time;
 
           if (typeof time !== 'number') {
-            console.error('Invalid payload', payload);
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
             return;
           }
 
@@ -815,6 +819,7 @@ export class AdminClient extends WebSocketClient {
       {
         action: 'skipMedia',
         handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Skipping media');
           game.mediaFinished();
         }
       },

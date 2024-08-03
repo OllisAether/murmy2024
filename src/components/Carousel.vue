@@ -23,13 +23,13 @@
     </Btn>
 
     <div v-if="items > 1" class="carousel__indicators">
-      <div
+      <button
         v-for="i in items"
         :key="i"
         :class="['carousel__indicator', {
           'carousel__indicator--active': value === i - 1
         }]"
-        @click="value = i"
+        @click="scrollTo(i - 1)"
       >
         <svg
           v-if="i === value + 1"
@@ -54,12 +54,13 @@
             :stroke-dashoffset="31.42 - 31.42 * (indicatorProgress / 100)"
           />
         </svg>
-      </div>
+      </button>
       <VBtn
         icon
         size="1.5rem"
-        variant="text"
+        variant="tonal"
         @click="cycle = !cycle"
+        class="carousel__indicator__cycle-btn"
       >
         <VIcon
           size="1rem"
@@ -99,7 +100,7 @@ watch(() => props.modelValue, (index) => {
   scrollTo(value.value)
 })
 
-watch(value, (index) => {
+watch(value, () => {
   if (cycle.value) {
     startInterval()
   }
@@ -217,11 +218,14 @@ function scroll () {
   }
 
   &__indicators {
+    position: relative;
+    width: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
     padding: 1rem;
+    margin: 0 auto;
   }
 
   &__indicator {
@@ -242,6 +246,11 @@ function scroll () {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+
+    &__cycle-btn {
+      position: absolute;
+      left: calc(100% + 1rem);
     }
   }
 }

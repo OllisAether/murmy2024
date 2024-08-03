@@ -6,6 +6,43 @@
   </RouterView>
 
   <div class="controls">
+    <VFadeTransition>
+      <VBtn
+        v-if="!game.wakelock.isActive"
+        icon
+        variant="text"
+        color="red"
+        @click="game.wakelock.request('screen')"
+      >
+        <VIcon>mdi-eye-lock-open</VIcon>!
+
+        <VOverlay
+          activator="parent"
+          width="400"
+          location-strategy="connected"
+          :scrim="false"
+          location="bottom"
+        >
+          <VCard>
+            <VCardText style="font-size: 1rem;">
+              <p class="mb-3" v-if="!game.wakelock.isSupported">
+                Die Bildschirmsperre konnte nicht aktiviert werden, da der Browser dies nicht unterstützt.
+              </p>
+              <p class="mb-3" v-else>
+                Die Bildschirmsperre konnte nicht aktiviert werden.
+              </p>
+              <p class="mb-3">
+                Es kann sein, dass der Bildschirm während des Spiels ausgeht.
+              </p>
+              <p>
+                Um dies zu verhindern, könnt ihr den Bildschirmtimeout in den Einstellungen eures Geräts deaktivieren.
+              </p>
+            </VCardText>
+          </VCard>
+        </VOverlay>
+      </VBtn>
+    </VFadeTransition>
+
     <Btn
       v-if="game.canFullscreen"
       class="fullscreen-button"
@@ -119,7 +156,6 @@
 </template>
 
 <script setup lang="ts">
-console.log('Skewbox')
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -128,6 +164,7 @@ import { useGameManager } from '../../store/gameManager';
 import { useRouter } from 'vue-router';
 import Btn from '@/components/Btn.vue';
 import SkewBox from '@/components/SkewBox.vue';
+import { VOverlay } from 'vuetify/components';
 
 // const display = useDisplay()
 
@@ -212,7 +249,7 @@ onMounted(() => {
 
   const before = viewport?.getAttribute('content')
 
-  viewport?.setAttribute('content', 'width=1500px, user-scalable=0')
+  viewport?.setAttribute('content', 'width=1500, user-scalable=0')
 
   onBeforeUnmount(() => {
     game.deinitGameManager()
