@@ -9,6 +9,7 @@ import { Asset } from "../../../shared/asset";
 import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
 import { JsonMap } from "../../../shared/json";
+import { Entry } from "../../../shared/suspectDatabase/entry";
 
 export interface AlertOptions {
   id: string
@@ -89,6 +90,9 @@ export const useAdmin = defineStore('admin', () => {
       }),
       ws.onAction('mediaState', (state) => {
         media.value.state = state
+      }),
+      ws.onAction('suspectDatabases', (dbs) => {
+        suspectDatabases.value = dbs
       })
     ]
 
@@ -98,6 +102,7 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getPlaybacks')
     ws.send('getCurrentPlayback')
     ws.send('getMediaState')
+    ws.send('getSuspectDatabases')
 
     await getAssets()
     console.log('Assets loaded')
@@ -484,10 +489,24 @@ export const useAdmin = defineStore('admin', () => {
   }
   // #endregion
 
+  // #region Suspect Databases
+  const suspectDatabases = ref<Record<string, {
+    entries: Entry[]
+  }>>({})
+
+  function removeEntry (teamId: string, matterId: string) {
+    ws.send('removeEntry', { teamId, matterId })
+  }
+
+  function addEntry (teamId: string, entry: Entry) {
+    ws.send('addEntry', { teamId, entry })
+  }
+  // #endregion
+
   return {
     initAdmin,
     deinitAdmin,
-    
+
     assets,
 
     addTeam,
@@ -535,6 +554,10 @@ export const useAdmin = defineStore('admin', () => {
     pauseMedia,
     seekMedia,
     setMedia,
-    skipMedia
+    skipMedia,
+
+    suspectDatabases,
+    removeEntry,
+    addEntry
   }
 })

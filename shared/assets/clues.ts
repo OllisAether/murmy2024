@@ -10,7 +10,22 @@ export const clues: Clue<ClueTypes>[] = [
     thumbnailAssetId: 'floorplan/floorplan_eg.png',
     image: {
       assetId: 'floorplan/floorplan_eg.png',
-      entries: []
+      entries: [
+        {
+          index: 0,
+          entry: {
+            matterId: 'fp1',
+            suspectId: 'general',
+            title: 'Kamera 1',
+          },
+          rect: {
+            x: 825,
+            y: 560,
+            width: 50,
+            height: 50
+          }
+        }
+      ]
     }
   },
   {

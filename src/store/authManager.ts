@@ -46,6 +46,9 @@ export const useAuthManager = defineStore('authManager', () => {
     loading.value = false
   })
 
+  const viewport = document.querySelector('meta[name="viewport"]')
+  const before = viewport?.getAttribute('content')
+
   wsClient.onAction('auth', async (data: {
     type: Role,
     teamId?: string,
@@ -53,6 +56,8 @@ export const useAuthManager = defineStore('authManager', () => {
     teamCode?: string,
     password?: string
   }) => {
+    before && viewport?.setAttribute('content', before)
+
     switch (data.type) {
       case Role.Admin:
         role.value = Role.Admin
@@ -84,6 +89,7 @@ export const useAuthManager = defineStore('authManager', () => {
         if (router.currentRoute.value.name !== 'team') {
           router.replace('/team')
         }
+        viewport?.setAttribute('content', 'width=1500, user-scalable=0')
         break
       default:
         team.value = null

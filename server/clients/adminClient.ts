@@ -838,6 +838,58 @@ export class AdminClient extends WebSocketClient {
           game.sendSuspectDatabasesToAdmins(this);
         }
       },
+      {
+        action: 'addEntry',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding entry', payload);
+
+          const teamId = payload.teamId;
+          const entry = payload.entry;
+
+          if (typeof teamId !== 'string' || typeof entry !== 'object') {
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('addEntry:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.suspectDatabaseManager.addEntry(teamId, entry);
+
+          this.send('addEntry:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'removeEntry',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing entry', payload);
+
+          const teamId = payload.teamId;
+          const matterId = payload.matterId;
+
+          if (typeof teamId !== 'string' || typeof matterId !== 'string') {
+            console.error(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('removeEntry:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.suspectDatabaseManager.removeEntry(teamId, matterId);
+
+          this.send('removeEntry:response', {
+            success: true,
+          });
+        }
+      }
       // #endregion
     ]))
   }

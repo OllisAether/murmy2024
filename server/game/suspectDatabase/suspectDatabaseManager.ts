@@ -1,5 +1,6 @@
 import { JsonMap } from "../../../shared/json"
 import { Entry } from "../../../shared/suspectDatabase/entry"
+import { colorize, Fg } from "../../console"
 import { Database } from "../../database"
 import { Game } from "../game"
 
@@ -31,7 +32,7 @@ export class SuspectDatabaseManager {
         || !(data[key] as SuspectDatabase).entries
         || !Array.isArray((data[key] as SuspectDatabase).entries))
     ) {
-      console.error("[SuspectDatabaseManager] Invalid data", data)
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid data', data)
       return
     }
 
@@ -51,7 +52,7 @@ export class SuspectDatabaseManager {
     const teamClient = game.getTeamClient(teamId)
     
     if (!teamClient) {
-      console.error("[SuspectDatabaseManager] Invalid team", teamId)
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
       return
     }
 
@@ -60,11 +61,37 @@ export class SuspectDatabaseManager {
     }
 
     if (this.databases[teamId].entries.some((e) => e.matterId === entry.matterId)) {
-      console.error("[SuspectDatabaseManager] Entry already exists", entry.matterId)
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry already exists', entry.matterId)
       return
     }
 
     this.databases[teamId].entries.push(entry)
+
+    game.sendSuspectDatabaseToTeams(teamClient)
+    this.save()
+  }
+
+  public removeEntry (teamId: string, matterId: string): void {
+    const game = Game.get()
+    const teamClient = game.getTeamClient(teamId)
+
+    if (!teamClient) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
+      return
+    }
+
+    if (!this.databases[teamId]) {
+      this.databases[teamId] = { entries: [] }
+    }
+
+    const index = this.databases[teamId].entries.findIndex((e) => e.matterId === matterId)
+
+    if (index === -1) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry does not exist', matterId)
+      return
+    }
+
+    this.databases[teamId].entries.splice(index, 1)
 
     game.sendSuspectDatabaseToTeams(teamClient)
     this.save()

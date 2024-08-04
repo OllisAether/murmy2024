@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, useModel, watch } from 'vue';
-import Btn from './Btn.vue';
+import Btn from '../Btn.vue';
 
 const props = withDefaults(defineProps<{
   modelValue?: number

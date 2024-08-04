@@ -169,6 +169,8 @@
         </div>
       </div>
 
+      {{ admin.suspectDatabases }}
+
       <RouterView />
     </VMain>
   </VApp>

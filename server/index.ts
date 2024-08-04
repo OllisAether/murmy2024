@@ -104,7 +104,8 @@ const port = process.env.PORT || 3000;
     });
   };
 
-  const assetPath = path.resolve(__dirname, '../client/clues');
+  const assetFolder = 'assets';
+  const assetPath = path.resolve(__dirname, `../client/${assetFolder}`);
 
   const sharedAssetPath = path.resolve(assetPath, 'shared');
   const sharedAssets: Asset[] = (await walk(sharedAssetPath)
@@ -114,7 +115,7 @@ const port = process.env.PORT || 3000;
     }))
     .map((asset) => ({
       name: path.relative(sharedAssetPath, asset),
-      url: `/clues/shared/${path.relative(sharedAssetPath, asset)}`
+      url: `/${assetFolder}/shared/${path.relative(sharedAssetPath, asset)}`
     }));
 
   const teamAssetPath = path.resolve(assetPath, 'team')
@@ -125,7 +126,7 @@ const port = process.env.PORT || 3000;
     }))
     .map((asset) => ({
       name: path.relative(teamAssetPath, asset),
-      url: `/clues/team/${path.relative(teamAssetPath, asset)}`
+      url: `/${assetFolder}/team/${path.relative(teamAssetPath, asset)}`
     }));
 
   const boardAssetPath = path.resolve(assetPath, 'board')
@@ -136,7 +137,7 @@ const port = process.env.PORT || 3000;
     }))
     .map((asset) => ({
       name: path.relative(boardAssetPath, asset),
-      url: `/clues/board/${path.relative(boardAssetPath, asset)}`
+      url: `/${assetFolder}/board/${path.relative(boardAssetPath, asset)}`
     }));
 
   app.get('/api/assets/:type', async (req, res) => {

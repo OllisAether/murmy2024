@@ -28,12 +28,15 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
-            {{ game.clues.mainClueType }}
-            <ClueCard
-              v-for="clue in game.clues.available"
-              :key="clue"
-              :clueId="clue"
-            />
+            <MainClueTypeCard />
+
+            <div class="workspace__clue-grid">
+              <ClueCard
+                v-for="clue in game.clues.available"
+                :key="clue"
+                :clueId="clue"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -45,6 +48,7 @@
 import BlurGradient from '@/components/BlurGradient.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
+import MainClueTypeCard from '@/components/team/MainClueTypeCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';
 import { useAuthManager } from '@/store/authManager';
@@ -139,6 +143,9 @@ const auth = useAuthManager();
     max-width: calc(100vw - 25rem);
     margin: 0 auto;
     padding: 6rem 8rem;
+  }
+
+  &__clue-grid {
     display: grid;
     gap: 3rem;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));

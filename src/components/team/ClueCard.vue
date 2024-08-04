@@ -264,7 +264,7 @@ function openClue() {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    // gap: 1rem;
     height: 100%;
     padding-bottom: 3rem;
 
@@ -278,6 +278,7 @@ function openClue() {
     }
 
     &__content {
+      padding-top: 1rem;
       flex-grow: 1;
       height: 0;
     }

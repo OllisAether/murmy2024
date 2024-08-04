@@ -117,8 +117,8 @@
 import { useAuthManager } from '../../store/authManager';
 import { useGameManager } from '@/store/gameManager';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
-import Carousel from '@/components/Carousel.vue';
-import CarouselItem from '@/components/CarouselItem.vue';
+import Carousel from '@/components/team/Carousel.vue';
+import CarouselItem from '@/components/team/CarouselItem.vue';
 import { computed } from 'vue';
 
 const auth = useAuthManager()

@@ -1,5 +1,7 @@
 <template>
-  <div class="clue-image-viewer">
+  <div :class="['clue-image-viewer', {
+    'clue-image-viewer--main-clue-type': mainClueType
+  }]">
     <div class="clue-image-viewer__tooltip">
       <div>
         <VIcon size="1.25rem">mdi-gesture-spread</VIcon>
@@ -72,6 +74,7 @@
       @touchmove="onTouchMove"
       @pointerdown="onPointerDown"
       @wheel.prevent="onScroll"
+      @contextmenu.prevent=""
     >
       <div
         :style="{
@@ -80,27 +83,68 @@
         class="clue-image-viewer__origin"
         v-if="rootWidth > 0 && rootHeight > 0"
       >
-        <template v-for="(asset, index) in assets">
+        <template v-if="assets.length > 0">
+          <template v-for="(asset, index) in assets">
+            <div
+              :class="['clue-image-viewer__image-container', {
+                'clue-image-viewer__image-container--current': index === currentPage,
+                'clue-image-viewer__image-container--next': index === currentPage + 1,
+                'clue-image-viewer__image-container--prev': index === currentPage - 1,
+                'clue-image-viewer__image-container--transition-next': pageTransitionProgress < 0,
+                'clue-image-viewer__image-container--transition-prev': pageTransitionProgress > 0
+              }]"
+              ref="images"
+              v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1"
+              :style="{
+                '--scale': Math.min(
+                  (rootHeight - 16 * 6) / asset.metadata.height,
+                  (rootWidth - 16 * 6) / asset.metadata.width),
+                '--canvasScale': scale,
+                '--pageTransitionProgress': pageTransitionProgress,
+                '--rootWidth': rootWidth + 'px',
+              }"
+            >
+              <img :src="asset.content" />
+              <Collectable
+                class="clue-image-viewer__collectable"
+                v-for="(entry, i) in entries?.filter(e => e.index === index)"
+                :key="i"
+                :entry="entry.entry"
+                :style="{
+                  'left': entry.rect.x + 'px',
+                  'top': entry.rect.y + 'px',
+                  'width': entry.rect.width + 'px',
+                  'height': entry.rect.height + 'px',
+                }"
+                hide-content
+              >
+                <img
+                  class="clue-image-viewer__collectable__image"
+                  :src="asset.content"
+                  :style="{
+                    left: `-${entry.rect.x}px`,
+                    top: `-${entry.rect.y}px`,
+                  }"
+                />
+              </Collectable>
+            </div>
+          </template>
+        </template>
+        <template v-else-if="mainClueType">
           <div
-            :class="['clue-image-viewer__image-container', {
-              'clue-image-viewer__image-container--current': index === currentPage,
-              'clue-image-viewer__image-container--next': index === currentPage + 1,
-              'clue-image-viewer__image-container--prev': index === currentPage - 1,
-              'clue-image-viewer__image-container--transition-next': pageTransitionProgress < 0,
-              'clue-image-viewer__image-container--transition-prev': pageTransitionProgress > 0
-            }]"
-            ref="images"
-            v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1"
+            class="clue-image-viewer__image-container clue-image-viewer__image-container--main-clue-type"
             :style="{
-              '--scale': Math.min(
-                (rootHeight - 16 * 6) / asset.metadata?.height,
-                (rootWidth - 16 * 6) / asset.metadata?.width),
+              '--scale': mainClueTypeSize.width > 0 && mainClueTypeSize.height > 0 ? Math.min(
+                (rootHeight - 16 * 6) / mainClueTypeSize.height,
+                (rootWidth - 16 * 6) / mainClueTypeSize.width) : 1,
               '--canvasScale': scale,
               '--pageTransitionProgress': pageTransitionProgress,
               '--rootWidth': rootWidth + 'px',
             }"
           >
-            <img :src="asset.content" />
+            <div ref="mainClueTypeContainer">
+              <slot name="main-clue-type" />
+            </div>
           </div>
         </template>
       </div>
@@ -115,10 +159,13 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Asset } from '@/../shared/asset';
 import { useSwipe } from '@vueuse/core';
 import Btn from '../Btn.vue';
+import { useCollectables } from '@/store/collectables';
+import Collectable from './Collectable.vue';
 
 const props = defineProps<{
   assetIds?: string[]
-  entries?: ImageEntry[]
+  entries?: ImageEntry[],
+  mainClueType?: 'phone' | 'diary' | null
 }>()
 
 const assets = computed<Asset[]>(() => {
@@ -126,8 +173,19 @@ const assets = computed<Asset[]>(() => {
 })
 
 const game = useGameManager();
+const collectables = useCollectables();
+
 const root = ref<HTMLElement | null>(null);
 const images = ref<HTMLElement[]>([]);
+const mainClueTypeContainer = ref<HTMLElement | null>(null);
+const mainClueTypeSize = ref({ width: 0, height: 0 });
+const currentElement = computed(() => {
+  if (mainClueTypeContainer.value) {
+    return mainClueTypeContainer.value;
+  }
+
+  return images.value[currentPage.value];
+});
 
 const currentPage = ref(0);
 watch(currentPage, (page) => {
@@ -147,16 +205,33 @@ const rootWidth = ref(0);
 const rootHeight = ref(0);
 
 onMounted(() => {
-  const observer = new ResizeObserver(() => {
+  const rootObserver = new ResizeObserver(() => {
     rootWidth.value = root.value?.clientWidth ?? 0;
     rootHeight.value = root.value?.clientHeight ?? 0;
   });
 
-  observer.observe(root.value!);
+  rootObserver.observe(root.value!);
 
   onBeforeUnmount(() => {
-    observer.disconnect();
+    rootObserver.disconnect();
   });
+})
+
+const mainClueTypeObserver = new ResizeObserver(() => {
+  mainClueTypeSize.value = {
+    width: mainClueTypeContainer.value?.offsetWidth ?? 0,
+    height: mainClueTypeContainer.value?.offsetHeight ?? 0
+  }
+});
+
+onBeforeUnmount(() => {
+  mainClueTypeObserver.disconnect();
+});
+
+watch(mainClueTypeContainer, (el) => {
+  if (el) {
+    mainClueTypeObserver.observe(el);
+  }
 })
 
 const scale = ref(1);
@@ -175,7 +250,7 @@ function applyTransform (composedTranslate: { x: number, y: number }) {
   nextTick(() => {
     const rootRect = root.value!.getBoundingClientRect()
 
-    const imgRect = images.value[currentPage.value].getBoundingClientRect()
+    const imgRect = currentElement.value.getBoundingClientRect()
 
     const yMin = Math.min(0, (rootRect.height - imgRect.height) / 2) + 16 * 6 * (1 - scale.value)
     const yMax = Math.max(0, -(rootRect.height - imgRect.height) / 2) - 16 * 6 * (1 - scale.value)
@@ -251,6 +326,10 @@ function onTouchMove (e: TouchEvent) {
       y: startPos.value.y + (touchOrigin.y - startTouchPos.value.y) - touchRelToTransformOrigin.y * (scale.value - startScale.value) / startScale.value
     }
   } else if (e.touches.length === 1) {
+    if (props.mainClueType) {
+      return;
+    }
+
     const distance = Math.sqrt(Math.pow(e.touches[0].clientX - startTouchPos.value.x, 2) + Math.pow(e.touches[0].clientY - startTouchPos.value.y, 2));
 
     if (distance < threshold && !thresholdExceeded) {
@@ -287,8 +366,8 @@ function onPointerDown (e: PointerEvent) {
     progress.value = progressEase(Math.max(0, Math.min(1, (Date.now() - start - holdDelay) / holdDuration)))
     
     if (progress.value >= 1) {
-      const success = checkHold(e.clientX, e.clientY);
-      
+      const success = collectables.markCollectableAt(e.clientX, e.clientY);
+
       if (!success) {
         nothingFound.value = true;
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -334,6 +413,10 @@ function onPointerDown (e: PointerEvent) {
     }
   
     if (e.pointerType === 'touch') return
+
+    if (props.mainClueType && !(e.ctrlKey || e.metaKey)) {
+      return;
+    }
   
     const composedTranslate = {
       x: startPos.value.x + e.clientX - startTouchPos.value.x,
@@ -374,30 +457,6 @@ function onScroll (e: WheelEvent) {
   applyTransform(composedTranslate)
 }
 
-function checkHold(x: number, y: number) {
-  const imageRect = images.value[currentPage.value].getBoundingClientRect();
-
-  const imageX = (x - imageRect.x) / imageRect.width;
-  const imageY = (y - imageRect.y) / imageRect.height;
-
-  const entries = (props.entries?.filter(entry => 
-    entry.index === currentPage.value &&
-    !game.database?.entries?.some(e => e.matterId === entry.entry.matterId) &&
-    entry.rect.x <= imageX && entry.rect.x + entry.rect.width >= imageX &&
-    entry.rect.y <= imageY && entry.rect.y + entry.rect.height >= imageY
-  ) ?? []).map(entry => entry.entry);
-
-  if (entries.length === 0) {
-    return false;
-  }
-
-  entries.forEach(entry => {
-    game.addDatabaseEntry(entry);
-  })
-
-  return true;
-}
-
 let atLeftEdgeAtStart = false;
 let atRightEdgeAtStart = false;
 let swiped = false;
@@ -422,14 +481,15 @@ const swipe = useSwipe(root, {
       return;
     }
 
-    if ((currentPage.value === 0 && swipe.direction.value === 'right') ||
-        (currentPage.value === assets.value.length - 1 && swipe.direction.value === 'left')) {
-      pageTransitionProgress.value = -swipe.lengthX.value / rootWidth.value / 10;
-      return;
-    }
-
     if ((atLeftEdgeAtStart && atLeftEdge.value && swipe.direction.value === 'left') ||
         (atRightEdgeAtStart && atRightEdge.value && swipe.direction.value === 'right')) {
+
+      if ((currentPage.value === 0 && swipe.direction.value === 'right') ||
+      (currentPage.value === assets.value.length - 1 && swipe.direction.value === 'left')) {
+        pageTransitionProgress.value = -swipe.lengthX.value / rootWidth.value / 10;
+        return;
+      }
+
       pageTransitionProgress.value = -swipe.lengthX.value / rootWidth.value;
 
       if (Math.abs(swipe.lengthX.value) > rootWidth.value / 2) {
@@ -539,9 +599,14 @@ watch(swipe.isSwiping, (isSwiping) => {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
-
+    
     text-align: left;
     opacity: 0.5;
+
+    .clue-image-viewer--main-clue-type & {
+      top: 3rem;
+      flex-direction: column;
+    }
 
     div {
       display: flex;
@@ -608,6 +673,17 @@ watch(swipe.isSwiping, (isSwiping) => {
         transform: translateX(calc(var(--pageTransitionProgress) * var(--rootWidth) / (var(--scale) * var(--canvasScale))));
       }
     }
+
+    & > :deep(.clue-image-viewer__collectable) {
+      position: absolute;
+      z-index: 1;
+      pointer-events: all;
+    }
+  }
+
+  &__collectable__image {
+    position: absolute;
+    object-fit: cover;
   }
   
   &__next-button {

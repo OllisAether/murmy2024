@@ -245,16 +245,8 @@ watch(() => game.phase.type, () => {
 onMounted(() => {
   game.initGameManager()
 
-  const viewport = document.querySelector('meta[name="viewport"]')
-
-  const before = viewport?.getAttribute('content')
-
-  viewport?.setAttribute('content', 'width=1500, user-scalable=0')
-
   onBeforeUnmount(() => {
     game.deinitGameManager()
-
-    before && viewport?.setAttribute('content', before)
   })
 })
 
