@@ -1,191 +1,251 @@
 <template>
   <div
-    class="phone-lock-screen"
-    ref="root"
-    @click="showNumpad = true"
+    :class="['phone-lock-screen', {
+      'phone-lock-screen--numpad': showNumpad,
+    }]"
+    @pointerdown="pointerdown"
+    @touchstart="touchstart"
   >
     <img
       class="phone-lock-screen__background"
       :src="game.getAsset('dokumente/Hawthornes Bild.jpg')?.content"
     >
 
-    <VFadeTransition>
-      <div v-if="showNumpad" class="phone-lock-screen__content">
-        <div class="phone-lock-screen__wrong-pin">
-          <div v-if="phone.pinTimeoutSeconds > 0">
-            Du hast zu oft den falschen Pin eingegeben. Bitte warte noch
-            {{ phone.pinTimeoutSeconds }} {{ phone.pinTimeoutSeconds === 1 ? 'Sekunde' : 'Sekunden' }}.
-          </div>
-          <div v-else-if="wrongPin">
-            Falscher Pin.
-
-            <div v-if="phone.pinTries > 0">
-              Du hast noch {{ 3 - phone.pinTries }} {{ 3 - phone.pinTries === 1 ? 'Versuch' : 'Versuche' }}.
+    <div class="phone-lock-screen__content">
+      <VFadeTransition>
+        <div v-if="showNumpad" class="phone-lock-screen__pin-screen">
+          <div class="phone-lock-screen__wrong-pin">
+            <div v-if="phone.pinTimeoutSeconds > 0">
+              Du hast zu oft den falschen Pin eingegeben. Bitte warte noch
+              {{ phone.pinTimeoutSeconds }} {{ phone.pinTimeoutSeconds === 1 ? 'Sekunde' : 'Sekunden' }}.
             </div>
-          </div>
-        </div>
-
-        <div class="phone-lock-screen__pin">
-          <div class="phone-lock-screen__pin__dots">
-            <template
-              v-for="(digit, i) in pin"
-            >
-              <template v-if="i >= dots">
-                {{ digit }}
-              </template>
-              <template v-else>
-                •
-              </template>
+            <template v-else>
+              <div v-if="wrongPin">
+                Falscher Pin.
+              </div>
+              <div v-if="phone.pinTries > 0">
+                Du hast noch {{ 3 - phone.pinTries }} {{ 3 - phone.pinTries === 1 ? 'Versuch' : 'Versuche' }}.
+              </div>
             </template>
           </div>
 
-          <button
-            class="phone-lock-screen__pin__back"
-            @click="back"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" fill="none" viewBox="0 0 18 12">
-              <path fill="currentColor" fill-rule="evenodd" d="m0 6 3.5-3.5H16v7H3.5L0 6Zm6.688-1.61L8.7 6 6.688 7.61l.624.78L9.5 6.64l2.188 1.75.624-.78L10.3 6l2.012-1.61-.624-.78L9.5 5.36 7.312 3.61l-.624.78Z" clip-rule="evenodd"/>
+          <div class="phone-lock-screen__pin">
+            <div class="phone-lock-screen__pin__dots">
+              <template
+                v-for="(digit, i) in pin"
+              >
+                <template v-if="i >= dots">
+                  {{ digit }}
+                </template>
+                <template v-else>
+                  •
+                </template>
+              </template>
+            </div>
+
+            <button
+              class="phone-lock-screen__pin__back"
+              @click="back"
+            >
+              <BackspaceSvg />
+            </button>
+          </div>
+
+          <div :class="['phone-lock-screen__numberpad', {
+            'phone-lock-screen__numberpad--disabled': phone.pinTimeoutSeconds > 0
+          }]">
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('1')">
+              <span>1</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('2')">
+              <span>2</span>
+              <span>abc</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('3')">
+              <span>3</span>
+              <span>def</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('4')">
+              <span>4</span>
+              <span>ghi</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('5')">
+              <span>5</span>
+              <span>jkl</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('6')">
+              <span>6</span>
+              <span>mno</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('7')">
+              <span>7</span>
+              <span>pqrs</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('8')">
+              <span>8</span>
+              <span>tuv</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('9')">
+              <span>9</span>
+              <span>wxyz</span>
+            </button>
+            <div />
+            <button class="phone-lock-screen__numberpad__button" @click="handlePin('0')">
+              <span>0</span>
+            </button>
+            <button class="phone-lock-screen__numberpad__button" @click="unlock">
+              <EnterSvg />
+            </button>
+          </div>
+        </div>
+        <div v-else class="phone-lock-screen__swipeup" data-no-pan>
+          <div class="phone-lock-screen__swipeup__clock">
+            <span class="phone-lock-screen__swipeup__clock__time">
+              {{ phone.clock }}
+            </span>
+            <span class="phone-lock-screen__swipeup__clock__date">
+              {{ phone.date }}
+            </span>
+          </div>
+  
+          <div class="phone-lock-screen__swipeup__icon">
+  
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="12"
+              fill="none"
+              viewBox="0 0 18 12"
+              :style="{
+                transition: !isSwiping ? 'transform 0.2s' : 'none',
+                transform: `translateY(-${swipeProgress * 50}px)`
+              }"
+            >
+              <path stroke="currentColor" d="M9 1.5V10"/>
+              <path stroke="currentColor" d="M5 5l4-4 4 4"/>
             </svg>
-          </button>
+  
+            <span
+              :style="{
+                transition: !isSwiping ? 'transform 0.2s' : 'none',
+                transform: `translateY(-${swipeProgress * 20}px)`
+              }"
+            >Nach oben wischen</span>
+          </div>
         </div>
-
-        <div :class="['phone-lock-screen__numberpad', {
-          'phone-lock-screen__numberpad--disabled': phone.pinTimeoutSeconds > 0
-        }]">
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('1')">
-            <span>1</span>
-            <span>abc</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('2')">
-            <span>2</span>
-            <span>def</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('3')">
-            <span>3</span>
-            <span>ghi</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('4')">
-            <span>4</span>
-            <span>jkl</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('5')">
-            <span>5</span>
-            <span>mno</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('6')">
-            <span>6</span>
-            <span>pqrs</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('7')">
-            <span>7</span>
-            <span>tuv</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('8')">
-            <span>8</span>
-            <span>wxyz</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('9')">
-            <span>9</span>
-            <span>+</span>
-          </button>
-          <div />
-          <button class="phone-lock-screen__numberpad__button" @click="handlePin('0')">
-            <span>0</span>
-          </button>
-          <button class="phone-lock-screen__numberpad__button" @click="unlock">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" fill="none" viewBox="0 0 18 12">
-              <path stroke="currentColor" d="M5.5 2.5 2 6l3.5 3.5"/>
-              <path stroke="currentColor" d="M2 6h13.5V2"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div v-else class="phone-lock-screen__swipeup">
-        <div class="phone-lock-screen__swipeup__clock">
-          <span class="phone-lock-screen__swipeup__clock__time">
-            {{ clock }}
-          </span>
-          <span class="phone-lock-screen__swipeup__clock__date">
-            {{ date }}
-          </span>
-        </div>
-
-        <div class="phone-lock-screen__swipeup__icon">
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="12"
-            fill="none"
-            viewBox="0 0 18 12"
-            :style="{
-              transform: `translateY(-${swipeProgress * 50}px)`
-            }"
-          >
-            <path stroke="currentColor" d="M9 1.5V10"/>
-            <path stroke="currentColor" d="M5 5l4-4 4 4"/>
-          </svg>
-
-          <span
-            :style="{
-              transform: `translateY(-${swipeProgress * 20}px)`
-            }"
-          >Nach oben wischen</span>
-        </div>
-      </div>
-    </VFadeTransition>
+      </VFadeTransition>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
 import { usePhone } from '@/store/team/phone';
-import { useSwipe } from '@vueuse/core';
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-defineProps<{
-  clock: string;
-}>()
+import BackspaceSvg from '@/assets/phone/backspace.svg';
+import EnterSvg from '@/assets/phone/enter.svg';
 
 const game = useGameManager();
 const phone = usePhone();
-
-const root = ref<HTMLElement | null>(null)
-
-const date = (() => {
-  const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
-  const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-
-  const date = new Date()
-  date.setFullYear(2013)
-  const day = date.getDate().toString().padStart(2, '0')
-  const month = months[date.getMonth()]
-  const year = date.getFullYear()
-  const weekday = weekdays[date.getDay()]
-
-  return `${weekday}, ${day}. ${month} ${year}`
-})()
 
 const dots = ref(0);
 const pin = ref('');
 const showNumpad = ref(false)
 
-const swipeProgress = computed(() => {
-  if (swipe.isSwiping.value) {
-    return Math.min(1, swipe.lengthY.value / 400)
-  }
+const swipeProgress = ref(0)
+const isSwiping = ref(false)
 
-  return 0
-})
+function pointerdown (e: PointerEvent) {
+  if (e.pointerType === 'touch') return
+  if (showNumpad.value) return
 
-const swipe = useSwipe(root, {
-  threshold: 10,
-  onSwipeEnd: () => {
-    if (swipe.direction.value === 'up') {
-      showNumpad.value = true
+  isSwiping.value = true
+
+  const startY = e.clientY
+
+  let velocity = 0
+
+  var lastY = startY
+  var lastTime = Date.now()
+  function pointermove (e: PointerEvent) {
+    swipeProgress.value = Math.min(1, Math.max(0, (startY - e.clientY) / 400))
+
+    const now = Date.now()
+    const timeDiff = now - lastTime
+    const yDiff = e.clientY - lastY
+    
+    velocity = -yDiff / timeDiff
+
+    if (swipeProgress.value >= 1) {
+      pointerup()
     }
   }
-})
+
+
+  function pointerup () {
+    if (swipeProgress.value > 0.5 || velocity > 2) {
+      showNumpad.value = true
+    }
+
+    swipeProgress.value = 0
+    isSwiping.value = false
+
+    window.removeEventListener('pointermove', pointermove)
+    window.removeEventListener('pointerup', pointerup)
+  }
+
+  window.addEventListener('pointermove', pointermove)
+  window.addEventListener('pointerup', pointerup)
+}
+
+function touchstart (e: TouchEvent) {
+  if (showNumpad.value) return
+  if (e.touches.length > 1) return
+
+  isSwiping.value = true
+
+  const startY = e.touches[0].clientY
+
+  let velocity = 0
+
+  var lastY = startY
+  var lastTime = Date.now()
+  function touchmove (e: TouchEvent) {
+    if (e.touches.length > 1) {
+      touchend()
+      return
+    }
+
+    swipeProgress.value = Math.min(1, Math.max(0, (startY - e.touches[0].clientY) / 400))
+
+    const now = Date.now()
+    const timeDiff = now - lastTime
+    const yDiff = e.touches[0].clientY - lastY
+    
+    velocity = -yDiff / timeDiff
+
+    if (swipeProgress.value >= 1) {
+      touchend()
+    }
+  }
+
+
+  function touchend () {
+    if (swipeProgress.value > 0.5 || velocity > 2) {
+      showNumpad.value = true
+    }
+
+    swipeProgress.value = 0
+    isSwiping.value = false
+
+    window.removeEventListener('touchmove', touchmove)
+    window.removeEventListener('touchend', touchend)
+  }
+
+  window.addEventListener('touchmove', touchmove)
+  window.addEventListener('touchend', touchend)
+}
 
 let dotTimeout: number | undefined
 onBeforeUnmount(() => {
@@ -214,11 +274,27 @@ const wrongPin = ref<boolean | number>(false)
 function unlock () {
   wrongPin.value = !phone.unlockPhone(pin.value)
 
+  if (pin.value.length < 4) {
+    return
+  }
+
   if (wrongPin.value) {
     pin.value = ''
     dots.value = 0
   }
 }
+
+onMounted(() => {
+  const off = phone.onBackBtn(() => {
+    if (showNumpad.value) {
+      showNumpad.value = false
+    }
+  })
+
+  onBeforeUnmount(() => {
+    off()
+  })
+})
 </script>
 
 <style lang="scss" scoped>
@@ -236,15 +312,19 @@ function unlock () {
   }
 
   &__content {
-    background: linear-gradient(#000d, #000a 15%, #000a 50%, black);
+    background: linear-gradient(#000, #0000 30%, #0000 70%, #000);
     height: 100%;
     position: absolute;
     inset: 0;
   }
 
+  &__pin-screen {
+    position: absolute;
+    inset: 0;
+    background: #000a;
+  }
+
   &__swipeup {
-    background: linear-gradient(#000, #0000 30%, #0000 70%, #000);
-    height: 100%;
     position: absolute;
     inset: 0;
 
@@ -262,7 +342,6 @@ function unlock () {
       &__time {
         font-size: 48px;
         font-weight: light;
-        letter-spacing: -.05em; 
       }
 
       &__date {
@@ -323,7 +402,7 @@ function unlock () {
     grid-template-rows: repeat(4, 1fr);
 
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     left: 0;
     right: 0;
 
@@ -342,7 +421,8 @@ function unlock () {
       align-items: center;
       color: white;
       font-size: 12px;
-      padding: 8px 0;
+      padding: 4px 0;
+      margin: 2px;
       cursor: pointer;
 
       &:active {

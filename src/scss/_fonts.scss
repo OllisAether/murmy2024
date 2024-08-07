@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Waiting+for+the+Sunrise&display=swap');
+
 // Sora
 @font-face {
   font-family: 'Sora';
@@ -68,4 +70,19 @@
   src: url('../assets/fonts/Good Times Bold Italic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
+}
+
+// Fraunces
+@font-face {
+  font-family: 'Fraunces 9pt';
+  src: url('../assets/fonts/Fraunces_9pt-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fraunces 144pt';
+  src: url('../assets/fonts/Fraunces_144pt-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
 }

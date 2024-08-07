@@ -1,30 +1,14 @@
 <template>
-  <Teleport
-    :disabled="!collected"
-    to="body"
+  <div
+    v-if="!collected || !disappear"
+    :class="['collectable', {
+      'collectable--inline': inline
+    }]"
+    ref="root"
+    @click="collected = !collected"
   >
-    <Transition name="collectable">
-      <div
-        v-if="!nextCollected"
-        v-bind="collected ? undefined : $attrs"
-        :class="['collectable', {
-          'collectable--hide-content': hideContent,
-          'collectable--collected': collected
-        }]"
-        ref="root"
-        @click="collected = !collected"
-        :style="{
-          '--left': rect?.x + 'px',
-          '--top': rect?.y + 'px',
-          '--width': rect?.width + 'px',
-          '--height': rect?.height + 'px',
-          '--transform': rect?.transform
-        }"
-      >
-        <slot />
-      </div>
-    </Transition>
-  </Teleport>
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,13 +25,13 @@ const root = ref<HTMLDivElement | null>(null)
 
 const props = defineProps<{
   entry: Entry
-  hideContent?: boolean
+  inline?: boolean
+  disappear?: boolean
 }>()
 
 const id = idGen()
 
 const collected = computed(() => game.database.entries.some((e) => e.matterId === props.entry.matterId))
-const nextCollected = ref(collected.value)
 const rect = ref<{
   x: number
   y: number
@@ -57,10 +41,6 @@ const rect = ref<{
 } | null>(null)
 
 watch(collected, () => {
-  setTimeout(() => {
-    nextCollected.value = collected.value
-  }, 100)
-
   if (!collected.value) return
   if (!root.value) return
 
@@ -100,6 +80,10 @@ onBeforeUnmount(() => {
 
   &--hide-content {
     opacity: 0;
+  }
+
+  &--inline {
+    display: inline;
   }
 
   &--collected {

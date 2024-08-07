@@ -98,11 +98,26 @@
           {{ clue.description }}
         </div>
         <div class="clue-card__clue-display__actions">
+          <div class="clue-card__clue-display__tooltip">
+            <div>
+              <VIcon size="1.25rem">mdi-gesture-spread</VIcon>
+              <span>
+                Zoomen
+              </span>
+            </div>
+            <div>
+              <VIcon size="1.25rem">mdi-gesture-tap-hold</VIcon>
+              <span>
+                Halten, um Hinweis zu markieren
+              </span>
+            </div>
+          </div>
           <Btn
             @click="showClue = false"
             color="#A23946"
           >
             Schließen
+            <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
           </Btn>
         </div>
       </div>
@@ -272,7 +287,7 @@ function openClue() {
       z-index: 2000;
       font-size: 2rem;
       line-height: 2rem;
-      padding: 1.5rem;
+      padding: 1.5rem 1.5rem 0;
       font-family: $fontDisplay;
       font-weight: 300;
     }
@@ -292,6 +307,31 @@ function openClue() {
       font-size: 1rem;
       line-height: 1.5rem;
       text-align: center;
+    }
+
+    &__actions {
+      padding: 0 4rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__tooltip {
+      flex: 1;
+      font-size: 0.8rem;
+      line-height: 1.25;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      text-align: left;
+      opacity: 0.5;
+
+      div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
     }
   }
 }

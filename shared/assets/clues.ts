@@ -33,7 +33,7 @@ export const clues: Clue<ClueTypes>[] = [
     type: 'image',
     cost: 10,
     title: 'Gebäudeplan: 1. OG',
-    description: 'A clue that will help you solve the mystery.',
+    description: 'A clue that will help you solve the mystery. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.',
     thumbnailAssetId: 'floorplan/floorplan_1og.png',
     image: {
       assetId: 'floorplan/floorplan_1og.png',

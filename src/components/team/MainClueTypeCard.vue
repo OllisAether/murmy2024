@@ -17,17 +17,41 @@
     >
       <div class="main-clue-type-card__clue-display">
         <ClueImageViewer :mainClueType="game.clues.mainClueType">
-          <template #main-clue-type>
-            <Phone />
+          <template #main-clue-type="{ zoomScale, currentPage, pageTransitionProgress }">
+            <Phone
+              v-if="game.clues.mainClueType === 'phone'"
+              :zoomScale="zoomScale"
+            />
+            <Diary
+              v-else-if="game.clues.mainClueType === 'diary'"
+              :zoomScale="zoomScale"
+              :currentPage="currentPage"
+              :pageTransitionProgress="pageTransitionProgress"
+            />
           </template>
         </ClueImageViewer>
 
         <div class="main-clue-type-card__clue-display__actions">
+          <div class="main-clue-type-card__clue-display__tooltip">
+            <div>
+              <VIcon size="1.25rem">mdi-gesture-spread</VIcon>
+              <span>
+                Zoomen
+              </span>
+            </div>
+            <div>
+              <VIcon size="1.25rem">mdi-gesture-tap-hold</VIcon>
+              <span>
+                Halten, um Hinweis zu markieren
+              </span>
+            </div>
+          </div>
           <Btn
             @click="showClue = false"
             color="#A23946"
           >
             Schließen
+            <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
           </Btn>
         </div>
       </div>
@@ -38,9 +62,11 @@
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
 import ClueImageViewer from './ClueImageViewer.vue';
-import { ref } from 'vue';
-import Phone from './phone/Phone.vue';
+import { defineAsyncComponent, ref } from 'vue';
 import Btn from '../Btn.vue';
+
+const Phone = defineAsyncComponent(() => import('./phone/Phone.vue'));
+const Diary = defineAsyncComponent(() => import('./diary/Diary.vue'));
 
 const game = useGameManager();
 const showClue = ref(false);
@@ -64,8 +90,28 @@ const showClue = ref(false);
     padding-top: 1rem;
 
     &__actions {
+      padding: 0 4rem;
       display: flex;
       justify-content: center;
+    }
+
+    &__tooltip {
+      flex: 1;
+      font-size: 0.8rem;
+      line-height: 1.25;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      text-align: left;
+      opacity: 0.5;
+
+      div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
     }
   }
 }

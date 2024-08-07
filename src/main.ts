@@ -37,11 +37,15 @@ createApp(App)
 // Prevent zooming on mobile devices
 document.addEventListener('gesturestart', function (e) {
   e.preventDefault()
+  e.stopPropagation()
+  e.stopImmediatePropagation()
 })
 
 // Prevent double tap to zoom on mobile devices
 document.addEventListener('click', function (e) {
   if (e.detail > 1) {
     e.preventDefault()
+    e.stopPropagation()
+    e.stopImmediatePropagation()
   }
 })

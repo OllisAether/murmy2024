@@ -3,10 +3,26 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 
 export const usePhone = defineStore('phone', () => {
+  const clock = ref('00:00')
+  const date = (() => {
+    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
+    const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  
+    const date = new Date()
+    date.setFullYear(2013)
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    const weekday = weekdays[date.getDay()]
+  
+    return `${weekday}, ${day}. ${month} ${year}`
+  })()
+  
+
   // #region Pin
   const locked = ref(true)
 
-  const pin = '1234'
+  const pin = import.meta.env.VITE_PIN as string
   const pinTimeoutSeconds = ref(0)
   const pinUnlockedAt = ref(0)
   const pinTries = ref(0)
@@ -30,6 +46,7 @@ export const usePhone = defineStore('phone', () => {
     if (pinTimeoutInterval) {
       clearInterval(pinTimeoutInterval)
       pinTimeoutInterval = null
+      pinTries.value = 0
     }
   }
 
@@ -75,10 +92,52 @@ export const usePhone = defineStore('phone', () => {
 
   function homeBtn () {
     openApp('home')
+    homeBtnListeners.forEach(listener => listener())
+  }
+
+  const homeBtnListeners: (() => void)[] = []
+  function onHomeBtn (callback: () => void) {
+    homeBtnListeners.push(callback)
+    return () => offHomeBtn(callback)
+  }
+  function offHomeBtn (callback: () => void) {
+    const index = homeBtnListeners.indexOf(callback)
+    if (index !== -1) {
+      homeBtnListeners.splice(index, 1)
+    }
+  }
+  function onceHomeBtn (callback: () => void) {
+    const off = onHomeBtn(() => {
+      off()
+      callback()
+    })
+
+    return
   }
 
   function backBtn () {
     popPath()
+    backBtnListeners.forEach(listener => listener())
+  }
+
+  const backBtnListeners: (() => void)[] = []
+  function onBackBtn (callback: () => void) {
+    backBtnListeners.push(callback)
+    return () => offBackBtn(callback)
+  }
+  function offBackBtn (callback: () => void) {
+    const index = backBtnListeners.indexOf(callback)
+    if (index !== -1) {
+      backBtnListeners.splice(index, 1)
+    }
+  }
+  function onceBackBtn (callback: () => void) {
+    const off = onBackBtn(() => {
+      off()
+      callback()
+    })
+
+    return
   }
 
   function pushPath (...path: string[]) {
@@ -98,6 +157,10 @@ export const usePhone = defineStore('phone', () => {
     while (currentPath.value.length > 0 && currentPath.value[currentPath.value.length - 1] !== targetPath) {
       currentPath.value.pop()
     }
+  }
+
+  function setPath (...path: string[]) {
+    paths.value[currentApp.value] = path
   }
 
   function isPath (...targetPath: string[]) {
@@ -129,7 +192,7 @@ export const usePhone = defineStore('phone', () => {
 
   // #region Save to localStorage
   function saveToLocalStorage () {
-    localStorage.setItem('phone', JSON.stringify({
+    sessionStorage.setItem('phone', JSON.stringify({
       locked: locked.value,
       pinTries: pinTries.value,
       pinUnlockedAt: pinUnlockedAt.value,
@@ -161,6 +224,8 @@ export const usePhone = defineStore('phone', () => {
   // #endregion
 
   return {
+    clock,
+    date,
     locked,
     pinTimeoutSeconds,
     pinUnlockedAt,
@@ -170,7 +235,13 @@ export const usePhone = defineStore('phone', () => {
     unlockPhone,
 
     homeBtn,
+    onHomeBtn,
+    offHomeBtn,
+    onceHomeBtn,
     backBtn,
+    onBackBtn,
+    offBackBtn,
+    onceBackBtn,
 
     currentApp,
     paths,
@@ -181,6 +252,7 @@ export const usePhone = defineStore('phone', () => {
     pushPath,
     popPath,
     popUntilPath,
+    setPath,
     isPath,
     isPathLoose,
     

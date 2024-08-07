@@ -1,56 +1,64 @@
 <template>
   <div class="phone">
-    <div class="phone__screen">
+    <div class="phone__screen" :style="{
+      '--screen-door-opacity': Math.min(0.8, (zoomScale - 1) / 4),
+    }">
       <div class="phone__statusbar">
         <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="5" height="9" fill="none" viewBox="0 0 5 9">
-            <path fill="currentColor" d="M5 8.5H0v-7h1.5v-1h2v1H5v7Z"/>
-          </svg>
-          {{ clock }}
+          <VIcon size="1em">mdi-sim-alert-outline</VIcon>
+          <VSpacer />
+          <VIcon size="1em">mdi-signal-off</VIcon>
+          <VIcon size="1em">mdi-battery-80</VIcon>
+          {{ phone.clock }}
         </div>
       </div>
 
       <div class="phone__content">
         <Transition name="phone__content__lockscreen">
-          <PhoneLockScreen class="phone__content__lockscreen" v-if="phone.locked" :clock="clock" />
+          <PhoneLockScreen class="phone__content__lockscreen" v-if="phone.locked" />
         </Transition>
 
         <div class="phone__content__main" v-if="!phone.locked">
-          <HomeScreen v-if="phone.currentApp === 'home'" />
+          <Transition name="phone__content__home">
+            <HomeScreen v-if="phone.currentApp === 'home'" />
+          </Transition>
+
+          <Transition name="phone__content__app">
+            <CallsApp v-if="phone.currentApp === 'calls'" />
+            <InternetApp v-else-if="phone.currentApp === 'internet'" />
+            <CameraApp v-else-if="phone.currentApp === 'camera'" />
+          </Transition>
         </div>
       </div>
 
-      <VFadeTransition>
-        <div class="phone__navbar" v-if="!phone.locked">
-          <button
-            class="phone__navbar__button phone__navbar__button--home"
-            @click="phone.backBtn()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" fill="none" viewBox="0 0 18 12">
-              <path stroke="currentColor" d="M4.5 1.5 1 5l3.5 3.5"/>
-              <path stroke="currentColor" d="M1 5h13.5a2.5 2.5 0 0 1 0 5h-6"/>
-            </svg>
-          </button>
-          <button
-            class="phone__navbar__button phone__navbar__button--home"
-            @click="phone.homeBtn()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" fill="none" viewBox="0 0 18 12">
-              <path stroke="currentColor" d="M17.5 10H.5V4.5L9 1l8.5 3.5V10Z"/>
-            </svg>
-          </button>
-          <button
-            class="phone__navbar__button phone__navbar__button--menu"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" fill="none" viewBox="0 0 18 12">
-              <path stroke="currentColor" d="M5 2.5h12.5V8m-16 2V5h13v5h-13Z"/>
-            </svg>
-          </button>
-        </div>
-      </VFadeTransition>
+      <div class="phone__navbar">
+        <button
+          class="phone__navbar__button phone__navbar__button--home"
+          @click="phone.backBtn()"
+        >
+          <BackSvg />
+        </button>
+        <button
+          :style="{
+            opacity: phone.locked ? 0 : 1,
+          }"
+          class="phone__navbar__button phone__navbar__button--home"
+          @click="phone.homeBtn()"
+        >
+          <HomeSvg />
+        </button>
+        <button
+          :style="{
+            opacity: phone.locked ? 0 : 1,
+          }"
+          class="phone__navbar__button phone__navbar__button--menu"
+        >
+          <MenuSvg />
+        </button>
+      </div>
     </div>
 
-    <img :src="game.getAsset('Phone.png')?.content" class="phone__image">
+    <img :src="game.getAsset('phone/Phone.webp')?.content" class="phone__image">
   </div>
 </template>
 
@@ -58,18 +66,29 @@
 import { useGameManager } from '@/store/gameManager';
 import { usePhone } from '@/store/team/phone';
 import moment from 'moment';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 import PhoneLockScreen from './PhoneLockScreen.vue';
 import HomeScreen from './home/HomeScreen.vue';
+import CallsApp from './calls/CallsApp.vue';
+
+import BackSvg from '@/assets/phone/back.svg';
+import HomeSvg from '@/assets/phone/home.svg';
+import MenuSvg from '@/assets/phone/menu.svg';
+import InternetApp from './internet/InternetApp.vue';
+import CameraApp from './camera/CameraApp.vue';
+
+defineProps<{
+  zoomScale: number;
+}>();
 
 const game = useGameManager();
 const phone = usePhone();
 
-const clock = ref(moment().format('HH:mm'));
-
 onMounted(() => {
+  phone.clock = moment().format('HH:mm');
+
   const interval = setInterval(() => {
-    clock.value = moment().format('HH:mm');
+    phone.clock = moment().format('HH:mm');
   }, 1000);
 
   onBeforeUnmount(() => {
@@ -79,10 +98,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$scale: 5;
+
 .phone {
   position: relative;
-  width: 213px;
-  height: 418px;
+  width: 213px * $scale;
+  height: 418px * $scale;
 
   font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
@@ -98,14 +119,45 @@ onMounted(() => {
   &__screen {
     pointer-events: all;
     position: absolute;
-    top: 53px;
-    left: 16px;
-    width: 180px;
-    height: 320px;
+    top: 53px * $scale;
+    left: 16px * $scale;
+    width: 180.5px;
+    height: 320.5px;
     background: black;
+
+    transform-origin: 0 0;
+    transform: scale($scale);
 
     display: flex;
     flex-direction: column;
+    will-change: transform;
+
+    // &::after {
+    //   z-index: 9999;
+    //   content: '';
+    //   position: absolute;
+    //   inset: 0;
+    //   width: percentage($scale);
+    //   height: percentage($scale);
+    //   will-change: opacity;
+
+    //   transform-origin: 0 0;
+    //   transform: scale(calc(1 / $scale));
+    
+    //   background:
+    //     linear-gradient(black, transparent 25%, transparent 75%, black),
+    //     linear-gradient(to right, black, #f00 10%, #f00 20%, #0f0, #00f 80%, #00f 90%, black);
+    //   background-size: $scale * 1px $scale * 1px;
+    //   pointer-events: none;
+
+    //   mix-blend-mode: color-dodge;
+      
+    //   opacity: var(--screen-door-opacity, 0);
+    // }
+
+    // & > * {
+    //   filter: brightness(calc(0.9 - var(--screen-door-opacity, 0) * 0.25))
+    // }
   }
 
   &__statusbar {
@@ -117,7 +169,7 @@ onMounted(() => {
     & > div {
       display: flex;
       align-items: center;
-      justify-content: right;
+
       gap: 3px;
       padding: 0 3px;
 
@@ -153,6 +205,32 @@ onMounted(() => {
       & > * {
         position: absolute;
         inset: 0;
+      }
+    }
+
+    &__home {
+      &-leave-active {
+        transition: 0.3s;
+      }
+    }
+
+    &__app {
+      &-enter-active {
+        transition: transform 0.2s ease, opacity 0.2s;
+      }
+
+      &-enter-from {
+        opacity: 0;
+        transform: scale(.8);
+      }
+
+      &-leave-active {
+        transition: transform 0.2s ease, opacity 0.2s;
+      }
+
+      &-leave-to {
+        opacity: 0;
+        transform: scale(.8);
       }
     }
   }

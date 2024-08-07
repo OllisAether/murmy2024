@@ -2,7 +2,7 @@
   <div :class="['clue-image-viewer', {
     'clue-image-viewer--main-clue-type': mainClueType
   }]">
-    <div class="clue-image-viewer__tooltip">
+    <!-- <div class="clue-image-viewer__tooltip">
       <div>
         <VIcon size="1.25rem">mdi-gesture-spread</VIcon>
         <span>
@@ -15,7 +15,7 @@
           Halten, um Hinweis zu markieren
         </span>
       </div>
-    </div>
+    </div> -->
 
     <VFadeTransition>
       <div
@@ -47,7 +47,7 @@
       </div>
     </VFadeTransition>
 
-    <template v-if="assets.length > 1">
+    <template v-if="pageCount > 1">
       <Btn
         :disabled="currentPage === 0"
         square
@@ -57,7 +57,7 @@
         <VIcon>mdi-chevron-left</VIcon>
       </Btn>
       <Btn
-        :disabled="currentPage === assets.length - 1"
+        :disabled="currentPage === pageCount - 1"
         square
         @click="currentPage++"
         class="clue-image-viewer__next-button"
@@ -143,7 +143,11 @@
             }"
           >
             <div ref="mainClueTypeContainer">
-              <slot name="main-clue-type" />
+              <slot name="main-clue-type"
+                :zoomScale="scale"
+                :currentPage="currentPage"
+                :pageTransitionProgress="pageTransitionProgress"
+              />
             </div>
           </div>
         </template>
@@ -161,6 +165,8 @@ import { useSwipe } from '@vueuse/core';
 import Btn from '../Btn.vue';
 import { useCollectables } from '@/store/collectables';
 import Collectable from './Collectable.vue';
+import { useDiary } from '@/store/team/diary';
+import { pages } from './diary/pages';
 
 const props = defineProps<{
   assetIds?: string[]
@@ -170,6 +176,14 @@ const props = defineProps<{
 
 const assets = computed<Asset[]>(() => {
   return (props.assetIds?.map(id => game.getAsset(id)).filter(x => x) as Asset[]) ?? [];
+})
+
+const diary = useDiary();
+
+const pageCount = computed(() => {
+  return props.mainClueType === 'diary'
+    ? (diary.locked ? 2 : pages.length)
+    : assets.value.length;
 })
 
 const game = useGameManager();
@@ -187,12 +201,20 @@ const currentElement = computed(() => {
   return images.value[currentPage.value];
 });
 
-const currentPage = ref(0);
+const currentPage = ref(props.mainClueType === 'diary' ? diary.page : 0);
 watch(currentPage, (page) => {
+  if (props.mainClueType === 'diary') {
+    diary.page = page;
+  }
+
+  if (props.mainClueType === 'phone') {
+    return;
+  }
+
   if (page < 0) {
     currentPage.value = 0;
-  } else if (page >= assets.value.length) {
-    currentPage.value = assets.value.length - 1;
+  } else if (page >= pageCount.value - 1) {
+    currentPage.value = pageCount.value - 1;
   }
 
   atLeftEdgeAtStart = false;
@@ -326,7 +348,18 @@ function onTouchMove (e: TouchEvent) {
       y: startPos.value.y + (touchOrigin.y - startTouchPos.value.y) - touchRelToTransformOrigin.y * (scale.value - startScale.value) / startScale.value
     }
   } else if (e.touches.length === 1) {
-    if (props.mainClueType) {
+    // if (props.mainClueType === 'phone') {
+    //   return;
+    // }
+
+    let path = e.composedPath();
+    path = path.slice(0, path.indexOf(root.value!) + 1);
+
+    if (path.some((el) => {
+      if (el instanceof HTMLElement) {
+        return el.hasAttribute('data-no-pan');
+      }
+    })) {
       return;
     }
 
@@ -357,10 +390,10 @@ const nothingFound = ref(false);
 
 function onPointerDown (e: PointerEvent) {
   let start = Date.now();
-  
+
   holdPosition.value = [e.clientX - (root.value?.getBoundingClientRect().x ?? 0), e.clientY - (root.value?.getBoundingClientRect().y ?? 0)];
   nothingFound.value = false;
-  
+
   let animation: number | null = null;
   async function counter () {
     progress.value = progressEase(Math.max(0, Math.min(1, (Date.now() - start - holdDelay) / holdDuration)))
@@ -379,7 +412,7 @@ function onPointerDown (e: PointerEvent) {
     
     animation = requestAnimationFrame(counter);
   }
-  
+
   startTouchPos.value = {
     x: e.clientX,
     y: e.clientY
@@ -411,10 +444,22 @@ function onPointerDown (e: PointerEvent) {
       animation && cancelAnimationFrame(animation);
       progress.value = 0;
     }
-  
+
     if (e.pointerType === 'touch') return
 
-    if (props.mainClueType && !(e.ctrlKey || e.metaKey)) {
+    if (/* props.mainClueType === 'phone' &&  */!(e.ctrlKey || e.metaKey)) {
+      return;
+    }
+
+    let path = e.composedPath();
+    path = path.slice(0, path.indexOf(root.value!) + 1);
+
+    if (path.some((el) => {
+      if (el instanceof HTMLElement) {
+        return el.hasAttribute('data-no-pan');
+      }
+    })) {
+      up();
       return;
     }
   
@@ -462,7 +507,7 @@ let atRightEdgeAtStart = false;
 let swiped = false;
 let oneFinger = false;
 const swipe = useSwipe(root, {
-  threshold: 100,
+  threshold,
   onSwipeStart: (e) => {
     atLeftEdgeAtStart = atLeftEdge.value;
     atRightEdgeAtStart = atRightEdge.value;
@@ -481,16 +526,24 @@ const swipe = useSwipe(root, {
       return;
     }
 
+    if (props.mainClueType === 'phone') {
+      return;
+    }
+
     if ((atLeftEdgeAtStart && atLeftEdge.value && swipe.direction.value === 'left') ||
         (atRightEdgeAtStart && atRightEdge.value && swipe.direction.value === 'right')) {
 
       if ((currentPage.value === 0 && swipe.direction.value === 'right') ||
-      (currentPage.value === assets.value.length - 1 && swipe.direction.value === 'left')) {
+        (currentPage.value === pageCount.value - 1 && swipe.direction.value === 'left')) {
         pageTransitionProgress.value = -swipe.lengthX.value / rootWidth.value / 10;
         return;
       }
 
       pageTransitionProgress.value = -swipe.lengthX.value / rootWidth.value;
+
+      if (Math.abs(swipe.lengthX.value) < 100) {
+        return
+      }
 
       if (Math.abs(swipe.lengthX.value) > rootWidth.value / 2) {
         if (swipe.direction.value === 'left') {
@@ -512,6 +565,10 @@ const pageTransitionProgress = ref(0);
 watch(swipe.isSwiping, (isSwiping) => {
   if (isSwiping || swiped || !oneFinger) {
     return;
+  }
+
+  if (Math.abs(swipe.lengthX.value) < 100) {
+    return
   }
 
   if (swipe.direction.value === 'left' && atLeftEdge.value && atLeftEdgeAtStart) {
@@ -586,32 +643,6 @@ watch(swipe.isSwiping, (isSwiping) => {
           transform: translateX(0rem)translate(-50%, -50%);
         }
       }
-    }
-  }
-
-  &__tooltip {
-    position: absolute;
-    top: -1.5rem;
-    left: 1.7rem;
-    font-size: 0.8rem;
-    line-height: 1.25;
-
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    
-    text-align: left;
-    opacity: 0.5;
-
-    .clue-image-viewer--main-clue-type & {
-      top: 3rem;
-      flex-direction: column;
-    }
-
-    div {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
   }
 
