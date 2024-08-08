@@ -29,9 +29,9 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 
-const phone = usePhone();
+const phone = useMainClue();
 const game = useGameManager();
 </script>
 

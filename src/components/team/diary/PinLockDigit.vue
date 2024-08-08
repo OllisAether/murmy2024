@@ -18,10 +18,14 @@
       <span
         v-for="i in 10"
         :key="i"
-      >
-        <!-- :style="{
+        :class="['pin-lock-digit__digit', {
+          'pin-lock-digit__digit--active': i - 1 === value,
+        }]"
+        :style="{
+          background: `linear-gradient(${getGradient(i - 1)})`,
           opacity: (Math.abs((i - 1) * 36 - rotation) + 90) % 360 > 180 ? 0 : 1,
-        }" -->
+        }"
+      >
         {{ i - 1 }}
       </span>
     </div>
@@ -29,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import Color from 'color';
 import { onMounted, ref, useModel } from 'vue';
 
 const props = defineProps<{
@@ -106,6 +111,33 @@ function pointerdown(event: PointerEvent | TouchEvent) {
 onMounted(() => {
   rotation.value = value.value * 36;
 })
+
+function getGradient (index: number) {
+  const angle = index * 36;
+  const angleDiff = (angle - ((rotation.value + 360) % 360) + 180) % 360 - 180;
+  
+  const progress = /* Math.max(-1, Math.min(1 , */(angleDiff / 36 - 5) % 10 + 5/* )); */
+
+  console.log(index, progress, angleDiff);
+
+  const stop1Colors = [Color('#d5dddd'), Color('#9cafaa'), Color('#31434e')];
+  const stop2Colors = [Color('#48625a'), Color('#575958'), Color('#899699')];
+  const stop3Colors = [Color('#c2c9c6'), Color('#bcc8cf'), Color('#3b4b54')];
+
+  let stop1: Color, stop2: Color, stop3: Color
+
+  if (progress > 0) {
+    stop1 = stop1Colors[1].mix(stop1Colors[2], progress);
+    stop2 = stop2Colors[1].mix(stop2Colors[2], progress);
+    stop3 = stop3Colors[1].mix(stop3Colors[2], progress);
+  } else {
+    stop1 = stop1Colors[0].mix(stop1Colors[1], progress + 1);
+    stop2 = stop2Colors[0].mix(stop2Colors[1], progress + 1);
+    stop3 = stop3Colors[0].mix(stop3Colors[1], progress + 1);
+  }
+
+  return `${stop1.hex()}, ${stop2.hex()}, ${stop3.hex()}`;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -117,16 +149,28 @@ onMounted(() => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 2rem;
-  width: 1rem;
+  height: 4rem;
+  width: 2rem;
   overflow: hidden;
   font-family: $fontDisplay;
   border-radius: 0.25rem;
+  background: black;
+  box-shadow:
+    2px 0 1px #131414,
+    -2px 0 1px #0d0e0e,
+    0 1px 1px #a5adab,
+    0 -1px 1px #a5a9ad
+  ;
+
+  transform-style: preserve-3d;
+  perspective: 9999px;
 
   &::after {
     content: '';
     position: absolute;
-    inset: -.5rem;
+    inset: 0;
+    transform: translateZ(4rem);
+    background: linear-gradient(#000a, transparent 20%, transparent 80%, #000a);
   }
 
   &__inner {
@@ -134,31 +178,39 @@ onMounted(() => {
     height: 100%;
     width: 100%;
     transform-origin: center center;
-    transform-style: preserve-3d;
     transition: transform 0.2s;
     pointer-events: none;
+    transform-style: preserve-3d;
 
     &--dragging {
       transition: none;
     }
   }
 
-  span {
+  &__digit {
     position: absolute;
     left: 0;
     right: 0;
     top: 50%;
     text-align: center;
     transform-origin: center 0;
-    line-height: 1rem;
-    background: #b5b2ad;
+    line-height: 2rem;
     color: black;
-    box-shadow: 0 0 .2rem #000 inset;
-    font-size: .75rem;
+    box-shadow:
+      0 0 5px #000 inset,
+      1px 0 1px #fff inset,
+      -1px 0 1px #fff inset;
+    text-shadow:
+      0 0 2px #000,
+      0 1px 1px #fff,
+      0 -1px 1px #fff;
+    font-size: 1.5rem;
+
+    will-change: transform;
 
     @for $i from 0 through 9 {
       &:nth-child(#{$i + 1}) {
-        transform: rotateX(#{$i * -36}deg)translateZ(1.5rem)translateY(-50%);
+        transform: rotateX(#{$i * -36}deg)translateZ(3.08rem)translateY(-50%);
       }
     }
   }

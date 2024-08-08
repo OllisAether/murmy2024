@@ -26,12 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import ContactsScreen from './ContactsScreen.vue';
 import HistoryScreen from './HistoryScreen.vue';
 import NumpadScreen from './NumpadScreen.vue';
 
-const phone = usePhone();
+const phone = useMainClue();
 </script>
 
 <style lang="scss" scoped>

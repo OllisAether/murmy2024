@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 
-const phone = usePhone();
+const phone = useMainClue();
 </script>
 
 <style lang="scss" scoped>

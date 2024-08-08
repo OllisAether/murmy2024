@@ -56,11 +56,11 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import AppIcon from './AppIcon.vue';
 import ClockWidget from './ClockWidget.vue';
 
-const phone = usePhone();
+const phone = useMainClue();
 const game = useGameManager();
 </script>
 

@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import moment from 'moment';
 import { onBeforeUnmount, onMounted } from 'vue';
 import PhoneLockScreen from './PhoneLockScreen.vue';
@@ -82,7 +82,7 @@ defineProps<{
 }>();
 
 const game = useGameManager();
-const phone = usePhone();
+const phone = useMainClue();
 
 onMounted(() => {
   phone.clock = moment().format('HH:mm');

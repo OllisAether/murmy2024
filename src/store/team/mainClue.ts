@@ -2,23 +2,7 @@ import { computed } from "@vue/reactivity";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 
-export const usePhone = defineStore('phone', () => {
-  const clock = ref('00:00')
-  const date = (() => {
-    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
-    const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-  
-    const date = new Date()
-    date.setFullYear(2013)
-    const day = date.getDate().toString().padStart(2, '0')
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-    const weekday = weekdays[date.getDay()]
-  
-    return `${weekday}, ${day}. ${month} ${year}`
-  })()
-  
-
+export const useMainClue = defineStore('mainClue', () => {
   // #region Pin
   const locked = ref(true)
 
@@ -26,6 +10,7 @@ export const usePhone = defineStore('phone', () => {
   const pinTimeoutSeconds = ref(0)
   const pinUnlockedAt = ref(0)
   const pinTries = ref(0)
+  const pinTimeoutDuration = 1000 * 30
 
   watch(pinUnlockedAt, () => {
     if (pinUnlockedAt.value > Date.now()) {
@@ -37,7 +22,7 @@ export const usePhone = defineStore('phone', () => {
     if (pinTries.value > 0) {
       setTimeout(() => {
         pinTries.value = 0
-      }, 1000 * 60) // 1 minute
+      }, pinTimeoutDuration)
     }
   }, { immediate: true })
 
@@ -63,12 +48,16 @@ export const usePhone = defineStore('phone', () => {
     }, 1000) as any
   }
 
-  function unlockPhone (_pin: string) {
+  function unlock (_pin: string) {
     if (pinUnlockedAt.value > Date.now()) {
       return false
     }
 
     if (pin === _pin) {
+      if (!locked.value) {
+        return true
+      }
+
       locked.value = false
       pinTimeoutSeconds.value = 0
       pinUnlockedAt.value = 0
@@ -76,15 +65,34 @@ export const usePhone = defineStore('phone', () => {
       return true
     }
 
+    if (!locked.value) {
+      return false
+    }
+
     pinTries.value++
 
     if (pinTries.value >= 3) {
-      pinUnlockedAt.value = Date.now() + 1000 * 60 // 1 minute
+      pinUnlockedAt.value = Date.now() + pinTimeoutDuration
     }
     return false
   }
   // #endregion
 
+  // #region Phone
+  const clock = ref('00:00')
+  const date = (() => {
+    const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
+    const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  
+    const date = new Date()
+    date.setFullYear(2013)
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    const weekday = weekdays[date.getDay()]
+  
+    return `${weekday}, ${day}. ${month} ${year}`
+  })()
   // #region Navigation
   const currentApp = ref<string>('home')
   const paths = ref<Record<string, string[]>>({})
@@ -189,22 +197,31 @@ export const usePhone = defineStore('phone', () => {
     delete paths.value[appName]
   }
   // #endregion
+  // #endregion
+
+  // #region Diary
+  const page = ref(0)
+  const diaryPinState = ref('0000')
+  // #endregion
 
   // #region Save to localStorage
   function saveToLocalStorage () {
-    sessionStorage.setItem('phone', JSON.stringify({
+    localStorage.setItem('mainClue', JSON.stringify({
       locked: locked.value,
       pinTries: pinTries.value,
       pinUnlockedAt: pinUnlockedAt.value,
 
       currentApp: currentApp.value,
       paths: paths.value,
+
+      page: page.value,
+      diaryPinState: diaryPinState.value,
     }))
   }
-  usePhone().$subscribe(saveToLocalStorage)
+  useMainClue().$subscribe(saveToLocalStorage)
 
   function loadFromLocalStorage () {
-    const data = localStorage.getItem('phone')
+    const data = localStorage.getItem('mainClue')
     if (data) {
       try {
         const json = JSON.parse(data)
@@ -214,8 +231,11 @@ export const usePhone = defineStore('phone', () => {
 
         currentApp.value = json.currentApp ?? 'home'
         paths.value = json.paths ?? {}
+
+        page.value = json.page ?? 0
+        diaryPinState.value = json.diaryPinState ?? '0000'
       } catch (error) {
-        console.error('Error while loading phone data from localStorage', error)
+        console.error('Error while loading mainClue data from localStorage', error)
       }
     }
   }
@@ -232,8 +252,9 @@ export const usePhone = defineStore('phone', () => {
     pinTries,
     stopTimeoutCounter,
     startTimeoutCounter,
-    unlockPhone,
+    unlock,
 
+    // #region Phone
     homeBtn,
     onHomeBtn,
     offHomeBtn,
@@ -255,7 +276,13 @@ export const usePhone = defineStore('phone', () => {
     setPath,
     isPath,
     isPathLoose,
-    
+    // #endregion
+
+    // #region Diary
+    page,
+    diaryPinState,
+    // #endregion
+
     saveToLocalStorage,
     loadFromLocalStorage,
   }

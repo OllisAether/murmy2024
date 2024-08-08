@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import ViewfinderScreen from './ViewfinderScreen.vue';
 import GalleryScreen from './GalleryScreen.vue';
 
-const phone = usePhone()
+const phone = useMainClue()
 </script>
 
 <style lang="scss" scoped>

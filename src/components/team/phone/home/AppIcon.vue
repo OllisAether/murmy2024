@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import { defineProps } from 'vue';
 
 const props = defineProps<{
@@ -16,7 +16,7 @@ const props = defineProps<{
   path?: string
 }>();
 
-const phone = usePhone();
+const phone = useMainClue();
 
 function click() {
   if (!props.app) return

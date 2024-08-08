@@ -140,14 +140,14 @@
 
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
-import { usePhone } from '@/store/team/phone';
+import { useMainClue } from '@/store/team/mainClue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import BackspaceSvg from '@/assets/phone/backspace.svg';
 import EnterSvg from '@/assets/phone/enter.svg';
 
 const game = useGameManager();
-const phone = usePhone();
+const phone = useMainClue();
 
 const dots = ref(0);
 const pin = ref('');
@@ -272,7 +272,7 @@ function back () {
 
 const wrongPin = ref<boolean | number>(false)
 function unlock () {
-  wrongPin.value = !phone.unlockPhone(pin.value)
+  wrongPin.value = !phone.unlock(pin.value)
 
   if (pin.value.length < 4) {
     return

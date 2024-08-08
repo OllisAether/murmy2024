@@ -36,8 +36,8 @@
 import { computed, useSlots } from 'vue';
 
 withDefaults(defineProps<{
-  deviation: number,
-  height: number,
+  deviation?: number,
+  height?: number,
 }>(), {
   deviation: 2,
   height: 50,

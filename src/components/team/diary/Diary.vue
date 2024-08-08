@@ -41,11 +41,11 @@
 <script lang="ts" setup>
 import { Transition, watch } from 'vue';
 import { pages } from './pages';
-import { useDiary } from '@/store/team/diary';
 import Cover from './pages/Cover.vue';
 import BackCover from './pages/BackCover.vue';
+import { useMainClue } from '@/store/team/mainClue';
 
-const diary = useDiary();
+const diary = useMainClue();
 
 const props = defineProps<{
   zoomScale: number,
@@ -132,9 +132,10 @@ function leave (el: Element, done: () => void, i: number) {
 
 <style lang="scss" scoped>
 .diary {
-  width: 455px;
-  height: 588px;
+  width: 455px * 2;
+  height: 588px * 2;
   pointer-events: all;
+  will-change: transform;
 
   &__pages {
     position: relative;

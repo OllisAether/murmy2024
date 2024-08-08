@@ -1,43 +1,56 @@
 <template>
   <Page :class="['front-cover', {
-    'front-cover--locked': useDiary().locked,
+    'front-cover--locked': diary.locked,
   }]" blank>
-    <PinLock />
+    <PinLock class="front-cover__pin-lock" />
 
-    <VBtn @click="useDiary().locked = !useDiary().locked">
+    <VBtn @click="diary.locked = !diary.locked">
       Lock
     </VBtn>
   </Page>
 </template>
 
 <script setup lang="ts">
+import { useMainClue } from '@/store/team/mainClue';
 import Page from '../Page.vue';
-import PinLock from '../PinLock.vue';
-import { useDiary } from '@/store/team/diary';
+import PinLock from '../PinLock.vue'
+
+const diary = useMainClue()
 </script>
 
 <style lang="scss" scoped>
 .front-cover {
   position: relative;
-  background: #151517;
-  box-shadow: 0 0 1rem #94bbff0b inset;
+  background: linear-gradient(#212424, #131518);
+  box-shadow:
+    0 -1rem 1rem -1rem #476c7e94 inset,
+    0 1rem 1rem -1rem #476c7e94 inset,
+    0 0 1rem #000 inset,
+  ;
 
   transform: scale(1.01);
-  
+
+  border-radius: 2rem .5rem .5rem 2rem;
+
+  .diary__page-wrapper--odd & {
+    border-radius: .5rem 2rem 2rem .5rem;
+  }
+
   &--locked {
     transform-style: preserve-3d;
 
     &::after {
       content: '';
       position: absolute;
-      top: .5rem;
-      left: calc(100% - .5rem);
-      bottom: .5rem;
-      width: calc(2rem - 2px);
+      top: 1rem;
+      left: calc(100% - 1rem);
+      bottom: 1rem;
+      width: calc(4rem - 2px);
       transform-origin: 0 0;
       transform: rotateY(90deg)translateX(1px);
-      background: linear-gradient(90deg, #EDE0CF, #797063, #EDE0CF);
-      background-size: 3px 100%;
+      background:
+        linear-gradient(transparent calc(50% - 3.5rem), rgb(44, 46, 47) calc(50% - 3.5rem), rgb(23, 24, 25) calc(50% + 3.5rem), transparent calc(50% + 3.5rem)) 0 0 / 100% 100%,
+        linear-gradient(90deg, #EDE0CF, #797063, #EDE0CF) 0 0 / 3px 100%;
     }
 
     &::before {
@@ -45,11 +58,17 @@ import { useDiary } from '@/store/team/diary';
       position: absolute;
       inset: 0;
 
-      background: #151517;
-      border-radius: .5rem;
-      transform: translateZ(-2rem);
+      background: black;
+      border-radius: 2rem;
+      transform: translateZ(-4rem);
     }
   }
 
+  &__pin-lock {
+    position: absolute;
+    top: 50%;
+    right: 5rem;
+    transform: translateY(-50%);
+  }
 }
 </style>

@@ -47,15 +47,14 @@ defineProps<{
 @use '@/scss/vars' as *;
 
 .diary-page {
-  font-size: 1rem;
   background: #EDE0CF;
   color: #3b3955;
   height: 100%;
 
-  border-radius: .5rem 0 0 .5rem;
+  border-radius: 1rem 0 0 1rem;
 
   .diary__page-wrapper--odd & {
-    border-radius: 0 .5rem .5rem 0;
+    border-radius: 0 1rem 1rem 0;
   }
 
   &__background {
@@ -73,24 +72,24 @@ defineProps<{
 
   &__date {
     position: absolute;
-    top: 1.5rem;
-    left: 1rem;
+    top: 3rem;
+    left: 2rem;
     width: 40%;
-    height: 2rem;
+    height: 4rem;
 
     border-bottom: 2px solid #DCC1A7;
 
     &__label {
       font-family: $fontDiaryDate;
-      font-size: .75rem;
-      line-height: 1;
+      font-size: 1.5rem;
+      line-height: .3;
       font-weight: bold;
       color: #DCC1A7;
     }
 
     &__value {
       font-family: $fontHandwriting;
-      font-size: 1.4rem;
+      font-size: 4rem;
       line-height: 1;
       padding-left: .3rem;
     }
@@ -98,13 +97,13 @@ defineProps<{
 
   &__page-number {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 3rem;
     left: 0;
-    padding: 0 1rem;
+    padding: 0 2rem;
 
     font-family: $fontDiaryPage;
     line-height: 1;
-    font-size: 5rem;
+    font-size: 10rem;
     font-weight: 600;
 
     color: #DCC1A7;
@@ -124,10 +123,10 @@ defineProps<{
     &__text {
       font-family: $fontHandwriting;
       position: absolute;
-      top: 4.25rem;
+      top: 8.5rem;
       padding: 0 1rem;
-      line-height: 1.5rem;
-      font-size: 1.4rem;
+      line-height: 3rem;
+      font-size: 2.7rem;
       filter: drop-shadow(-1px -1px 2px #d7c5ae)drop-shadow(1px 1px 2px #ebe3d8);
     }
   }

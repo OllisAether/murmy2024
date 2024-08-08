@@ -165,8 +165,8 @@ import { useSwipe } from '@vueuse/core';
 import Btn from '../Btn.vue';
 import { useCollectables } from '@/store/collectables';
 import Collectable from './Collectable.vue';
-import { useDiary } from '@/store/team/diary';
 import { pages } from './diary/pages';
+import { useMainClue } from '@/store/team/mainClue';
 
 const props = defineProps<{
   assetIds?: string[]
@@ -178,7 +178,7 @@ const assets = computed<Asset[]>(() => {
   return (props.assetIds?.map(id => game.getAsset(id)).filter(x => x) as Asset[]) ?? [];
 })
 
-const diary = useDiary();
+const diary = useMainClue();
 
 const pageCount = computed(() => {
   return props.mainClueType === 'diary'
