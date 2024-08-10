@@ -28,6 +28,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
+const props = defineProps<{
+  bottom?: boolean;
+}>();
+
 const scroller = ref<HTMLElement | null>(null);
 const scrollProgress = ref(0);
 const scrollRatio = ref(0);
@@ -141,6 +145,10 @@ onMounted(() => {
     scrollProgress.value = scroller.value.scrollTop / (scroller.value.scrollHeight - scroller.value.clientHeight)
     scrollRatio.value = scroller.value.clientHeight / scroller.value.scrollHeight;
   });
+
+  if (props.bottom) {
+    scroller.value.scrollTop = scroller.value.scrollHeight;
+  }
 });
 </script>
 

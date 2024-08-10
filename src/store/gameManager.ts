@@ -339,7 +339,7 @@ export const useGameManager = defineStore('gameManager', () => {
     })
   }
 
-  function getAsset (name: string) {
+  function getAsset (name?: string) {
     return assets.value.find(asset => asset.name === name)
   }
   // #endregion

@@ -106,27 +106,18 @@
             >
               <img :src="asset.content" />
               <Collectable
+                disappear
                 class="clue-image-viewer__collectable"
-                v-for="(entry, i) in entries?.filter(e => e.index === index)"
+                v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
                 :key="i"
                 :entry="entry.entry"
                 :style="{
-                  'left': entry.rect.x + 'px',
-                  'top': entry.rect.y + 'px',
-                  'width': entry.rect.width + 'px',
-                  'height': entry.rect.height + 'px',
+                  'left': entry.rect.x * 100 + '%',
+                  'top': entry.rect.y * 100 + '%',
+                  'width': entry.rect.width * 100 + '%',
+                  'height': entry.rect.height * 100 + '%',
                 }"
-                hide-content
-              >
-                <img
-                  class="clue-image-viewer__collectable__image"
-                  :src="asset.content"
-                  :style="{
-                    left: `-${entry.rect.x}px`,
-                    top: `-${entry.rect.y}px`,
-                  }"
-                />
-              </Collectable>
+              />
             </div>
           </template>
         </template>
@@ -606,6 +597,7 @@ watch(swipe.isSwiping, (isSwiping) => {
     transform: translate(-50%, -50%);
     width: fit-content;
     height: fit-content;
+    pointer-events: none;
 
     mix-blend-mode: difference;
     filter: hue-rotate(180deg);

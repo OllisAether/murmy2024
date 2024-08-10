@@ -1,92 +1,57 @@
+import moment, { Moment } from "moment"
+
 export interface Call {
-  timestamp: string;
-  caller: string;
-  number: string;
-  duration?: string;
-  type: 'answered' | 'missed' | 'outgoing' | 'rejected';
+  timestamp: Moment
+  number: string
+  duration?: string
+  type: 'answered' | 'missed' | 'outgoing' | 'rejected'
 }
 
 export const calls: Call[] = [
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
+    timestamp: moment('01-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
     number: '0123456789',
-    duration: '1:23',
+    duration: '1:30',
     type: 'answered'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
+    timestamp: moment('01-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
     number: '0123456789',
-    duration: '1:23',
+    duration: '1:30',
     type: 'missed'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
+    timestamp: moment('02-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
     number: '0123456789',
-    duration: '1:23',
+    duration: '1:30',
     type: 'outgoing'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    type: 'rejected'
-  },
-
-  {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    duration: '1:23',
-    type: 'answered'
-  },
-  {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    duration: '1:23',
-    type: 'missed'
-  },
-  {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    duration: '1:23',
-    type: 'outgoing'
-  },
-  {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
+    timestamp: moment('02-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
     number: '0123456789',
     type: 'rejected'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
+    timestamp: moment('01-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
     number: '0123456789',
-    duration: '1:23',
+    duration: '1:30',
     type: 'answered'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    duration: '1:23',
+    timestamp: moment('01-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
+    number: '012345672349',
+    duration: '1:30',
     type: 'missed'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
-    duration: '1:23',
+    timestamp: moment('02-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
+    number: '012345672349',
+    duration: '1:30',
     type: 'outgoing'
   },
   {
-    timestamp: '1. Apr 2013, 10:00',
-    caller: 'Dr. Müller',
-    number: '0123456789',
+    timestamp: moment('02-04-2013 10:00', 'DD-MM-YYYY HH:mm'),
+    number: '012345672349',
     type: 'rejected'
-  }
+  },
 ]

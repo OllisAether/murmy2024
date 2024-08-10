@@ -21,7 +21,7 @@
         class="viewfinder-screen__gallery-btn"
         @click="phone.pushPath('gallery')"
       >
-        <img :src="game.getAsset('dokumente/VandalismusPost.jpg')?.content">
+        <img :src="game.getAsset(gallery[0]?.assetId)?.content">
       </button>
     </div>
   </div>
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import { useMainClue } from '@/store/team/mainClue';
+import { gallery } from '../../../../../shared/assets/phone/gallery';
 
 const phone = useMainClue();
 const game = useGameManager();
@@ -37,6 +38,9 @@ const game = useGameManager();
 
 <style lang="scss" scoped>
 .viewfinder-screen {
+  position: absolute;
+  inset: 0;
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -45,8 +49,10 @@ const game = useGameManager();
   &__toolbar {
     display: flex;
     justify-content: space-between;
-    padding: .5rem 1rem;
-    font-size: .5rem;
+    height: 30px;
+    padding: 0 10px;
+    align-items: center;
+    font-size: 10px;
 
     background: linear-gradient(#000, #0f1416);
     border-bottom: 1px solid #fff2;
@@ -54,6 +60,7 @@ const game = useGameManager();
 
   &__viewfinder {
     position: relative;
+    height: 0;
     flex: 1;
     background: #000;
 
@@ -64,7 +71,7 @@ const game = useGameManager();
       transform: translate(-50%, -50%);
       width: 100%;
       text-align: center;
-      font-size: .5rem;
+      font-size: 8px;
       color: #8b1f1f;
     }
   }
@@ -74,7 +81,7 @@ const game = useGameManager();
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .75rem 1rem;
+    padding: 10px;
 
     background: linear-gradient(#000, #0f1416);
     border-top: 1px solid #fff2;
@@ -94,17 +101,17 @@ const game = useGameManager();
     ;
     color: black;
 
-    padding: .15rem;
+    padding: 3px;
     border-radius: 50%;
 
     & > :deep(.v-icon) {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-top: .1rem;
+      padding-top: 1px;
       border-radius: 50%;
-      width: 1.8rem;
-      height: 1.8rem;
+      width: 28px;
+      height: 28px;
       border: 1px solid #000;
       box-shadow:
         -.3px -.3px 1px #0008,
@@ -125,9 +132,10 @@ const game = useGameManager();
     box-shadow: 0 1px 2px #000;
 
     img {
+      pointer-events: none;
       display: block;
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 22px;
+      height: 22px;
       object-fit: cover;
     }
   }

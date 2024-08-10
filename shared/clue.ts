@@ -30,7 +30,7 @@ export interface Clue <T extends ClueTypes> {
 }
 
 export interface ImageEntry {
-  index: number
+  index?: number
   rect: {
     x: number
     y: number

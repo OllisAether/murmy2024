@@ -11,7 +11,7 @@ body, html {
 }
 
 // prevent user selection
-:not(input, textarea, select, button, [contenteditable]) {
+:not(input, textarea, [contenteditable]) {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Chrome/Safari/Opera */
    -khtml-user-select: none; /* Konqueror */

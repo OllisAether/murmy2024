@@ -93,6 +93,7 @@ export const useMainClue = defineStore('mainClue', () => {
   
     return `${weekday}, ${day}. ${month} ${year}`
   })()
+
   // #region Navigation
   const currentApp = ref<string>('home')
   const paths = ref<Record<string, string[]>>({})
@@ -176,17 +177,19 @@ export const useMainClue = defineStore('mainClue', () => {
   }
 
   function isPathLoose (...targetPath: string[]) {
-    currentPath.value.join('/').startsWith(targetPath.join('/'))
+    return currentPath.value.join('/').startsWith(targetPath.join('/'))
   }
 
-  function openApp (appName: string, ...path: string[]) {
+  function openApp (appName: string, path?: string[]) {
     currentApp.value = appName
     
     if (!paths.value[appName]) {
       paths.value[appName] = []
     }
 
-    paths.value[appName] = path
+    if (path) {
+      paths.value[appName] = path
+    }
   }
 
   function closeApp (appName: string) {

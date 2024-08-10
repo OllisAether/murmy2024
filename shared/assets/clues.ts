@@ -1,4 +1,5 @@
 import { Clue, ClueTypes } from '../clue';
+import { idGen } from '../random';
 
 export const clues: Clue<ClueTypes>[] = [
   {
@@ -14,15 +15,15 @@ export const clues: Clue<ClueTypes>[] = [
         {
           index: 0,
           entry: {
-            matterId: 'fp1',
+            matterId: idGen(),
             suspectId: 'general',
             title: 'Kamera 1',
           },
           rect: {
-            x: 825,
-            y: 560,
-            width: 50,
-            height: 50
+            x: 825 / 1600,
+            y: 560 / 1200,
+            width: 50 / 1600,
+            height: 50 / 1200
           }
         }
       ]

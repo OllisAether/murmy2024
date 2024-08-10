@@ -1,8 +1,10 @@
 <template>
-  <div class="phone">
-    <div class="phone__screen" :style="{
-      '--screen-door-opacity': Math.min(0.8, (zoomScale - 1) / 4),
-    }">
+  <div class="phone" :style="{
+    '--phone-width': 213 + 'px',
+    '--phone-height': 418 + 'px',
+    // '--screen-door-opacity': Math.min(0.8, (zoomScale - 1) / 4),
+  }">
+    <div class="phone__screen">
       <div class="phone__statusbar">
         <div>
           <VIcon size="1em">mdi-sim-alert-outline</VIcon>
@@ -27,6 +29,7 @@
             <CallsApp v-if="phone.currentApp === 'calls'" />
             <InternetApp v-else-if="phone.currentApp === 'internet'" />
             <CameraApp v-else-if="phone.currentApp === 'camera'" />
+            <MessagesApp v-else-if="phone.currentApp === 'sms'" />
           </Transition>
         </div>
       </div>
@@ -76,6 +79,7 @@ import HomeSvg from '@/assets/phone/home.svg';
 import MenuSvg from '@/assets/phone/menu.svg';
 import InternetApp from './internet/InternetApp.vue';
 import CameraApp from './camera/CameraApp.vue';
+import MessagesApp from './messages/MessagesApp.vue';
 
 defineProps<{
   zoomScale: number;

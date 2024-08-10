@@ -24,7 +24,17 @@
           </div>
         </div>
 
-        {{ game.database }}
+        <div class="sus-db__entries">
+          <div class="sus-db__entries__title">
+            Datenbank
+          </div>
+
+          <DatabaseEntry
+            v-for="entry in game.database.entries"
+            :key="entry.matterId"
+            :entry="entry"
+          />
+        </div>
       </div>
     </Transition>
     <button
@@ -45,6 +55,7 @@ import Timer from '../Timer.vue';
 import { useSwipe } from '@vueuse/core';
 import { suspects } from '@/assets/suspects';
 import { useGameManager } from '@/store/gameManager';
+import DatabaseEntry from './DatabaseEntry.vue';
 
 const game = useGameManager()
 
@@ -76,7 +87,10 @@ watch(swipe.direction, () => {
   height: 100%;
   border-right: 1px solid $stroke;
   position: relative;
-  
+
+  display: flex;
+  flex-direction: column;
+
   &__wrapper {
     position: relative;
     box-shadow: 0 0 10rem rgba(0, 0, 0, 0.5);
@@ -167,6 +181,11 @@ watch(swipe.direction, () => {
 
   &-enter-from, &-leave-to {
     margin-left: -400px;
+  }
+
+  &__entries {
+    overflow-y: auto;
+    height: 100%;
   }
 }
 </style>
