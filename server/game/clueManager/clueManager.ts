@@ -160,7 +160,7 @@ export class ClueManager {
     }
 
     const game = Game.get()
-    const team = game.getTeamClient(teamId)
+    const team = game.getTeam(teamId)
 
     const clue = clues.find(clue => clue.id === clueId)
 
@@ -196,7 +196,9 @@ export class ClueManager {
 
     this.unlockedClues[teamId].push(clueId)
 
-    game.sendCluesToClients(team)
+    const teamClient = game.getTeamClient(teamId)
+
+    teamClient && game.sendCluesToClients(teamClient)
     this.save()
 
     return true

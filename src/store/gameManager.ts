@@ -9,6 +9,10 @@ import { Phase } from "../../shared/phase";
 import { VoteOption, VoteSession } from "../../shared/vote";
 import { Entry } from "../../shared/suspectDatabase/entry";
 import { useWakeLock } from "@vueuse/core";
+import { clues as cluesAsset } from "@/../shared/assets/clues";
+import { getEntries } from "../../shared/textContent";
+import { gallery } from "../../shared/assets/phone/gallery";
+import { chats } from "../../shared/assets/phone/messages/chats";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -634,6 +638,48 @@ export const useGameManager = defineStore('gameManager', () => {
   function addDatabaseEntry (entry: Entry) {
     ws.send('suspectDatabaseEntry', { entry })
   }
+
+  function collectAllEntries () {
+    const entries: Entry[] = []
+
+    cluesAsset.forEach((clue) => {
+      clue.image?.entries?.forEach((entry) => {
+        entries.push(entry.entry)
+      })
+
+      clue.imageStack?.entries?.forEach((entry) => {
+        entries.push(entry.entry)
+      })
+
+      getEntries(clue.text?.content ?? '').forEach((entry) => {
+        entries.push(entry)
+      })
+    })
+
+    gallery.forEach((item) => {
+      item.entries?.forEach((entry) => {
+        entries.push(entry.entry)
+      })
+    })
+
+    chats.forEach((chat) => {
+      chat.messages.forEach((message) => {
+        if (message.type === 'message') {
+          getEntries(message.content).forEach((entry) => {
+            entries.push(entry)
+          })
+        }
+
+        if (message.type === 'image') {
+          message.entries?.forEach((entry) => {
+            entries.push(entry.entry)
+          })
+        }
+      })
+    })
+
+    return entries
+  }
   // #endregion
 
   // #region Clues
@@ -701,6 +747,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
     database,
     addDatabaseEntry,
+    collectAllEntries,
 
     clues,
     unlockClue

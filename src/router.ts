@@ -138,6 +138,13 @@ const router = createRouter({
           meta: {
             title: "Media"
           },
+        },
+        {
+          path: "suspectDatabases",
+          component: () => import("./pages/admin/SuspectDatabases.vue"),
+          meta: {
+            title: "Verdächtigendatenbanken"
+          },
         }
       ],
     },

@@ -49,9 +49,9 @@ export class SuspectDatabaseManager {
 
   public addEntry (teamId: string, entry: Entry): void {
     const game = Game.get()
-    const teamClient = game.getTeamClient(teamId)
+    const team = game.getTeam(teamId)
     
-    if (!teamClient) {
+    if (!team) {
       console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
       return
     }
@@ -67,15 +67,18 @@ export class SuspectDatabaseManager {
 
     this.databases[teamId].entries.push(entry)
 
-    game.sendSuspectDatabaseToTeams(teamClient)
+    const teamClient = game.getTeamClient(teamId)
+
+    teamClient && game.sendSuspectDatabaseToTeams(teamClient)
+    game.sendSuspectDatabasesToAdmins()
     this.save()
   }
 
   public removeEntry (teamId: string, matterId: string): void {
     const game = Game.get()
-    const teamClient = game.getTeamClient(teamId)
+    const team = game.getTeam(teamId)
 
-    if (!teamClient) {
+    if (!team) {
       console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
       return
     }
@@ -93,7 +96,10 @@ export class SuspectDatabaseManager {
 
     this.databases[teamId].entries.splice(index, 1)
 
-    game.sendSuspectDatabaseToTeams(teamClient)
+    const teamClient = game.getTeamClient(teamId)
+
+    teamClient && game.sendSuspectDatabaseToTeams(teamClient)
+    game.sendSuspectDatabasesToAdmins()
     this.save()
   }
 }

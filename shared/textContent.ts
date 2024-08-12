@@ -17,3 +17,11 @@ export function getRawText (text: TextContent | string): string {
 
   return text.content.map(getRawText).join('')
 }
+
+export function getEntries (text: TextContent | string): Entry[] {
+  if (typeof text === 'string') {
+    return []
+  }
+
+  return [text.entry, ...text.content.flatMap(getEntries)]
+}

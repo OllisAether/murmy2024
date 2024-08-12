@@ -22,7 +22,7 @@ export interface Clue <T extends ClueTypes> {
     entries: ImageEntry[]
   } : never
   text?: T extends 'text' ? {
-    content: TextContent[]
+    content: TextContent | string
   } : never
   video?: T extends 'video' ? {
     assetId: string

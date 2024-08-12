@@ -66,6 +66,13 @@
           </VListItemTitle>
         </VListItem>
 
+        <VListItem to="/admin/suspectDatabases">
+          <VListItemTitle>
+            <VIcon>mdi-database-search</VIcon>
+            Verdächtigendatenbanken
+          </VListItemTitle>
+        </VListItem>
+
         <div class="divider">
           <span>Verwaltung</span>
           <VDivider />
@@ -168,8 +175,6 @@
           </VAlert>
         </div>
       </div>
-
-      {{ admin.suspectDatabases }}
 
       <RouterView />
     </VMain>
