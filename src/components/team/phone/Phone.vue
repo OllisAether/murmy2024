@@ -26,10 +26,10 @@
           </Transition>
 
           <Transition name="phone__content__app">
-            <CallsApp v-if="phone.currentApp === 'calls'" />
-            <InternetApp v-else-if="phone.currentApp === 'internet'" />
-            <CameraApp v-else-if="phone.currentApp === 'camera'" />
-            <MessagesApp v-else-if="phone.currentApp === 'sms'" />
+            <CallsApp class="phone__content__app" v-if="phone.currentApp === 'calls'" />
+            <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
+            <CameraApp class="phone__content__app" v-else-if="phone.currentApp === 'camera'" />
+            <MessagesApp class="phone__content__app" v-else-if="phone.currentApp === 'sms'" />
           </Transition>
         </div>
       </div>
@@ -102,14 +102,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-$scale: 5;
+@use '@/scss/vars' as *;
 
 .phone {
   position: relative;
   width: 213px * $scale;
   height: 418px * $scale;
 
-  font-size: 12px;
+  font-size: 12px * $scale;
   font-family: Arial, Helvetica, sans-serif;
 
   &__image {
@@ -125,16 +125,16 @@ $scale: 5;
     position: absolute;
     top: 53px * $scale;
     left: 16px * $scale;
-    width: 180.5px;
-    height: 320.5px;
+    width: 180.5px * $scale;
+    height: 320.5px * $scale;;
     background: black;
 
-    transform-origin: 0 0;
-    transform: scale($scale);
+    // transform-origin: 0 0;
+    // transform: scale($scale);
 
     display: flex;
     flex-direction: column;
-    will-change: transform;
+    // will-change: transform;
 
     // &::after {
     //   z-index: 9999;
@@ -165,17 +165,17 @@ $scale: 5;
   }
 
   &__statusbar {
-    height: 12px;
+    height: 12px * $scale;
     background: linear-gradient(#242424, #000000);
-    font-size: 8px;
+    font-size: 8px * $scale;
     color: white;
 
     & > div {
       display: flex;
       align-items: center;
 
-      gap: 3px;
-      padding: 0 3px;
+      gap: 3px * $scale;
+      padding: 0 3px * $scale;
 
       mask-image: linear-gradient(transparent, white 40%, transparent);
     }
@@ -242,7 +242,7 @@ $scale: 5;
   &__navbar {
     display: flex;
     justify-content: space-between;
-    height: 20px;
+    height: 20px * $scale;
     background: #000;
 
     &__button {
@@ -257,13 +257,18 @@ $scale: 5;
 
       &:active {
         background: radial-gradient(#fff3 50%, transparent 50%);
-        background-size: 80px 80px;
+        background-size: 80px * $scale 80px * $scale;
         background-position: center;
         background-repeat: no-repeat;
       }
 
       &--menu {
         pointer-events: none;
+      }
+
+      svg {
+        width: 18px * $scale;
+        height: 12px * $scale;
       }
     }
 

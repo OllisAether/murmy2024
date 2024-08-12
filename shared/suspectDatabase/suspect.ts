@@ -1,8 +1,8 @@
-import { JsonMap } from '../../../shared/json'
+import { JsonMap } from '../json'
 
 export interface Suspect extends JsonMap {
   id: string
   name: string
-  image: string
+  imageAssetId?: string
   color: string
 }

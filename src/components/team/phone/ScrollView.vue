@@ -153,6 +153,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .scroll-view {
   position: relative;
   overflow: hidden;
@@ -161,7 +163,7 @@ onMounted(() => {
     position: absolute;
     top: 0;
     right: 0;
-    width: 2px;
+    width: 2px * $scale;
     bottom: 0;
 
     &__thumb {

@@ -13,7 +13,7 @@ const props = defineProps<{
   iconSrc: string
   name?: string
   app?: string
-  path?: string
+  path?: string[]
 }>();
 
 const phone = useMainClue();
@@ -30,22 +30,24 @@ function click() {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .app-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  filter: drop-shadow(0 1px 1px black)drop-shadow(0 0 1px black);
+  filter: drop-shadow(0 1px * $scale 1px * $scale black)drop-shadow(0 0 1px * $scale black);
 
   &__image {
-    width: 22px;
-    width: 22px;
+    width: 22px * $scale;
+    width: 22px * $scale;
     pointer-events: none;
   }
 
   &__name {
-    font-size: 6px
+    font-size: 6px * $scale
   }
 }
 </style>

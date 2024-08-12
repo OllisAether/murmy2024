@@ -1,8 +1,4 @@
-export interface Contact {
-  name?: string
-  number: string
-  avatarAssetId?: string
-}
+import { Contact } from "../../phone/contact";
 
 export const contacts: Contact[] = [
   {

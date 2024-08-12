@@ -1,11 +1,5 @@
-import moment, { Moment } from "moment"
-
-export interface Call {
-  timestamp: Moment
-  number: string
-  duration?: string
-  type: 'answered' | 'missed' | 'outgoing' | 'rejected'
-}
+import moment from "moment"
+import { Call } from "../../phone/call"
 
 export const calls: Call[] = [
   {

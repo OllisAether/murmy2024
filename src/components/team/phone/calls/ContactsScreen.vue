@@ -32,13 +32,15 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/phoneContacts';
+import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 
 const game = useGameManager();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .contacts-screen {
   height: 100%;
 
@@ -50,8 +52,8 @@ const game = useGameManager();
     &__item {
       display: flex;
       align-items: center;
-      padding: 5px 5px 5px 10px;
-      border-bottom: 1px solid #fff2;
+      padding: 5px * $scale 5px * $scale 5px * $scale 10px * $scale;
+      border-bottom: 1px * $scale solid #fff2;
       line-height: 1;
 
       &__info {
@@ -59,26 +61,26 @@ const game = useGameManager();
       }
 
       &__name {
-        font-size: 10px;
+        font-size: 10px * $scale;
       }
 
       &__number {
-        font-size: 8px;
+        font-size: 8px * $scale;
         color: #777;
       }
 
       &__avatar {
-        width: 20px;
-        height: 20px;
+        width: 20px * $scale;
+        height: 20px * $scale;
         border-radius: 50%;
         background: #6a6a6a;
         overflow: hidden;
-        margin-right: 5px;
+        margin-right: 5px * $scale;
 
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 8px;
+        font-size: 8px * $scale;
 
         img {
           width: 100%;

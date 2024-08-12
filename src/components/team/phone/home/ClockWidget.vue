@@ -14,16 +14,18 @@ const phone = useMainClue();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .clock-widget {
   background: linear-gradient(#888d, #444d 49%, #222d 51%, #000d);
-  border-radius: 5px;
+  border-radius: 5px * $scale;
   box-shadow:
-    0 -1px 1px 0 #000a inset,
-    0 1px 1px 0 #fffa inset,
-    -1px 0 1px 0 #000a inset,
-    1px 0 1px 0 #fffa inset,
-    0 0 1px 0 #000d,
-    0 1px 2px 1px #000d,
+    0 -1px * $scale 1px * $scale 0 #000a inset,
+    0 1px * $scale 1px * $scale 0 #fffa inset,
+    -1px * $scale 0 1px * $scale 0 #000a inset,
+    1px * $scale 0 1px * $scale 0 #fffa inset,
+    0 0 1px * $scale 0 #000d,
+    0 1px * $scale 2px * $scale 1px * $scale #000d,
   ;
 
   &__content {
@@ -32,20 +34,20 @@ const phone = useMainClue();
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5px;
-    gap: 5px;
+    padding: 5px * $scale;
+    gap: 5px * $scale;
     align-items: center;
     mask-image: linear-gradient(#0002, #000 49%, #000a 51%, #0005);
   }
 
   &__time {
-    font-size: 48px;
+    font-size: 48px * $scale;
     font-weight: bold;
     line-height: 1;
   }
 
   &__date {
-    font-size: 8px;
+    font-size: 8px * $scale;
     font-weight: bold;
     line-height: 1;
   }

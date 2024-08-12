@@ -130,19 +130,21 @@ function backspace () {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .numpad-screen {
   height: 100%;
 
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 1px * $scale;
 
   &__warning {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 8px;
-    margin-top: 10px;
+    font-size: 8px * $scale;
+    margin-top: 10px * $scale;
   }
 
   &__phone-number {
@@ -152,14 +154,14 @@ function backspace () {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 0 5px;
+    padding: 0 5px * $scale;
 
     &__field {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 22px;
+      font-size: 22px * $scale;
       color: #4dccff;
       line-height: 1;
       word-break: break-all;
@@ -168,7 +170,7 @@ function backspace () {
 
     &__backspace {
       display: block;
-      padding: 8px 5px;
+      padding: 8px * $scale 5px * $scale;
 
       & > svg {
         display: block;
@@ -180,8 +182,8 @@ function backspace () {
     position: inherit;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-    padding-bottom: 5px;
+    gap: 3px * $scale;
+    padding-bottom: 5px * $scale;
 
     &__button {
       display: flex;
@@ -189,17 +191,17 @@ function backspace () {
 
       justify-content: center;
       align-items: center;
-      gap: 4px;
+      gap: 4px * $scale;
 
       &__primary {
-        font-size: 18px;
+        font-size: 18px * $scale;
         color: #4dccff;
       }
 
       &__secondary {
-        font-size: 8px;
+        font-size: 8px * $scale;
         color: #aaa;
-        border-bottom: 1px solid #4dccff;
+        border-bottom: 1px * $scale solid #4dccff;
       }
 
       &:active {
@@ -220,12 +222,12 @@ function backspace () {
   &__bottom-bar {
     display: flex;
     justify-content: center;
-    border-top: 1px solid #4dccff;
+    border-top: 1px * $scale solid #4dccff;
   }
 
   &__call-button {
     display: block;
-    padding: 5px 20px;
+    padding: 5px * $scale 20px * $scale;
 
     & > svg {
       display: block;

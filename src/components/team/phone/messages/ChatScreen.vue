@@ -92,12 +92,13 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/phoneContacts';
+import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { chats, GroupChat, PrivateChat } from '../../../../../shared/assets/phone/messages/chats';
+import { chats } from '../../../../../shared/assets/phone/messages/chats';
 import { computed } from 'vue';
 import Collectable from '../../Collectable.vue';
+import { GroupChat, PrivateChat } from '../../../../../shared/phone/chat';
 
 const game = useGameManager();
 const phone = useMainClue();
@@ -121,7 +122,7 @@ const computedChat = computed(() => {
 
   if (chat.value.type === 'group') {
     const participants = (chat.value as GroupChat).participants
-    .map((p) => contacts.find((c) => c.number === p) ?? { number: p })
+      .map((p) => contacts.find((c) => c.number === p) ?? { number: p })
 
     return {
       ...chat.value,
@@ -143,6 +144,8 @@ const computedChat = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .chat-screen {
   position: absolute;
   inset: 0;
@@ -154,11 +157,11 @@ const computedChat = computed(() => {
   &__title {
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    height: 30px;
-    font-size: 10px;
+    padding: 0 10px * $scale;
+    height: 30px * $scale;
+    font-size: 10px * $scale;
     background: linear-gradient(#555d51, #262826);
-    border-bottom: 1px solid #fff1;
+    border-bottom: 1px * $scale solid #fff1;
   }
 
   &__name-participants {
@@ -175,7 +178,7 @@ const computedChat = computed(() => {
 
   &__participants {
     width: 100%;
-    font-size: 8px;
+    font-size: 8px * $scale;
     color: #777;
 
     overflow: hidden;
@@ -184,17 +187,17 @@ const computedChat = computed(() => {
   }
 
   &__avatar {
-    width: 20px;
-    height: 20px;
+    width: 20px * $scale;
+    height: 20px * $scale;
     border-radius: 50%;
     background: #6a6a6a;
     overflow: hidden;
-    margin-right: 5px;
+    margin-right: 5px * $scale;
 
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8px;
+    font-size: 8px * $scale;
 
     img {
       width: 100%;
@@ -210,35 +213,35 @@ const computedChat = computed(() => {
     z-index: 1;
     display: flex;
     align-items: center;
-    padding: 5px;
-    gap: 5px;
-    border-top: 1px solid #fff1;
+    padding: 5px * $scale;
+    gap: 5px * $scale;
+    border-top: 1px * $scale solid #fff1;
 
-    box-shadow: 0 0 4px 1px #000;
+    box-shadow: 0 0 4px * $scale 1px * $scale #000;
 
     &__field {
       flex: 1;
       display: flex;
       align-items: center;
       color: #777;
-      font-size: 10px;
-      gap: 5px;
+      font-size: 10px * $scale;
+      gap: 5px * $scale;
 
       .v-icon {
-        font-size: 12px;
+        font-size: 12px * $scale;
       }
     }
 
     &__send {
       color: #bbb;
-      filter: drop-shadow(0 1px 2px #000600);
+      filter: drop-shadow(0 1px * $scale 2px * $scale #000600);
       mask-image: linear-gradient(#fff6, #fff 49%, #fff8 51%, #fff4);
     }
   }
 
   &__message {
-    padding: 0 5px;
-    margin: 5px 0;
+    padding: 0 5px * $scale;
+    margin: 5px * $scale 0;
 
     display: flex;
     flex-direction: column;
@@ -249,8 +252,8 @@ const computedChat = computed(() => {
     }
 
     &__avatar {
-      width: 20px;
-      height: 20px;
+      width: 20px * $scale;
+      height: 20px * $scale;
       border-radius: 50%;
       background: #6a6a6a;
       overflow: hidden;
@@ -265,15 +268,15 @@ const computedChat = computed(() => {
       flex: 1;
 
       background: linear-gradient(#7b7b7b, #000, #181818);
-      background-position: -1px -1px;
-      background-size: calc(100% + 2px) calc(100% + 2px);
-      border: 1px solid #fff1;
-      border-radius: 5px;
+      background-position: -1px * $scale -1px * $scale;
+      background-size: calc(100% + 2px * $scale) calc(100% + 2px * $scale);
+      border: 1px * $scale solid #fff1;
+      border-radius: 5px * $scale;
       line-height: 1.2;
       width: fit-content;
       max-width: 70%;
 
-      box-shadow: 0 2px 4px 1px #000;
+      box-shadow: 0 2px * $scale 4px * $scale 1px * $scale #000;
 
       .chat-screen__message--me & {
         background-image: linear-gradient(#7ab566, #0d2a05, rgb(23, 62, 22));
@@ -281,18 +284,18 @@ const computedChat = computed(() => {
     }
 
     &__sender {
-      font-size: 8px;
+      font-size: 8px * $scale;
       color: #777;
     }
 
     &__text {
-      padding: 3px 6px;
-      font-size: 10px;
+      padding: 3px * $scale 6px * $scale;
+      font-size: 10px * $scale;
     }
 
     &__image {
       position: relative;
-      padding: 5px;
+      padding: 5px * $scale;
 
       img {
         pointer-events: none;
@@ -311,19 +314,19 @@ const computedChat = computed(() => {
     display: flex;
     align-items: center;
 
-    padding: 5px;
-    font-size: 8px;
+    padding: 5px * $scale;
+    font-size: 8px * $scale;
     color: #777;
     text-align: center;
 
     span:nth-child(1), span:nth-child(3) {
       flex: 1;
-      border-top: 1px solid #fff1;
+      border-top: 1px * $scale solid #fff1;
     }
 
     span:nth-child(2) {
       width: fit-content;
-      padding: 0 5px;
+      padding: 0 5px * $scale;
     }
   }
 }

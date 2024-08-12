@@ -53,11 +53,12 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/phoneContacts';
+import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { ChatImage, ChatMessage, chats, ChatTimestamp } from '../../../../../shared/assets/phone/messages/chats';
-import { getRawText } from '@/model/textContent';
+import { chats } from '../../../../../shared/assets/phone/messages/chats';
+import { getRawText } from '../../../../../shared/textContent';
+import { ChatImage, ChatMessage, ChatTimestamp } from '../../../../../shared/phone/chat';
 
 const game = useGameManager();
 const phone = useMainClue();
@@ -90,6 +91,8 @@ const computedChats = chats.map((chat) => {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .chats-screen {
   display: flex;
   flex-direction: column;
@@ -98,17 +101,17 @@ const computedChats = chats.map((chat) => {
   &__title {
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    height: 30px;
-    font-size: 12px;
+    padding: 0 10px * $scale;
+    height: 30px * $scale;
+    font-size: 12px * $scale;
     background: linear-gradient(#555d51, #262826);
-    border-bottom: 1px solid #fff1;
+    border-bottom: 1px * $scale solid #fff1;
 
     img {
-      width: 18px;
-      height: 18px;
-      margin-right: 10px;
-      filter: drop-shadow(0 1px 2px #000600);
+      width: 18px * $scale;
+      height: 18px * $scale;
+      margin-right: 10px * $scale;
+      filter: drop-shadow(0 1px * $scale 2px * $scale #000600);
     }
   }
 
@@ -126,8 +129,8 @@ const computedChats = chats.map((chat) => {
       display: flex;
       text-align: left;
       align-items: center;
-      padding: 5px 5px 5px 10px;
-      border-bottom: 1px solid #fff2;
+      padding: 5px * $scale 5px * $scale 5px * $scale 10px * $scale;
+      border-bottom: 1px * $scale solid #fff2;
       line-height: 1;
 
       &__info {
@@ -136,13 +139,13 @@ const computedChats = chats.map((chat) => {
       }
 
       &__name {
-        font-size: 10px;
+        font-size: 10px * $scale;
       }
 
       &__last-message {
-        font-size: 8px;
+        font-size: 8px * $scale;
         color: #777;
-        padding: 2px 0;
+        padding: 2px * $scale 0;
 
         white-space: nowrap;
         overflow: hidden;
@@ -150,17 +153,17 @@ const computedChats = chats.map((chat) => {
       }
 
       &__avatar {
-        width: 20px;
-        height: 20px;
+        width: 20px * $scale;
+        height: 20px * $scale;
         border-radius: 50%;
         background: #6a6a6a;
         overflow: hidden;
-        margin-right: 5px;
+        margin-right: 5px * $scale;
 
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 8px;
+        font-size: 8px * $scale;
 
         img {
           width: 100%;

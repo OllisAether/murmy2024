@@ -1,5 +1,5 @@
 import { Entry } from "./suspectDatabase/entry"
-import { TextContent } from "../src/model/textContent"
+import { TextContent } from "./textContent"
 
 export type ClueTypes =
   'image' | 'imageStack' |

@@ -37,6 +37,8 @@ const game = useGameManager();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .gallery-screen {
   position: absolute;
   inset: 0;
@@ -49,21 +51,21 @@ const game = useGameManager();
   &__toolbar {
     display: flex;
     align-items: center;
-    // gap: 10px;
-    height: 30px;
+    // gap: 10px * $scale;
+    height: 30px * $scale;
 
     background: linear-gradient(#000, #0f1416);
-    border-bottom: 1px solid #fff2;
+    border-bottom: 1px * $scale solid #fff2;
   }
 
   &__back-btn {
-    font-size: 8px;
-    width: 30px;
+    font-size: 8px * $scale;
+    width: 30px * $scale;
     height: 100%;
   }
 
   &__title {
-    font-size: 10px;
+    font-size: 10px * $scale;
   }
 
   &__content {

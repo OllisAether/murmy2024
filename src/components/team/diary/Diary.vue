@@ -53,8 +53,8 @@ const props = defineProps<{
   pageTransitionProgress: number,
 }>();
 
-const enterDuration = 600;
-const leaveDuration = 200;
+const enterDuration = 750;
+const leaveDuration = 250;
 
 function enter (el: Element, done: () => void, i: number) {
   if (Math.abs(i - props.currentPage) >= 1) {
@@ -74,7 +74,7 @@ function enter (el: Element, done: () => void, i: number) {
     { transform: `perspective(5000px)rotateY(${isOdd ? '-90deg' : '90deg'})` },
     { transform: 'perspective(5000px)rotateY(0deg)' }
   ], {
-    duration: enterDuration ,
+    duration: enterDuration,
     delay: leaveDuration,
     easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)',
     fill: 'both',
@@ -135,13 +135,13 @@ function leave (el: Element, done: () => void, i: number) {
   width: 455px * 2;
   height: 588px * 2;
   pointer-events: all;
-  will-change: transform;
 
   &__pages {
     position: relative;
     width: 200%;
     height: 100%;
     transform-origin: 0 0;
+    will-change: transform;
 
     transition: transform 1s cubic-bezier(0.23, 1, 0.320, 1);
 
@@ -181,9 +181,9 @@ function leave (el: Element, done: () => void, i: number) {
     transform-style: preserve-3d;
     transform: perspective(5000px);
 
+    will-change: transform;
     .diary:not(.diary--locked) & {
       transition: filter .5s;
-      will-change: filter;
     }
 
     &--odd {
@@ -203,22 +203,22 @@ function leave (el: Element, done: () => void, i: number) {
       filter: brightness(calc(var(--progress-abs, 0) * 2 * (1 - $brightness) + $brightness))blur(calc((1 - var(--progress-abs, 0) * 2) * $blur));
     }
 
+    .diary--odd.diary--swiping.diary--swiping-next:not(.diary--locked) &,
+    .diary--swiping.diary--swiping-prev:not(.diary--odd):not(.diary--locked) & {
+      filter: brightness($brightness)blur($blur);
+    }
+
+    &--current {
+      z-index: 1;
+
+      .diary:not(.diary--locked) & {
+        filter: brightness(calc(1 - var(--progress-abs, 0) * 2 * (1 - $brightness)))blur(calc(var(--progress-abs, 0) * 2 * $blur));
+      }
       .diary--odd.diary--swiping.diary--swiping-next:not(.diary--locked) &,
       .diary--swiping.diary--swiping-prev:not(.diary--odd):not(.diary--locked) & {
-        filter: brightness($brightness)blur($blur);
+        filter: brightness(1)blur(0);
       }
-
-      &--current {
-        z-index: 1;
-
-        .diary:not(.diary--locked) & {
-          filter: brightness(calc(1 - var(--progress-abs, 0) * 2 * (1 - $brightness)))blur(calc(var(--progress-abs, 0) * 2 * $blur));
-        }
-        .diary--odd.diary--swiping.diary--swiping-next:not(.diary--locked) &,
-        .diary--swiping.diary--swiping-prev:not(.diary--odd):not(.diary--locked) & {
-          filter: brightness(1)blur(0);
-        }
-      }
+    }
   }
 }
 </style>

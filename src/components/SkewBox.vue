@@ -5,6 +5,7 @@
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
       :viewBox="[
         -padding,
         -padding,
@@ -18,7 +19,12 @@
         inset: `-${padding}px`
       }"
     >
-      <g>
+      <g
+        class="skew-box__content"
+        :style="{
+          clipPath: (progress !== undefined) ? `inset(${-padding}px ${-padding}px ${(height + padding * 2) * progress - padding / 2}px ${-padding}px)` : undefined
+        }"
+      >
         <path
           :d="`
             M${width - roundedCorners} 0
@@ -66,7 +72,7 @@
         v-if="hasProgress"
         class="skew-box__progress"
         :style="{
-          clipPath: `inset(${(height + padding * 2) * (1 - progress!)}px ${-padding}px ${-padding}px ${-padding}px)`
+          clipPath: `inset(${(height + padding * 2) * (1 - progress!) - padding / 2}px ${-padding}px ${-padding}px ${-padding}px)`
         }"
       >
         <path
@@ -126,8 +132,9 @@
           }"
         >
           <image
-            v-if="img"
+            v-if="img && img !== true"
             :href="img"
+            :xlink:href="img"
             :x="-Math.tan(skew * Math.PI / 180) * rawHeight / 2 - (hasProgress ? width * (1 - progressScale): 0)"
             :y="-1"
             :width="Math.tan(skew * Math.PI / 180) * rawHeight + width + 2 + (hasProgress ? width * (1 - progressScale) * 2 : 0)"
@@ -137,15 +144,15 @@
               transformOrigin: 'center',
               transform: `skew(${skew}deg)`
             }"
-            :filter="`url(#desaturate-${id})`"
+            :filter="hasProgress ? `url(#desaturate-${id})` : ''"
           />
         </g>
       </g>
 
       <defs>
         <linearGradient :id="`skew-box-fill-${id}`" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" :stop-color="color.string()" stop-opacity="100%"/>
-          <stop offset="100%" :stop-color="color.rotate(-20).darken(0.4).string()" stop-opacity="70%" />
+          <stop offset="0%" :stop-color="color.string()" stop-opacity="60%"/>
+          <stop offset="100%" :stop-color="color.rotate(-20).darken(0.4).string()" stop-opacity="40%" />
         </linearGradient>
         <linearGradient :id="`skew-box-stroke-${id}`" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" :stop-color="color.rotate(10).lighten(Math.max(0, 1 - color.lightness() / 100 * 2)).string()" />
@@ -154,8 +161,8 @@
 
         <template v-if="hasProgress">
           <linearGradient :id="`skew-box-progress-fill-${id}`" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" :stop-color="progressColor.string()" stop-opacity="100%"/>
-            <stop offset="100%" :stop-color="progressColor.rotate(-20).darken(0.4).string()" stop-opacity="70%" />
+            <stop offset="0%" :stop-color="progressColor.string()" stop-opacity="60%"/>
+            <stop offset="100%" :stop-color="progressColor.rotate(-20).darken(0.4).string()" stop-opacity="40%" />
           </linearGradient>
           <linearGradient :id="`skew-box-progress-stroke-${id}`" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" :stop-color="progressColor.rotate(10).lighten(Math.max(0, 1 - progressColor.lightness() / 100 * 2)).string()" />
@@ -173,21 +180,14 @@
         <mask v-if="img" :id="`skew-box-path-${id}`">
           <path
             :d="`
-              M${width - roundedCorners} 0
-              A${roundedCorners} ${roundedCorners} 0 0 1 ${width} ${roundedCorners}
-
-              L${width} ${rawHeight - cornerCut - roundedCorners * sqrtEighth}
+              M 0 0
+              L${width} 0 ${width} ${rawHeight - cornerCut - roundedCorners * sqrtEighth}
               
               A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners * sqrtEighth} ${rawHeight - cornerCut + roundedCorners * sqrtEighth}
               L${width - cornerCut + roundedCorners * sqrtEighth} ${rawHeight - roundedCorners * sqrtEighth}
               A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners * sqrtEighth} ${rawHeight}
               L${roundedCorners} ${rawHeight}
-              A${roundedCorners} ${roundedCorners} 0 0 1 0 ${rawHeight - roundedCorners}
-              L0 ${cornerCut + roundedCorners * sqrtEighth}
-              A${roundedCorners} ${roundedCorners} 0 0 1 ${roundedCorners * sqrtEighth} ${cornerCut - roundedCorners * sqrtEighth}
-              L${cornerCut - roundedCorners * sqrtEighth} ${roundedCorners * sqrtEighth}
-              A${roundedCorners} ${roundedCorners} 0 0 1 ${cornerCut + roundedCorners * sqrtEighth} 0
-              Z
+              A${roundedCorners} ${roundedCorners} 0 0 1 0 ${rawHeight - roundedCorners} Z
             `"
             fill="white"
             stroke="white"
@@ -213,7 +213,7 @@ const props = withDefaults(defineProps<{
   roundedCorners?: number
   color?: string
   skew?: number
-  img?: string
+  img?: string | true
   imgHeightScale?: number
   
   progress?: number
@@ -233,8 +233,7 @@ const props = withDefaults(defineProps<{
   strokeWidth: 2,
   shadowStrokeWidth: 3,
   padding: 8,
-  progressScale: 0.85,
-  contentOnly: false
+  progressScale: 0.85
 })
 
 const bigCorner = computed(() => props.displaceDistance + props.roundedCorners)
@@ -287,6 +286,11 @@ onMounted(() => {
 
   svg {
     position: absolute;
+  }
+
+  &__content {
+    will-change: clip-path;
+    transition: clip-path 1s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   &__progress {

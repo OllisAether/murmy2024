@@ -2,6 +2,10 @@
   <Page :class="['front-cover', {
     'front-cover--locked': diary.locked,
   }]" blank>
+    <img
+      :src="game.getAsset('diary/FrontCover.webp')?.content"
+      class="front-cover__image"
+    />
     <PinLock class="front-cover__pin-lock" />
 
     <VBtn @click="diary.locked = !diary.locked">
@@ -12,9 +16,11 @@
 
 <script setup lang="ts">
 import { useMainClue } from '@/store/team/mainClue';
+import { useGameManager } from '@/store/gameManager';
 import Page from '../Page.vue';
 import PinLock from '../PinLock.vue'
 
+const game = useGameManager();
 const diary = useMainClue()
 </script>
 
@@ -23,8 +29,8 @@ const diary = useMainClue()
   position: relative;
   background: linear-gradient(#212424, #131518);
   box-shadow:
-    0 -1rem 1rem -1rem #476c7e94 inset,
-    0 1rem 1rem -1rem #476c7e94 inset,
+    0 -1rem 1.5em -1rem #476c7e94 inset,
+    0 1rem .5rem -1rem #476c7e94 inset,
     0 0 1rem #000 inset,
   ;
 
@@ -69,6 +75,15 @@ const diary = useMainClue()
     top: 50%;
     right: 5rem;
     transform: translateY(-50%);
+  }
+
+  &__image {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 </style>

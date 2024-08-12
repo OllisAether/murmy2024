@@ -17,7 +17,9 @@
       <PinLockDigit v-model="fourthDigit" />
     </div>
 
-    <div class="pin-lock__strap" v-if="diary.locked" />
+    <VSlideXReverseTransition>
+      <div class="pin-lock__strap" v-if="diary.locked" />
+    </VSlideXReverseTransition>
 
     <VFadeTransition>
       <div
@@ -77,8 +79,9 @@ watch(() => diary.pinTimeoutSeconds, () => {
 });
 
 let unlockAnimation: Animation | null = null;
-function unlock () {
+async function unlock () {
   let success = false;
+  const wasLocked = diary.locked;
 
   if (diary.pinTimeoutSeconds > 0) {
     if (!unlockButton.value) return;
@@ -154,9 +157,17 @@ function unlock () {
       easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
     })
 
-    unlockAnimation.addEventListener('finish', () => {
-      unlockAnimation = null;
-    });
+
+    if (wasLocked) {
+      setTimeout(() => {
+        if (diary.page === 0) {
+          diary.page = 1;
+        }
+      }, 750);
+    }
+
+    await unlockAnimation.finished;
+    unlockAnimation = null;
   }
 }
 </script>

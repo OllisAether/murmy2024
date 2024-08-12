@@ -48,6 +48,8 @@ const url = 'http://www.yahoo.com/search?q=cat+gifs&hl=de&gl=de&client=android-i
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .internet-app {
   display: flex;
   flex-direction: column;
@@ -57,13 +59,13 @@ const url = 'http://www.yahoo.com/search?q=cat+gifs&hl=de&gl=de&client=android-i
     background: linear-gradient(#000, #0f1416);
     display: flex;
     align-items: center;
-    padding: 5px;
-    font-size: 10px;
+    padding: 5px * $scale;
+    font-size: 10px * $scale;
     color: #aaa;
-    border-bottom: 1px solid #fff2;
+    border-bottom: 1px * $scale solid #fff2;
 
     &__url {
-      padding: 0 5px;
+      padding: 0 5px * $scale;
       flex: 1;
       text-decoration: line-through;
   
@@ -79,20 +81,20 @@ const url = 'http://www.yahoo.com/search?q=cat+gifs&hl=de&gl=de&client=android-i
     flex: 1;
     background: #fff;
     color: black;
-    font-size: 8px;
-    padding: 22px 8px 0px;
+    font-size: 8px * $scale;
+    padding: 22px * $scale 8px * $scale 0px * $scale;
 
     h2 {
-      font-size: 12px;
-      margin-bottom: 8px;
+      font-size: 12px * $scale;
+      margin-bottom: 8px * $scale;
     }
 
     p {
-      margin-bottom: 8px;
+      margin-bottom: 8px * $scale;
     }
 
     ul {
-      padding-left: 16px;
+      padding-left: 16px * $scale;
     }
 
     .link {
@@ -103,9 +105,9 @@ const url = 'http://www.yahoo.com/search?q=cat+gifs&hl=de&gl=de&client=android-i
 
     .android-icon {
       position: absolute;
-      top: -8px;
-      left: 6px;
-      font-size: 32px;
+      top: -8px * $scale;
+      left: 6px * $scale;
+      font-size: 32px * $scale;
       transform: rotate(180deg);
       color: #6dd13f;
     }

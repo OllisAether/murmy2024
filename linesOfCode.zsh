@@ -1,1 +1,1 @@
-git ls-files | grep -E '\.ts$|\.vue$|\.scss$|\.html$' | xargs wc -l
+git ls-files | grep -E '\.ts$|\.vue$|\.scss$|\.html$' | xargs wc

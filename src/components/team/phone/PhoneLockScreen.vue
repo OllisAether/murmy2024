@@ -108,17 +108,17 @@
             </span>
           </div>
   
-          <div class="phone-lock-screen__swipeup__icon">
+          <div class="phone-lock-screen__swipeup__icon" :style="{
+            '--swipe-progress': swipeProgress,
+          }">
   
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="12"
               fill="none"
               viewBox="0 0 18 12"
+              class="phone-lock-screen__swipeup__icon__arrow"
               :style="{
-                transition: !isSwiping ? 'transform 0.2s' : 'none',
-                transform: `translateY(-${swipeProgress * 50}px)`
+                transition: !isSwiping ? 'transform 0.2s' : 'none'
               }"
             >
               <path stroke="currentColor" d="M9 1.5V10"/>
@@ -126,9 +126,9 @@
             </svg>
   
             <span
+              class="phone-lock-screen__swipeup__icon__text"
               :style="{
-                transition: !isSwiping ? 'transform 0.2s' : 'none',
-                transform: `translateY(-${swipeProgress * 20}px)`
+                transition: !isSwiping ? 'transform 0.2s' : 'none'
               }"
             >Nach oben wischen</span>
           </div>
@@ -330,7 +330,7 @@ onMounted(() => {
 
     &__clock {
       position: absolute;
-      top: 20px;
+      top: 20px * $scale;
       left: 50%;
       transform: translateX(-50%);
       line-height: 1;
@@ -340,12 +340,12 @@ onMounted(() => {
       align-items: center;
       
       &__time {
-        font-size: 48px;
+        font-size: 48px * $scale;
         font-weight: light;
       }
 
       &__date {
-        font-size: 10px;
+        font-size: 10px * $scale;
         color: #fff;
         text-align: center;
       }
@@ -353,24 +353,34 @@ onMounted(() => {
 
     &__icon {
       position: absolute;
-      bottom: 10px;
+      bottom: 10px * $scale;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
 
       flex-direction: column;
       align-items: center;
-      gap: 5px;
-      font-size: 10px;
+      gap: 5px * $scale;
+      font-size: 10px * $scale;
+
+      &__arrow {
+        width: 18px * $scale;
+        height: 12px * $scale;
+        transform: translateY(calc(var(--swipe-progress) * -50px * $scale));
+      }
+
+      &__text {
+        transform: translateY(calc(var(--swipe-progress) * -20px * $scale));
+      }
     }
   }
 
   &__wrong-pin {
     position: absolute;
-    top: 90px;
-    left: 10px;
-    right: 10px;
-    font-size: 8px;
+    top: 90px * $scale;
+    left: 10px * $scale;
+    right: 10px * $scale;
+    font-size: 8px * $scale;
     text-align: center;
     transform: translateY(-100%);
 
@@ -379,20 +389,28 @@ onMounted(() => {
 
   &__pin {
     position: absolute;
-    top: 90px;
-    left: 10px;
-    right: 10px;
-    height: 25px;
+    top: 90px * $scale;
+    left: 10px * $scale;
+    right: 10px * $scale;
+    height: 25px * $scale;
 
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid white;
+    border-bottom: 1px * $scale solid white;
 
     &__dots {
       flex: 1;
       color: white;
       text-align: center;
+    }
+
+    &__back {
+      svg {
+        width: 18px * $scale;
+        height: 12px * $scale;
+        fill: white;
+      }
     }
   }
 
@@ -402,11 +420,11 @@ onMounted(() => {
     grid-template-rows: repeat(4, 1fr);
 
     position: absolute;
-    bottom: 20px;
+    bottom: 20px * $scale;
     left: 0;
     right: 0;
 
-    padding: 10px;
+    padding: 10px * $scale;
 
     &--disabled {
       pointer-events: none;
@@ -420,9 +438,9 @@ onMounted(() => {
     
       align-items: center;
       color: white;
-      font-size: 12px;
-      padding: 4px 0;
-      margin: 2px;
+      font-size: 12px * $scale;
+      padding: 4px * $scale 0;
+      margin: 2px * $scale;
       cursor: pointer;
 
       &:active {
@@ -430,9 +448,14 @@ onMounted(() => {
       }
 
       span:nth-child(2) {
-        margin-left: 5px;
-        font-size: 8px;
+        margin-left: 5px * $scale;
+        font-size: 8px * $scale;
         color: #888;
+      }
+
+      svg {
+        width: 18px * $scale;
+        height: 12px * $scale;
       }
     }
   }

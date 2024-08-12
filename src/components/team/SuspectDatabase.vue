@@ -1,7 +1,7 @@
 <template>
   <div class="sus-db__wrapper">
     <Transition name="sus-db">
-      <div v-if="open" class="sus-db">
+      <div v-show="open" class="sus-db">
         <div class="sus-db__shapes">
           <VIcon class="sus-db__shapes__icon">mdi-server-security</VIcon>
           <span class="sus-db__shapes__text">Elite</span>
@@ -14,26 +14,57 @@
           </svg>
         </div>
         <div class="sus-db__suspects">
-          <div
+          <button
             v-for="suspect in suspects"
             :key="suspect.id"
-            class="sus-db__suspects__suspect"
+            :class="['sus-db__suspect', {
+              'sus-db__suspect--active': suspect.id === activeSuspect,
+              'sus-db__suspect--generic': suspect.id === 'generic'
+            }]"
+            @click="activeSuspect = suspect.id ?? 'generic'"
           >
-            <img :src="game.getAsset('sasha')?.content">
-            {{ suspect.name }}
-          </div>
+            <div class="sus-db__suspect__img">
+              <SkewBox
+                class="sus-db__suspect__img__skew"
+                :img-height-scale="0.7"
+                :img="suspect.imageAssetId ? game.getAsset(suspect.imageAssetId)?.content : true"
+                :progress-color="suspect.color"
+                :progress="suspect.id === activeSuspect ? 1 : 0"
+              />
+
+              <VIcon v-if="suspect.id === 'generic'">
+                mdi-cards-playing-outline
+              </VIcon>
+            </div>
+            <div class="sus-db__suspect__name">
+              <span>
+                {{ suspect.name }}
+              </span>
+            </div>
+          </button>
         </div>
 
-        <div class="sus-db__entries">
-          <div class="sus-db__entries__title">
-            Datenbank
-          </div>
+        <div class="sus-db__entries" ref="entriesList">
+          <template v-for="(entries, suspectId) in entries">
+            <Transition :name="'sus-db__entries__tab--' + suspectTransition">
+              <div
+                v-show="suspectId === activeSuspect"
+                class="sus-db__entries__tab"
+              >
+                <DatabaseEntry
+                  v-for="entry in entries"
+                  :key="entry.matterId"
+                  :entry="entry"
+                />
 
-          <DatabaseEntry
-            v-for="entry in game.database.entries"
-            :key="entry.matterId"
-            :entry="entry"
-          />
+                <div v-if="entries.length === 0" class="sus-db__entries__no-entries">
+                  <span>
+                    Noch keine Hinweise markiert
+                  </span>
+                </div>
+              </div>
+            </Transition>
+          </template>
         </div>
       </div>
     </Transition>
@@ -50,12 +81,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useModel, watch } from 'vue';
+import { computed, ref, useModel, watch } from 'vue';
 import Timer from '../Timer.vue';
 import { useSwipe } from '@vueuse/core';
-import { suspects } from '@/assets/suspects';
+import { suspects as allSuspects } from '../../../shared/assets/suspects';
 import { useGameManager } from '@/store/gameManager';
 import DatabaseEntry from './DatabaseEntry.vue';
+import SkewBox from '../SkewBox.vue';
+import { Entry } from '../../../shared/suspectDatabase/entry';
+import { Suspect } from '../../../shared/suspectDatabase/suspect';
 
 const game = useGameManager()
 
@@ -67,7 +101,57 @@ const open = useModel(props, 'open');
 
 const btn = ref<HTMLElement | null>(null);
 
-const swipe = useSwipe(btn);
+const swipe = useSwipe(btn, {
+  threshold: 50,
+  passive: false
+});
+
+const suspects = computed<(Suspect & {
+  imageAssetId?: string | undefined
+})[]>(() => {
+  const suspects: (Suspect & {
+    imageAssetId?: string | undefined
+  })[] = [
+    {
+      id: 'generic',
+      name: 'Allgemein',
+      color: '#bdd1d2',
+    },
+  ]
+
+  Object.keys(entries.value).forEach((suspectId) => {
+    const suspect = allSuspects.find(suspect => suspect.id === suspectId);
+
+    if (suspect) {
+      suspects.push(suspect);
+    }
+  });
+
+  return suspects;
+
+});
+
+const entries = computed(() => {
+  const suspectEntries: Record<string, Entry[]> = {
+    generic: [],
+  };
+
+  for (const entry of game.database.entries) {
+    let id = entry.suspectId;
+
+    if (!id || allSuspects.every(suspect => suspect.id !== id)) {
+      id = 'generic';
+    }
+
+    if (!suspectEntries[id]) {
+      suspectEntries[id] = [];
+    }
+
+    suspectEntries[id].push(entry);
+  }
+
+  return suspectEntries;
+});
 
 watch(swipe.direction, () => {
   if (swipe.direction.value === 'left') {
@@ -76,6 +160,44 @@ watch(swipe.direction, () => {
     open.value = true;
   }
 });
+
+const entriesList = ref<HTMLElement | null>(null);
+
+const entriesSwipe = useSwipe(entriesList, {
+  threshold: 50,
+  passive: true
+});
+
+watch(entriesSwipe.direction, () => {
+  const index = suspects.value.findIndex(suspect => suspect.id === activeSuspect.value);
+
+  if (entriesSwipe.direction.value === 'left') {
+    const next = suspects.value[index + 1];
+
+    if (!next) return;
+
+    activeSuspect.value = next.id;
+  } else if (entriesSwipe.direction.value === 'right') {
+    const prev = suspects.value[index - 1];
+
+    if (!prev) return;
+
+    activeSuspect.value = prev.id;
+  }
+});
+
+const suspectTransition = ref<'right' | 'left'>('right');
+const activeSuspect = ref<string>('generic');
+watch(activeSuspect, (val, old) => {
+  const indexNew = suspects.value.findIndex(suspect => suspect.id === val);
+  const indexOld = suspects.value.findIndex(suspect => suspect.id === old);
+
+  if (indexNew > indexOld) {
+    suspectTransition.value = 'right';
+  } else {
+    suspectTransition.value = 'left';
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +223,7 @@ watch(swipe.direction, () => {
     opacity: .2;
 
     &__icon {
+      z-index: 0;
       position: absolute;
       bottom: 2rem;
       right: 12rem;
@@ -108,6 +231,7 @@ watch(swipe.direction, () => {
     }
 
     &__text {
+      z-index: 0;
       position: absolute;
       bottom: 2rem;
       right: 2rem;
@@ -162,8 +286,8 @@ watch(swipe.direction, () => {
       content: '';
       position: absolute;
       top: -50rem;
-      left: -1rem;
-      right: -1rem;
+      left: -.5rem;
+      right: -.5rem;
       bottom: -50rem;
     }
 
@@ -183,9 +307,149 @@ watch(swipe.direction, () => {
     margin-left: -400px;
   }
 
+  &__suspects {
+    z-index: 1;
+    overflow-y : auto;
+    display: flex;
+    padding: .5rem 3rem 1rem;
+    gap: 1rem;
+    mask-image: linear-gradient(90deg, transparent, black 2rem, black calc(100% - 2rem), transparent);
+  }
+
+  &__suspect {
+    display: flex;
+    flex-direction: column;
+
+    &--active {
+      .sus-db__suspect__name{
+        color: white;
+
+        &::before {
+          background: #f44;
+        }
+      }
+
+      .sus-db__suspect__img .v-icon {
+        transform: translate(-50%, -50%)scale(1.2)translateY(-.25rem);
+        color: #fff;
+      }
+    }
+
+    &__img {
+      flex: 0 0 auto;
+      position: relative;
+      width: 7rem;
+      height: 7rem * 5/3;
+      margin-bottom: 1rem;
+
+      &__skew {
+        position: absolute;
+        inset: 0;
+      }
+
+      .v-icon {
+        position: absolute;
+        top: 67%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+
+        font-size: 4rem;
+        color: #fff3;
+        
+        mask-image: linear-gradient(black, #0000);
+        
+        transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), color 1s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+    }
+
+    &__name {
+      display: flex;
+
+      line-height: 1rem;
+      text-align: left;
+      width: 100%;
+      margin-left: -.8rem;
+      color: #fff8;
+
+      transition: color .2s;
+
+      & > span {
+        mask-image: linear-gradient(black, #0008);
+      }
+
+      &::before {
+        flex: 0 0 auto;
+        content: '';
+        width: .3rem;
+        height: .3rem;
+        margin-top: .25rem;
+        margin-right: .4rem;
+        border-radius: 50%;
+        background: $stroke;
+
+        transition: background .2s;
+      }
+    }
+  }
+
   &__entries {
-    overflow-y: auto;
-    height: 100%;
+    z-index: 1;
+    flex: 1 1 auto;
+    height: 0;
+    position: relative;
+    overflow: hidden;
+
+    &__tab {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding-bottom: 2rem;
+      padding-top: 1rem;
+
+      &--left {
+        &-enter-active, &-leave-active {
+          transition: transform .75s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        &-enter-from {
+          transform: translateX(-100%);
+        }
+        &-leave-to {
+          transform: translateX(100%);
+        }
+      }
+
+      &--right {
+        &-enter-active, &-leave-active {
+          transition: transform .75s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        &-enter-from {
+          transform: translateX(100%);
+        }
+        &-leave-to {
+          transform: translateX(-100%);
+        }
+      }
+    }
+
+    &__no-entries {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem 1rem;
+      color: #fff8;
+
+      border-radius: 1rem;
+      margin: 0 1rem;
+
+      background: #BCD1F111;
+      border: 2px dashed #fff1;
+
+      & > span {
+        mask-image: linear-gradient(black, #0008);
+      }
+    }
   }
 }
 </style>

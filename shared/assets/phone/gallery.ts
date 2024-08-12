@@ -1,13 +1,7 @@
-import { ImageEntry } from "../../clue"
+import { Gallery, GalleryItem } from "../../phone/gallery"
 import { idGen } from "../../random"
 
-export interface GalleryItem {
-  assetId: string,
-  date: string,
-  entries?: ImageEntry[]
-}
-
-export const gallery: GalleryItem[] = [
+export const gallery: Gallery = [
   ...Array(28).fill({
     assetId: 'dokumente/VandalismusPost.jpg',
     date: '2013-01-01 02:03',
@@ -18,8 +12,12 @@ export const gallery: GalleryItem[] = [
       rect: { x: 0, y: 0, width: 1, height: 1 },
       entry: {
         matterId: 'vandalismusPost' + index + idGen(),
-        suspectId: 'daphne',
+        suspectId: 'lumine',
         title: 'Vandalismus vom Daphne',
+        description: 'Ein Post von Daphne auf Instagram in dem vandaliertem Schulklo. Vielleicht steckt sie dahinter?',
+        image: {
+          imageAssetId: 'dokumente/VandalismusPost.jpg',
+        },
       }
     }],
   })),

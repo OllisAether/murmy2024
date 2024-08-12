@@ -1,47 +1,8 @@
-import { TextContent } from "@/model/textContent"
-import moment, { Moment } from "moment"
-import { Entry } from "../../../suspectDatabase/entry"
-import { ImageEntry } from "../../../clue"
+import moment from "moment"
 import { idGen } from "../../../random"
+import { Chat } from "../../../phone/chat";
 
-export type Chat = GroupChat | PrivateChat
-
-export interface ChatBase {
-  type: 'private' | 'group'
-  messages: (ChatMessage | ChatTimestamp | ChatImage)[]
-}
-
-export interface GroupChat extends ChatBase {
-  type: 'group'
-  name: string
-  iconAssetId?: string
-  participants: string[]
-}
-
-export interface PrivateChat extends ChatBase {
-  type: 'private'
-  number: string
-}
-
-export interface ChatMessage {
-  type: 'message'
-  sender: string | 'me'
-  content: TextContent | string
-}
-
-export interface ChatImage {
-  type: 'image'
-  sender: string | 'me'
-  imageAssetId: string
-  entries?: ImageEntry[]
-}
-
-export interface ChatTimestamp {
-  type: 'timestamp'
-  timestamp: Moment
-}
-
-export const chats: (PrivateChat | GroupChat)[] = [
+export const chats: Chat[] = [
   {
     type: 'private',
     number: '+1234567890',

@@ -37,6 +37,8 @@ const game = useGameManager();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .viewfinder-screen {
   position: absolute;
   inset: 0;
@@ -49,13 +51,13 @@ const game = useGameManager();
   &__toolbar {
     display: flex;
     justify-content: space-between;
-    height: 30px;
-    padding: 0 10px;
+    height: 30px * $scale;
+    padding: 0 10px * $scale;
     align-items: center;
-    font-size: 10px;
+    font-size: 10px * $scale;
 
     background: linear-gradient(#000, #0f1416);
-    border-bottom: 1px solid #fff2;
+    border-bottom: 1px * $scale solid #fff2;
   }
 
   &__viewfinder {
@@ -71,7 +73,7 @@ const game = useGameManager();
       transform: translate(-50%, -50%);
       width: 100%;
       text-align: center;
-      font-size: 8px;
+      font-size: 8px * $scale;
       color: #8b1f1f;
     }
   }
@@ -81,10 +83,10 @@ const game = useGameManager();
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 10px * $scale;
 
     background: linear-gradient(#000, #0f1416);
-    border-top: 1px solid #fff2;
+    border-top: 1px * $scale solid #fff2;
   }
 
   &__captrue-btn {
@@ -95,47 +97,47 @@ const game = useGameManager();
   
     background: linear-gradient(#444, #ccc);
     box-shadow:
-      -.5px -.5px 1px #0008 inset,
-      .5px .5px 1px #fff8 inset,
-      0 1px 2px #000
+      -.5px * $scale -.5px * $scale 1px * $scale #0008 inset,
+      .5px * $scale .5px * $scale 1px * $scale #fff8 inset,
+      0 1px * $scale 2px * $scale #000
     ;
     color: black;
 
-    padding: 3px;
+    padding: 3px * $scale;
     border-radius: 50%;
 
     & > :deep(.v-icon) {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-top: 1px;
+      padding-top: 1px * $scale;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      border: 1px solid #000;
+      width: 28px * $scale;
+      height: 28px * $scale;
+      border: 1px * $scale solid #000;
       box-shadow:
-        -.3px -.3px 1px #0008,
-        .3px .3px 1px #fff8,
-        -.3px -.3px 1px #0008 inset,
-        .3px .3px 1px #fff8 inset
+        -.3px * $scale -.3px * $scale 1px * $scale #0008,
+        .3px * $scale .3px * $scale 1px * $scale #fff8,
+        -.3px * $scale -.3px * $scale 1px * $scale #0008 inset,
+        .3px * $scale .3px * $scale 1px * $scale #fff8 inset
       ;
       text-shadow:
-        -.3px -.3px 1px #0008,
-        .3px .3px 1px #fff8;
+        -.3px * $scale -.3px * $scale 1px * $scale #0008,
+        .3px * $scale .3px * $scale 1px * $scale #fff8;
     }
   }
 
   &__gallery-btn {
     display: block;
 
-    border: 1px solid #fff;
-    box-shadow: 0 1px 2px #000;
+    border: 1px * $scale solid #fff;
+    box-shadow: 0 1px * $scale 2px * $scale #000;
 
     img {
       pointer-events: none;
       display: block;
-      width: 22px;
-      height: 22px;
+      width: 22px * $scale;
+      height: 22px * $scale;
       object-fit: cover;
     }
   }

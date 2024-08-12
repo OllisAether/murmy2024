@@ -194,10 +194,6 @@ const currentElement = computed(() => {
 
 const currentPage = ref(props.mainClueType === 'diary' ? diary.page : 0);
 watch(currentPage, (page) => {
-  if (props.mainClueType === 'diary') {
-    diary.page = page;
-  }
-
   if (props.mainClueType === 'phone') {
     return;
   }
@@ -208,10 +204,20 @@ watch(currentPage, (page) => {
     currentPage.value = pageCount.value - 1;
   }
 
+  if (props.mainClueType === 'diary') {
+    diary.page = page;
+  }
+
   atLeftEdgeAtStart = false;
   atRightEdgeAtStart = false;
 
   applyTransform(translate.value);
+})
+
+watch(() => diary.page, (page) => {
+  if (props.mainClueType === 'diary') {
+    currentPage.value = page;
+  }
 })
 
 const rootWidth = ref(0);

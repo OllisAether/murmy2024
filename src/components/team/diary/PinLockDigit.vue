@@ -118,7 +118,7 @@ function getGradient (index: number) {
   
   const progress = /* Math.max(-1, Math.min(1 , */(angleDiff / 36 - 5) % 10 + 5/* )); */
 
-  console.log(index, progress, angleDiff);
+  // console.log(index, progress, angleDiff);
 
   const stop1Colors = [Color('#d5dddd'), Color('#9cafaa'), Color('#31434e')];
   const stop2Colors = [Color('#48625a'), Color('#575958'), Color('#899699')];

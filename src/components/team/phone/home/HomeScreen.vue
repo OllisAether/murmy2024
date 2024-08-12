@@ -65,6 +65,8 @@ const game = useGameManager();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .home-screen {
   &__background {
     position: absolute;
@@ -85,8 +87,8 @@ const game = useGameManager();
   &__appgrid {
     flex: 1;
     display: grid;
-    gap: 5px;
-    padding: 5px;
+    gap: 5px * $scale;
+    padding: 5px * $scale;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
   }
@@ -94,10 +96,10 @@ const game = useGameManager();
   &__appbar {
     display: flex;
     align-items: center;
-    padding: 8px 5px;
-    gap: 5px;
-    box-shadow: 0 1px 2px 2px #000,
-                0 3px 1px -1px #fff4 inset;
+    padding: 8px * $scale 5px * $scale;
+    gap: 5px * $scale;
+    box-shadow: 0 1px * $scale 2px * $scale 2px * $scale #000,
+                0 3px * $scale 1px * $scale -1px * $scale #fff4 inset;
     background: linear-gradient(#000a, #888);
 
     & > * {
@@ -106,7 +108,7 @@ const game = useGameManager();
 
     &__menu {
       color: #ddd;
-      filter: drop-shadow(0 1px 1px #0009)drop-shadow(0 0 1px #0006);
+      filter: drop-shadow(0 1px * $scale 1px * $scale #0009)drop-shadow(0 0 1px * $scale #0006);
     }
   }
 }

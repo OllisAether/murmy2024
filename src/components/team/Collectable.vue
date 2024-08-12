@@ -94,14 +94,14 @@ async function startOrbAnimation () {
     {
       top: rect.value.y + rect.value.height / 2 + 'px',
       left: rect.value.x + rect.value.width / 2 + 'px',
-      easing: 'cubic-bezier(0.55, 0.055, 0.675, 0.19)'
+      easing: 'cubic-bezier(0.4, 0, 0.8, 0.1)'
     },
     {
       top: '50%',
-      left: '0',
+      left: !!document.querySelector('.sus-db') ? '12.5rem' : '0',
     }
   ], {
-    duration: 1000,
+    duration: 700,
   })
   
   const animation2 = orb.value.children[0].animate([
@@ -109,7 +109,7 @@ async function startOrbAnimation () {
       width: rect.value.width + 'px',
       height: rect.value.height + 'px',
       opacity: 0,
-      easing: 'cubic-bezier(0.19, 1, 0.22, 1)'
+      easing: 'cubic-bezier(0.5, 0, 0, 1)'
     },
     {
       opacity: 1,
@@ -122,7 +122,7 @@ async function startOrbAnimation () {
       offset: 1
     }
   ], {
-    duration: 1000,
+    duration: 700,
   })
   
   await Promise.all([

@@ -69,11 +69,12 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import { useMainClue } from '@/store/team/mainClue';
-import { gallery, GalleryItem } from '../../../../../shared/assets/phone/gallery';
+import { gallery } from '../../../../../shared/assets/phone/gallery';
 import { computed, onMounted, ref } from 'vue';
 import Collectable from '../../Collectable.vue';
 import { useSwipe } from '@vueuse/core';
 import { watch } from 'vue';
+import { GalleryItem } from '../../../../../shared/phone/gallery';
 
 const phone = useMainClue();
 const game = useGameManager();
@@ -138,8 +139,12 @@ watch(imageIndex, () => {
     const startTime = Date.now();
 
     function scrollUpdate () {
+      if (!imagesPreview.value) {
+        return;
+      }
+
       const progress = Math.min((Date.now() - startTime) / 200, 1);
-      const targetLeft = imageIndex.value * 20;
+      const targetLeft = imageIndex.value * (imagesPreview.value.querySelector('button')?.offsetWidth || 0);
 
       if (!imagesPreview.value) {
         return;
@@ -183,7 +188,7 @@ onMounted(() => {
 
   if (imagesPreview.value) {
     imagesPreview.value.scrollTo({
-      left: imageIndex.value * 20,
+      left: imageIndex.value * (imagesPreview.value.querySelector('button')?.offsetWidth || 0),
       behavior: 'instant'
     });
   }
@@ -191,6 +196,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .image-screen {
   position: absolute;
   inset: 0;
@@ -203,22 +210,22 @@ onMounted(() => {
   &__toolbar {
     display: flex;
     align-items: center;
-    // gap: 10px;
-    height: 30px;
+    // gap: 10px * $scale;
+    height: 30px * $scale;
 
     background: linear-gradient(#000, #0f1416);
-    border-bottom: 1px solid #fff2;
+    border-bottom: 1px * $scale solid #fff2;
   }
 
   &__back-btn {
-    font-size: 8px;
-    width: 30px;
+    font-size: 8px * $scale;
+    width: 30px * $scale;
     height: 100%;
   }
 
   &__title {
     z-index: 1;
-    font-size: 8px;
+    font-size: 8px * $scale;
     line-height: 1.2;
   }
 
@@ -245,11 +252,11 @@ onMounted(() => {
         }
 
         &-enter-from {
-          transform: translate(-50%, -50%)translateX(var(--phone-width));
+          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * $scale));
         }
         
         &-leave-to {
-          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * -1));
+          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * -1 * $scale));
         }
       }
 
@@ -259,11 +266,11 @@ onMounted(() => {
         }
         
         &-enter-from {
-          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * -1));
+          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * -1 * $scale));
         }
         
         &-leave-to {
-          transform: translate(-50%, -50%)translateX(var(--phone-width));
+          transform: translate(-50%, -50%)translateX(calc(var(--phone-width) * $scale));
         }
       }
     }
@@ -275,22 +282,22 @@ onMounted(() => {
 
   &__images {
     display: flex;
-    padding: 0 calc(50% - 10px);
+    padding: 0 calc(50% - 10px * $scale);
     overflow: hidden;
-    gap: 1px;
+    gap: 1px * $scale;
 
     &__image {
       flex-shrink: 0;
       display: block;
-      width: 19px;
-      height: 19px;
+      width: 19px * $scale;
+      height: 19px * $scale;
       opacity: .5;
 
       transition: opacity .2s linear;
 
       &--active {
         opacity: 1;
-        border: 1px solid #fff;
+        border: 1px * $scale solid #fff;
       }
 
       img {

@@ -34,13 +34,14 @@
 </template>
 
 <script setup lang="ts">
-import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/phoneContacts';
+import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { calls } from '@/../shared/assets/phone/calls';
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .history-screen {
   height: 100%;
 
@@ -52,8 +53,8 @@ import { calls } from '@/../shared/assets/phone/calls';
     &__item {
       display: flex;
       align-items: center;
-      padding: 5px 5px 5px 10px;
-      border-bottom: 1px solid #fff2;
+      padding: 5px * $scale 5px * $scale 5px * $scale 10px * $scale;
+      border-bottom: 1px * $scale solid #fff2;
       line-height: 1;
 
       &__info {
@@ -61,17 +62,17 @@ import { calls } from '@/../shared/assets/phone/calls';
       }
 
       &__type-duration {
-        width: 25px;
+        width: 25px * $scale;
       }
 
       &__caller {
-        font-size: 10px;
-        margin-bottom: 2px;
+        font-size: 10px * $scale;
+        margin-bottom: 2px * $scale;
       }
 
       &__time {
         color: #aaa;
-        font-size: 8px;
+        font-size: 8px * $scale;
       }
 
       &__type {
@@ -80,7 +81,7 @@ import { calls } from '@/../shared/assets/phone/calls';
         justify-content: center;
         border-radius: 50%;
 
-        font-size: 8px;
+        font-size: 8px * $scale;
 
         grid-column: 2 / 3;
         grid-row: 1 / 3;
@@ -104,7 +105,7 @@ import { calls } from '@/../shared/assets/phone/calls';
       &__duration {
         grid-column: 2 / 3;
         grid-row: 3 / 4;
-        font-size: 8px;
+        font-size: 8px * $scale;
         color: #aaa;
         text-align: center;
       }

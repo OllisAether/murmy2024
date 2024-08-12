@@ -340,7 +340,14 @@ export const useGameManager = defineStore('gameManager', () => {
   }
 
   function getAsset (name?: string) {
-    return assets.value.find(asset => asset.name === name)
+    const asset = assets.value.find(asset => asset.name === name)
+
+    if (!asset) {
+      console.error('%c[GameManager]', 'color: #4CAF50', 'Asset not found', name)
+      return null
+    }
+
+    return asset
   }
   // #endregion
 

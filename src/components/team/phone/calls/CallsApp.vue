@@ -35,6 +35,8 @@ const phone = useMainClue();
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .calls-app {
   display: flex;
   flex-direction: column;
@@ -43,20 +45,20 @@ const phone = useMainClue();
   &__tabs {
     background: linear-gradient(#000, #0f1416);
     display: flex;
-    border-bottom: 1px solid #fff2;
+    border-bottom: 1px * $scale solid #fff2;
   }
 
   &__tabs__tab {
     flex: 1;
     display: block;
-    padding: 5px;
+    padding: 5px * $scale;
     cursor: pointer;
     transition: background-color 0.2s;
-    font-size: 10px;
+    font-size: 10px * $scale;
 
     &--active {
-      padding-bottom: 3px;
-      border-bottom: 2px solid #4dccff;
+      padding-bottom: 3px * $scale;
+      border-bottom: 2px * $scale solid #4dccff;
     }
   }
 
