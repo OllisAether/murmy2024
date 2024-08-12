@@ -28,7 +28,7 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
-            <MainClueTypeCard />
+            <MainClueTypeCard class="workspace__main-clue" />
 
             <div class="workspace__clue-grid">
               <ClueCard
@@ -62,7 +62,7 @@ const auth = useAuthManager();
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/vars';
+@use '@/scss/vars' as *;
 
 .workspace {
   height: 100%;
@@ -143,6 +143,10 @@ const auth = useAuthManager();
     max-width: calc(100vw - 25rem);
     margin: 0 auto;
     padding: 6rem 8rem;
+  }
+
+  &__main-clue {
+    margin-bottom: 3rem;
   }
 
   &__clue-grid {

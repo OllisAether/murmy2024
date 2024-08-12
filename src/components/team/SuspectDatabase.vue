@@ -201,7 +201,8 @@ watch(activeSuspect, (val, old) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/vars';
+@use '@/scss/vars' as *;
+@use 'sass:math';
 
 .sus-db {
   background: $surface;
@@ -313,6 +314,7 @@ watch(activeSuspect, (val, old) => {
     display: flex;
     padding: .5rem 3rem 1rem;
     gap: 1rem;
+    justify-content: center;
     mask-image: linear-gradient(90deg, transparent, black 2rem, black calc(100% - 2rem), transparent);
   }
 
@@ -339,7 +341,7 @@ watch(activeSuspect, (val, old) => {
       flex: 0 0 auto;
       position: relative;
       width: 7rem;
-      height: 7rem * 5/3;
+      height: 7rem * math.div(5, 3);
       margin-bottom: 1rem;
 
       &__skew {

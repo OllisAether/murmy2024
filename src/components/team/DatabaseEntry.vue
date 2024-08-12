@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';

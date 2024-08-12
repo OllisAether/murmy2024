@@ -8,9 +8,9 @@
     />
     <PinLock class="front-cover__pin-lock" />
 
-    <VBtn @click="diary.locked = !diary.locked">
+    <!-- <VBtn @click="diary.locked = !diary.locked">
       Lock
-    </VBtn>
+    </VBtn> -->
   </Page>
 </template>
 

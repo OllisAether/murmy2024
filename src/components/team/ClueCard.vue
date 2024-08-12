@@ -273,6 +273,7 @@ function openClue() {
     height: 100%;
     transform: translate(-.75rem, -.5rem);
     object-fit: contain;
+    filter: drop-shadow(0 0 1rem #0007);
   }
 
   &__clue-display {
