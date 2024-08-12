@@ -13,6 +13,7 @@ import { clues as cluesAsset } from "@/../shared/assets/clues";
 import { getEntries } from "../../shared/textContent";
 import { gallery } from "../../shared/assets/phone/gallery";
 import { chats } from "../../shared/assets/phone/messages/chats";
+import { transcripts } from "../../shared/assets/transcripts";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -103,8 +104,8 @@ export const useGameManager = defineStore('gameManager', () => {
         ws.send('getClues')
       }),
       new Promise<void>(resolve => {
-        ws.once('currentMedia').then(() => {
-          console.log('Fetched currentMedia')
+        ws.once('media').then(() => {
+          console.log('Fetched media')
           resolve()
         })
         ws.send('getMedia')
@@ -154,6 +155,9 @@ export const useGameManager = defineStore('gameManager', () => {
       })()
     ])
 
+    // Reinitialize game manager when tab is focused
+    document.addEventListener('visibilitychange', onFocus)
+
     loading.value = false
     initialized.value = true
     console.log('GameManager initialized')
@@ -163,19 +167,58 @@ export const useGameManager = defineStore('gameManager', () => {
     console.log('GameManager deinitialized')
 
     stopTimerInterval()
-    timer.value = {
-      startTime: null,
-      currentTime: 0,
-      duration: 0,
-      state: 'stopped'
-    }
+    // timer.value = {
+    //   startTime: null,
+    //   currentTime: 0,
+    //   duration: 0,
+    //   state: 'stopped'
+    // }
 
     stopTimeSync()
-    timeSync.value = {
-      ping: null,
-      diff: 0
-    }
+    // timeSync.value = {
+    //   ping: null,
+    //   diff: 0
+    // }
+
+    // phase.value = {
+    //   type: Phase.Idle,
+    //   meta: {}
+    // }
+
+    // vote.value = {
+    //   pools: {},
+    //   session: null
+    // }
+
+    // voteOptions.value = []
+
+    // currentMedia.value = null
+    // watchedMedia.value = []
+
+    // database.value = {
+    //   entries: []
+    // }
+
+    // clues.value = {
+    //   mainClueType: null,
+    //   available: [],
+    //   unlocked: [],
+    //   investigationCoins: 0
+    // }
+
+    document.removeEventListener('visibilitychange', onFocus)
     initialized.value = false
+  }
+
+  async function reinitGameManager () {
+    deinitGameManager()
+    await initGameManager()
+  }
+
+  function onFocus () {
+    if (document.visibilityState === 'visible') {
+      reinitGameManager()
+    }
   }
 
   // #region Fullscreen
@@ -599,10 +642,16 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Media
   const currentMedia = ref<string | null>(null)
+  const watchedMedia = ref<string[]>([])
 
-  ws.onAction('currentMedia', (data: string) => {
-    console.log('Current media', data)
-    currentMedia.value = data
+  const availableTranscripts = computed(() => transcripts.filter((transcript) => watchedMedia.value.includes(transcript.for)))
+
+  ws.onAction('media', (data: {
+    currentMedia: string | null
+    watchedMedia: string[]
+  }) => {
+    currentMedia.value = data.currentMedia
+    watchedMedia.value = data.watchedMedia
   })
 
   function mediaFinished () {
@@ -733,6 +782,9 @@ export const useGameManager = defineStore('gameManager', () => {
     triggerBoardSkip,
 
     currentMedia: readonly(currentMedia),
+    watchedMedia: readonly(watchedMedia),
+    availableTranscripts,
+
     mediaFinished,
     mediaProgress,
     mediaDuration,

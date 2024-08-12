@@ -1,7 +1,7 @@
 import { Database } from '../../database'
 import { Game } from '../game'
 import { clues } from '../../../shared/assets/clues'
-import { VoteResults, Votes } from '../../../shared/vote'
+import { Votes } from '../../../shared/vote'
 import { colorize, Fg } from '../../console'
 
 export class ClueManager {
@@ -40,7 +40,8 @@ export class ClueManager {
       !Array.isArray(data.availableClues) ||
       data.availableClues?.some((clueId: any) => typeof clueId !== 'string')) {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid availableClues data', data.availableClues)
-      return
+    } else {
+      this.availableClues = data.availableClues as string[]
     }
 
     if (!data.unlockedClues ||
@@ -51,12 +52,14 @@ export class ClueManager {
         || (data.unlockedClues as Record<string, any>)?.[teamId]
           ?.some((clueId: any) => typeof clueId !== 'string'))) {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid unlockedClues data', data.unlockedClues)
-      return
+    } else {
+      this.unlockedClues = data.unlockedClues as Record<string, string[]>
     }
 
     if (typeof data.givenInvestigationCoins !== 'number') {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid givenInvestigationCoins data', data.givenInvestigationCoins)
-      return
+    } else {
+      this.givenInvestigationCoins = data.givenInvestigationCoins
     }
 
     if (typeof data.usedInvestigationCoins !== 'object' ||
@@ -64,7 +67,8 @@ export class ClueManager {
       Object.keys(data.usedInvestigationCoins!)
         ?.some(teamId => typeof (data.usedInvestigationCoins as Record<string, any>)?.[teamId] !== 'number')) {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid usedInvestigationCoins data', data.usedInvestigationCoins)
-      return
+    } else {
+      this.usedInvestigationCoins = data.usedInvestigationCoins as Record<string, number>
     }
 
     if (typeof data.mainClueType !== 'object' ||
@@ -73,20 +77,23 @@ export class ClueManager {
         ?.some(teamId => (data.mainClueType as Record<string, any>)?.[teamId] !== 'phone'
         && (data.mainClueType as Record<string, any>)?.[teamId] !== 'diary')) {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid mainClueType data', data.mainClueType)
-      return
+    } else {
+      this.mainClueType = data.mainClueType as Record<string, 'phone' | 'diary'>
     }
 
     if (typeof data.assignFurtherMainClueTypesRandomly !== 'boolean') {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid assignFurtherMainClueTypesRandomly data', data.assignFurtherMainClueTypesRandomly)
-      return
+    } else {
+      this.assignFurtherMainClueTypesRandomly = data.assignFurtherMainClueTypesRandomly
     }
 
-    this.availableClues = data.availableClues as string[]
-    this.unlockedClues = data.unlockedClues as Record<string, string[]>
-    this.givenInvestigationCoins = data.givenInvestigationCoins
-    this.usedInvestigationCoins = data.usedInvestigationCoins as Record<string, number>
-    this.mainClueType = data.mainClueType as Record<string, 'phone' | 'diary'>
-    this.assignFurtherMainClueTypesRandomly = data.assignFurtherMainClueTypesRandomly
+    // this.availableClues = data.availableClues as string[]
+    // this.availableTranscripts = data.availableTranscripts as string[]
+    // this.unlockedClues = data.unlockedClues as Record<string, string[]>
+    // this.givenInvestigationCoins = data.givenInvestigationCoins
+    // this.usedInvestigationCoins = data.usedInvestigationCoins as Record<string, number>
+    // this.mainClueType = data.mainClueType as Record<string, 'phone' | 'diary'>
+    // this.assignFurtherMainClueTypesRandomly = data.assignFurtherMainClueTypesRandomly
   }
 
   getAvailableClues() {

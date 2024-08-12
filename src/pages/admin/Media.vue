@@ -28,6 +28,17 @@
               <VBtn
                 icon
                 variant="tonal"
+                :color="game.watchedMedia.includes(media.name) ? 'primary' : 'default'"
+                size="small"
+                class="mr-2"
+                @click="toggleWatched(media)"
+              >
+                <VIcon>mdi-eye-outline</VIcon>
+              </VBtn>
+
+              <VBtn
+                icon
+                variant="tonal"
                 size="small"
                 v-if="game.currentMedia !== media.name"
                 @click="admin.setMedia(media.name)"
@@ -110,4 +121,12 @@ const media = computed(() => [
   const type = getType(asset);
   return type === 'video' || type === 'audio';
 }))
+
+function toggleWatched (media: Asset) {
+  if (game.watchedMedia.includes(media.name)) {
+    admin.removeWatchedMedia(media.name);
+  } else {
+    admin.addWatchedMedia(media.name);
+  }
+}
 </script>

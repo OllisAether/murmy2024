@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="clue"
+    v-if="clue || transcript"
     :class="['clue-card', {
       'clue-card--unlocked': isUnlocked,
       'clue-card--affordable': isAffordable,
@@ -13,7 +13,9 @@
       <template v-if="isUnlocked">
         <img
           class="clue-card__thumbnail"
-          :src="game.getAsset(clue.thumbnailAssetId)?.content"
+          :src="transcript
+            ? game.getAsset(transcript.thumbnailAssetId)?.content
+            : game.getAsset(clue?.thumbnailAssetId)?.content"
         >
       </template>
       <template v-else>
@@ -22,13 +24,13 @@
         </span>
         <span class="clue-card__cost">
           <VIcon size="1rem">mdi-star-four-points-circle</VIcon>
-          {{ clue.cost }}
+          {{ clue?.cost }}
         </span>
       </template>
     </button>
 
     <div class="clue-card__title">
-      {{ clue.title }}
+      {{ clue?.title ?? transcript?.title }}
     </div>
 
     <VOverlay
@@ -53,7 +55,7 @@
           Bestätigen
           <span class="clue-card__confirmation-overlay-cost">
             <VIcon size="1em">mdi-star-four-points-circle</VIcon>
-            {{ clue.cost }}
+            {{ clue?.cost }}
           </span>
         </Btn>
         <Btn
@@ -78,28 +80,33 @@
     >
       <div class="clue-card__clue-display">
         <div class="clue-card__clue-display__name">
-          {{ clue.title }}
+          {{ clue?.title ?? transcript?.title }}
         </div>
         <div class="clue-card__clue-display__content">
-          <template v-if="clue.type === 'image'">
-            <ClueImageViewer
-              :assetIds="([clue.image?.assetId].filter(x => x) as string[])"
-              :entries="clue.image?.entries"
-            />
+          <template v-if="clue">
+            <template v-if="clue.type === 'image'">
+              <ClueImageViewer
+                :assetIds="([clue.image?.assetId].filter(x => x) as string[])"
+                :entries="clue.image?.entries"
+              />
+            </template>
+            <template v-else>
+              <ClueImageViewer
+                :assetIds="clue.imageStack?.assetIds"
+                :entries="clue.imageStack?.entries"
+              />
+            </template>
           </template>
-          <template v-else>
-            <ClueImageViewer
-              :assetIds="clue.imageStack?.assetIds"
-              :entries="clue.imageStack?.entries"
-            />
+          <template v-else-if="transcript">
+            <pre class="text-left">{{ transcript.content }}</pre>
           </template>
         </div>
-        <div class="clue-card__clue-display__description">
-          {{ clue.description }}
+        <div v-if="clue?.description" class="clue-card__clue-display__description">
+          {{ clue?.description }}
         </div>
         <div class="clue-card__clue-display__actions">
           <div class="clue-card__clue-display__tooltip">
-            <div>
+            <div v-if="clue">
               <VIcon size="1.25rem">mdi-gesture-spread</VIcon>
               <span>
                 Zoomen
@@ -132,20 +139,24 @@ import { clues } from '../../../shared/assets/clues';
 import { computed, ref } from 'vue';
 import Btn from '../Btn.vue';
 import ClueImageViewer from './ClueImageViewer.vue';
+import { Transcript } from '../../../shared/transcript';
 
 const game = useGameManager();
 
 const props = defineProps<{
-  clueId: string;
+  clueId?: string;
+  transcript?: Transcript
 }>();
 
 const clue = clues.find((c) => c.id === props.clueId);
-const isUnlocked = computed(() => game.clues.unlocked.includes(props.clueId));
+const isUnlocked = computed(() => props.transcript ? true : game.clues.unlocked.includes(props.clueId ?? ''));
 const isAffordable = computed(() => game.clues.investigationCoins >= (clue?.cost ?? 0));
 
 const showBuyConfirmation = ref(false);
 
 async function unlockClue() {
+  if (!props.clueId) return;
+
   const res = await game.unlockClue(props.clueId);
 
   console.log(res);
@@ -158,7 +169,7 @@ async function unlockClue() {
 const showClue = ref(false);
 
 function openClue() {
-  if (isUnlocked.value){
+  if (isUnlocked.value) {
     showClue.value = true;
   }
 }
@@ -197,7 +208,8 @@ function openClue() {
   }
   
   &__title {
-    padding: 1rem 1rem 0 0;
+    padding: 1rem .5rem 0 0;
+    margin-left: -1rem;
     font-size: .8rem;
     opacity: 0.5;
 

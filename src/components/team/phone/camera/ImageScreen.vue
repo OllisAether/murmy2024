@@ -84,8 +84,8 @@ const image = computed<GalleryItem | undefined>(() => gallery[imageIndex.value])
 
 const imageRefs = ref<HTMLImageElement[]>([]);
 
-const imageWidth = ref(0);
-const imageHeight = ref(0);
+const imageWidth = ref(game.getAsset(image.value?.assetId)?.metadata.width || 0);
+const imageHeight = ref(game.getAsset(image.value?.assetId)?.metadata.height || 0);
 
 const container = ref<HTMLDivElement | null>(null);
 
@@ -129,7 +129,7 @@ watch(imageRefs, () => {
     imageWidth.value = imageRefs.value[0].naturalWidth;
     imageHeight.value = imageRefs.value[0].naturalHeight;
   }
-}, { deep: true });
+}, { deep: true, immediate: true });
 
 const imagesPreview = ref<HTMLDivElement | null>(null);
 let scrollAnimationFrame: number | null = null;

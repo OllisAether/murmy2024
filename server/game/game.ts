@@ -654,16 +654,19 @@ export class Game {
 
   // #region Media
   private currentMedia: string | null = null
+  private watchedMedia: Set<string> = new Set()
 
   saveMedia () {
     Database.get().saveCollection('media', {
-      currentMedia: this.currentMedia
+      currentMedia: this.currentMedia,
+      watchedMedia: Array.from(this.watchedMedia)
     })
   }
 
   loadMedia () {
     const media = Database.get().getCollection('media') as {
       currentMedia: string
+      watchedMedia: string[]
     }
 
     if (!media) {
@@ -671,30 +674,47 @@ export class Game {
     }
 
     this.currentMedia = media.currentMedia
+    this.watchedMedia = new Set(media.watchedMedia)
   }
 
-  sendCurrentMediaToClients (client?: WebSocketClient) {
+  sendMediaToClients (client?: WebSocketClient) {
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending media to clients')
 
     if (client) {
-      client.send('currentMedia', this.currentMedia)
+      client.send('media', {
+        currentMedia: this.currentMedia,
+        watchedMedia: Array.from(this.watchedMedia)
+      })
       return
     }
 
     this.clients
       .filter((c) => c.type !== Role.Unauthorized)
-      .forEach((c) => c.send('currentMedia', this.currentMedia))
+      .forEach((c) => c.send('media', {
+        currentMedia: this.currentMedia,
+        watchedMedia: Array.from(this.watchedMedia)
+      }))
   }
 
   getMedia () {
     return this.currentMedia
   }
 
+  getWatchedMedia () {
+    return Array.from(this.watchedMedia)
+  }
+
   setMedia (media: string | null) {
     console.log(colorize('[Media]', Fg.Cyan), 'Setting media', media)
+
     this.currentMedia = media
+    
+    if (media) {
+      this.watchedMedia.add(media)
+    }
+
     this.saveMedia()
-    this.sendCurrentMediaToClients()
+    this.sendMediaToClients()
   }
 
   mediaFinishedListeners: (() => void)[] = []
@@ -783,6 +803,18 @@ export class Game {
     }
 
     board.send('getMedia', this.currentMedia)
+  }
+
+  removeWatchedMedia (media: string) {
+    this.watchedMedia.delete(media)
+    this.saveMedia()
+    this.sendMediaToClients()
+  }
+
+  addWatchedMedia (media: string) {
+    this.watchedMedia.add(media)
+    this.saveMedia()
+    this.sendMediaToClients()
   }
 
   sendMediaDurationToAdmins (duration: number) {

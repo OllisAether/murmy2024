@@ -10,7 +10,7 @@ export class SetMedia extends CueHandle {
     const media = ctx.getFieldValue(ctx.options.media);
 
     if (typeof media !== 'string') {
-      console.error(colorize('[Cue: SetMedia]', Fg.Magenta), 'Media is not a string');
+      console.warn(colorize('[Cue: SetMedia]', Fg.Magenta), 'Media is not a string');
       next();
       return;
     }
@@ -28,7 +28,7 @@ export class WaitForMediaFinished extends CueHandle {
     console.log(colorize('[Cue: WaitForMediaFinished]', Fg.Magenta), 'Start');
 
     if (!Game.get().getMedia()) {
-      console.error(colorize('[Cue: WaitForMediaFinished]', Fg.Magenta), 'No media');
+      console.warn(colorize('[Cue: WaitForMediaFinished]', Fg.Magenta), 'No media');
       next();
       return;
     }

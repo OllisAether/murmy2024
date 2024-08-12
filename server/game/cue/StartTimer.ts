@@ -20,7 +20,7 @@ export class StartTimer extends CueHandle {
       typeof duration !== 'number' ||
       duration <= 0
     ) {
-      console.log(colorize('[Cue: StartTimer]', Fg.Magenta), 'Invalid duration', options.duration)
+      console.warn(colorize('[Cue: StartTimer]', Fg.Magenta), 'Invalid duration', options.duration)
       next()
       return
     }

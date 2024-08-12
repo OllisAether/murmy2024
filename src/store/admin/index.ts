@@ -487,6 +487,14 @@ export const useAdmin = defineStore('admin', () => {
   function skipMedia () {
     ws.send('skipMedia')
   }
+
+  function addWatchedMedia (media: string) {
+    ws.send('addWatchedMedia', { media })
+  }
+
+  function removeWatchedMedia (media: string) {
+    ws.send('removeWatchedMedia', { media })
+  }
   // #endregion
 
   // #region Suspect Databases
@@ -555,6 +563,8 @@ export const useAdmin = defineStore('admin', () => {
     seekMedia,
     setMedia,
     skipMedia,
+    addWatchedMedia,
+    removeWatchedMedia,
 
     suspectDatabases,
     removeEntry,

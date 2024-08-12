@@ -85,7 +85,7 @@ export function genericActions (client: WebSocketClient): {
     {
       action: 'getMedia',
       handler: () => {
-        game.sendCurrentMediaToClients(client);
+        game.sendMediaToClients(client);
       }
     }
   ]

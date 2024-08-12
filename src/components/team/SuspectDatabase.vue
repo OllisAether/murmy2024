@@ -33,7 +33,7 @@
               />
 
               <VIcon v-if="suspect.id === 'generic'">
-                mdi-cards-playing-outline
+                mdi-cards-playing
               </VIcon>
             </div>
             <div class="sus-db__suspect__name">

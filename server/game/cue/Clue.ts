@@ -27,7 +27,7 @@ export class AddClues extends CueHandle {
     const availableClues = ctx.getFieldValue(ctx.options.clues) as string[]
 
     if (!Array.isArray(availableClues) || availableClues.some(clueId => typeof clueId !== 'string')) {
-      console.error('[Cue: AddClues] ClueIds is not an array')
+      console.warn('[Cue: AddClues] ClueIds is not an array')
       next()
       return
     }

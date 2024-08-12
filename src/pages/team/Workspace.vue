@@ -30,12 +30,48 @@
           <div class="workspace__content">
             <MainClueTypeCard class="workspace__main-clue" />
 
+            <div class="workspace__content__header">
+              Transkripte
+
+              <HelpBtn>
+                Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Medien. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
+
+                Es lohnt sich, die Transkripte genau zu lesen, da sie oft <b class="help-color">wichtige Informationen</b> enthalten, die <b class="help-color">markiert</b> werden können.
+              </HelpBtn>
+            </div>
+
+            <div class="workspace__clue-grid mb-8">
+              <ClueCard
+                v-for="transcript in game.availableTranscripts"
+                :key="transcript.id"
+                :transcript="transcript"
+              />
+            </div>
+
+            <div class="workspace__no-clues" v-if="game.availableTranscripts.length === 0">
+              Keine Transkripte verfügbar
+            </div>
+
+            <div class="workspace__content__header">
+              Hinweise
+
+              <HelpBtn>
+                Hinweise enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
+
+                Ihr könnt Hinweise mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
+              </HelpBtn>
+            </div>
+
             <div class="workspace__clue-grid">
               <ClueCard
                 v-for="clue in game.clues.available"
                 :key="clue"
                 :clueId="clue"
               />
+            </div>
+
+            <div class="workspace__no-clues" v-if="game.clues.available.length === 0">
+              Keine Hinweise verfügbar
             </div>
           </div>
         </div>
@@ -48,6 +84,7 @@
 import BlurGradient from '@/components/BlurGradient.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
+import HelpBtn from '@/components/team/HelpBtn.vue';
 import MainClueTypeCard from '@/components/team/MainClueTypeCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';
@@ -143,6 +180,25 @@ const auth = useAuthManager();
     max-width: calc(100vw - 25rem);
     margin: 0 auto;
     padding: 6rem 8rem;
+
+    &__header {
+      margin: 1.5rem -1rem;
+      font-size: 1.5rem;
+      font-family: $fontDisplay;
+      font-weight: 300;
+      gap: .5rem;
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  &__no-clues {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    opacity: 0.5;
   }
 
   &__main-clue {

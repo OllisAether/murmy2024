@@ -87,7 +87,7 @@ export class If extends CueHandle {
       }
 
       // No ElseIf or Else or EndIf found
-      console.error(colorize('[Cue: If]', Fg.Magenta), 'No ElseIf or Else or EndIf found')
+      console.warn(colorize('[Cue: If]', Fg.Magenta), 'No ElseIf or Else or EndIf found')
       next()
     }
   }
