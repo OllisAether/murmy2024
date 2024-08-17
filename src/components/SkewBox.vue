@@ -22,6 +22,7 @@
       <g
         class="skew-box__content"
         :style="{
+          willChange: 'clip-path',
           clipPath: (progress !== undefined) ? `inset(${-padding}px ${-padding}px ${(height + padding * 2) * progress - padding / 2}px ${-padding}px)` : undefined
         }"
       >
@@ -29,17 +30,17 @@
           :d="`
             M${width - roundedCorners} 0
             A${roundedCorners} ${roundedCorners} 0 0 1 ${width} ${roundedCorners}
-            L${width} ${height - cornerCut - roundedCorners * sqrtEighth}
+            L${width} ${height - cornerCut - roundedCorners / sqrtEight}
         
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners * sqrtEighth} ${height - cornerCut + roundedCorners * sqrtEighth}
-            L${width - cornerCut + roundedCorners * sqrtEighth} ${height - roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners * sqrtEighth} ${height}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners / sqrtEight} ${height - cornerCut + roundedCorners / sqrtEight}
+            L${width - cornerCut + roundedCorners / sqrtEight} ${height - roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners / sqrtEight} ${height}
             L${roundedCorners} ${height}
             A${roundedCorners} ${roundedCorners} 0 0 1 0 ${height - roundedCorners}
-            L0 ${cornerCut + roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${roundedCorners * sqrtEighth} ${cornerCut - roundedCorners * sqrtEighth}
-            L${cornerCut - roundedCorners * sqrtEighth} ${roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${cornerCut + roundedCorners * sqrtEighth} 0
+            L0 ${cornerCut + roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${roundedCorners / sqrtEight} ${cornerCut - roundedCorners / sqrtEight}
+            L${cornerCut - roundedCorners / sqrtEight} ${roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${cornerCut + roundedCorners / sqrtEight} 0
             Z
           `"
           :fill="`url(#skew-box-fill-${id})`"
@@ -52,10 +53,10 @@
         <path
           :d="`
             M${displaceDistance + roundedCorners} ${height + displaceDistance}
-            L${width - cornerCut + displaceDistance / 2 - bigCorner * sqrtEighth} ${height + displaceDistance}
-            A${bigCorner} ${bigCorner} 0 0 0 ${width - cornerCut + displaceDistance / 2 + bigCorner * sqrtEighth} ${height + displaceDistance - bigCorner * sqrtEighth}
-            L${width + displaceDistance - bigCorner * sqrtEighth} ${height - cornerCut + displaceDistance / 2 + bigCorner * sqrtEighth}
-            A${bigCorner} ${bigCorner} 0 0 0 ${width + displaceDistance} ${height - cornerCut + displaceDistance / 2 - bigCorner * sqrtEighth}
+            L${width - cornerCut + displaceDistance / 2 - bigCorner / sqrtEight} ${height + displaceDistance}
+            A${bigCorner} ${bigCorner} 0 0 0 ${width - cornerCut + displaceDistance / 2 + bigCorner / sqrtEight} ${height + displaceDistance - bigCorner / sqrtEight}
+            L${width + displaceDistance - bigCorner / sqrtEight} ${height - cornerCut + displaceDistance / 2 + bigCorner / sqrtEight}
+            A${bigCorner} ${bigCorner} 0 0 0 ${width + displaceDistance} ${height - cornerCut + displaceDistance / 2 - bigCorner / sqrtEight}
             L${width + displaceDistance} ${displaceDistance + roundedCorners}
           `"
           :stroke="color.lighten(Math.max(-.2, 1 - color.lightness() / 100 * 4)).string()"
@@ -72,6 +73,7 @@
         v-if="hasProgress"
         class="skew-box__progress"
         :style="{
+          willChange: 'clip-path',
           clipPath: `inset(${(height + padding * 2) * (1 - progress!) - padding / 2}px ${-padding}px ${-padding}px ${-padding}px)`
         }"
       >
@@ -80,17 +82,17 @@
             M${width - roundedCorners} 0
             A${roundedCorners} ${roundedCorners} 0 0 1 ${width} ${roundedCorners}
 
-            L${width} ${height - cornerCut - roundedCorners * sqrtEighth}
+            L${width} ${height - cornerCut - roundedCorners / sqrtEight}
             
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners * sqrtEighth} ${height - cornerCut + roundedCorners * sqrtEighth}
-            L${width - cornerCut + roundedCorners * sqrtEighth} ${height - roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners * sqrtEighth} ${height}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners / sqrtEight} ${height - cornerCut + roundedCorners / sqrtEight}
+            L${width - cornerCut + roundedCorners / sqrtEight} ${height - roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners / sqrtEight} ${height}
             L${roundedCorners} ${height}
             A${roundedCorners} ${roundedCorners} 0 0 1 0 ${height - roundedCorners}
-            L0 ${cornerCut + roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${roundedCorners * sqrtEighth} ${cornerCut - roundedCorners * sqrtEighth}
-            L${cornerCut - roundedCorners * sqrtEighth} ${roundedCorners * sqrtEighth}
-            A${roundedCorners} ${roundedCorners} 0 0 1 ${cornerCut + roundedCorners * sqrtEighth} 0
+            L0 ${cornerCut + roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${roundedCorners / sqrtEight} ${cornerCut - roundedCorners / sqrtEight}
+            L${cornerCut - roundedCorners / sqrtEight} ${roundedCorners / sqrtEight}
+            A${roundedCorners} ${roundedCorners} 0 0 1 ${cornerCut + roundedCorners / sqrtEight} 0
             Z
           `"
           :fill="`url(#skew-box-progress-fill-${id})`"
@@ -104,10 +106,10 @@
         <path
           :d="`
             M${displaceDistance + roundedCorners} ${height + displaceDistance}
-            L${width - cornerCut + displaceDistance / 2 - bigCorner * sqrtEighth} ${height + displaceDistance}
-            A${bigCorner} ${bigCorner} 0 0 0 ${width - cornerCut + displaceDistance / 2 + bigCorner * sqrtEighth} ${height + displaceDistance - bigCorner * sqrtEighth}
-            L${width + displaceDistance - bigCorner * sqrtEighth} ${height - cornerCut + displaceDistance / 2 + bigCorner * sqrtEighth}
-            A${bigCorner} ${bigCorner} 0 0 0 ${width + displaceDistance} ${height - cornerCut + displaceDistance / 2 - bigCorner * sqrtEighth}
+            L${width - cornerCut + displaceDistance / 2 - bigCorner / sqrtEight} ${height + displaceDistance}
+            A${bigCorner} ${bigCorner} 0 0 0 ${width - cornerCut + displaceDistance / 2 + bigCorner / sqrtEight} ${height + displaceDistance - bigCorner / sqrtEight}
+            L${width + displaceDistance - bigCorner / sqrtEight} ${height - cornerCut + displaceDistance / 2 + bigCorner / sqrtEight}
+            A${bigCorner} ${bigCorner} 0 0 0 ${width + displaceDistance} ${height - cornerCut + displaceDistance / 2 - bigCorner / sqrtEight}
             L${width + displaceDistance} ${displaceDistance + roundedCorners}
           `"
           :stroke="progressColor.lighten(Math.max(-.2, 1 - progressColor.lightness() / 100 * 4)).string()"
@@ -142,12 +144,13 @@
             preserveAspectRatio="xMidYMid slice"
             :style="{
               transformOrigin: 'center',
-              transform: `skew(${skew}deg)`
+              transform: `skew(${skew}deg)`,
+              filter: hasProgress ? `saturate(${Math.min(1, progress! * 2)})` : '',
             }"
-            :filter="hasProgress ? `url(#desaturate-${id})` : ''"
           />
         </g>
       </g>
+      <!-- :filter="hasProgress ? `url(#desaturate-${id})` : ''" -->
 
       <defs>
         <linearGradient :id="`skew-box-fill-${id}`" x1="0" x2="0" y1="0" y2="1">
@@ -180,14 +183,14 @@
         <mask v-if="img" :id="`skew-box-path-${id}`">
           <path
             :d="`
-              M 0 0
-              L${width} 0 ${width} ${rawHeight - cornerCut - roundedCorners * sqrtEighth}
+              M${strokeWidth} 0
+              L${width - strokeWidth} 0 ${width - strokeWidth} ${rawHeight - cornerCut - roundedCorners / sqrtEight}
               
-              A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners * sqrtEighth} ${rawHeight - cornerCut + roundedCorners * sqrtEighth}
-              L${width - cornerCut + roundedCorners * sqrtEighth} ${rawHeight - roundedCorners * sqrtEighth}
-              A${roundedCorners} ${roundedCorners} 0 0 1 ${width - cornerCut - roundedCorners * sqrtEighth} ${rawHeight}
-              L${roundedCorners} ${rawHeight}
-              A${roundedCorners} ${roundedCorners} 0 0 1 0 ${rawHeight - roundedCorners} Z
+              A${roundedCorners} ${roundedCorners} 0 0 1 ${width - roundedCorners / sqrtEight - strokeWidth} ${rawHeight - cornerCut + roundedCorners / sqrtEight - strokeWidth / sqrtThree}
+              L${width - cornerCut + roundedCorners / sqrtEight - strokeWidth / sqrtThree} ${rawHeight - roundedCorners / sqrtEight - strokeWidth}
+              A${roundedCorners - strokeWidth / sqrtTwo} ${roundedCorners - strokeWidth / sqrtTwo} 0 0 1 ${width - cornerCut - roundedCorners / sqrtEight} ${rawHeight - strokeWidth}
+              L${roundedCorners} ${rawHeight - strokeWidth}
+              A${roundedCorners - strokeWidth / sqrtTwo} ${roundedCorners - strokeWidth / sqrtTwo} 0 0 1 ${strokeWidth} ${rawHeight - roundedCorners} Z
             `"
             fill="white"
             stroke="white"
@@ -205,7 +208,9 @@ import { idGen } from '../../shared/random';
 import Color from 'color';
 
 const root = ref<HTMLElement | null>(null)
-const sqrtEighth = Math.sqrt(0.125)
+const sqrtEight = Math.sqrt(8) // 2.8284271247
+const sqrtThree = Math.sqrt(3) // 1.7320508076
+const sqrtTwo = Math.sqrt(2) // 1.4142135624
 
 const props = withDefaults(defineProps<{
   cornerCut?: number
@@ -230,7 +235,7 @@ const props = withDefaults(defineProps<{
   color: '#1E2023',
   skew: 10,
   imgHeightScale: 0.8,
-  strokeWidth: 2,
+  strokeWidth: 3,
   shadowStrokeWidth: 3,
   padding: 8,
   progressScale: 0.85

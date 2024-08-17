@@ -13,7 +13,7 @@ export class WaitForBoardSkip extends CueHandle {
   private off: (() => void) | null = null
 
   public start(next: CueHandleNext): void {
-    console.log(colorize('[Cue: WaitForSkip]', Fg.Magenta), 'Start')
+    console.log(colorize('[Cue: WaitForBoardSkip]', Fg.Magenta), 'Start')
 
     const game = Game.get()
     

@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 import { useMainClue } from '@/store/team/mainClue';
-import { defineProps } from 'vue';
 
 const props = defineProps<{
   iconSrc: string

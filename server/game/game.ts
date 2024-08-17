@@ -917,10 +917,13 @@ export class Game {
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending clues to admins')
 
     const clues = {
-      available: this.clueManager.getAvailableClues(),
       unlocked: this.clueManager.getUnlockedClues(),
-      investigationCoins: this.clueManager.getInvestigationCoins(),
+      investigationCoins: {
+        total: this.clueManager.getGivenInvestigationCoins(),
+        usedByTeam: this.clueManager.getInvestigationCoinDelta(),
+      },
       mainClueType: this.clueManager.getMainClueType(),
+      assignFurtherMainClueTypesRandomly: this.clueManager.getAssignFurtherMainClueTypesRandomly(),
     }
 
     if (client) {
@@ -929,13 +932,13 @@ export class Game {
         return
       }
 
-      client.send('clues', clues)
+      client.send('adminClues', clues)
       return
     }
 
     this.clients
       .filter((c) => c.type === Role.Admin)
-      .forEach((c) => (c as AdminClient).send('clues', clues))
+      .forEach((c) => (c as AdminClient).send('adminClues', clues))
   }
   // #endregion
 

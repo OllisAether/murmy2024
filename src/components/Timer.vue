@@ -43,7 +43,7 @@ const game = useGameManager()
 
 const remaining = computed(() => (game.timer.duration - game.timer.currentTime) / 1000)
 const timeString = computed(() => {
-  if (game.timer.state === 'stopped') return ['00', '00']
+  if (game.timer.state === 'stopped') return ['––', '––']
 
   const minutes = Math.floor(remaining.value / 60);
   const seconds = Math.floor(remaining.value % 60);

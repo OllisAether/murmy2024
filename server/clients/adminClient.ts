@@ -29,9 +29,9 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding team', payload);
 
-          const id = payload.id;
-          const name = payload.name;
-          const code = payload.code;
+          const id = payload?.id;
+          const name = payload?.name;
+          const code = payload?.code;
 
           if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -119,9 +119,9 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Editing team', payload);
 
-          const id = payload.id;
-          const name = payload.name;
-          const code = payload.code;
+          const id = payload?.id;
+          const name = payload?.name;
+          const code = payload?.code;
 
           if (typeof name !== 'string' || typeof code !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -210,7 +210,7 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing team', payload);
 
-          const id = payload.id;
+          const id = payload?.id;
 
           const team = game.getTeams().find((t) => t.id === id);
 
@@ -254,7 +254,18 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Kicking client', payload);
 
-          const id = payload.id;
+          const id = payload?.id;
+
+          if (!id || typeof id !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('kickClient:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           const client = game.getClient(id);
 
@@ -282,7 +293,18 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Logging out client', payload);
 
-          const id = payload.id;
+          const id = payload?.id;
+
+          if (!id || typeof id !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('logoutClient:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           const client = game.getClient(id);
 
@@ -309,8 +331,19 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting client team', payload);
 
-          const clientId = payload.clientId;
-          const teamId = payload.teamId;
+          const clientId = payload?.clientId;
+          const teamId = payload?.teamId;
+
+          if (typeof teamId !== 'string' || typeof clientId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setClientTeam:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           if (game.getClients().find((c) => c.type === Role.Team && (c as TeamClient).teamId === teamId)) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Team already linked to a client', teamId);
@@ -331,7 +364,18 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting client board', payload);
 
-          const clientId = payload.clientId;
+          const clientId = payload?.clientId;
+
+          if (typeof clientId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setClientBoard:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           if (game.getClients().find((c) => c.type === Role.Board)) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Board already exists');
@@ -361,7 +405,18 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing help request', payload);
 
-          const teamId = payload.teamId;
+          const teamId = payload?.teamId;
+
+          if (typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('removeHelpRequest:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           game.removeHelpRequest(teamId);
         }
@@ -387,7 +442,7 @@ export class AdminClient extends WebSocketClient {
         action: 'setTime',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting time', payload);
-          const time = payload.time;
+          const time = payload?.time;
 
           if (typeof time !== 'number') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -407,7 +462,7 @@ export class AdminClient extends WebSocketClient {
         action: 'setDuration',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting duration', payload);
-          const duration = payload.duration;
+          const duration = payload?.duration;
 
           if (typeof duration !== 'number') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -437,7 +492,7 @@ export class AdminClient extends WebSocketClient {
         action: 'nextCue',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Next cue', payload);
-          const index = payload.index;
+          const index = payload?.index;
 
           if (typeof index !== 'number' && index !== undefined) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -469,7 +524,7 @@ export class AdminClient extends WebSocketClient {
         action: 'setCurrentPlayback',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting current playback', payload);
-          const index = payload.index;
+          const index = payload?.index;
 
           if (typeof index !== 'number') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -489,10 +544,10 @@ export class AdminClient extends WebSocketClient {
         action: 'setPlaybackFields',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting playback fields', payload);
-          const index = payload.index;
-          const fields = payload.fields;
+          const index = payload?.index;
+          const fields = payload?.fields;
 
-          if (typeof index !== 'number' || typeof fields !== 'object') {
+          if (typeof index !== 'number' || typeof fields !== 'object' || Array.isArray(fields) || !fields) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('setPlaybackFields:response', {
@@ -510,8 +565,8 @@ export class AdminClient extends WebSocketClient {
         action: 'setPlaybackTrigger',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting playback trigger', payload);
-          const index = payload.index;
-          const trigger = payload.trigger;
+          const index = payload?.index;
+          const trigger = payload?.trigger;
 
           if (typeof index !== 'number' || typeof trigger !== 'string' || ['auto', 'manual'].indexOf(trigger) === -1) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -531,7 +586,7 @@ export class AdminClient extends WebSocketClient {
         action: 'setManualTriggerOverride',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting manual trigger override', payload);
-          const value = payload.value;
+          const value = payload?.value;
 
           if (typeof value !== 'boolean') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -555,7 +610,7 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding vote option', payload);
 
-          const option = payload.option as VoteOption;
+          const option = payload?.option as VoteOption;
 
           if (typeof option.title !== 'string' || option.title.length === 0 ||
               typeof option.id !== 'string' || option.id.length === 0 ||
@@ -601,7 +656,7 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Editing vote option', payload);
 
-          const option = payload.option as VoteOption;
+          const option = payload?.option as VoteOption;
 
           if (typeof option.title !== 'string' || option.title.length === 0 ||
               typeof option.id !== 'string' || option.id.length === 0 ||
@@ -615,7 +670,7 @@ export class AdminClient extends WebSocketClient {
                 Object.keys(option.options).some(k => typeof k !== 'string' ||
                   !Array.isArray(option.options![k]) || option.options![k].some(o => typeof o !== 'string')
               )))) {
-            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload.option);
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload?.option);
 
             this.send('editVoteOption:response', {
               success: false,
@@ -647,7 +702,18 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing vote option', payload);
 
-          const id = payload.id;
+          const id = payload?.id;
+
+          if (typeof id !== 'string' || id.length === 0) {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('removeVoteOption:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
 
           if (!game.voteManager.getVoteOptions().find((o) => o.id === id)) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'ID not found', id);
@@ -672,7 +738,7 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding pool', payload);
 
-          const pool = payload.pool;
+          const pool = payload?.pool;
 
           if (typeof pool !== 'string' || pool.length === 0) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -697,7 +763,7 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing pool', payload);
 
-          const pool = payload.pool;
+          const pool = payload?.pool;
 
           if (typeof pool !== 'string' || pool.length === 0) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -722,8 +788,8 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding option to pool', payload);
 
-          const pool = payload.pool;
-          const option = payload.option;
+          const pool = payload?.pool;
+          const option = payload?.option;
 
           if (typeof pool !== 'string' || pool.length === 0 ||
               typeof option !== 'string' || option.length === 0) {
@@ -749,8 +815,8 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing option from pool', payload);
 
-          const pool = payload.pool;
-          const option = payload.option;
+          const pool = payload?.pool;
+          const option = payload?.option;
 
           if (typeof pool !== 'string' || pool.length === 0 ||
               typeof option !== 'string' || option.length === 0) {
@@ -785,7 +851,7 @@ export class AdminClient extends WebSocketClient {
         action: 'setMedia',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting media', payload);
-          const media = payload.media;
+          const media = payload?.media;
 
           if (typeof media !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -806,7 +872,7 @@ export class AdminClient extends WebSocketClient {
         action: 'seekMedia',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Seeking media', payload);
-          const time = payload.time;
+          const time = payload?.time;
 
           if (typeof time !== 'number') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -833,7 +899,7 @@ export class AdminClient extends WebSocketClient {
         action: 'addWatchedMedia',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding watched media', payload);
-          const media = payload.media;
+          const media = payload?.media;
 
           if (typeof media !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -847,7 +913,7 @@ export class AdminClient extends WebSocketClient {
         action: 'removeWatchedMedia',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing watched media', payload);
-          const media = payload.media;
+          const media = payload?.media;
 
           if (typeof media !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -871,10 +937,10 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding entry', payload);
 
-          const teamId = payload.teamId;
-          const entry = payload.entry;
+          const teamId = payload?.teamId;
+          const entry = payload?.entry;
 
-          if (typeof teamId !== 'string' || typeof entry !== 'object') {
+          if (typeof teamId !== 'string' || typeof entry !== 'object' || Array.isArray(entry) || !entry) {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addEntry:response', {
@@ -885,7 +951,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          game.suspectDatabaseManager.addEntry(teamId, entry);
+          game.suspectDatabaseManager.addEntry(teamId, entry as any);
 
           this.send('addEntry:response', {
             success: true,
@@ -897,8 +963,8 @@ export class AdminClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing entry', payload);
 
-          const teamId = payload.teamId;
-          const matterId = payload.matterId;
+          const teamId = payload?.teamId;
+          const matterId = payload?.matterId;
 
           if (typeof teamId !== 'string' || typeof matterId !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
@@ -914,6 +980,244 @@ export class AdminClient extends WebSocketClient {
           game.suspectDatabaseManager.removeEntry(teamId, matterId);
 
           this.send('removeEntry:response', {
+            success: true,
+          });
+        }
+      },
+      // #endregion
+    
+      // #region Clues
+      {
+        action: 'getAdminClues',
+        handler: () => {
+          game.sendCluesToAdmins(this);
+        }
+      },
+      {
+        action: 'setGivenInvestigationCoins',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting given investigation coins', payload);
+
+          const amount = payload?.amount;
+
+          if (typeof amount !== 'number') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setGivenInvestigationCoins:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.setInvestigationCoins(amount);
+
+          this.send('setGivenInvestigationCoins:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'setInvestigationCoinDelta',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting investigation coin delta', payload);
+
+          const delta = payload?.delta;
+          const teamId = payload?.teamId;
+
+          if (typeof delta !== 'number' || typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setInvestigationCoinDelta:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.setInvestigationCoinDelta(teamId, delta);
+
+          this.send('setInvestigationCoinDelta:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'addClue',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding clue', payload);
+
+          const clueId = payload?.clueId;
+
+          if (typeof clueId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('addClue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.addClue(clueId);
+
+          this.send('addClue:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'removeClue',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing clue', payload);
+
+          const clueId = payload?.clueId;
+
+          if (typeof clueId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('removeClue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.removeClue(clueId);
+
+          this.send('removeClue:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'unlockClue',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Unlocking clue', payload);
+
+          const clueId = payload?.clueId;
+          const teamId = payload?.teamId;
+
+          if (typeof clueId !== 'string' || typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('unlockClue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.unlockClueWithoutCost(teamId, clueId);
+
+          this.send('unlockClue:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'lockClue',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Locking clue', payload);
+
+          const clueId = payload?.clueId;
+          const teamId = payload?.teamId;
+
+          if (typeof clueId !== 'string' || typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('lockClue:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.lockClue(teamId, clueId);
+
+          this.send('lockClue:response', {
+            success: true,
+          });
+        },
+      },
+      {
+        action: 'setAssignFurtherMainClueTypesRandomly',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting assign further main clue types randomly', payload);
+
+          const value = payload?.value;
+
+          if (typeof value !== 'boolean') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setAssignFurtherMainClueTypesRandomly:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.setAssignFurtherMainClueTypesRandomly(value);
+
+          this.send('setAssignFurtherMainClueTypesRandomly:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'setMainClueType',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting main clue type', payload);
+
+          const type = payload?.type;
+          const teamId = payload?.teamId;
+
+          if (((typeof type !== 'string' || !['phone', 'diary'].includes(type)) && !(type === undefined || type === null)) || typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setMainClueType:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.setMainClueType(teamId, type as 'phone' | 'diary');
+
+          this.send('setMainClueType:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'assignRandomMainClueType',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Assigning random main clue type', payload);
+
+          const teamId = payload?.teamId;
+
+          if (typeof teamId !== 'string' && teamId !== undefined) {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('assignRandomMainClueType:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.assignRandomMainClueType(teamId);
+
+          this.send('assignRandomMainClueType:response', {
             success: true,
           });
         }

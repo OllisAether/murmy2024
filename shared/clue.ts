@@ -1,9 +1,7 @@
 import { Entry } from "./suspectDatabase/entry"
-import { TextContent } from "./textContent"
+// import { TextContent } from "./textContent"
 
-export type ClueTypes =
-  'image' | 'imageStack' |
-  'text' | 'video'
+export type ClueTypes = 'images'
 
 export interface Clue <T extends ClueTypes> {
   id: string
@@ -13,20 +11,16 @@ export interface Clue <T extends ClueTypes> {
   thumbnailAssetId: string
   description?: string
 
-  image?: T extends 'image' ? {
-    assetId: string
-    entries: ImageEntry[]
-  } : never
-  imageStack?: T extends 'imageStack' ? {
+  images?: T extends 'images' ? {
     assetIds: string[]
-    entries: ImageEntry[]
+    entries?: ImageEntry[]
   } : never
-  text?: T extends 'text' ? {
-    content: TextContent | string
-  } : never
-  video?: T extends 'video' ? {
-    assetId: string
-  } : never
+  // text?: T extends 'text' ? {
+  //   content: TextContent | string
+  // } : never
+  // video?: T extends 'video' ? {
+  //   assetId: string
+  // } : never
 }
 
 export interface ImageEntry {

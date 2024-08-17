@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
-import { readFileSync } from 'fs'
 import { configDotenv } from 'dotenv'
 import mkCert from 'vite-plugin-mkcert'
 import vuetify from 'vite-plugin-vuetify'
+import { VitePWA } from 'vite-plugin-pwa'
 
 configDotenv({
   path: '.env'
@@ -17,19 +17,20 @@ export default defineConfig({
     vuetify(),
     svgLoader(),
     mkCert(),
-    // VitePWA({
-    //   registerType: 'autoUpdate',
-    //   manifest: {
-    //     name: 'Murder Mystery Night',
-    //     short_name: 'Murder Mystery Night',
-    //     theme_color: '#000000',
-    //     background_color: '#f93400',
-    //     display: 'standalone',
-    //   },
-    //   devOptions: {
-    //     enabled: true
-    //   }
-    // })
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Murder Mystery Night',
+        short_name: 'Murder Mystery Night',
+        theme_color: '#000000',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [{ src: 'favicon.png' }]
+      },
+      devOptions: {
+        enabled: false
+      }
+    })
   ],
   build: {
     outDir: 'dist/client',

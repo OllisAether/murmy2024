@@ -1,21 +1,20 @@
 import { Clue, ClueTypes } from '../clue';
-import { idGen } from '../random';
 
 export const clues: Clue<ClueTypes>[] = [
   {
     id: 'fp1',
-    type: 'image',
+    type: 'images',
     cost: 10,
     title: 'Gebäudeplan: EG',
     description: 'A clue that will help you solve the mystery.',
     thumbnailAssetId: 'floorplan/floorplan_eg.png',
-    image: {
-      assetId: 'floorplan/floorplan_eg.png',
+    images: {
+      assetIds: ['floorplan/floorplan_eg.png'],
       entries: [
         {
           index: 0,
           entry: {
-            matterId: idGen(),
+            matterId: 'camera1',
             suspectId: 'carpentier',
 
             title: 'Kamera 1',
@@ -42,38 +41,35 @@ export const clues: Clue<ClueTypes>[] = [
   },
   {
     id: 'fp2',
-    type: 'image',
+    type: 'images',
     cost: 10,
     title: 'Gebäudeplan: 1. OG',
     description: 'A clue that will help you solve the mystery. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.',
     thumbnailAssetId: 'floorplan/floorplan_1og.png',
-    image: {
-      assetId: 'floorplan/floorplan_1og.png',
-      entries: []
+    images: {
+      assetIds: ['floorplan/floorplan_1og.png']
     }
   },
   {
     id: 'fp3',
-    type: 'image',
+    type: 'images',
     cost: 10,
     title: 'Gebäudeplan: 2. OG',
     description: 'A clue that will help you solve the mystery.',
     thumbnailAssetId: 'floorplan/floorplan_2og.png',
-    image: {
-      assetId: 'floorplan/floorplan_2og.png',
-      entries: []
+    images: {
+      assetIds: ['floorplan/floorplan_2og.png']
     },
   },
   {
     id: 'druckverlauf',
-    type: 'imageStack',
+    type: 'images',
     cost: 10,
     title: 'Druckverlauf',
     description: 'A clue that will help you solve the mystery.',
     thumbnailAssetId: 'dokumente/druckverlauf/Druckverlauf-01.png',
-    imageStack: {
+    images: {
       assetIds: Array(30).fill(0).map((_, i) => `dokumente/druckverlauf/Druckverlauf-${String(i + 1).padStart(2, '0')}.png`),
-      entries: []
     }
   }
 ]

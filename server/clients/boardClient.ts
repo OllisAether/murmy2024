@@ -29,7 +29,7 @@ export class BoardClient extends WebSocketClient {
         action: 'mediaDuration',
         handler: (payload) => {
           console.log(colorize('[Client: Board]', Fg.Blue), 'Received media duration', payload);
-          const { duration } = payload;
+          const duration = payload?.duration;
 
           if (typeof duration !== 'number') {
             console.error(colorize('[Client: Board]', Fg.Blue), 'Invalid duration', duration);
@@ -43,7 +43,7 @@ export class BoardClient extends WebSocketClient {
         action: 'mediaState',
         handler: (payload) => {
           console.log(colorize('[Client: Board]', Fg.Blue), 'Received media state', payload);
-          const { state } = payload;
+          const state = payload?.state;
 
           if (typeof state !== 'string') {
             console.error(colorize('[Client: Board]', Fg.Blue), 'Invalid state', state);
@@ -62,7 +62,7 @@ export class BoardClient extends WebSocketClient {
         action: 'mediaProgress',
         handler: (payload) => {
           // console.log(colorize('[Client: Board]', Fg.Blue), 'Received media progress', payload);
-          const { progress } = payload;
+          const progress = payload?.progress;
 
           if (typeof progress !== 'number') {
             return;

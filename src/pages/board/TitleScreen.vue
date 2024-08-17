@@ -4,14 +4,9 @@
       :class="['title', {
         'title--countdown': game.timer.state !== 'stopped',
       }]">
-      <span>(</span>
-      <span>
-        Murder Mystery<br>
-        <span class="night">
-          Night
-        </span>
-      </span>
-      <span>)</span>
+        <span>Murder</span>
+        <span>Mystery</span>
+        <span>Night</span>
     </div>
 
     <Transition name="countdown">
@@ -41,19 +36,15 @@ const game = useGameManager()
   transform: translate(-50%, -50%);
 
   white-space: nowrap;
-  font-size: min(10vh, 5vw);
+  font-size: 9vw;
   text-align: center;
   line-height: 1;
-
   font-family: $fontDisplay;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  gap: 0.1em;
+  mask-image: linear-gradient(black, #0004);
 
-  .night, &>span:nth-child(1), &>span:nth-child(3) {
-    font-size: 2.5em;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);
 

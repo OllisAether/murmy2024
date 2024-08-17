@@ -692,17 +692,13 @@ export const useGameManager = defineStore('gameManager', () => {
     const entries: Entry[] = []
 
     cluesAsset.forEach((clue) => {
-      clue.image?.entries?.forEach((entry) => {
+      clue.images?.entries?.forEach((entry) => {
         entries.push(entry.entry)
       })
 
-      clue.imageStack?.entries?.forEach((entry) => {
-        entries.push(entry.entry)
-      })
-
-      getEntries(clue.text?.content ?? '').forEach((entry) => {
-        entries.push(entry)
-      })
+      // getEntries(clue.text?.content ?? '').forEach((entry) => {
+      //   entries.push(entry)
+      // })
     })
 
     gallery.forEach((item) => {

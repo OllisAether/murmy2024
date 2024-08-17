@@ -103,7 +103,14 @@ const btn = ref<HTMLElement | null>(null);
 
 const swipe = useSwipe(btn, {
   threshold: 50,
-  passive: false
+  passive: false,
+  onSwipeEnd: () => {
+    if (swipe.direction.value === 'left') {
+      open.value = false;
+    } else if (swipe.direction.value === 'right') {
+      open.value = true;
+    }
+  }
 });
 
 const suspects = computed<(Suspect & {
@@ -164,8 +171,7 @@ watch(swipe.direction, () => {
 const entriesList = ref<HTMLElement | null>(null);
 
 const entriesSwipe = useSwipe(entriesList, {
-  threshold: 50,
-  passive: true
+  threshold: 50
 });
 
 watch(entriesSwipe.direction, () => {
@@ -216,7 +222,7 @@ watch(activeSuspect, (val, old) => {
 
   &__wrapper {
     position: relative;
-    box-shadow: 0 0 10rem rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 2rem rgba(0, 0, 0, .5);
   }
 
   &__shapes {
@@ -321,6 +327,7 @@ watch(activeSuspect, (val, old) => {
   &__suspect {
     display: flex;
     flex-direction: column;
+    font-family: $fontHeading;
 
     &--active {
       .sus-db__suspect__name{
@@ -367,7 +374,7 @@ watch(activeSuspect, (val, old) => {
     &__name {
       display: flex;
 
-      line-height: 1rem;
+      line-height: 1.2rem;
       text-align: left;
       width: 100%;
       margin-left: -.8rem;

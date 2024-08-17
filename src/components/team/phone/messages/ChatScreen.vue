@@ -47,7 +47,7 @@
           </div>
           <div class="chat-screen__message__content">
             <div v-if="message.type === 'message'" class="chat-screen__message__text">
-              {{ message.content }}
+              <TextContentRenderer :textContent="message.content" />
             </div>
             <div v-else class="chat-screen__message__image">
               <img :src="game.getAsset(message.imageAssetId)?.content">
@@ -99,6 +99,7 @@ import { chats } from '../../../../../shared/assets/phone/messages/chats';
 import { computed } from 'vue';
 import Collectable from '../../Collectable.vue';
 import { GroupChat, PrivateChat } from '../../../../../shared/phone/chat';
+import TextContentRenderer from '../../TextContentRenderer.vue';
 
 const game = useGameManager();
 const phone = useMainClue();

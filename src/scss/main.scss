@@ -1,3 +1,5 @@
+@use './vars' as *;
+
 @import './fonts';
 
 body, html {
@@ -5,9 +7,7 @@ body, html {
   color: white;
   font-size: 16px !important;
 
-  &:not(.admin) {
-    font-family: Sora, sans-serif;
-  }
+  font-family: $fontFamily;
 }
 
 // prevent user selection
@@ -34,7 +34,7 @@ body, html {
   }
 }
 
-// /* prevent pull-to-refresh for Safari 9~15 */
+/* prevent pull-to-refresh for Safari 9~15 */
 @media screen and (pointer: coarse) and (not (display-mode: standalone)) {
   @supports (-webkit-backdrop-filter: blur(1px)) and (not (overscroll-behavior-y: none))  {
     html:not(.admin) {
@@ -52,17 +52,17 @@ body, html {
 }
 
 /* prevent pull-to-refresh for Chrome 63+ */
-body:not(.admin) {
-  overscroll-behavior-y: none;
-  overflow: hidden;
-}
+// body:not(.admin) {
+//   overscroll-behavior-y: none;
+//   overflow: hidden;
+// }
 
 /* prevent pinch-zoom for Chrome 36+, Safari 13+ */
-* {
-  // overflow: hidden;
-  touch-action: pan-x pan-y;
-  // min-height: 100%; /* prevent pinch-zoom at page bottom */
-}
+// body:not(.admin) {
+//   // overflow: hidden;
+//   touch-action: pan-x pan-y;
+//   // min-height: 100%; /* prevent pinch-zoom at page bottom */
+// }
 
 :not(.admin) #app {
   position: fixed;
@@ -75,41 +75,15 @@ body:not(.admin) {
   height: 0;
 }
 
-.app-layout {
-  height: 100%;
-  font-family: 'SF Pro Text', sans-serif;
-
-  & > .v-toolbar {
-    z-index: 1;
-    position: absolute;
-    top: 0;
-    padding-top: 4rem;
-  }
-
-  & > .v-main {
-    position: absolute;
-    inset: 0;
-    padding-top: 8rem;
-    height: 100%;
-    overflow: auto;
-  }
-}
-
 .no-transition {
   .v-slider-track__background, .v-slider-track__fill, .v-slider-thumb {
     transition: none;
   }
 }
 
-// @media screen and (max-width: 768px) {
-//   html.admin {
-//     font-size: 12px !important;
-//   }
-// }
-
 .v-overlay__scrim {
-  background: rgba(0, 0, 0, 0.25) !important;
+  background: #08121680 !important;
   opacity: 1 !important;
-  -webkit-backdrop-filter: blur(1rem) !important;
-  backdrop-filter: blur(1rem) !important;
+  -webkit-backdrop-filter: blur(2rem) !important;
+  backdrop-filter: blur(2rem) !important;
 }

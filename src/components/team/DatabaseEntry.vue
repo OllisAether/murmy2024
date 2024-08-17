@@ -130,7 +130,9 @@ const root = ref<HTMLDivElement | null>(null)
   }
 
   &__title {
-    padding: .5rem 0;
+    padding: .5rem 0 .1rem;
+    font-family: $fontHeading;
+    font-size: 1.2rem;
   }
 
   &__description {
@@ -160,6 +162,7 @@ const root = ref<HTMLDivElement | null>(null)
     border-radius: .5rem;
 
     img {
+      display: block;
       pointer-events: none;
       width: 100%;
       height: auto;
@@ -187,7 +190,7 @@ const root = ref<HTMLDivElement | null>(null)
 
     display: flex;
     flex-direction: row;
-    align-items: center;
+    // align-items: center;
     padding: 1rem 1rem 1rem 2rem;
     gap: 1rem;
 
@@ -214,13 +217,16 @@ const root = ref<HTMLDivElement | null>(null)
       z-index: 1;
       flex: 1 1 auto;
       width: 0;
+      font-size: 1.2rem;
+      padding: 1rem 0;
 
       display: flex;
       flex-direction: column;
     }
 
     &__title {
-      font-size: 1.8rem;
+      font-family: $fontHeading;
+      font-size: 2rem;
     }
 
     &__description {

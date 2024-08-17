@@ -36,10 +36,13 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .btn {
   position: relative;
   padding: 1rem 1.5rem;
   line-height: 1rem;
+  font-family: $fontHeading;
 
   transition: .3s opacity, .1s filter;
 

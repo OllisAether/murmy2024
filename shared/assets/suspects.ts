@@ -38,3 +38,7 @@ export const suspects: Suspect[] = [
     imageAssetId: 'thumbnails/lumine.png',
   }
 ]
+
+export function getSuspectById(id: string) {
+  return suspects.find(suspect => suspect.id === id)
+}

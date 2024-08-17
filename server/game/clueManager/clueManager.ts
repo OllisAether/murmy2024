@@ -116,6 +116,18 @@ export class ClueManager {
     return this.givenInvestigationCoins - (this.usedInvestigationCoins[teamId] || 0)
   }
 
+  getInvestigationCoinDelta(teamId?: string) {
+    if (!teamId) {
+      return this.usedInvestigationCoins
+    }
+
+    return this.usedInvestigationCoins[teamId] || 0
+  }
+  
+  getGivenInvestigationCoins() {
+    return this.givenInvestigationCoins
+  }
+
   useInvestigationCoins(teamId: string, amount: number) {
     if (this.getInvestigationCoins(teamId) < amount) {
       console.warn(colorize('[ClueManager]', Fg.Blue), `Team ${teamId} does not have enough investigation coins`)
@@ -128,7 +140,10 @@ export class ClueManager {
 
     this.usedInvestigationCoins[teamId] += amount
 
-    Game.get().sendCluesToClients()
+    const teamClient = Game.get().getTeamClient(teamId)
+
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
     this.save()
 
     return true
@@ -141,7 +156,24 @@ export class ClueManager {
 
     this.usedInvestigationCoins[teamId] -= amount
 
-    Game.get().sendCluesToClients()
+    const teamClient = Game.get().getTeamClient(teamId)
+
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  setInvestigationCoinDelta(teamId: string, amount: number) {
+    if (!this.usedInvestigationCoins[teamId]) {
+      this.usedInvestigationCoins[teamId] = 0
+    }
+
+    this.usedInvestigationCoins[teamId] = amount
+
+    const teamClient = Game.get().getTeamClient(teamId)
+
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -149,6 +181,15 @@ export class ClueManager {
     this.givenInvestigationCoins += amount
 
     Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  setInvestigationCoins(amount: number) {
+    this.givenInvestigationCoins = amount
+
+    Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -157,6 +198,25 @@ export class ClueManager {
       .push(...clueIds.filter(clueId => !this.availableClues.includes(clueId)))
 
     Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  addClue(clueId: string) {
+    if (!this.availableClues.includes(clueId)) {
+      this.availableClues.push(clueId)
+    }
+
+    Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  removeClue(clueId: string) {
+    this.availableClues = this.availableClues.filter(id => id !== clueId)
+
+    Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -206,9 +266,58 @@ export class ClueManager {
     const teamClient = game.getTeamClient(teamId)
 
     teamClient && game.sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
     this.save()
 
     return true
+  }
+
+  unlockClueWithoutCost(teamId: string, clueId: string) {
+    const game = Game.get()
+    const team = game.getTeam(teamId)
+
+    const clue = clues.find(clue => clue.id === clueId)
+
+    if (!clue) {
+      console.error(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} not found`)
+      return false
+    }
+
+    if (!team) {
+      console.error(colorize('[ClueManager]', Fg.Blue), `Team ${teamId} not found`)
+      return false
+    }
+
+    if (this.unlockedClues[teamId] && this.unlockedClues[teamId].includes(clueId)) {
+      console.warn(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} already unlocked for team ${teamId}`)
+      return false
+    }
+
+    if (!this.unlockedClues[teamId]) {
+      this.unlockedClues[teamId] = []
+    }
+
+    this.unlockedClues[teamId].push(clueId)
+
+    const teamClient = game.getTeamClient(teamId)
+
+    teamClient && game.sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  lockClue(teamId: string, clueId: string) {
+    if (!this.unlockedClues[teamId] || !this.unlockedClues[teamId].includes(clueId)) {
+      console.warn(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} not unlocked for team ${teamId}`)
+    }
+
+    this.unlockedClues[teamId] = this.unlockedClues[teamId].filter(id => id !== clueId)
+
+    const teamClient = Game.get().getTeamClient(teamId)
+
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
+    this.save()
   }
 
   assignRandomMainClueType(teamId?: string) {
@@ -220,7 +329,25 @@ export class ClueManager {
     let numberOfDiaryClues = Object.values(this.mainClueType).filter(type => type === 'diary').length
 
     if (teamId) {
-      if (numberOfPhoneClues <= numberOfDiaryClues) {
+      // if (numberOfPhoneClues <= numberOfDiaryClues) {
+      //   this.mainClueType[teamId] = 'phone'
+      //   numberOfPhoneClues++
+      // } else {
+      //   this.mainClueType[teamId] = 'diary'
+      //   numberOfDiaryClues++
+      // }
+
+      const randomValue = Math.random()
+      const phoneChance = 1 - numberOfPhoneClues / (teams.length - 1)
+      const diaryChance = 1 - numberOfDiaryClues / (teams.length - 1)
+
+      const chance = (phoneChance + diaryChance) === 0
+        ? 0.5
+        : phoneChance / (phoneChance + diaryChance)
+
+      console.log(randomValue, chance, phoneChance, diaryChance)
+
+      if (randomValue < chance) {
         this.mainClueType[teamId] = 'phone'
         numberOfPhoneClues++
       } else {
@@ -231,6 +358,7 @@ export class ClueManager {
       console.log(colorize('[ClueManager]', Fg.Blue), 'Main clue type assigned randomly to team', teamId, this.mainClueType[teamId])
     } else {
       const teamsWithoutMainClueType = teams.filter(teamId => !this.mainClueType[teamId])
+        .sort(() => Math.random() - 0.5)
       
       for (const teamId of teamsWithoutMainClueType) {
         if (numberOfPhoneClues <= numberOfDiaryClues) {
@@ -244,7 +372,15 @@ export class ClueManager {
       console.log(colorize('[ClueManager]', Fg.Blue), 'Main clue types assigned randomly', this.mainClueType)
     }
 
-    game.sendCluesToClients()
+    if (teamId) {
+      const teamClient = game.getTeamClient(teamId)
+      
+      teamClient && game.sendCluesToClients(teamClient)
+    } else {
+      game.sendCluesToClients()
+    }
+
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -265,6 +401,7 @@ export class ClueManager {
     console.log(colorize('[ClueManager]', Fg.Blue), 'Diary votes', diaryVotes)
 
     Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -275,6 +412,7 @@ export class ClueManager {
     this.assignFurtherMainClueTypesRandomly = value
 
     Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 
@@ -289,17 +427,24 @@ export class ClueManager {
 
     if (!this.mainClueType[teamId]) {
       if (this.assignFurtherMainClueTypesRandomly) {
-        this.assignRandomMainClueType()
+        this.assignRandomMainClueType(teamId)
       }
     }
 
     return this.mainClueType[teamId] ?? null
   }
 
-  setMainClueType(teamId: string, type: 'phone' | 'diary') {
-    this.mainClueType[teamId] = type
+  setMainClueType(teamId: string, type: 'phone' | 'diary' | null) {
+    if (!type) {
+      delete this.mainClueType[teamId]
+    } else {
+      this.mainClueType[teamId] = type
+    }
 
-    Game.get().sendCluesToClients()
+    const teamClient = Game.get().getTeamClient(teamId)
+    
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
     this.save()
   }
 }

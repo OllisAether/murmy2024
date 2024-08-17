@@ -2,6 +2,7 @@ import WebSocket from 'ws';
 import { Role } from '../../shared/roles';
 import { GenericClient } from './genericClient';
 import { Game } from '../game/game';
+import { JsonMap } from '../../shared/json';
 
 export abstract class WebSocketClient {
   abstract type: Role;
@@ -93,7 +94,7 @@ export function genericActions (client: WebSocketClient): {
 
 export function handleActions (actions: {
   action: string,
-  handler: (payload: any) => void
+  handler: (payload?: JsonMap) => void
 }[]) {
   return (message: any) => {
     const { action, payload } = JSON.parse(message.toString());

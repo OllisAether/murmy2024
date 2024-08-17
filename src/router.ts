@@ -145,7 +145,14 @@ const router = createRouter({
           meta: {
             title: "Verdächtigendatenbanken"
           },
-        }
+        },
+        {
+          path: "clues",
+          component: () => import("./pages/admin/Clues.vue"),
+          meta: {
+            title: "Hinweise"
+          },
+        },
       ],
     },
     {

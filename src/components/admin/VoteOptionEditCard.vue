@@ -48,6 +48,18 @@
           variant="outlined"
         />
 
+        <VTextField
+          v-model="color"
+          label="Farbe"
+          variant="outlined"
+        />
+
+        <VCheckbox
+          v-model="placeImageOverBox"
+          label="Platziert das Bild über dem Kasten"
+          hide-details
+        />
+
         <VDivider class="mt-4 mb-4">
           Wenn diese Option gewählt wird
         </VDivider>
@@ -282,6 +294,8 @@ const id = ref(props.option?.id ?? idGen())
 const title = ref(props.option?.title ?? '')
 const image = ref(props.option?.image)
 const description = ref(props.option?.description ?? '')
+const color = ref(props.option?.color ?? '')
+const placeImageOverBox = ref(props.option?.placeImageOverBox ?? false)
 
 const removeSelf = ref(props.option?.removeSelf ?? true)
 const availableClues = ref<(string | undefined)[]>(props.option?.availableClues ?? [])
@@ -326,6 +340,8 @@ async function submit () {
     title: title.value,
     image: image.value,
     description: description.value.length ? description.value : undefined,
+    color: color.value.length ? color.value : undefined,
+    placeImageOverBox: placeImageOverBox.value,
     removeSelf: removeSelf.value,
     availableClues: availableClues.value.filter(clue => !!clue) as string[],
     options: options.value,

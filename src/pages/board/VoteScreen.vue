@@ -1,13 +1,14 @@
 <template>
   <ScreenWrapper>
     <div :class="['vote-screen', {
-      'vote-screen--next-tiebreaker': nextTiebreaker
+      'vote-screen--next-tiebreaker': nextTiebreaker && !game.phase.meta?.private,
+      'vote-screen--private': game.phase.meta?.private
     }]">
       <span class="vote-screen__elite-text">
         ELITE
       </span>
 
-      <pre>{{ game.vote.session }}</pre>
+      <!-- <pre>{{ game.vote.session }}</pre> -->
 
       <div class="vote-screen__timer">
         <VFadeTransition>
@@ -15,55 +16,49 @@
         </VFadeTransition>
       </div>
 
-      <div class="vote-screen__candidates">
-        <TransitionGroup name="vote-screen__candidate">
-          <div
-            v-for="candidate in candidates"
-            :key="candidate.id"
-            :class="['vote-screen__candidate', {
-              'vote-screen__candidate--has-image': candidate.image
-            }]"
-          >
-            <SkewBox
-              :img="candidate.image && game.getAsset(candidate.image)?.content"
-              :img-height-scale="0.75"
-              :progress-scale="0.75"
+      <template v-if="!game.phase.meta?.private">
+        <div class="vote-screen__candidates">
+          <TransitionGroup name="vote-screen__candidate">
+            <div
+              v-for="candidate in candidates"
+              :key="candidate.id"
+              :class="['vote-screen__candidate', {
+                'vote-screen__candidate--has-image': candidate.image
+              }]"
+            >
+              <SkewBox
+                :img="candidate.image && game.getAsset(candidate.image)?.content"
+                :img-height-scale="0.75"
+                :progress-scale="0.75"
 
-              :rounded-corners="10"
-              :shadow-stroke-width="5"
-              :stroke-width="3"
-              :displace-distance="10"
-              :padding="12"
+                :rounded-corners="10"
+                :shadow-stroke-width="6"
+                :stroke-width="6"
+                :displace-distance="12"
+                :padding="15"
 
-              :progress="
-                showWinner
-                  ? (
-                    showWinner.id === candidate.id
-                      ? 1
-                      : 0
-                  )
-                  : (nextTiebreaker
-                    ? 1
-                    : candidate.votes.length / (game.vote.session!.totalPossibleVotes ?? 1)
-                  )
-              "
-              progress-color="#4F38DE"
-            />
+                :progress="showWinner
+                  ? (showWinner.id === candidate.id ? 1 : 0)
+                  : (nextTiebreaker ? 1 : candidate.votes.length / (game.vote.session!.totalPossibleVotes ?? 1))
+                "
+                :progress-color="candidate.color ?? '#ffffff'"
+              />
 
-            <div class="vote-screen__candidate__title">
-              {{ candidate.title }}
+              <div class="vote-screen__candidate__title">
+                {{ candidate.title }}
+              </div>
             </div>
-          </div>
-        </TransitionGroup>
-      </div>
-      <Transition name="vote-screen__tiebreaker">
-        <div
-          v-if="nextTiebreaker"
-          class="vote-screen__tiebreaker"
-        >
-          Tiebreaker
+          </TransitionGroup>
         </div>
-    </Transition>
+        <Transition name="vote-screen__tiebreaker">
+          <div
+            v-if="nextTiebreaker"
+            class="vote-screen__tiebreaker"
+          >
+            Tiebreaker
+          </div>
+        </Transition>
+      </template>
     </div>
   </ScreenWrapper>
 </template>
@@ -88,11 +83,11 @@ const showWinner = computed(() => {
     : game.vote.session?.voteResults?.finalWinner ?? null
 })
 
-const nextTiebreaker = computed(() => {
-  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value
-})
 const isTiebreaker = computed(() => {
   return game.vote.session?.isTiebreaker
+})
+const nextTiebreaker = computed(() => {
+  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value
 })
 
 const candidates = computed(() => {
@@ -168,6 +163,13 @@ watch(nextTiebreaker, (value) => {
     left: 50%;
 
     transform: translateX(-50%);
+
+    .vote-screen--private & {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 30vh;
+    }
   }
 
   &__candidates {
@@ -181,7 +183,7 @@ watch(nextTiebreaker, (value) => {
     padding: 15vh 10vh;
     display: flex;
     justify-content: center;
-    gap: 5vh;
+    gap: 3vh;
 
     transition:
       filter 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -209,7 +211,7 @@ watch(nextTiebreaker, (value) => {
       transform: translateX(-12%);
       text-align: center;
       padding: 3vh;
-      font-size: 2vh;
+      font-size: 2.5vh;
     }
 
     &-enter-active, &-leave-active {

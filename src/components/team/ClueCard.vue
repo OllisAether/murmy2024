@@ -84,21 +84,17 @@
         </div>
         <div class="clue-card__clue-display__content">
           <template v-if="clue">
-            <template v-if="clue.type === 'image'">
+            <template v-if="clue.type === 'images'">
               <ClueImageViewer
-                :assetIds="([clue.image?.assetId].filter(x => x) as string[])"
-                :entries="clue.image?.entries"
-              />
-            </template>
-            <template v-else>
-              <ClueImageViewer
-                :assetIds="clue.imageStack?.assetIds"
-                :entries="clue.imageStack?.entries"
+                :assetIds="clue.images?.assetIds"
+                :entries="clue.images?.entries"
               />
             </template>
           </template>
           <template v-else-if="transcript">
-            <pre class="text-left">{{ transcript.content }}</pre>
+            <TranscriptDisplay
+              :transcript="transcript"
+            />
           </template>
         </div>
         <div v-if="clue?.description" class="clue-card__clue-display__description">
@@ -138,8 +134,9 @@ import SkewBox from '../SkewBox.vue';
 import { clues } from '../../../shared/assets/clues';
 import { computed, ref } from 'vue';
 import Btn from '../Btn.vue';
-import ClueImageViewer from './ClueImageViewer.vue';
+import ClueImageViewer from './ClueViewer.vue';
 import { Transcript } from '../../../shared/transcript';
+import TranscriptDisplay from './TranscriptDisplay.vue';
 
 const game = useGameManager();
 
@@ -210,8 +207,8 @@ function openClue() {
   &__title {
     padding: 1rem .5rem 0 0;
     margin-left: -1rem;
-    font-size: .8rem;
     opacity: 0.5;
+    font-family: $fontHeading;
 
     transition: opacity .3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -302,6 +299,7 @@ function openClue() {
       line-height: 2rem;
       padding: 1.5rem 1.5rem 0;
       font-family: $fontDisplay;
+      
       font-weight: 300;
     }
 
@@ -336,7 +334,7 @@ function openClue() {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      
+
       text-align: left;
       opacity: 0.5;
 

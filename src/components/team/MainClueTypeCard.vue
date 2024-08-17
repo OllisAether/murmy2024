@@ -7,10 +7,10 @@
       <SkewBox color="#fff2" :corner-cut="12" class="main-clue-card__content__box" />
 
       <template v-if="game.clues.mainClueType === 'phone'">
-        <img :src="game.getAsset('phone/PhoneThumbnail.webp')?.content">
+        <img :src="game.getAsset('mainClue/PhoneThumbnail.webp')?.content">
       </template>
       <template v-else-if="game.clues.mainClueType === 'diary'">
-        <img :src="game.getAsset('diary/DiaryThumbnail.webp')?.content">
+        <img :src="game.getAsset('mainClue/DiaryThumbnail.webp')?.content">
       </template>
 
       <div class="main-clue-card__content__text">
@@ -80,7 +80,7 @@
 
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
-import ClueImageViewer from './ClueImageViewer.vue';
+import ClueImageViewer from './ClueViewer.vue';
 import { defineAsyncComponent, ref } from 'vue';
 import Btn from '../Btn.vue';
 import SkewBox from '../SkewBox.vue';

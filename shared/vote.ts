@@ -5,6 +5,8 @@ export interface VoteOption extends JsonMap {
   title: string,
   image?: string,
   description?: string,
+  color?: string,
+  placeImageOverBox?: boolean,
 
   // After option is selected, the following will be added
   removeSelf?: boolean,

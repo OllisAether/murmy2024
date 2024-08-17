@@ -136,11 +136,6 @@ async function startOrbAnimation () {
 
 <style lang="scss" scoped>
 .collectable {
-  // outline: 1px solid blue;
-
-  animation: cubic-bezier(0.215, 0.610, 0.355, 1);
-  animation: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  animation: cubic-bezier(0.19, 1, 0.22, 1);
   &--inline {
     display: inline;
   }

@@ -93,6 +93,9 @@ export const useAdmin = defineStore('admin', () => {
       }),
       ws.onAction('suspectDatabases', (dbs) => {
         suspectDatabases.value = dbs
+      }),
+      ws.onAction('adminClues', (cluesData) => {
+        clues.value = cluesData
       })
     ]
 
@@ -103,6 +106,7 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getCurrentPlayback')
     ws.send('getMediaState')
     ws.send('getSuspectDatabases')
+    ws.send('getAdminClues')
 
     await getAssets()
     console.log('Assets loaded')
@@ -511,6 +515,66 @@ export const useAdmin = defineStore('admin', () => {
   }
   // #endregion
 
+  // #region Clues
+  const clues = ref<{
+    unlocked: Record<string, string[]>
+    investigationCoins: {
+      total: number
+      usedByTeam: Record<string, number>
+    },
+    mainClueType: Record<string, 'phone' | 'diary'>,
+    assignFurtherMainClueTypesRandomly: boolean
+  }>({
+    unlocked: {},
+    investigationCoins: {
+      total: 0,
+      usedByTeam: {}
+    },
+    mainClueType: {},
+    assignFurtherMainClueTypesRandomly: false
+  })
+
+  function setGivenInvestigationCoins(amount: number) {
+    ws.send('setGivenInvestigationCoins', { amount })
+  }
+
+  function setInvestigationCoinDelta(teamId: string, delta: number) {
+    ws.send('setInvestigationCoinDelta', { teamId, delta })
+  }
+
+  function addClue (clueId: string) {
+    ws.send('addClue', { clueId })
+  }
+
+  function removeClue (clueId: string) {
+    ws.send('removeClue', { clueId })
+  }
+
+  function unlockClue (teamId: string, clueId: string) {
+    ws.send('unlockClue', { teamId, clueId })
+  }
+
+  function lockClue (teamId: string, clueId: string) {
+    ws.send('lockClue', { teamId, clueId })
+  }
+
+  function setAssignFurtherMainClueTypesRandomly (value: boolean) {
+    ws.send('setAssignFurtherMainClueTypesRandomly', { value })
+  }
+
+  function setMainClueType (teamId: string, type: 'phone' | 'diary' | null) {
+    ws.send('setMainClueType', { teamId, type })
+  }
+
+  function assignRandomMainClueType (teamId: string) {
+    ws.send('assignRandomMainClueType', { teamId })
+  }
+
+  function assignRandomMainClueTypeForAllTeams () {
+    ws.send('assignRandomMainClueType')
+  }
+  // #endregion
+  
   return {
     initAdmin,
     deinitAdmin,
@@ -568,6 +632,18 @@ export const useAdmin = defineStore('admin', () => {
 
     suspectDatabases,
     removeEntry,
-    addEntry
+    addEntry,
+
+    clues,
+    setGivenInvestigationCoins,
+    setInvestigationCoinDelta,
+    addClue,
+    removeClue,
+    unlockClue,
+    lockClue,
+    setAssignFurtherMainClueTypesRandomly,
+    setMainClueType,
+    assignRandomMainClueType,
+    assignRandomMainClueTypeForAllTeams
   }
 })

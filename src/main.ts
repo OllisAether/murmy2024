@@ -34,18 +34,18 @@ createApp(App)
   .use(router)
   .mount('#app')
 
-// Prevent zooming on mobile devices
-document.addEventListener('gesturestart', function (e) {
+function preventDefault(e: Event) {
   e.preventDefault()
-  e.stopPropagation()
-  e.stopImmediatePropagation()
-})
+}
 
-// Prevent double tap to zoom on mobile devices
-document.addEventListener('click', function (e) {
-  if (e.detail > 1) {
-    e.preventDefault()
-    e.stopPropagation()
-    e.stopImmediatePropagation()
-  }
-})
+// Standalone PWA
+if (window.matchMedia('(display-mode: standalone)').matches) {
+} else {
+  // Prevent zooming on mobile devices
+  document.addEventListener('gesturestart', preventDefault)
+
+  // Prevent double tap to zoom on mobile devices
+  document.addEventListener('click', (e) => {
+    if (e.detail > 1) preventDefault(e)
+  })
+}

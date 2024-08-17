@@ -1,5 +1,5 @@
 <template>
-  <VCard color="background" :elevation="0" :class="{
+  <VCard :elevation="0" :class="{
     'mb-4': team !== admin.teams[admin.teams.length - 1]
   }">
     <VToolbar>
@@ -39,7 +39,7 @@
       </VBtn>
     </VToolbar>
     <VCardText>
-      <VList nav rounded>
+      <VList nav rounded bg-color="background">
         <DatabaseEntry
           v-for="entry in admin.suspectDatabases[team.id]?.entries"
           :key="entry.matterId"

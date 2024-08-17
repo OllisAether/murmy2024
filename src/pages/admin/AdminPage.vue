@@ -73,6 +73,14 @@
           </VListItemTitle>
         </VListItem>
 
+        <VListItem to="/admin/clues">
+          <VListItemTitle>
+            <VIcon>mdi-magnify</VIcon>
+            Hinweise
+          </VListItemTitle>
+        </VListItem>
+
+
         <div class="divider">
           <span>Verwaltung</span>
           <VDivider />
@@ -247,11 +255,11 @@ async function logout() {
 }
 
 .title {
-  font-family: $fontDisplay;
+  font-family: $fontHeading;
 }
 
 .divider {
-  font-family: $fontDisplay;
+  font-family: $fontHeading;
   margin: 1.5rem 0 .5rem;
 
   span {

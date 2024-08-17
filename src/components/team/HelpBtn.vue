@@ -19,7 +19,13 @@
         <div class="help-btn__tooltip__content">
           <div class="help-btn__tooltip__content__header">
             <VIcon class="help-btn__tooltip__content__header__icon">mdi-crystal-ball</VIcon>
-            Orakel der Behilflichkeit
+            <div class="help-btn__tooltip__content__header__title">
+              Orakel der Behilflichkeit
+            </div>
+
+            <div>
+              <slot name="header" />
+            </div>
           </div>
 
           <slot />
@@ -58,6 +64,8 @@ const help = ref(false);
 </script>
 
 <style scoped lang="scss">
+@use '@/scss/vars' as *;
+
 .help-btn {
   color: #c184ff66;
   text-shadow: 0 0 1rem #9123ff;
@@ -91,15 +99,26 @@ const help = ref(false);
       &__header {
         font-size: 1.5rem;
         font-weight: 500;
+        font-family: $fontHeading;
         margin-bottom: 1rem;
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 1fr;
+
+        gap: 0 .5rem;
         align-items: center;
-        gap: 0.5rem;
         color: #d8b1ff;
         text-shadow: 0 0 1rem #c184ff99, 0 0 2rem #9123ff;
 
         &__icon {
-          font-size: 1.5em;
+          font-size: 2em;
+          grid-row: 1 / span 2;
+        }
+
+        &__title {
+          font-size: .7rem;
+          opacity: .5;
+          font-family: $fontDisplay;
+          font-weight: bold;
         }
       }
 

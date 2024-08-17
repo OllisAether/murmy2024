@@ -43,7 +43,7 @@ export class TeamClient extends WebSocketClient {
         action: 'vote',
         handler: (payload) => {
           console.log(colorize('[Client: Team]', Fg.Blue), 'Voting', payload);
-          const vote = payload.option;
+          const vote = payload?.option;
 
           if (typeof vote !== 'string') {
             console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid vote', vote)
@@ -74,9 +74,9 @@ export class TeamClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Client: Team]', Fg.Blue), 'Adding suspect database entry', payload);
           const game = Game.get();
-          const entry: Entry = payload.entry;
+          const entry = payload?.entry;
 
-          if (!entry || typeof entry !== 'object') {
+          if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
             console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid entry', entry)
             this.send('suspectDatabaseEntry:response', {
               success: false,
@@ -85,7 +85,7 @@ export class TeamClient extends WebSocketClient {
             return
           }
 
-          game.suspectDatabaseManager.addEntry(this.teamId, entry)
+          game.suspectDatabaseManager.addEntry(this.teamId, entry as Entry)
 
           this.send('suspectDatabaseEntry:response', {
             success: true
@@ -103,7 +103,7 @@ export class TeamClient extends WebSocketClient {
         action: 'unlockClue',
         handler: (payload) => {
           console.log(colorize('[Client: Team]', Fg.Blue), 'Unlocking clue', payload);
-          const clueId = payload.clueId;
+          const clueId = payload?.clueId;
 
           if (typeof clueId !== 'string') {
             console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid clueId', clueId)

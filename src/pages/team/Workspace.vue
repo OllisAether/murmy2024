@@ -28,12 +28,16 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
-            <MainClueTypeCard class="workspace__main-clue" />
+            <MainClueTypeCard class="workspace__main-clue" v-if="game.clues.mainClueType"/>
 
             <div class="workspace__content__header">
               Transkripte
 
               <HelpBtn>
+                <template #header>
+                  Transkripte
+                </template>
+
                 Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Medien. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
 
                 Es lohnt sich, die Transkripte genau zu lesen, da sie oft <b class="help-color">wichtige Informationen</b> enthalten, die <b class="help-color">markiert</b> werden können.
@@ -56,6 +60,10 @@
               Hinweise
 
               <HelpBtn>
+                <template #header>
+                  Hinweise
+                </template>
+
                 Hinweise enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
 
                 Ihr könnt Hinweise mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
@@ -184,7 +192,7 @@ const auth = useAuthManager();
     &__header {
       margin: 1.5rem -1rem;
       font-size: 1.5rem;
-      font-family: $fontDisplay;
+      font-family: $fontHeading;
       font-weight: 300;
       gap: .5rem;
       align-items: center;
