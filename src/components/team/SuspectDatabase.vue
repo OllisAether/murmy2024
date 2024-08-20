@@ -77,6 +77,22 @@
       {{ open ? 'Einklappen' : 'Ausklappen' }}
       <VIcon class="sus-db__expand-collapse-btn__icon">mdi-chevron-up</VIcon>
     </button>
+
+    <Teleport to="body">
+      <VFadeTransition>
+        <div
+          v-if="draggedEntry"
+          class="entry-drag"
+          :style="{
+            top: entryDrag.dragPos.y + 'px',
+            left: entryDrag.dragPos.x + 'px'
+          }"
+        >
+          {{ suspects.find(suspect => suspect.id === draggedEntry?.suspectId)?.name ?? 'Allgemein' }} - 
+          {{ draggedEntry.title }}
+        </div>
+      </VFadeTransition>
+    </Teleport>
   </div>
 </template>
 
@@ -90,8 +106,16 @@ import DatabaseEntry from './DatabaseEntry.vue';
 import SkewBox from '../SkewBox.vue';
 import { Entry } from '../../../shared/suspectDatabase/entry';
 import { Suspect } from '../../../shared/suspectDatabase/suspect';
+import { useEntryDrag } from '@/store/team/entryDrag';
 
 const game = useGameManager()
+const entryDrag = useEntryDrag()
+
+const draggedEntry = computed(() => {
+  if (!entryDrag.isDragging) return;
+
+  return game.database.entries.find(entry => entry.matterId === entryDrag.draggedEntry);
+});
 
 const props = defineProps<{
   open?: boolean
@@ -175,6 +199,8 @@ const entriesSwipe = useSwipe(entriesList, {
 });
 
 watch(entriesSwipe.direction, () => {
+  if (entryDrag.isDragging) return;
+
   const index = suspects.value.findIndex(suspect => suspect.id === activeSuspect.value);
 
   if (entriesSwipe.direction.value === 'left') {
@@ -460,5 +486,20 @@ watch(activeSuspect, (val, old) => {
       }
     }
   }
+}
+
+.entry-drag {
+  position: fixed;
+  z-index: 9999;
+  background: #303439cf;
+  border-radius: .5rem;
+  padding: .5rem;
+  transform: translate(-50%, -100%)translateY(-.5rem);
+  font-size: .8rem;
+  color: #fff;
+  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, .5),
+              0 0 0 1px #fff2 inset;
 }
 </style>

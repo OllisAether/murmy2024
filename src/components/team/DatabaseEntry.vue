@@ -1,7 +1,7 @@
 <template>
   <button :class="['database-entry', {
     'database-entry--has-image': !!entry.image
-  }]" ref="root">
+  }]" ref="root" @pointerdown="pointerdown">
     <div class="database-entry__content">
       <div class="database-entry__title">
         {{ entry.title }}
@@ -10,6 +10,8 @@
         {{ entry.description }}
       </div>
     </div>
+
+    <VIcon class="database-entry__fullscreen-icon">mdi-fullscreen</VIcon>
 
     <div
       v-if="entry.image"
@@ -32,8 +34,6 @@
         } : {}"
       />
     </div>
-
-    <VIcon class="database-entry__fullscreen-icon">mdi-fullscreen</VIcon>
 
     <VDialog v-model="dialog" activator="parent" width="fit-content">
       <div class="database-entry__overlay">
@@ -86,16 +86,58 @@ import { ref } from 'vue';
 import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';
+import { useEntryDrag } from '@/store/team/entryDrag';
 
 const game = useGameManager()
 
-defineProps<{
+const props = defineProps<{
   entry: Entry
 }>()
 
 const dialog = ref(false)
 
 const root = ref<HTMLDivElement | null>(null)
+
+const entryDrag = useEntryDrag()
+function pointerdown (event: PointerEvent) {
+  if (entryDrag.dropZones.length === 0) return
+
+  const start = {
+    x: event.clientX,
+    y: event.clientY
+  }
+
+  window.addEventListener('pointermove', pointermove)
+  window.addEventListener('pointerup', pointerup)
+
+  let thresholdSurpassed = false
+  function pointermove (event: PointerEvent) {
+    const distance = Math.sqrt(
+      Math.pow(event.clientX - start.x, 2) +
+      Math.pow(event.clientY - start.y, 2)
+    )
+    
+    if (!thresholdSurpassed && distance > 10) {
+      thresholdSurpassed = true
+      entryDrag.startDrag(props.entry.matterId)
+    } else if (!thresholdSurpassed) {
+      return
+    }
+
+    entryDrag.moveDrag({
+      x: event.clientX,
+      y: event.clientY
+    })
+  }
+
+  function pointerup () {
+    if (thresholdSurpassed) {
+      entryDrag.endDrag()
+    }
+    window.removeEventListener('pointermove', pointermove)
+    window.removeEventListener('pointerup', pointerup)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -171,17 +213,18 @@ const root = ref<HTMLDivElement | null>(null)
   }
 
   &__fullscreen-icon {
-    z-index: 1;
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
+    // z-index: 1;
+    // position: absolute;
+    // top: 1rem;
+    // right: 1rem;
     color: #fff8;
     font-size: 1.5rem;
+    margin-right: .5rem;
     
-    .database-entry--has-image & {
-      color: #fff;
-      text-shadow: 0 0 .3srem #000;
-    }
+    // .database-entry--has-image & {
+    //   color: #fff;
+    //   text-shadow: 0 0 .3rem #000;
+    // }
   }
 
   &__overlay {

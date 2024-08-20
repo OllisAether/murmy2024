@@ -2,14 +2,17 @@ import { CueType } from '../cue/CueTypes';
 import { Phase } from '../phase';
 import { Playback } from './Playback';
 
-export const Work = (): Playback => ({
-  name: 'Arbeitsphase',
+export const Work = (form?: boolean): Playback => ({
+  name: 'Arbeitsphase' + (form ? ' (mit Lösungsbogen)' : ''),
   trigger: 'auto',
   cues: [
     {
       type: CueType.SetPhase,
       options: {
         phase: Phase.Work,
+        meta: {
+          form,
+        }
       },
     },
     {

@@ -1,6 +1,6 @@
 import moment from "moment"
-import { idGen } from "../../../random"
-import { Chat } from "../../../phone/chat";
+import { idGen } from "../../random"
+import { Chat } from "../../phone/chat";
 
 export const chats: Chat[] = [
   {

@@ -15,6 +15,11 @@
           name="Lock"
           @click="phone.locked = true"
         />
+        <AppIcon
+          :iconSrc="game.getAsset('phone/Icon_Notes.webp')?.content"
+          name="Memo"
+          app="notes"
+        />
       </div>
 
       <div class="home-screen__appbar">

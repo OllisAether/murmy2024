@@ -14,6 +14,7 @@ import { VoteManager } from "./vote/voteManager"
 import { SuspectDatabaseManager } from "./suspectDatabase/suspectDatabaseManager"
 import { ClueManager } from "./clueManager/clueManager"
 import { Bg, colorize, Fg } from "../console"
+import { FormManager } from "./formManager/formManager"
 
 export class Game {
   private adminPassword: string
@@ -940,6 +941,10 @@ export class Game {
       .filter((c) => c.type === Role.Admin)
       .forEach((c) => (c as AdminClient).send('adminClues', clues))
   }
+  // #endregion
+
+  // #region Form
+  formManager: FormManager = new FormManager()
   // #endregion
 
   // #region Singleton

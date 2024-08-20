@@ -56,7 +56,7 @@ import { useGameManager } from '@/store/gameManager';
 import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { chats } from '../../../../../shared/assets/phone/messages/chats';
+import { chats } from '../../../../../shared/assets/phone/chats';
 import { getRawText } from '../../../../../shared/textContent';
 import { ChatImage, ChatMessage, ChatTimestamp } from '../../../../../shared/phone/chat';
 

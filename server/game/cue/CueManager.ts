@@ -36,6 +36,8 @@ export class CueManager {
     Media(),
     AddInvestigationCoins(100),
     Work(),
+    Idle(),
+    Work(true),
   ]
 
   public save () {

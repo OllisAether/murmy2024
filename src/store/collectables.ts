@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { Entry } from "../../shared/suspectDatabase/entry";
 import { useGameManager } from "./gameManager";
+import { getPathToElement } from "@/utils/getPathToElement";
 
 export interface Collectable {
   entry: Entry
@@ -23,8 +24,14 @@ export const useCollectables = defineStore('collectables', () => {
     const game = useGameManager()
 
     const element = document.elementFromPoint(x, y)
+    const path = getPathToElement(element as HTMLElement)
 
-    const collectable = Object.values(collectables.value).find(collectable => collectable.element === element)
+    const collectable = path.reduce((collectable: Collectable | undefined, element) => {
+      if (collectable) return collectable
+
+      return Object.values(collectables.value)
+        .find(collectable => collectable.element === element)
+    }, undefined)
 
     if (!collectable) return
 

@@ -95,7 +95,7 @@ import { useGameManager } from '@/store/gameManager';
 import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { chats } from '../../../../../shared/assets/phone/messages/chats';
+import { chats } from '../../../../../shared/assets/phone/chats';
 import { computed } from 'vue';
 import Collectable from '../../Collectable.vue';
 import { GroupChat, PrivateChat } from '../../../../../shared/phone/chat';

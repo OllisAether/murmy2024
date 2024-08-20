@@ -1,5 +1,9 @@
 <template>
-  <template v-if="typeof textContent === 'string'">{{ textContent }}</template>
+  <template v-if="typeof textContent === 'string'">
+    <span class="text-content-renderer">
+      {{ textContent }}
+    </span>
+  </template>
   <template v-else>
     <template v-if="textContent.style || textContent.css">
       <span
@@ -145,6 +149,11 @@ function splitLettersIntoSpan(el: HTMLElement) {
 .text-content-renderer {
   display: inline;
   white-space: pre-wrap;
+
+  &--p {
+    display: block;
+    margin: 1em 0;
+  }
 
   &--bold {
     font-weight: bold;

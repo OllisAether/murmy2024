@@ -634,7 +634,7 @@ watch(swipe.isSwiping, (isSwiping) => {
 
       img {
         filter: brightness(0.7);
-        transform: rotate(5deg)translate(1rem, -.5rem)scale(.95);
+        transform: rotate(2deg)translate(1.5rem, 1rem)scale(.99);
       }
     }
 
@@ -644,6 +644,10 @@ watch(swipe.isSwiping, (isSwiping) => {
       img {
         filter: brightness(0.7);
       }
+    }
+    
+    &--current {
+      filter: drop-shadow(0 0 2rem #0007);
     }
 
     &--current.clue-viewer__image-container--transition-next,

@@ -1,16 +1,14 @@
 <template>
   <div class="numpad-screen">
-    <div class="numpad-screen__warning">
+    <div :class="['numpad-screen__warning', {
+      'numpad-screen__warning--blink': simWarning
+    }]">
       Keine SIM-Karte eingelegt
     </div>
     <div class="numpad-screen__phone-number">
       <div class="numpad-screen__phone-number__field">
         {{ phoneNumber }}
       </div>
-
-      <button @click="backspace" class="numpad-screen__phone-number__backspace">
-        <BackspaceSvg />
-      </button>
     </div>
 
     <div class="numpad-screen__numpad">
@@ -102,9 +100,14 @@
       </button>
     </div>
     <div class="numpad-screen__bottom-bar">
-      <button class="numpad-screen__call-button">
+      <div></div>
+      <button @click="call">
         <VIcon>mdi-phone</VIcon>
       </button>
+      <button @click="backspace" v-if="phoneNumber.length > 0">
+        <BackspaceSvg />
+      </button>
+      <div v-else></div>
     </div>
   </div>
 </template>
@@ -127,6 +130,21 @@ function handleButtonClick(digit: string) {
 function backspace () {
   phoneNumber.value = phoneNumber.value.slice(0, -1);
 }
+
+const simWarning = ref(false);
+function call () {
+  phoneNumber.value = '';
+
+  if (!simWarning.value) {
+    simWarning.value = true;
+
+    setTimeout(() => {
+      simWarning.value = false;
+    }, 2000);
+
+    return;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -145,6 +163,19 @@ function backspace () {
     align-items: center;
     font-size: 8px * $scale;
     margin-top: 10px * $scale;
+
+    &--blink {
+      animation: blink .5s infinite;
+
+      @keyframes blink {
+        0%, 100% {
+          color: white;
+        }
+        50% {
+          color: #ff5849;
+        }
+      }
+    }
   }
 
   &__phone-number {
@@ -166,15 +197,6 @@ function backspace () {
       line-height: 1;
       word-break: break-all;
       text-align: center;
-    }
-
-    &__backspace {
-      display: block;
-      padding: 8px * $scale 5px * $scale;
-
-      & > svg {
-        display: block;
-      }
     }
   }
 
@@ -223,20 +245,25 @@ function backspace () {
     display: flex;
     justify-content: center;
     border-top: 1px * $scale solid #4dccff;
-  }
 
-  &__call-button {
-    display: block;
-    padding: 5px * $scale 20px * $scale;
-
-    & > svg {
-      display: block;
+    & > * {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px * $scale 0;
+  
+      & > svg {
+        width: 18px * $scale;
+        display: block;
+      }
     }
 
-    &:active {
+    & > button:active {
       background: #4dccff;
       color: #000;
     }
   }
+
 }
 </style>

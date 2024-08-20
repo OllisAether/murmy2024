@@ -61,7 +61,7 @@
             <div>
               <VIcon size="1.25rem">mdi-gesture-tap-hold</VIcon>
               <span>
-                Halten, um Hinweis zu markieren
+                Halten, um Hinweise zu markieren
               </span>
             </div>
           </div>
@@ -70,7 +70,7 @@
             color="#A23946"
           >
             Schließen
-            <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
+            <VIcon size="1em" class="ml-2">mdi-close</VIcon>
           </Btn>
         </div>
       </div>
@@ -115,15 +115,6 @@ const showClue = ref(false);
       width: auto;
       height: 100%;
       filter: drop-shadow(0 0 1rem #0007);
-
-      .main-clue-card--phone & {
-        &::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: red;
-        }
-      }
     }
 
     &__box {

@@ -28,6 +28,8 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
+            <FormCard class="workspace__main-clue" v-if="game.phase.meta?.form" />
+
             <MainClueTypeCard class="workspace__main-clue" v-if="game.clues.mainClueType"/>
 
             <div class="workspace__content__header">
@@ -92,6 +94,7 @@
 import BlurGradient from '@/components/BlurGradient.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
+import FormCard from '@/components/team/FormCard.vue';
 import HelpBtn from '@/components/team/HelpBtn.vue';
 import MainClueTypeCard from '@/components/team/MainClueTypeCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';

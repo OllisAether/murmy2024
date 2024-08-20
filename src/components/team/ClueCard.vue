@@ -111,7 +111,7 @@
             <div>
               <VIcon size="1.25rem">mdi-gesture-tap-hold</VIcon>
               <span>
-                Halten, um Hinweis zu markieren
+                Halten, um Hinweise zu markieren
               </span>
             </div>
           </div>
@@ -120,7 +120,7 @@
             color="#A23946"
           >
             Schließen
-            <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
+            <VIcon size="1em" class="ml-2">mdi-close</VIcon>
           </Btn>
         </div>
       </div>

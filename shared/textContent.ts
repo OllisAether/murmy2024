@@ -1,6 +1,7 @@
 import { Entry } from "./suspectDatabase/entry"
 
 export type TextStyle =
+  'p' |
   'bold' |
   'italic' |
   'underline' |
@@ -66,6 +67,22 @@ export function color(color: string | undefined | null, text: TextContent | stri
   }
 }
 
+export function p(text: TextContent | string): TextContent | string {
+  if (typeof text === 'string') {
+    return {
+      style: ['p'],
+      content: [text]
+    }
+  }
+
+  return {
+    ...text,
+    style: [
+      ...(text.style || []),
+      'p'
+    ]
+  }
+}
 export function bold(text: TextContent | string): TextContent | string {
   if (typeof text === 'string') {
     return {

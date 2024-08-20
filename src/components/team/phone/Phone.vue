@@ -30,6 +30,7 @@
             <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
             <CameraApp class="phone__content__app" v-else-if="phone.currentApp === 'camera'" />
             <MessagesApp class="phone__content__app" v-else-if="phone.currentApp === 'sms'" />
+            <NotesApp class="phone__content__app" v-else-if="phone.currentApp === 'notes'" />
           </Transition>
         </div>
       </div>
@@ -80,6 +81,7 @@ import MenuSvg from '@/assets/phone/menu.svg';
 import InternetApp from './internet/InternetApp.vue';
 import CameraApp from './camera/CameraApp.vue';
 import MessagesApp from './messages/MessagesApp.vue';
+import NotesApp from './notes/NotesApp.vue';
 
 defineProps<{
   zoomScale: number;
