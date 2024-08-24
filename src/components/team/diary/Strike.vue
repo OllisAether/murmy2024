@@ -1,5 +1,7 @@
 <template>
-  <span class="strike" ref="root">
+  <span :class="['strike', {
+    'strike--behind': behind,
+  }]" ref="root">
     <span
       v-for="(char, i) in text"
       :key="i"
@@ -10,22 +12,22 @@
         xmlns="http://www.w3.org/2000/svg"
       >
         <line
-          x1="5%"
+          x1="0%"
           :y1="`${randomSequence[i * 3] * deviation + randomSequence[i * 3 + 1] * 2 + height}%`"
-          x2="95%"
+          x2="100%"
           :y2="`${randomSequence[i * 3 + 3] * deviation + randomSequence[i * 3 + 4] * 2 + height}%`"
-          stroke="currentColor"
+          :stroke="color"
           stroke-linecap="round"
-          stroke-width="1"
+          :stroke-width="thickness"
         />
         <line
-          x1="5%"
+          x1="0%"
           :y1="`${randomSequence[i * 3] * deviation + randomSequence[i * 3 + 2] * 2 + height}%`"
-          x2="95%"
+          x2="100%"
           :y2="`${randomSequence[i * 3 + 3] * deviation + randomSequence[i * 3 + 5] * 2 + height}%`"
-          stroke="currentColor"
+          :stroke="color"
           stroke-linecap="round"
-          stroke-width="1"
+          :stroke-width="thickness"
         />
       </svg>
     </span>
@@ -38,9 +40,15 @@ import { computed, useSlots } from 'vue';
 withDefaults(defineProps<{
   deviation?: number,
   height?: number,
+  thickness?: number,
+  color?: string,
+  behind?: boolean,
 }>(), {
   deviation: 2,
   height: 50,
+  thickness: 2,
+  color: 'currentColor',
+  behind: false,
 });
 
 const text = computed(() => (useSlots().default?.()[0].children as string));
@@ -57,14 +65,19 @@ const randomSequence = Array.from({ length: text.value.length * 6 }, () => Math.
     position: relative;
     display: inline-block;
     white-space: pre-wrap;
+
   }
 
   &__line {
+    .strike--behind & {
+      z-index: -1;
+    }
+
     position: absolute;
-    top: -5%;
-    left: -5%;
-    height: 110%;
-    width: 110%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
   }
 }
 </style>

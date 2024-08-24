@@ -13,6 +13,7 @@ import { AddInvestigationCoins } from "../../../shared/playback/investigationCoi
 import { Media } from "../../../shared/playback/media";
 import { VoteMainClue } from "../../../shared/playback/voteMainClue";
 import { colorize, Fg } from "../../console";
+import { ClearAllForms, FilloutForms } from "../../../shared/playback/forms";
 
 export class CueManager {
   currentPlayback: Playback | null = null
@@ -23,26 +24,45 @@ export class CueManager {
   currentCueIndex: number = -1
   currentCueHandle: CueHandle | null = null
 
-  private playbacks: Playback[] = [
+  private playbacks: (Playback | {
+    divider: string
+  })[] = [
+    { divider: 'Einlass' },
+
     Idle(0, {
       info: true
     }),
-    Idle(10000, {
+    Idle(30_000, {
       info: true
     }),
+
+    { divider: 'Intro' },
+
     VoteMainClue(),
-    Idle(),
+
     Vote(),
     Media(),
-    AddInvestigationCoins(100),
+
+    AddInvestigationCoins(10),
     Work(),
+
+    { divider: 'Pause' },
+    Idle(15 * 60_000, {
+      break: true
+    }),
     Idle(),
-    Work(true),
+    
+    { divider: 'Ende' },
+    ClearAllForms(),
+    FilloutForms(),
+    Idle(0, {
+      end: true
+    }),
   ]
 
   public save () {
     Database.get().saveCollection('playbacks', {
-      playbacks: this.playbacks ?? [],
+      playbacks: this.getOnlyPlaybacks() ?? [],
       currentPlaybackIndex: this.currentPlaybackIndex ?? -1,
 
       currentCueIndex: this.currentCueIndex ?? -1,
@@ -76,7 +96,7 @@ export class CueManager {
       return
     }
 
-    // this.playbacks = data.playbacks as Playback[] ?? this.playbacks
+    // this.getOnlyPlaybacks() = data.playbacks as Playback[] ?? this.getOnlyPlaybacks()
     this.currentPlaybackIndex = data.currentPlaybackIndex as number ?? -1
     this.currentCueIndex = data.currentCueIndex as number ?? -1
     this.currentCueMeta = data.currentCueMeta as JsonMap ?? {}
@@ -85,7 +105,7 @@ export class CueManager {
 
     if (this.currentPlaybackIndex >= 0) {
       console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
-      this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
+      this.currentPlayback = this.getOnlyPlaybacks()[this.currentPlaybackIndex]
 
       if (this.currentCueIndex >= 0) {
         this.nextCue(this.currentCueIndex, this.currentCueMeta)
@@ -95,8 +115,13 @@ export class CueManager {
     Game.get().sendCurrentPlaybackToAdmins()
   }
 
-  public getPlaybacks(): Playback[] {
+  public getPlaybacks(): (Playback | {
+    divider: string
+  })[] {
     return this.playbacks
+  }
+  public getOnlyPlaybacks(): Playback[] {
+    return this.playbacks.filter(p => !p.divider) as Playback[]
   }
 
   public getCurrentPlayback() {
@@ -107,23 +132,23 @@ export class CueManager {
   }
 
   public setPlaybackFields(playbackIndex: number, fields: JsonMap): void {
-    if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
+    if (playbackIndex < 0 || playbackIndex >= this.getOnlyPlaybacks().length) {
       console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${playbackIndex} out of bounds`)
       return
     }
 
-    this.playbacks[playbackIndex].fields = fields
+    this.getOnlyPlaybacks()[playbackIndex].fields = fields
     Game.get().sendPlaybacksToAdmins()
     this.save()
   }
 
   setPlaybackTrigger(playbackIndex: number, trigger: 'auto' | 'manual'): void {
-    if (playbackIndex < 0 || playbackIndex >= this.playbacks.length) {
+    if (playbackIndex < 0 || playbackIndex >= this.getOnlyPlaybacks().length) {
       console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${playbackIndex} out of bounds`)
       return
     }
 
-    this.playbacks[playbackIndex].trigger = trigger
+    this.getOnlyPlaybacks()[playbackIndex].trigger = trigger
     Game.get().sendPlaybacksToAdmins()
     this.save()
   }
@@ -144,7 +169,7 @@ export class CueManager {
     console.log(colorize('[CueManager]', Fg.Magenta), `Set current playback ${index}`)
     this.deinitCurrentCue()
 
-    if (index >= this.playbacks.length || index < 0) {
+    if (index >= this.getOnlyPlaybacks().length || index < 0) {
       console.error(colorize('[CueManager]', Fg.Magenta), `Playback index ${index} out of bounds`)
       return
     }
@@ -152,7 +177,7 @@ export class CueManager {
     // console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
 
     this.currentPlaybackIndex = index
-    this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
+    this.currentPlayback = this.getOnlyPlaybacks()[this.currentPlaybackIndex]
     this.currentCueIndex = -1
 
     Game.get().sendCurrentPlaybackToAdmins()
@@ -174,7 +199,7 @@ export class CueManager {
 
     this.currentPlaybackIndex++
 
-    if (this.currentPlaybackIndex >= this.playbacks.length) {
+    if (this.currentPlaybackIndex >= this.getOnlyPlaybacks().length) {
       console.warn(colorize('[CueManager]', Fg.Magenta), 'No more playbacks')
       this.currentPlaybackIndex = -1
       this.currentCueIndex = -1
@@ -187,7 +212,7 @@ export class CueManager {
     }
 
     // console.log(colorize('[CueManager]', Fg.Magenta), `Init playback ${this.currentPlaybackIndex}`)
-    this.currentPlayback = this.playbacks[this.currentPlaybackIndex]
+    this.currentPlayback = this.getOnlyPlaybacks()[this.currentPlaybackIndex]
     this.currentCueIndex = -1
 
     if (!this.manualTriggerOverride && this.currentPlayback.trigger === 'auto') {

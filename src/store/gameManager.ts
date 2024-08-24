@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useWsClient } from "./wsClient";
-import { computed, readonly, ref, watch } from "vue";
+import { computed, readonly, ref, watch, WatchStopHandle } from "vue";
 import { UAParser } from "ua-parser-js";
 import { Asset } from "@/../shared/asset";
 import { useAuthManager } from "./authManager";
@@ -14,6 +14,9 @@ import { getEntries } from "../../shared/textContent";
 import { gallery } from "../../shared/assets/phone/gallery";
 import { chats } from "../../shared/assets/phone/chats";
 import { transcripts } from "../../shared/assets/transcripts";
+import { FormFieldValue } from "../../shared/form";
+import { notes } from "../../shared/assets/phone/notes";
+import { diaryEntries } from "../../shared/assets/diary/entries";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -27,8 +30,14 @@ export const useGameManager = defineStore('gameManager', () => {
   const loading = ref(false)
   const initialized = ref(false)
   async function initGameManager () {
-    if (initialized.value) return
-    if (loading.value) return
+    if (initialized.value) {
+      console.log('GameManager already initialized')
+      return
+    }
+    if (loading.value) {
+      console.log('GameManager already initializing')
+      return
+    }
 
     loading.value = true
 
@@ -57,17 +66,24 @@ export const useGameManager = defineStore('gameManager', () => {
     startTimeSync()
     syncTime()
 
-    if (auth.role === Role.Team) {
-      await new Promise<void>(resolve => {
-        ws.once('suspectDatabase').then(() => {
-          console.log('Fetched suspectDatabase')
-          resolve()
-        })
-        ws.send('getSuspectDatabase')
-      })
-    }
-
+    
     await Promise.all([
+      ...(auth.role === Role.Team ? [
+        new Promise<void>(resolve => {
+          ws.once('suspectDatabase').then(() => {
+            console.log('Fetched suspectDatabase')
+            resolve()
+          })
+          ws.send('getSuspectDatabase')
+        }),
+        new Promise<void>(resolve => {
+          ws.once('form').then(() => {
+            console.log('Fetched form')
+            resolve()
+          })
+          ws.send('getForm')
+        }),
+      ] : []),
       new Promise<void>(resolve => {
         ws.once('phase').then(() => {
           console.log('Fetched phase')
@@ -97,8 +113,9 @@ export const useGameManager = defineStore('gameManager', () => {
         ws.send('getVoteOptions')
       }),
       new Promise<void>(resolve => {
-        ws.once('clues').then(() => {
+        ws.once('clues').then((res) => {
           console.log('Fetched clues')
+          delayedInvestigationCoins.value = res.investigationCoins
           resolve()
         })
         ws.send('getClues')
@@ -167,44 +184,50 @@ export const useGameManager = defineStore('gameManager', () => {
     console.log('GameManager deinitialized')
 
     stopTimerInterval()
-    // timer.value = {
-    //   startTime: null,
-    //   currentTime: 0,
-    //   duration: 0,
-    //   state: 'stopped'
-    // }
+    timer.value = {
+      startTime: null,
+      currentTime: 0,
+      duration: 0,
+      state: 'stopped'
+    }
 
     stopTimeSync()
-    // timeSync.value = {
-    //   ping: null,
-    //   diff: 0
-    // }
+    timeSync.value = {
+      ping: null,
+      diff: 0
+    }
 
-    // phase.value = {
-    //   type: Phase.Idle,
-    //   meta: {}
-    // }
+    phase.value = {
+      type: Phase.Idle,
+      meta: {}
+    }
 
-    // vote.value = {
-    //   pools: {},
-    //   session: null
-    // }
+    vote.value = {
+      pools: {},
+      session: null
+    }
 
-    // voteOptions.value = []
+    voteOptions.value = []
 
-    // currentMedia.value = null
-    // watchedMedia.value = []
+    currentMedia.value = null
+    watchedMedia.value = []
 
-    // database.value = {
-    //   entries: []
-    // }
+    database.value = {
+      entries: []
+    }
 
-    // clues.value = {
-    //   mainClueType: null,
-    //   available: [],
-    //   unlocked: [],
-    //   investigationCoins: 0
-    // }
+    clues.value = {
+      mainClueType: null,
+      mainClueUnlocked: false,
+      available: [],
+      new: [],
+      unlocked: [],
+      investigationCoins: 0
+    }
+
+    form.value = {}
+
+    stopInvestigationCoinsDelay()
 
     document.removeEventListener('visibilitychange', onFocus)
     initialized.value = false
@@ -673,23 +696,30 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Suspect Database
   const database = ref<{
-    entries: Entry[]
+    entries: string[]
   }>({
     entries: []
   })
 
   ws.onAction('suspectDatabase', (db: {
-    entries: Entry[]
+    entries: string[]
   }) => {
     database.value = db
   })
 
-  function addDatabaseEntry (entry: Entry) {
-    ws.send('suspectDatabaseEntry', { entry })
+  function addDatabaseEntry (entryId: string) {
+    ws.send('suspectDatabaseEntry', { entryId })
   }
 
+  const allEntries = computed(() => collectAllEntries())
   function collectAllEntries () {
     const entries: Entry[] = []
+
+    transcripts.forEach((transcript) => {
+      transcript.content.forEach((line) => {
+        entries.push(...getEntries(line[1]))
+      })
+    })
 
     cluesAsset.forEach((clue) => {
       clue.images?.entries?.forEach((entry) => {
@@ -723,6 +753,16 @@ export const useGameManager = defineStore('gameManager', () => {
       })
     })
 
+    notes.forEach((note) => {
+      getEntries(note.content).forEach((entry) => {
+        entries.push(entry)
+      })
+    })
+
+    diaryEntries.forEach((entry) => {
+      entries.push(entry)
+    })
+
     return entries
   }
   // #endregion
@@ -730,19 +770,39 @@ export const useGameManager = defineStore('gameManager', () => {
   // #region Clues
   const clues = ref<{
     mainClueType: 'phone' | 'diary' | null
+    mainClueUnlocked: boolean
     available: string[]
+    new: string[]
     unlocked: string[]
     investigationCoins: number
   }>({
     mainClueType: null,
+    mainClueUnlocked: false,
     available: [],
+    new: [],
     unlocked: [],
     investigationCoins: 0
   })
 
+  const delayedInvestigationCoins = ref<number>(0)
+  let investigationCoinsWatcher: WatchStopHandle | null = null
+  function startInvestigationCoinsDelay () {
+    investigationCoinsWatcher = watch(clues, (value) => {
+      if (value.investigationCoins !== delayedInvestigationCoins.value) {
+        delayedInvestigationCoins.value = value.investigationCoins
+      }
+    }, { immediate: true })
+  }
+
+  function stopInvestigationCoinsDelay () {
+    investigationCoinsWatcher?.()
+  }
+
   ws.onAction('clues', (data: {
     mainClueType: 'phone' | 'diary' | null
+    mainClueUnlocked: boolean
     available: string[]
+    new: string[]
     unlocked: string[]
     investigationCoins: number
   }) => {
@@ -751,6 +811,31 @@ export const useGameManager = defineStore('gameManager', () => {
 
   async function unlockClue (clueId: string) {
     return await ws.request('unlockClue', { clueId })
+  }
+
+  function setMainClueUnlocked (unlocked: boolean) {
+    ws.send('setMainClueUnlocked', { unlocked })
+  }
+  // #endregion
+
+  // #region Form
+  const form = ref<Record<string, FormFieldValue>>({})
+  const formSubmitted = ref(false)
+
+  ws.onAction('form', (data: {
+    fields: Record<string, FormFieldValue>,
+    submitted: boolean
+  }) => {
+    form.value = data.fields ?? {}
+    formSubmitted.value = data.submitted ?? false
+  })
+
+  function setFieldValue (fieldId: string, value: FormFieldValue) {
+    ws.send('setField', { fieldId, value })
+  }
+
+  function submitForm () {
+    ws.send('submitForm')
   }
   // #endregion
 
@@ -770,6 +855,7 @@ export const useGameManager = defineStore('gameManager', () => {
     
     isFullscreen: readonly(isFullscreen),
     wakelock: useWakeLock(),
+    wakelockShouldBeActive: ref(false),
 
     timer: readonly(timer),
     timeSync: readonly(timeSync),
@@ -796,8 +882,19 @@ export const useGameManager = defineStore('gameManager', () => {
     database,
     addDatabaseEntry,
     collectAllEntries,
+    allEntries,
 
     clues,
-    unlockClue
+    unlockClue,
+    setMainClueUnlocked,
+
+    delayedInvestigationCoins,
+    startInvestigationCoinsDelay,
+    stopInvestigationCoinsDelay,
+
+    form,
+    formSubmitted,
+    setFieldValue,
+    submitForm,
   }
 })

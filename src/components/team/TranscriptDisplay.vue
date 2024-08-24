@@ -1,13 +1,15 @@
 <template>
   <HoldIndicator class="transcript-display__hold-indicator">
     <div class="transcript-display">
-      <TranscriptLine
-        v-for="(l, i) in lines"
-        :key="i"
-        :line="l.line"
-        :secondLine="l.secondLine"
-        :transcript="transcript"
-      />
+      <div class="transcript-display__content">
+        <TranscriptLine
+          v-for="(l, i) in lines"
+          :key="i"
+          :line="l.line"
+          :secondLine="l.secondLine"
+          :transcript="transcript"
+        />
+      </div>
     </div>
   </HoldIndicator>
 </template>
@@ -60,7 +62,10 @@ const lines = computed(() => {
 
   mask-image: linear-gradient(transparent, black 2rem, black calc(100% - 2rem), transparent);
 
-  padding: 2rem 0;
+  &__content {
+    padding: 2rem 0;
+    min-height: 100%;
+  }
 
   &__hold-indicator {
     height: 100%;

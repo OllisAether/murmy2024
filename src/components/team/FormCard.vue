@@ -1,21 +1,31 @@
 <template>
   <div class="form-card">
-    <button @click="showForm = true" class="form-card__content">
-      <SkewBox color="#fff2" :corner-cut="12" class="form-card__content__box" />
-
-      <img :src="game.getAsset('dokumente/autopsiebericht.png')?.content">
-
+    <button @click="!game.formSubmitted && (showForm = true)" :class="['form-card__content', {
+      'form-card__content--open': showForm && !game.formSubmitted
+    }]">
+      <VIcon class="form-card__content__icon" v-if="!game.formSubmitted">
+        mdi-open-in-new
+      </VIcon>
       <div class="form-card__content__text">
         <div class="form-card__content__text__title">
           Lösungsbogen
+          <template v-if="game.formSubmitted">
+            abgeschickt
+          </template>
         </div>
         <div class="form-card__content__text__description">
-          Hier könnt ihr eure Lösungen eintragen.
+          <template v-if="game.formSubmitted">
+            Ihr könnt euch entspannen, bis die anderen Teams auch fertig sind.
+          </template>
+          <template v-else>
+            Hier könnt ihr eure Lösungen eintragen.
+          </template>
         </div>
       </div>
     </button>
 
     <VOverlay
+      v-if="!game.formSubmitted"
       v-model="showForm"
       attach="parent"
       :z-index="9"
@@ -55,7 +65,7 @@
             Schließen
             <VIcon size="1em" class="ml-2">mdi-close</VIcon>
           </Btn>
-          <VDialog max-width="300">
+          <VDialog max-width="400">
             <template #activator="{ props }">
               <Btn color="#006d3e" v-bind="props">
                 Absenden
@@ -77,14 +87,21 @@
                   :skew="5"
                 />
 
-                <div style="position: relative; font-size: 1rem;">
-                  Möchtet ihr eure Lösungen wirklich absenden?
-                </div>
+                <VCardTitle style="position: relative;" class="px-0">
+                  <VIcon size="1em" class="mr-2">mdi-alert</VIcon>
+                  Wichtig
+                </VCardTitle>
+
+                <!-- <div style="position: relative; font-size: 1rem;"> -->
+                  <VCardText style="position: relative;" class="px-0">
+                    Nach dem Absenden könnt ihr eure Antworten nicht mehr ändern.
+                  </VCardText>
+                <!-- </div> -->
                 <VCardActions>
                   <Btn class="mr-4" color="#A23946" @click="isActive.value = false">
                     Nein
                   </Btn>
-                  <Btn color="#006d3e">
+                  <Btn color="#006d3e" @click="submit">
                     Ja
                   </Btn>
                 </VCardActions>
@@ -109,46 +126,46 @@ const game = useGameManager();
 
 const showForm = ref(false);
 const pageIndex = ref(0);
+
+function submit() {
+  game.submitForm();
+  showForm.value = false;
+}
 </script>
 
 <style lang="scss" scoped>
 @use '@/scss/vars' as *;
 
 .form-card {
-  height: 15rem;
-
   &__content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 1rem 3rem;
+    background: white;
+    color: black;
+    position: absolute;
+    right: 2rem;
+    bottom: -5rem;
+
+    width: 30rem;
+    box-shadow: 0 0 1rem #000;
+
+    padding: 1.5rem 2rem;
+    padding-bottom: 7rem;
+
     text-align: left;
 
-    display: flex;
-    align-items: stretch;
-    gap: 2rem;
+    transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), opacity .5s;
 
-    img {
-      position: relative;
-      pointer-events: none;
-      width: auto;
-      height: 100%;
-      filter: drop-shadow(0 0 1rem #0007);
+    &--open {
+      transform: translateY(-5rem);
+      opacity: 0;
     }
 
-    &__box {
+    &__icon {
       position: absolute;
-      top: 4rem;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: .5;
-      z-index: -1;
+      top: 1.5rem;
+      right: 1rem;
     }
 
     &__text {
-      padding-top: 3rem;
-    
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -156,11 +173,12 @@ const pageIndex = ref(0);
       gap: 0.5rem;
 
       &__title {
-        font-size: 2rem;
+        font-size: 1.4rem;
+        font-family: $fontHeading;
       }
 
       &__description {
-        color: #fff8;
+        color: #000a;
       }
     }
   }

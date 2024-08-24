@@ -22,7 +22,7 @@
         />
       </svg>
       <div class="diary-page__page-number">
-        {{ pageNumber?.toString().padStart(2, '0') }}
+        {{ ((pageNumber ?? 2) - 2).toString().padStart(2, '0') }}
       </div>
     </div>
 
@@ -121,13 +121,15 @@ defineProps<{
     height: 100%;
 
     &__text {
+      width: 100%;
+      height: 100%;
       font-family: $fontHandwriting;
       position: absolute;
       top: 8.5rem;
-      padding: 0 1rem;
+      padding: 0 2rem;
       line-height: 3rem;
       font-size: 2.7rem;
-      filter: drop-shadow(-1px -1px 2px #d7c5ae)drop-shadow(1px 1px 2px #ebe3d8);
+      // filter: drop-shadow(-1px -1px 2px #d7c5ae)drop-shadow(1px 1px 2px #ebe3d8);
     }
   }
 }

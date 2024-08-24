@@ -35,15 +35,20 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldOrder } from '@/../shared/form';
-import { computed, ref } from 'vue';
+import { FormFieldOrder, FormFieldOrderValue } from '@/../shared/form';
+import { computed, ref, watch } from 'vue';
 import TextContentRenderer from '../TextContentRenderer.vue';
 
 const props = defineProps<{
   field: FormFieldOrder
+  value?: FormFieldOrderValue
 }>()
 
-const order = ref<string[]>([])
+const emit = defineEmits(['setForm'])
+
+const order = ref<FormFieldOrderValue>(props.value ?? [])
+watch(order, () => emit('setForm', order.value), { deep: true })
+
 const computedOrder = computed(() => order.value.map(entry => props.field.choices.find(choice => choice.id === entry)).filter(choice => choice) as FormFieldOrder['choices'])
 
 const pool = computed(() => {

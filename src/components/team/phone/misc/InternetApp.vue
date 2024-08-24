@@ -18,13 +18,7 @@
 
       <p>
         The webpage at
-        <Collectable inline :entry="{
-          matterId: 'collectables',
-          suspectId: 'internet-app',
-          title: 'Webpage not available',
-        }">
-          <span class="link">{{ url }}</span>
-        </Collectable>
+        <span class="link">{{ url }}</span>
         might be temporarily down or it may have moved permanently to a new web address.
       </p>
 
@@ -42,9 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import Collectable from '../../Collectable.vue';
-
-const url = 'http://www.yahoo.com/search?q=cat+gifs&hl=de&gl=de&client=android-internet&source=android-home';
+const url = 'http://www.google.com/search?q=cat+gifs&hl=de&gl=de&client=android-internet&source=android-home';
 </script>
 
 <style lang="scss" scoped>

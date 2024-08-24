@@ -1,6 +1,13 @@
 <template>
   <div class="chat-screen">
     <div class="chat-screen__title">
+      <button
+        class="chat-screen__back"
+        @click="phone.backBtn()"
+      >
+        <VIcon size="1em">mdi-arrow-left</VIcon>
+      </button>
+
       <div class="chat-screen__avatar">
         <img
           v-if="computedChat.avatar"
@@ -56,7 +63,7 @@
                 class="chat-screen__message__image-entry"
                 v-for="(entry, i) in message.entries"
                 :key="i"
-                :entry="entry.entry"
+                :entryId="entry.entry.id"
                 :style="{
                   top: `${entry.rect.x * 100}%`,
                   left: `${entry.rect.y * 100}%`,
@@ -158,11 +165,18 @@ const computedChat = computed(() => {
   &__title {
     display: flex;
     align-items: center;
-    padding: 0 10px * $scale;
+    // padding:10px * $scale;
     height: 30px * $scale;
     font-size: 10px * $scale;
     background: linear-gradient(#555d51, #262826);
     border-bottom: 1px * $scale solid #fff1;
+  }
+
+  &__back {
+    color: #fff8;
+    font-size: 12px * $scale;
+    padding: 0 5px * $scale;
+    padding-bottom: 2px * $scale;
   }
 
   &__name-participants {

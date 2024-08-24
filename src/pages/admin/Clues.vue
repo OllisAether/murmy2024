@@ -207,11 +207,22 @@
               'mb-4': team !== admin.teams[admin.teams.length - 1]
             }"
           >
-            <div class="d-flex flex-wrap">
-              <VListItemTitle class="flex-grow-1">
+            <div class="d-flex flex-wrap align-center">
+              <VListItemTitle class="my-1">
                 {{ team.name }} ({{ team.id }})
               </VListItemTitle>
-              <div>
+              <div class="d-flex flex-grow-1">
+                <VSpacer />
+                <VBtn
+                  variant="tonal"
+                  icon
+                  size="small"
+                  :color="admin.clues.mainClueUnlocked[team.id] ? 'primary' : 'default'"
+                  @click="admin.setMainClueUnlocked(team.id, !admin.clues.mainClueUnlocked[team.id])"
+                >
+                  <VIcon>{{ admin.clues.mainClueUnlocked[team.id] ? 'mdi-lock-open' : 'mdi-lock' }}</VIcon>
+                </VBtn>
+                <VDivider vertical class="mx-2" />
                 <VBtn
                   variant="tonal"
                   icon
@@ -223,7 +234,7 @@
                 </VBtn>
                 <VBtn
                   variant="tonal"
-                  class="mx-2"
+                  class="mx-1"
                   icon
                   size="small"
                   :color="admin.clues.mainClueType[team.id] === 'phone' ? 'primary' : 'default'"

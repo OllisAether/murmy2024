@@ -2,7 +2,8 @@
   <ScreenWrapper>
     <div :class="['vote-screen', {
       'vote-screen--next-tiebreaker': nextTiebreaker,
-      'vote-screen--has-voted': game.voted
+      'vote-screen--has-voted': game.voted,
+      'vote-screen--private': game.phase.meta.private
     }]">
       <span class="vote-screen__elite-text">
         ELITE
@@ -19,7 +20,7 @@
       <div class="vote-screen__candidates">
         <TransitionGroup name="vote-screen__candidate">
           <div
-            v-for="candidate in candidates"
+            v-for="(candidate, i) in candidates"
             :key="candidate.id"
             :class="['vote-screen__candidate', {
               'vote-screen__candidate--has-image': candidate.image,
@@ -28,7 +29,8 @@
               'vote-screen__candidate--placeImageOverBox': candidate.placeImageOverBox
             }]"
             :style="{
-              '--candidate-color-rgb': Color(candidate.color).rgb().array().slice(0, 3).join(', ')
+              '--candidate-color-rgb': Color(candidate.color).rgb().array().slice(0, 3).join(', '),
+              animationDelay: `${i * 0.1 + 0.3}s`
             }"
             @click="vote(candidate.id)"
           >
@@ -166,7 +168,11 @@ const isRandom = computed(() => {
 
     padding: 15vh 20vh;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+
+    .vote-screen--private & {
+      justify-content: space-around;
+    }
 
     transition:
       filter 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -187,9 +193,20 @@ const isRandom = computed(() => {
     position: relative;
     width: 28vh;
 
+    margin: 0 2vh;
+
     transition:
       transform 1s cubic-bezier(0.19, 1, 0.22, 1),
       filter 1s cubic-bezier(0.19, 1, 0.22, 1);
+
+    animation: enter 1s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+
+    @keyframes enter {
+      from {
+        transform: translateY(10vh);
+        opacity: 0;
+      }
+    }
 
     & > :deep(.skew-box) {
       aspect-ratio: 5 / 9;
@@ -208,7 +225,7 @@ const isRandom = computed(() => {
 
     &--placeImageOverBox {
       & > :deep(.skew-box) {
-        aspect-ratio: 5 / (9 * .75);
+        aspect-ratio: 5 / 6.75;
       }
     }
 
@@ -241,8 +258,8 @@ const isRandom = computed(() => {
     }
 
     &-enter-from, &-leave-to {
-      margin-left: -20vh;
-      margin-right: -20vh;
+      margin-left: -14vh;
+      margin-right: -14vh;
       opacity: 0;
     }
   }

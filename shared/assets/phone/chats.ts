@@ -1,5 +1,4 @@
 import moment from "moment"
-import { idGen } from "../../random"
 import { Chat } from "../../phone/chat";
 
 export const chats: Chat[] = [
@@ -115,7 +114,7 @@ export const chats: Chat[] = [
           {
             rect: { x: 0.4, y: 0.1, width: 0.6, height: 0.5 },
             entry: {
-              matterId: 'autopsiebericht' + idGen(),
+              id: 'autopsiebericht',
               suspectId: 'general',
               title: 'Autopsiebericht',
             }

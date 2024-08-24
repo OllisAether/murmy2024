@@ -13,7 +13,7 @@
             <path stroke="currentColor" stroke-width="2" d="M-10 28h147.343a4.002 4.002 0 0 0 2.829-1.172l24.656-24.656A4.003 4.003 0 0 1 167.657 1H685"/>
           </svg>
         </div>
-        <div class="sus-db__suspects">
+        <div class="sus-db__suspects" ref="suspectsScroller">
           <button
             v-for="suspect in suspects"
             :key="suspect.id"
@@ -22,6 +22,7 @@
               'sus-db__suspect--generic': suspect.id === 'generic'
             }]"
             @click="activeSuspect = suspect.id ?? 'generic'"
+            ref="suspectBtns"
           >
             <div class="sus-db__suspect__img">
               <SkewBox
@@ -45,23 +46,29 @@
         </div>
 
         <div class="sus-db__entries" ref="entriesList">
-          <template v-for="(entries, suspectId) in entries">
+          <template v-for="suspect in suspects">
             <Transition :name="'sus-db__entries__tab--' + suspectTransition">
               <div
-                v-show="suspectId === activeSuspect"
+                v-show="suspect.id === activeSuspect"
                 class="sus-db__entries__tab"
+                ref="entryTabs"
               >
-                <DatabaseEntry
-                  v-for="entry in entries"
-                  :key="entry.matterId"
-                  :entry="entry"
-                />
+                <TransitionGroup name="sus-db__entries__entry" @enter="enter" :css="false">
+                  <DatabaseEntry
+                    class="sus-db__entries__entry"
+                    v-for="entry in delayedEntries[suspect.id] ?? []"
+                    :key="entry.id"
+                    :entry="entry"
+                  />
+                </TransitionGroup>
 
-                <div v-if="entries.length === 0" class="sus-db__entries__no-entries">
-                  <span>
-                    Noch keine Hinweise markiert
-                  </span>
-                </div>
+                <VFadeTransition>
+                  <div v-if="delayedEntries[suspect.id]?.length === 0" class="sus-db__entries__no-entries">
+                    <span>
+                      Noch keine Hinweise markiert
+                    </span>
+                  </div>
+                </VFadeTransition>
               </div>
             </Transition>
           </template>
@@ -88,8 +95,19 @@
             left: entryDrag.dragPos.x + 'px'
           }"
         >
-          {{ suspects.find(suspect => suspect.id === draggedEntry?.suspectId)?.name ?? 'Allgemein' }} - 
-          {{ draggedEntry.title }}
+          <img
+            class="entry-drag__img"
+            v-if="draggedEntry.imageAssetId"
+            :src="game.getAsset(draggedEntry.imageAssetId)?.content"
+          />
+          <div class="entry-drag__content">
+            <div class="entry-drag__suspect">
+              {{ suspects.find(suspect => suspect.id === draggedEntry?.suspectId)?.name ?? 'Allgemein' }}
+            </div>
+            <div class="entry-drag__title">
+              <TextContentRenderer :text-content="draggedEntry.title" />
+            </div>
+          </div>
         </div>
       </VFadeTransition>
     </Teleport>
@@ -107,6 +125,7 @@ import SkewBox from '../SkewBox.vue';
 import { Entry } from '../../../shared/suspectDatabase/entry';
 import { Suspect } from '../../../shared/suspectDatabase/suspect';
 import { useEntryDrag } from '@/store/team/entryDrag';
+import TextContentRenderer from './TextContentRenderer.vue';
 
 const game = useGameManager()
 const entryDrag = useEntryDrag()
@@ -114,7 +133,7 @@ const entryDrag = useEntryDrag()
 const draggedEntry = computed(() => {
   if (!entryDrag.isDragging) return;
 
-  return game.database.entries.find(entry => entry.matterId === entryDrag.draggedEntry);
+  return game.allEntries.find(entry => entry.id === entryDrag.draggedEntry);
 });
 
 const props = defineProps<{
@@ -159,7 +178,6 @@ const suspects = computed<(Suspect & {
   });
 
   return suspects;
-
 });
 
 const entries = computed(() => {
@@ -167,7 +185,11 @@ const entries = computed(() => {
     generic: [],
   };
 
-  for (const entry of game.database.entries) {
+  const entries = game.database.entries
+    .map(entry => game.allEntries.find(e => e.id === entry))
+    .filter(e => e) as Entry[];
+
+  for (const entry of entries) {
     let id = entry.suspectId;
 
     if (!id || allSuspects.every(suspect => suspect.id !== id)) {
@@ -181,8 +203,40 @@ const entries = computed(() => {
     suspectEntries[id].push(entry);
   }
 
+  for (const suspectId in suspectEntries) {
+    suspectEntries[suspectId].reverse();
+  }
+
   return suspectEntries;
 });
+
+watch(entries, (entries, oldEntries) => {
+  const flatEntries = Object.values(entries).flat();
+  const flatOldEntries = Object.values(oldEntries).flat();
+
+  const newEntries = flatEntries.filter(entry => !flatOldEntries.map(e => e.id).includes(entry.id));
+
+  if (newEntries.length === 1) {
+    const suspect = suspects.value.find(suspect => suspect.id === newEntries[0].suspectId)?.id ?? 'generic';
+
+    activeSuspect.value = suspect;
+    
+    const suspectIndex = suspects.value.findIndex(s => s.id === suspect);
+
+    setTimeout(() => {
+      entryTabs.value[suspectIndex]?.scrollTo({
+        behavior: 'smooth',
+        top: 0,
+      });
+    })
+  }
+
+  setTimeout(() => {
+    delayedEntries.value = entries;
+  }, 400);
+}, { deep: true });
+
+const delayedEntries = ref(entries.value);
 
 watch(swipe.direction, () => {
   if (swipe.direction.value === 'left') {
@@ -220,6 +274,13 @@ watch(entriesSwipe.direction, () => {
 
 const suspectTransition = ref<'right' | 'left'>('right');
 const activeSuspect = ref<string>('generic');
+
+const suspectBtns = ref<HTMLElement[]>([]);
+const entryTabs = ref<HTMLElement[]>([]);
+
+const suspectsScroller = ref<HTMLElement | null>(null);
+
+let animationFrame: number | undefined;
 watch(activeSuspect, (val, old) => {
   const indexNew = suspects.value.findIndex(suspect => suspect.id === val);
   const indexOld = suspects.value.findIndex(suspect => suspect.id === old);
@@ -229,7 +290,87 @@ watch(activeSuspect, (val, old) => {
   } else {
     suspectTransition.value = 'left';
   }
+
+  setTimeout(() => {
+    stopAnimation();
+
+    suspectsScroller.value?.addEventListener('wheel', stopAnimation);
+    suspectsScroller.value?.addEventListener('pointerdown', stopAnimation);
+
+    const left = suspectBtns.value[indexNew]?.offsetLeft - (suspectsScroller.value?.clientWidth ?? 0) / 2 + suspectBtns.value[indexNew]?.clientWidth / 2
+    const leftStart = suspectsScroller.value?.scrollLeft ?? 0;
+
+    const start = Date.now();
+    const duration = 1000;
+    // exponential Ease out
+    const easing = (t: number) => 1 - Math.pow(2, -10 * t);
+    step();
+
+    function step () {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const x = easing(progress) * (left - leftStart) + leftStart;
+
+      if (suspectsScroller.value) {
+        suspectsScroller.value.scrollLeft = x;
+      }
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      }
+    }
+
+    function stopAnimation() {
+      suspectsScroller.value?.removeEventListener('wheel', stopAnimation);
+      suspectsScroller.value?.removeEventListener('pointerdown', stopAnimation);
+
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    }
+  });
 })
+watch(suspects, (val) => {
+  if (!val.some(suspect => suspect.id === activeSuspect.value)) {
+    activeSuspect.value = 'generic';
+  };
+}, { deep: true });
+
+function enter(el: Element, done: () => void) {
+  const height = el.clientHeight;
+
+  el.classList.add('sus-db__entries__entry--enter-active');
+  (el as HTMLElement).style.zIndex = '1';
+  requestAnimationFrame(() => {
+    el.classList.remove('sus-db__entries__entry--enter-active');
+  });
+
+  const animation = el.animate([
+    {
+      marginBottom: -height + 'px',
+      transform: 'translateX(100%)',
+      opacity: 0,
+      easing: 'cubic-bezier(0.19, 1, 0.22, 1)',
+    },
+    {
+      transform: 'translateX(100%)',
+      opacity: 0,
+      easing: 'cubic-bezier(0.19, 1, 0.22, 1)',
+      offset: 0.2,
+    },
+    {
+      opacity: 1,
+      transform: 'translateX(0)'
+    },
+  ], {
+    duration: 1000,
+  })
+
+  animation.addEventListener('finish', () => {
+    (el as HTMLElement).style.zIndex = '';
+    done();
+  });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -342,21 +483,20 @@ watch(activeSuspect, (val, old) => {
 
   &__suspects {
     z-index: 1;
-    overflow-y : auto;
+    overflow-y: auto;
     display: flex;
-    padding: .5rem 3rem 1rem;
+    padding: .5rem calc(50% - 7rem / 2) 1rem;
     gap: 1rem;
-    justify-content: center;
-    mask-image: linear-gradient(90deg, transparent, black 2rem, black calc(100% - 2rem), transparent);
   }
 
   &__suspect {
+    width: 7rem;
     display: flex;
     flex-direction: column;
     font-family: $fontHeading;
 
     &--active {
-      .sus-db__suspect__name{
+      .sus-db__suspect__name {
         color: white;
 
         &::before {
@@ -485,21 +625,85 @@ watch(activeSuspect, (val, old) => {
         mask-image: linear-gradient(black, #0008);
       }
     }
+
+    &__entry {
+      transition:
+        opacity .2s,
+        border-color 2s cubic-bezier(0.445, 0.05, 0.55, 0.95),
+        box-shadow 2s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+
+      &--enter-active {
+        transition: opacity .2s;
+
+        $neon1: #00ff7b;
+        $neon2: #00b7ff;
+        
+        border-color: #fff;
+        box-shadow:
+          inset 0 0 1rem #fff,
+          
+          inset .2rem 0 .5rem $neon1,
+          inset -.2rem 0 .5rem $neon2,
+          
+          inset 1rem 0 2rem -.5rem $neon1,
+          inset -1rem 0 2rem -.5rem $neon2,
+          
+          0 0 1.5rem #fff,
+          -.5rem 0 1rem $neon1,
+          .5rem 0 1rem $neon2,
+          0 0 3rem 1rem #000;
+      }
+    }
   }
+
 }
 
 .entry-drag {
   position: fixed;
   z-index: 9999;
+
   background: #303439cf;
-  border-radius: .5rem;
-  padding: .5rem;
+  border-radius: 1rem;
+  
   transform: translate(-50%, -100%)translateY(-.5rem);
   font-size: .8rem;
   color: #fff;
+
   -webkit-backdrop-filter: blur(1rem);
   backdrop-filter: blur(1rem);
   box-shadow: 0 0 1rem rgba(0, 0, 0, .5),
               0 0 0 1px #fff2 inset;
+
+  display: flex;
+  align-items: stretch;
+  padding: .5rem;
+  height: min-content;
+
+  &__content {
+    padding: .5rem;
+  }
+
+  &__suspect {
+    color: #fff8;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: $fontHeading;
+  }
+
+  &__img {
+    display: block;
+    pointer-events: none;
+    height: 100%;
+    width: auto;
+    height: auto;
+    max-width: 5rem;
+    max-height: 5rem;
+    object-fit: cover;
+    border-radius: .5rem;
+    margin-right: .5rem;
+  }
 }
 </style>

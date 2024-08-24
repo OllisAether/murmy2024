@@ -938,9 +938,9 @@ export class AdminClient extends WebSocketClient {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding entry', payload);
 
           const teamId = payload?.teamId;
-          const entry = payload?.entry;
+          const entryId = payload?.entryId;
 
-          if (typeof teamId !== 'string' || typeof entry !== 'object' || Array.isArray(entry) || !entry) {
+          if (typeof teamId !== 'string' || typeof entryId !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addEntry:response', {
@@ -951,7 +951,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          game.suspectDatabaseManager.addEntry(teamId, entry as any);
+          game.suspectDatabaseManager.addEntry(teamId, entryId);
 
           this.send('addEntry:response', {
             success: true,
@@ -964,9 +964,9 @@ export class AdminClient extends WebSocketClient {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing entry', payload);
 
           const teamId = payload?.teamId;
-          const matterId = payload?.matterId;
+          const id = payload?.id;
 
-          if (typeof teamId !== 'string' || typeof matterId !== 'string') {
+          if (typeof teamId !== 'string' || typeof id !== 'string') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('removeEntry:response', {
@@ -977,7 +977,7 @@ export class AdminClient extends WebSocketClient {
             return;
           }
 
-          game.suspectDatabaseManager.removeEntry(teamId, matterId);
+          game.suspectDatabaseManager.removeEntry(teamId, id);
 
           this.send('removeEntry:response', {
             success: true,
@@ -1193,6 +1193,32 @@ export class AdminClient extends WebSocketClient {
           game.clueManager.setMainClueType(teamId, type as 'phone' | 'diary');
 
           this.send('setMainClueType:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'setMainClueUnlocked',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting main clue unlocked', payload);
+
+          const unlocked = payload?.unlocked;
+          const teamId = payload?.teamId;
+
+          if (typeof unlocked !== 'boolean' || typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setMainClueUnlocked:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.clueManager.setMainClueUnlocked(teamId, unlocked);
+
+          this.send('setMainClueUnlocked:response', {
             success: true,
           });
         }

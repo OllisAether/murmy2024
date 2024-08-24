@@ -8,21 +8,23 @@
       <div class="form-field-entry__dropzone__entries" v-if="entries.length">
         <div
           v-for="entry in computedEntries"
-          :key="entry.matterId"
-          class="form-field-entry__dropzone__entry"
+          :key="entry.id"
+          :class="['form-field-entry__dropzone__entry', {
+            'form-field-entry__dropzone__entry--has-description': !!entry.description
+          }]"
         >
           <div class="form-field-entry__dropzone__entry__content">
             <div class="form-field-entry__dropzone__entry__title">
               {{ suspects.find(suspect => suspect.id === entry.suspectId)?.name ?? 'Allgemein' }} -
-              {{ entry.title }}
+              <TextContentRenderer :text-content="entry.title" />
             </div>
             <div v-if="entry.description" class="form-field-entry__dropzone__entry__description">
-              {{ entry.description }}
+              <TextContentRenderer :text-content="entry.description" />
             </div>
           </div>
 
           <button
-            @click="entries.splice(entries.indexOf(entry.matterId), 1)"
+            @click="entries.splice(entries.indexOf(entry.id), 1)"
             class="form-field-entry__dropzone__entry__close-btn"
           >
             <VIcon>mdi-close</VIcon>
@@ -74,20 +76,24 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldEntry } from '@/../shared/form';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { FormFieldEntry, FormFieldEntryValue } from '@/../shared/form';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import HelpBtn from '../HelpBtn.vue';
 import { useEntryDrag } from '@/store/team/entryDrag';
 import { useGameManager } from '@/store/gameManager';
 import { Entry } from '../../../../shared/suspectDatabase/entry';
 import { suspects } from '../../../../shared/assets/suspects';
+import TextContentRenderer from '../TextContentRenderer.vue';
 
 const game = useGameManager()
 const entryDrag = useEntryDrag()
 
 const props = defineProps<{
   field: FormFieldEntry
+  value?: FormFieldEntryValue
 }>()
+
+const emit = defineEmits(['setForm'])
 
 const amount = computed(() => {
   return props.field.amount ?? props.field.solutions.length
@@ -96,8 +102,10 @@ const max = computed(() => {
   return (props.field.morePossible && props.field.morePossible.max) || amount.value
 })
 
-const entries = ref<string[]>([])
-const computedEntries = computed<Entry[]>(() => entries.value.map(entry => game.database.entries.find(e => e.matterId === entry)).filter(e => e) as Entry[])
+const entries = ref<FormFieldEntryValue>(props.value ?? [])
+watch(entries, () => emit('setForm', entries.value), { deep: true })
+
+const computedEntries = computed<Entry[]>(() => entries.value.map(entry => game.allEntries.find(e => e.id === entry)).filter(e => e) as Entry[])
 
 const dropzone = ref<HTMLDivElement | null>(null)
 
@@ -181,29 +189,39 @@ onBeforeUnmount(() => {
 
       display: flex;
       align-items: stretch;
+      padding: 0 1rem;
 
       &__content {
         z-index: 1;
-        padding: 0 1rem;
         flex: 1 1 auto;
         width: 0;
 
+        padding: 1rem 0;
+
         display: flex;
         flex-direction: column;
+
+        .form-field-entry__dropzone__entry--has-description & {
+          padding: 1rem 0 0;
+        }
       }
 
       &__title {
-        padding: 1rem 0 .1rem;
         font-family: $fontHeading;
-        font-size: 1.6rem;
+        font-size: 1.2rem;
+
+        .form-field-entry__dropzone__entry--has-description & {
+          margin-bottom: .2rem;
+        }
       }
 
       &__description {
-        height: 0;
         flex: 1 1 auto;
 
         min-height: 2rem;
+        max-height: 2rem;
         margin-right: 1rem;
+        margin-bottom: .2rem;
 
         color: #fff8;
         line-height: 1rem;
@@ -218,7 +236,6 @@ onBeforeUnmount(() => {
       &__close-btn {
         color: #ff5b5bc2;
         font-size: 1.5rem;
-        margin-right: .5rem;
       }
     }
   }

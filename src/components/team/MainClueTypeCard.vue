@@ -138,6 +138,7 @@ const showClue = ref(false);
 
       &__title {
         font-size: 2rem;
+        font-family: $fontHeading;
       }
 
       &__description {

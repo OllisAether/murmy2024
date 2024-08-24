@@ -222,6 +222,19 @@ onMounted(() => {
   document.documentElement.classList.add('admin');
   document.body.classList.add('admin');
 
+  const viewport = document.querySelector('meta[name="viewport"]');
+
+  const minWidth = 500;
+  if (window.innerWidth < minWidth && viewport) {
+    const before = viewport.getAttribute('content');
+    const scale = window.innerWidth / minWidth;
+    viewport.setAttribute('content', `width=device-width, initial-scale=${scale}, maximum-scale=${scale}, user-scalable=1`);
+  
+    onBeforeUnmount(() => {
+      before && viewport?.setAttribute('content', before);
+    });
+  }
+
   onBeforeUnmount(() => {
     admin.deinitAdmin();
     document.documentElement.classList.remove('admin');

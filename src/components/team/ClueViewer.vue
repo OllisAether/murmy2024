@@ -70,7 +70,7 @@
                   class="clue-viewer__collectable"
                   v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
                   :key="i"
-                  :entry="entry.entry"
+                  :entryId="entry.entry.id"
                   :style="{
                     'left': entry.rect.x * 100 + '%',
                     'top': entry.rect.y * 100 + '%',

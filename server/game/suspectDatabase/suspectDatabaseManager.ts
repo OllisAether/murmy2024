@@ -1,11 +1,10 @@
 import { JsonMap } from "../../../shared/json"
-import { Entry } from "../../../shared/suspectDatabase/entry"
 import { colorize, Fg } from "../../console"
 import { Database } from "../../database"
 import { Game } from "../game"
 
 export interface SuspectDatabase extends JsonMap {
-  entries: Entry[]
+  entries: string[]
 }
 
 export class SuspectDatabaseManager {
@@ -47,10 +46,10 @@ export class SuspectDatabaseManager {
     return this.databases
   }
 
-  public addEntry (teamId: string, entry: Entry): void {
+  public addEntry (teamId: string, entryId: string): void {
     const game = Game.get()
     const team = game.getTeam(teamId)
-    
+
     if (!team) {
       console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
       return
@@ -60,12 +59,13 @@ export class SuspectDatabaseManager {
       this.databases[teamId] = { entries: [] }
     }
 
-    if (this.databases[teamId].entries.some((e) => e.matterId === entry.matterId)) {
-      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry already exists', entry.matterId)
+    if (this.databases[teamId].entries.some((e) => e === entryId)) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry already exists', entryId)
       return
     }
 
-    this.databases[teamId].entries.push(entry)
+    this.databases[teamId].entries.push(entryId)
+    game.clueManager.earnInvestigationCoins(teamId, 5)
 
     const teamClient = game.getTeamClient(teamId)
 
@@ -74,7 +74,7 @@ export class SuspectDatabaseManager {
     this.save()
   }
 
-  public removeEntry (teamId: string, matterId: string): void {
+  public removeEntry (teamId: string, entryId: string): void {
     const game = Game.get()
     const team = game.getTeam(teamId)
 
@@ -87,10 +87,10 @@ export class SuspectDatabaseManager {
       this.databases[teamId] = { entries: [] }
     }
 
-    const index = this.databases[teamId].entries.findIndex((e) => e.matterId === matterId)
+    const index = this.databases[teamId].entries.findIndex((e) => e === entryId)
 
     if (index === -1) {
-      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry does not exist', matterId)
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry does not exist', entryId)
       return
     }
 

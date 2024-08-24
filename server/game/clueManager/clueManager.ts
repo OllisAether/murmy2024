@@ -6,6 +6,7 @@ import { colorize, Fg } from '../../console'
 
 export class ClueManager {
   private availableClues: string[] = []
+  private newAvailableClues: string[] = []
   private unlockedClues: {
     [teamId: string]: string[]
   } = {}
@@ -17,14 +18,19 @@ export class ClueManager {
   private mainClueType: {
     [teamId: string]: 'phone' | 'diary'
   } = {}
+  private mainClueUnlocked: {
+    [teamId: string]: boolean
+  } = {}
 
   save () {
     Database.get().saveCollection('clues', {
       availableClues: this.availableClues,
+      newAvailableClues: this.newAvailableClues,
       unlockedClues: this.unlockedClues,
       givenInvestigationCoins: this.givenInvestigationCoins,
       usedInvestigationCoins: this.usedInvestigationCoins,
       mainClueType: this.mainClueType,
+      mainClueUnlocked: this.mainClueUnlocked,
       assignFurtherMainClueTypesRandomly: this.assignFurtherMainClueTypesRandomly
     })
   }
@@ -42,6 +48,14 @@ export class ClueManager {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid availableClues data', data.availableClues)
     } else {
       this.availableClues = data.availableClues as string[]
+    }
+
+    if (!data.newAvailableClues ||
+      !Array.isArray(data.newAvailableClues) ||
+      data.newAvailableClues?.some((clueId: any) => typeof clueId !== 'string')) {
+      console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid newAvailableClues data', data.newAvailableClues)
+    } else {
+      this.newAvailableClues = data.newAvailableClues as string[]
     }
 
     if (!data.unlockedClues ||
@@ -81,6 +95,15 @@ export class ClueManager {
       this.mainClueType = data.mainClueType as Record<string, 'phone' | 'diary'>
     }
 
+    if (typeof data.mainClueUnlocked !== 'object' ||
+      Array.isArray(data.mainClueUnlocked) ||
+      Object.keys(data.mainClueUnlocked!)
+        ?.some(teamId => typeof (data.mainClueUnlocked as Record<string, any>)?.[teamId] !== 'boolean')) {
+      console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid mainClueUnlocked data', data.mainClueUnlocked)
+    } else {
+      this.mainClueUnlocked = data.mainClueUnlocked as Record<string, boolean>
+    }
+
     if (typeof data.assignFurtherMainClueTypesRandomly !== 'boolean') {
       console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid assignFurtherMainClueTypesRandomly data', data.assignFurtherMainClueTypesRandomly)
     } else {
@@ -96,18 +119,7 @@ export class ClueManager {
     // this.assignFurtherMainClueTypesRandomly = data.assignFurtherMainClueTypesRandomly
   }
 
-  getAvailableClues() {
-    return this.availableClues
-  }
-
-  getUnlockedClues(teamId?: string) {
-    if (!teamId) {
-      return this.unlockedClues
-    }
-
-    return this.unlockedClues[teamId] || []
-  }
-
+  // #region Investigation Coins
   getInvestigationCoins(teamId?: string) {
     if (!teamId) {
       return this.givenInvestigationCoins
@@ -123,7 +135,7 @@ export class ClueManager {
 
     return this.usedInvestigationCoins[teamId] || 0
   }
-  
+
   getGivenInvestigationCoins() {
     return this.givenInvestigationCoins
   }
@@ -192,10 +204,30 @@ export class ClueManager {
     Game.get().sendCluesToAdmins()
     this.save()
   }
+  // #endregion
+
+  // #region Clues
+  getAvailableClues() {
+    return this.availableClues
+  }
+
+  getNewAvailableClues() {
+    return this.newAvailableClues
+  }
+
+  getUnlockedClues(teamId?: string) {
+    if (!teamId) {
+      return this.unlockedClues
+    }
+
+    return this.unlockedClues[teamId] || []
+  }
 
   addClues(clueIds: string[]) {
     this.availableClues
       .push(...clueIds.filter(clueId => !this.availableClues.includes(clueId)))
+    
+    this.newAvailableClues.push(...clueIds.filter(clueId => !this.newAvailableClues.includes(clueId)))
 
     Game.get().sendCluesToClients()
     Game.get().sendCluesToAdmins()
@@ -205,6 +237,7 @@ export class ClueManager {
   addClue(clueId: string) {
     if (!this.availableClues.includes(clueId)) {
       this.availableClues.push(clueId)
+      this.newAvailableClues.push(clueId)
     }
 
     Game.get().sendCluesToClients()
@@ -217,6 +250,13 @@ export class ClueManager {
 
     Game.get().sendCluesToClients()
     Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
+  clearNewAvailableClues() {
+    this.newAvailableClues = []
+
+    Game.get().sendCluesToClients()
     this.save()
   }
 
@@ -319,7 +359,9 @@ export class ClueManager {
     Game.get().sendCluesToAdmins()
     this.save()
   }
+  // #endregion
 
+  // #region Main Clue Type
   assignRandomMainClueType(teamId?: string) {
     const game = Game.get()
 
@@ -434,6 +476,14 @@ export class ClueManager {
     return this.mainClueType[teamId] ?? null
   }
 
+  getMainClueUnlocked(teamId?: string) {
+    if (!teamId) {
+      return this.mainClueUnlocked
+    }
+
+    return this.mainClueUnlocked[teamId] || false
+  }
+
   setMainClueType(teamId: string, type: 'phone' | 'diary' | null) {
     if (!type) {
       delete this.mainClueType[teamId]
@@ -447,4 +497,15 @@ export class ClueManager {
     Game.get().sendCluesToAdmins()
     this.save()
   }
+
+  setMainClueUnlocked(teamId: string, value: boolean) {
+    this.mainClueUnlocked[teamId] = value
+
+    const teamClient = Game.get().getTeamClient(teamId)
+    
+    teamClient && Game.get().sendCluesToClients(teamClient)
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+  // #endregion
 }

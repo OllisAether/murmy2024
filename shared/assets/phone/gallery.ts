@@ -1,5 +1,4 @@
 import { Gallery, GalleryItem } from "../../phone/gallery"
-import { idGen } from "../../random"
 
 export const gallery: Gallery = [
   ...Array(28).fill({
@@ -11,13 +10,11 @@ export const gallery: Gallery = [
     entries: [{
       rect: { x: 0, y: 0, width: 1, height: 1 },
       entry: {
-        matterId: 'vandalismusPost' + index + idGen(),
+        id: 'vandalismusPost' + index,
         suspectId: 'lumine',
         title: 'Vandalismus vom Daphne',
         description: 'Ein Post von Daphne auf Instagram in dem vandaliertem Schulklo. Vielleicht steckt sie dahinter?',
-        image: {
-          imageAssetId: 'dokumente/VandalismusPost.jpg',
-        },
+        imageAssetId: 'dokumente/VandalismusPost.jpg',
       }
     }],
   })),

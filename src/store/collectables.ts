@@ -1,11 +1,10 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { Entry } from "../../shared/suspectDatabase/entry";
 import { useGameManager } from "./gameManager";
 import { getPathToElement } from "@/utils/getPathToElement";
 
 export interface Collectable {
-  entry: Entry
+  entryId: string
   element: HTMLDivElement
 }
 
@@ -20,7 +19,7 @@ export const useCollectables = defineStore('collectables', () => {
     delete collectables.value[id]
   }
 
-  function getCollectableAt (x: number, y: number): Collectable | undefined {
+  function getCollectableAt (x: number, y: number): Collectable | 'alreadyCollected' | void {
     const game = useGameManager()
 
     const element = document.elementFromPoint(x, y)
@@ -35,85 +34,28 @@ export const useCollectables = defineStore('collectables', () => {
 
     if (!collectable) return
 
-    // Check if collectable is already collected
     if (game.database.entries
-      .map(entry => entry.matterId)
-      .includes(collectable.entry.matterId)) return
+      .includes(collectable.entryId)) {
+      return 'alreadyCollected'
+    }
 
     return collectable
-
-    // return Object.values(collectables.value)
-    //   .filter(collectable => {
-    //     const { left, top, right, bottom } = collectable.element.getBoundingClientRect()
-    //     if (withPadding) {
-    //       return left - padding <= x && right + padding >= x && top - padding <= y && bottom + padding >= y
-    //     }
-
-    //     return left <= x && right >= x && top <= y && bottom >= y
-    //   }).filter(collectable => {
-    //     return !game.database.entries
-    //       .map(entry => entry.matterId)
-    //       .includes(collectable.entry.matterId)
-    //   })
   }
 
   function markCollectableAt (x: number, y: number) {
     const game = useGameManager()
     let collectable = getCollectableAt(x, y)
 
-    // if (collectables.length === 0) {
-    //   collectables = getCollectableAt(x, y, true)
-    //     .filter(collectable => {
-    //       return !game.database.entries
-    //         .map(entry => entry.matterId)
-    //         .includes(collectable.entry.matterId)
-    //     })
-    // }
-
-    // collectables.forEach(collectable => {
-    //   game.addDatabaseEntry(collectable.entry)
-    // })
+    if (collectable === 'alreadyCollected') {
+      return 'alreadyCollected'
+    }
 
     if (collectable) {
-      game.addDatabaseEntry(collectable.entry)
+      game.addDatabaseEntry(collectable.entryId)
     }
 
     return !!collectable
   }
-
-  // const collectedEntries = ref<Record<string, Collectable>>({})
-
-  // function setCollectedEntry (entry: Collectable) {
-  //   collectedEntries.value[entry.entry.matterId] = entry
-  // }
-
-  // function removeCollectedEntry (matterId: string) {
-  //   delete collectedEntries.value[matterId]
-  // }
-
-  // function getCollectedEntry (matterId: string) {
-  //   return collectedEntries.value[matterId]
-  // }
-
-  // function waitForCollectedEntry (matterId: string, cb: (entry: Collectable) => void): () => void {
-  //   const entry = getCollectedEntry(matterId)
-
-  //   if (entry) {
-  //     cb(entry)
-  //     return () => {}
-  //   }
-
-  //   const stop = watch(collectedEntries, collectedEntries => {
-  //     const entry = collectedEntries[matterId]
-
-  //     if (entry) {
-  //       cb(entry)
-  //       stop()
-  //     }
-  //   }, { immediate: true, deep: true })
-
-  //   return stop
-  // }
 
   return {
     collectables,

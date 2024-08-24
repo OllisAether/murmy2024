@@ -29,8 +29,6 @@ const router = createRouter({
             return "/team/home"
           case Phase.Work:
             return "/team/workspace"
-          case Phase.Break:
-            return "/team/break"
           case Phase.Vote:
             return "/team/vote"
           default:
@@ -60,14 +58,6 @@ const router = createRouter({
           meta: {
             phase: Phase.Work,
           },
-        },
-        {
-          path: "break",
-          component: () => import("./pages/team/Break.vue"),
-
-          meta: {
-            phase: Phase.Break,
-          }
         },
         {
           path: "vote",
@@ -201,9 +191,12 @@ router.beforeEach(async (to, _, next) => {
   if (auth.loading) {
     console.log("Waiting for auth to load")
     await new Promise<void>((resolve) => {
-      watch(() => auth.loading, () => {
-        if (!auth.loading) resolve()
-      }, { once: true })
+      const off = watch(() => auth.loading, () => {
+        if (!auth.loading) {
+          off()
+          resolve()
+        }
+      }, { immediate: true })
     })
   }
 
@@ -240,14 +233,19 @@ router.beforeEach(async (to, _, next) => {
   if (auth.role === Role.Team) {
     const game = useGameManager()
 
-    if (game.loading) {
+    if (!game.initialized || game.loading) {
       console.log("Waiting for game to load")
-      game.initGameManager()
+      if (!game.initialized) {
+        game.initGameManager()
+      }
 
       await new Promise<void>((resolve) => {
-        watch(() => game.loading, () => {
-          if (!game.loading) resolve()
-        }, { once: true })
+        const off = watch(() => game.loading, () => {
+          if (!game.loading) {
+            off()
+            resolve()
+          }
+        }, { immediate: true})
       })
     }
 

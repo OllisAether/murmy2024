@@ -276,11 +276,24 @@ async function unlock () {
     background: linear-gradient(90deg, #1e181a, #070808);
     box-shadow:
       -3px 0 5px -2px #b8d7ec inset,
-      0 0 2px #000,
+      0 0 10px #000,
       0 0 10px #000 inset
     ;
 
     &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: .3rem;
+      bottom: .3rem;
+      right: .15rem;
+
+      border: #808080 dashed .1rem;
+      border-right: none;
+      filter: drop-shadow(-1px -1px 1px #000)drop-shadow(1px 1px 1px #fff3);
+    }
+
+    &::after {
       content: '';
       position: absolute;
       left: -.5rem;

@@ -1,8 +1,6 @@
-import { CueType, CueTypes } from "../../shared/cue/CueTypes";
+import { CueType } from "../../shared/cue/CueTypes";
 
-export const cueIconMap: {
-  [key in CueTypes]?: string
-} = {
+export const cueIconMap: Record<CueType, string> = {
   [CueType.SetPhase]: 'mdi-label-outline',
   [CueType.StartTimer]: 'mdi-timer-sand',
 
@@ -30,7 +28,14 @@ export const cueIconMap: {
 
   [CueType.AddInvestigationCoins]: 'mdi-star-four-points-circle',
   [CueType.AddClues]: 'mdi-magnify-plus',
+  [CueType.AssignMainClueType]: 'mdi-tablet-cellphone',
+  [CueType.AssignMainClueTypeRandomly]: 'mdi-dice-multiple',
+  [CueType.SetAssignFurtherMainClueTypesRandomly]: 'mdi-dice-multiple',
 
   [CueType.SetMedia]: 'mdi-video',
   [CueType.WaitForMediaFinished]: 'mdi-video-off',
+
+  [CueType.CalculateResults]: 'mdi-calculator',
+  [CueType.ClearAllForms]: 'mdi-eraser',
+  [CueType.WaitForAllFormsSubmitted]: 'mdi-check-all',
 }

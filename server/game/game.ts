@@ -46,6 +46,7 @@ export class Game {
     this.cueManager.load()
     this.suspectDatabaseManager.load()
     this.clueManager.load()
+    this.formManager.load()
   }
 
   // #region Teams
@@ -76,7 +77,7 @@ export class Game {
 
     this.teams = teams.map((t) => {
       if (!t.id || !t.name || !t.code) {
-        console.warn('Invalid team data', t)
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Invalid team data', t)
         return null
       }
 
@@ -278,13 +279,13 @@ export class Game {
     const client = this.getClient(clientId)
 
     if (!client) {
-      console.warn('Client not found', clientId)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client not found', clientId)
       res.status(404).send('Client not found')
       return
     }
 
     if (client.type !== Role.Unauthorized) {
-      console.warn('Client already logged in', clientId)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client already logged in', clientId)
       res.status(409).send('Client already logged in')
       return
     }
@@ -300,7 +301,7 @@ export class Game {
       (c) => c.type === 'team'
       && (c as TeamClient).teamId === team.id)
     ) {
-      console.warn('Team already logged in', team.id)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Team already logged in', team.id)
       res.status(409).send('Team already logged in')
       return
     }
@@ -320,26 +321,26 @@ export class Game {
     const client = this.getClient(clientId)
 
     if (!client) {
-      console.warn('Client not found', clientId)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client not found', clientId)
       res.status(404).send('Client not found')
       return
     }
 
     if (client.type !== Role.Unauthorized) {
-      console.warn('Client already logged in', clientId)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client already logged in', clientId)
       res.status(409).send('Client already logged in')
       return
     }
 
     if (role !== Role.Admin && role !== Role.Board) {
-      console.warn('Invalid role', role)
+      console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Invalid role', role)
       res.status(400).send('Invalid role')
       return
     }
 
     if (role === Role.Admin) {
       if (password !== this.adminPassword) {
-        console.warn('Invalid password', password)
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Invalid password', password)
         res.status(403).send('Invalid password')
         return
       }
@@ -347,13 +348,13 @@ export class Game {
       this.promoteClientToAdmin(clientId)
     } else if (role === Role.Board) {
       if (password !== this.boardPassword) {
-        console.warn('Invalid password', password)
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Invalid password', password)
         res.status(403).send('Invalid password')
         return
       }
 
       if (this.clients.some((c) => c.type === Role.Board)) {
-        console.warn('Board already logged in')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Board already logged in')
         res.status(409).send('Board already logged in')
         return
       }
@@ -540,7 +541,7 @@ export class Game {
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.warn('Client is not an admin')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not an admin')
         return
       }
 
@@ -566,7 +567,7 @@ export class Game {
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.warn('Client is not an admin')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not an admin')
         return
       }
 
@@ -851,7 +852,7 @@ export class Game {
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.warn('Client is not an admin')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not an admin')
         return
       }
 
@@ -869,7 +870,7 @@ export class Game {
 
     if (client) {
       if (client.type !== Role.Team) {
-        console.warn('Client is not a team')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not a team')
         return
       }
 
@@ -893,13 +894,17 @@ export class Game {
       if (client.type === Role.Team) {
         return {
           mainClueType: this.clueManager.getMainClueType((client as TeamClient).teamId),
+          mainClueUnlocked: this.clueManager.getMainClueUnlocked((client as TeamClient).teamId),
           available: this.clueManager.getAvailableClues(),
+          new: this.clueManager.getNewAvailableClues(),
           unlocked: this.clueManager.getUnlockedClues((client as TeamClient).teamId),
           investigationCoins: this.clueManager.getInvestigationCoins((client as TeamClient).teamId),
         }
       } else {
+        // Admin or Board
         return {
           available: this.clueManager.getAvailableClues(),
+          new: this.clueManager.getNewAvailableClues(),
         }
       }
     }
@@ -924,12 +929,13 @@ export class Game {
         usedByTeam: this.clueManager.getInvestigationCoinDelta(),
       },
       mainClueType: this.clueManager.getMainClueType(),
+      mainClueUnlocked: this.clueManager.getMainClueUnlocked(),
       assignFurtherMainClueTypesRandomly: this.clueManager.getAssignFurtherMainClueTypesRandomly(),
     }
 
     if (client) {
       if (client.type !== Role.Admin) {
-        console.warn('Client is not an admin')
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not an admin')
         return
       }
 
@@ -945,6 +951,73 @@ export class Game {
 
   // #region Form
   formManager: FormManager = new FormManager()
+
+  sendFormToTeamClient (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending form to team client')
+
+    if (client) {
+      if (client.type !== Role.Team) {
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not a team')
+        return
+      }
+
+      client.send('form', {
+        fields: this.formManager.getForm((client as TeamClient).teamId),
+        submitted: this.formManager.isFormSubmitted((client as TeamClient).teamId)
+      })
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Team)
+      .forEach((c) => (c as TeamClient).send('form', {
+        fields: this.formManager.getForm((c as TeamClient).teamId),
+        submitted: this.formManager.isFormSubmitted((c as TeamClient).teamId)
+      }))
+  }
+
+  sendResultsToBoard (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending results to board')
+
+    const results = this.formManager.getResults()
+
+    if (client) {
+      if (client.type !== Role.Board) {
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not a board')
+        return
+      }
+
+      client.send('results', results)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Board)
+      .forEach((c) => (c as AdminClient).send('results', results))
+  }
+
+  sendFormsToAdmins (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending forms to admins')
+
+    const forms = {
+      forms: this.formManager.getForms(),
+      results: this.formManager.getResults()
+    }
+
+    if (client) {
+      if (client.type !== Role.Admin) {
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not an admin')
+        return
+      }
+
+      client.send('forms', forms)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Admin)
+      .forEach((c) => (c as AdminClient).send('forms', forms))
+  }
   // #endregion
 
   // #region Singleton

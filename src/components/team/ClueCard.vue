@@ -7,9 +7,15 @@
       'clue-card--confirmation': showBuyConfirmation
     }]"
   >
-    <button class="clue-card__content" @click="openClue">
+    <button
+      class="clue-card__content"
+      @click="openClue"
+      :style="{
+        zIndex: delayedShowBuyConfirmation ? 10 : 0
+      }"
+    >
       <SkewBox color="#fff2" :corner-cut="12"/>
-      
+
       <template v-if="isUnlocked">
         <img
           class="clue-card__thumbnail"
@@ -18,18 +24,26 @@
             : game.getAsset(clue?.thumbnailAssetId)?.content"
         >
       </template>
-      <template v-else>
+      <template v-else-if="clue">
+        <div class="clue-card__new" v-if="game.clues.new.includes(clue?.id)">
+          Neu
+        </div>
         <span class="clue-card__lock">
-          <VIcon>mdi-help</VIcon>
+          <VIcon>mdi-lock</VIcon>
         </span>
         <span class="clue-card__cost">
           <VIcon size="1rem">mdi-star-four-points-circle</VIcon>
-          {{ clue?.cost }}
+          {{ clue.cost }}
         </span>
       </template>
     </button>
 
-    <div class="clue-card__title">
+    <div
+      class="clue-card__title"
+      :style="{
+        zIndex: delayedShowBuyConfirmation ? 10 : 0
+      }"
+    >
       {{ clue?.title ?? transcript?.title }}
     </div>
 
@@ -41,9 +55,10 @@
       location="bottom center"
       scroll-strategy="close"
       transition="slide-y-transition"
+
       attach="parent"
-      :z-index="-1"
-      :offset="16"
+      :z-index="9"
+      absolute
     >
       <div class="clue-card__confirmation-overlay">
         <Btn
@@ -132,7 +147,7 @@
 import { useGameManager } from '@/store/gameManager';
 import SkewBox from '../SkewBox.vue';
 import { clues } from '../../../shared/assets/clues';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Btn from '../Btn.vue';
 import ClueImageViewer from './ClueViewer.vue';
 import { Transcript } from '../../../shared/transcript';
@@ -150,6 +165,16 @@ const isUnlocked = computed(() => props.transcript ? true : game.clues.unlocked.
 const isAffordable = computed(() => game.clues.investigationCoins >= (clue?.cost ?? 0));
 
 const showBuyConfirmation = ref(false);
+const delayedShowBuyConfirmation = ref(false);
+watch(showBuyConfirmation, (val) => {
+  if (val) {
+    delayedShowBuyConfirmation.value = true;
+  } else {
+    setTimeout(() => {
+      delayedShowBuyConfirmation.value = false;
+    }, 300);
+  }
+});
 
 async function unlockClue() {
   if (!props.clueId) return;
@@ -181,10 +206,6 @@ function openClue() {
   height: fit-content;
   text-align: center;
 
-  &--confirmation {
-    z-index: 100;
-  }
-
   &__content {
     aspect-ratio: .9;
     width: 100%;
@@ -205,6 +226,7 @@ function openClue() {
   }
   
   &__title {
+    position: relative;
     padding: 1rem .5rem 0 0;
     margin-left: -1rem;
     opacity: 0.5;
@@ -226,6 +248,7 @@ function openClue() {
   &__confirmation-overlay {
     display: flex;
     align-items: center;
+    padding: 1rem 0 5rem;
     padding-right: 1rem;
   }
 
@@ -250,21 +273,47 @@ function openClue() {
     font-size: 2rem;
   }
 
+  &__new {
+    position: absolute;
+    top: -.5rem;
+    right: -2rem;
+    padding: .1rem .5rem;
+    background-color: #2b183ed5;
+    border: 1px solid #d8b1ff;
+    border-radius: .5rem;
+    color: #d8b1ff;
+    text-shadow: 0 0 .5rem #c184ff99, 0 0 1rem #9123ff;
+    box-shadow:
+      0 0 .5em #d8b1ff77 inset,
+      0 0 1rem #9123ff55 inset;
+    -webkit-backdrop-filter: blur(.2rem);
+    backdrop-filter: blur(.2rem);
+
+    font-family: $fontDisplay;
+    font-weight: bold;
+  }
+
   &__cost {
     position: absolute;
     bottom: .5rem;
     right: -1rem;
     display: flex;
     align-items: center;
-    padding: .25rem .5rem;
+    padding: .1rem .5rem;
     font-size: 1.25rem;
     font-family: $fontDisplay;
-    background: rgba(0, 0, 0, .25);
-    color: #f44;
+
+    border: 1px solid #ff7f7f88;
+    background: #ff7f7f44;
+    border-radius: .5rem;
+    
+    color: #ff7f7f;
     -webkit-backdrop-filter: blur(.2rem);
     backdrop-filter: blur(.2rem);
-
+    
     .clue-card--affordable & {
+      background: #393c3fa1;
+      border-color: #fff2;
       color: inherit;
     }
 

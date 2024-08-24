@@ -13,11 +13,17 @@ const props = defineProps<{
   name?: string
   app?: string
   path?: string[]
+  crash?: boolean
 }>();
 
 const phone = useMainClue();
 
 function click() {
+  if (props.crash) {
+    phone.openCrashApp(props.name || 'App');
+    return;
+  }
+
   if (!props.app) return
 
   if (props.path) {
@@ -46,6 +52,13 @@ function click() {
   }
 
   &__name {
+    margin-top: 4px * $scale;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 0;
+    min-width: 100%;
     font-size: 6px * $scale
   }
 }

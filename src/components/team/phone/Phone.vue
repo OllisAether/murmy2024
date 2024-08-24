@@ -27,11 +27,43 @@
 
           <Transition name="phone__content__app">
             <CallsApp class="phone__content__app" v-if="phone.currentApp === 'calls'" />
-            <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
             <CameraApp class="phone__content__app" v-else-if="phone.currentApp === 'camera'" />
             <MessagesApp class="phone__content__app" v-else-if="phone.currentApp === 'sms'" />
             <NotesApp class="phone__content__app" v-else-if="phone.currentApp === 'notes'" />
+
+            <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
+            <PinterestApp class="phone__content__app" v-else-if="phone.currentApp === 'pinterest'" />
+            <PlayStoreApp class="phone__content__app" v-else-if="phone.currentApp === 'playstore'" />
+            <ClockApp class="phone__content__app" v-else-if="phone.currentApp === 'clock'" />
+            <CalculatorApp class="phone__content__app" v-else-if="phone.currentApp === 'calculator'" />
+            <CrashApp class="phone__content__app" v-else-if="phone.currentApp === 'crash'" />
           </Transition>
+
+          <VFadeTransition>
+            <div class="phone__alert__scrim" v-if="phone.alert"></div>
+          </VFadeTransition>
+          <VDialogTransition>
+            <div class="phone__alert" v-if="phone.alert">
+              <div class="phone__alert__content">
+                <div class="phone__alert__title">
+                  {{ phone.alert.title }}
+                </div>
+                <div class="phone__alert__message">
+                  {{ phone.alert.message }}
+                </div>
+
+                <div class="phone__alert__actions">
+                  <button
+                    v-for="(action, i) in phone.alert.actions"
+                    :key="i"
+                    @click="action.callback"
+                  >
+                    {{ action.text }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </VDialogTransition>
         </div>
       </div>
 
@@ -78,10 +110,15 @@ import CallsApp from './calls/CallsApp.vue';
 import BackSvg from '@/assets/phone/back.svg';
 import HomeSvg from '@/assets/phone/home.svg';
 import MenuSvg from '@/assets/phone/menu.svg';
-import InternetApp from './internet/InternetApp.vue';
+import InternetApp from './misc/InternetApp.vue';
 import CameraApp from './camera/CameraApp.vue';
 import MessagesApp from './messages/MessagesApp.vue';
 import NotesApp from './notes/NotesApp.vue';
+import PlayStoreApp from './misc/PlayStoreApp.vue';
+import ClockApp from './misc/ClockApp.vue';
+import CalculatorApp from './misc/CalculatorApp.vue';
+import CrashApp from './misc/CrashApp.vue';
+import PinterestApp from './misc/PinterestApp.vue';
 
 defineProps<{
   zoomScale: number;
@@ -280,6 +317,66 @@ onMounted(() => {
 
     &-enter-to, &-leave-to {
       opacity: 0;
+    }
+  }
+
+  &__alert {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    &__content {
+      position: relative;
+      width: 160px * $scale;
+      background: #111;
+      overflow: hidden;
+      border-radius: 2px * $scale;
+      color: white;
+
+      box-shadow:
+        0 2px * $scale 5px * $scale #000,
+        0 -1px * $scale .5px * $scale -1px * $scale #000a inset;
+    }
+
+    &__title {
+      font-size: 10px * $scale;
+      color: #4dccff;
+      line-height: 1;
+      border-bottom: .5px * $scale solid #4dccff;
+      padding: 8px * $scale;
+      background: linear-gradient(#0005, transparent);
+    }
+
+    &__message {
+      padding: 8px * $scale;
+      font-size: 8px * $scale;
+    }
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      border-top: .5px * $scale solid #333;
+
+      & > * {
+        flex: 1;
+        padding: 5px * $scale;
+        border-right: 1px * $scale solid #333;
+        font-size: 8px * $scale;
+        text-align: center;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
     }
   }
 }

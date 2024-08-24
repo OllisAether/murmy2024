@@ -9,7 +9,6 @@ import { Asset } from "../../../shared/asset";
 import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
 import { JsonMap } from "../../../shared/json";
-import { Entry } from "../../../shared/suspectDatabase/entry";
 
 export interface AlertOptions {
   id: string
@@ -116,10 +115,47 @@ export const useAdmin = defineStore('admin', () => {
 
   function deinitAdmin () {
     console.log('Deinitializing Admin')
+    useGameManager().deinitGameManager()
 
     actions.forEach((a) => a())
+    actions = []
 
-    useGameManager().deinitGameManager()
+    assets.value = {
+      team: [],
+      shared: [],
+      board: []
+    }
+
+    teams.value = []
+
+    clients.value = []
+
+    needsHelp.value = []
+
+    playbacks.value = []
+
+    currentPlaybackIndex.value = -1
+
+    media.value = {
+      progress: 0,
+      duration: 0,
+      state: 'paused'
+    }
+
+    suspectDatabases.value = {}
+
+    clues.value = {
+      unlocked: {},
+      investigationCoins: {
+        total: 0,
+        usedByTeam: {}
+      },
+      mainClueType: {},
+      mainClueUnlocked: {},
+      assignFurtherMainClueTypesRandomly: false
+    }
+
+    alerts.value = []
   }
 
   // #region Assets
@@ -405,7 +441,9 @@ export const useAdmin = defineStore('admin', () => {
   // #endregion
 
   // #region Playbacks & Cues
-  const playbacks = ref<Playback[]>([])
+  const playbacks = ref<(Playback | {
+    divider: string
+  })[]>([])
   const currentPlaybackIndex = ref<number>(-1)
   const currentCueIndex = ref<number>(-1)
 
@@ -502,16 +540,18 @@ export const useAdmin = defineStore('admin', () => {
   // #endregion
 
   // #region Suspect Databases
-  const suspectDatabases = ref<Record<string, {
-    entries: Entry[]
-  }>>({})
+  const suspectDatabases = ref<{
+    [teamId: string]: {
+      entries: string[]
+    }
+  }>({})
 
-  function removeEntry (teamId: string, matterId: string) {
-    ws.send('removeEntry', { teamId, matterId })
+  function removeEntry (teamId: string, id: string) {
+    ws.send('removeEntry', { teamId, id })
   }
 
-  function addEntry (teamId: string, entry: Entry) {
-    ws.send('addEntry', { teamId, entry })
+  function addEntry (teamId: string, entryId: string) {
+    ws.send('addEntry', { teamId, entryId })
   }
   // #endregion
 
@@ -523,6 +563,7 @@ export const useAdmin = defineStore('admin', () => {
       usedByTeam: Record<string, number>
     },
     mainClueType: Record<string, 'phone' | 'diary'>,
+    mainClueUnlocked: Record<string, boolean>,
     assignFurtherMainClueTypesRandomly: boolean
   }>({
     unlocked: {},
@@ -531,6 +572,7 @@ export const useAdmin = defineStore('admin', () => {
       usedByTeam: {}
     },
     mainClueType: {},
+    mainClueUnlocked: {},
     assignFurtherMainClueTypesRandomly: false
   })
 
@@ -564,6 +606,10 @@ export const useAdmin = defineStore('admin', () => {
 
   function setMainClueType (teamId: string, type: 'phone' | 'diary' | null) {
     ws.send('setMainClueType', { teamId, type })
+  }
+
+  function setMainClueUnlocked (teamId: string, unlocked: boolean) {
+    ws.send('setMainClueUnlocked', { teamId, unlocked })
   }
 
   function assignRandomMainClueType (teamId: string) {
@@ -643,6 +689,7 @@ export const useAdmin = defineStore('admin', () => {
     lockClue,
     setAssignFurtherMainClueTypesRandomly,
     setMainClueType,
+    setMainClueUnlocked,
     assignRandomMainClueType,
     assignRandomMainClueTypeForAllTeams
   }

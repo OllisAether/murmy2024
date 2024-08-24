@@ -16,11 +16,11 @@
               <VSelect
                 variant="outlined"
                 v-model="newEntry"
-                :items="game.collectAllEntries()
-                  .filter(entry => !admin.suspectDatabases[team.id]?.entries.find(e => e.matterId === entry.matterId))
+                :items="game.allEntries
+                  .filter(entry => !admin.suspectDatabases[team.id]?.entries.find(e => e === entry.id))
                   .map(entry => ({
-                    title: `${entry.title} - ${entry.suspectId} (${entry.matterId})`,
-                    value: entry
+                    title: `${entry.title} - ${entry.suspectId} (${entry.id})`,
+                    value: entry.id
                   }))"
                 label="Eintrag"
               />
@@ -41,10 +41,10 @@
     <VCardText>
       <VList nav rounded bg-color="background">
         <DatabaseEntry
-          v-for="entry in admin.suspectDatabases[team.id]?.entries"
-          :key="entry.matterId"
+          v-for="entryId in admin.suspectDatabases[team.id]?.entries"
+          :key="entryId"
           :team="team"
-          :entry="entry"
+          :entryId="entryId"
         />
         <VListItem v-if="!admin.suspectDatabases[team.id]?.entries.length">
           <VListItemTitle>
@@ -60,7 +60,6 @@
 import DatabaseEntry from '@/components/admin/DatabaseEntry.vue';
 import { useAdmin } from '@/store/admin';
 import { ref } from 'vue';
-import { Entry } from '../../../shared/suspectDatabase/entry';
 import { useGameManager } from '@/store/gameManager';
 
 const admin = useAdmin()
@@ -76,7 +75,7 @@ const props = defineProps<{
 
 const dialog = ref(false)
 
-const newEntry = ref<Entry>()
+const newEntry = ref<string>()
 function addEntry() {
   if (newEntry.value) {
     admin.addEntry(props.team.id, newEntry.value)

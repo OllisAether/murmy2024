@@ -70,7 +70,7 @@ import { VAlert, VContainer, VProgressLinear } from 'vuetify/components';
 import { useAuthManager } from './store/authManager';
 import { useWsClient } from './store/wsClient';
 import { useGameManager } from './store/gameManager';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { Role } from '../shared/roles';
 
 const auth = useAuthManager()
@@ -85,6 +85,14 @@ const loadProgress = computed(() => {
     * 100)
 })
 
+watch(() => game.wakelockShouldBeActive, (shouldBeActive) => {
+  if (shouldBeActive) {
+    game.wakelock.request('screen')
+  } else {
+    game.wakelock.release()
+  }
+})
+
 onMounted(() => {
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
@@ -95,7 +103,11 @@ onMounted(() => {
   })
 
   document.addEventListener('pointerdown', () => {
-    game.wakelock.request('screen')
+    if (game.wakelockShouldBeActive) {
+      game.wakelock.request('screen')
+    } else {
+      game.wakelock.release()
+    }
   })
 })
 </script>

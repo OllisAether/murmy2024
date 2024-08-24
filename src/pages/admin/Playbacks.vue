@@ -18,14 +18,25 @@
           Manuelle Trigger-Überschreibung {{ admin.manualTriggerOverride ? 'deaktivieren' : 'aktivieren' }}
         </VBtn>
 
-        <PlaybackCard
+        <template
           v-for="(playback, i) in admin.playbacks"
-          :playback="playback"
-          :index="i"
-          :class="{
-            'mt-1': i !== 0,
-          }"
-        />
+          :key="i"
+        >
+          <div v-if="playback.divider" class="mt-4 mb-2">
+            <VDivider>
+              {{ playback.divider }}
+            </VDivider>
+          </div>
+
+          <PlaybackCard
+            v-else
+            :playback="(playback as Playback)"
+            :index="admin.playbacks.filter(p => !p.divider).indexOf(playback)"
+            :class="{
+              'mt-1': i !== 0,
+            }"
+          />
+        </template>
       </VCardText>
     </VCard>
   </VContainer>
@@ -35,6 +46,7 @@
 import { useAdmin } from '../../store/admin/index';
 import GameControl from '../../components/admin/GameControl.vue';
 import PlaybackCard from '../../components/admin/playbacks/PlaybackCard.vue';
+import { Playback } from '../../../shared/playback/Playback';
 
 const admin = useAdmin()
 </script>

@@ -1,10 +1,13 @@
 <template>
-  <div class="clock-widget">
+  <button
+    class="clock-widget"
+    @click="phone.openApp('clock')"
+  >
     <div class="clock-widget__content">
       <div class="clock-widget__time">{{ phone.clock }}</div>
       <div class="clock-widget__date">{{ phone.date }}</div>
     </div>
-  </div>
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -42,13 +45,14 @@ const phone = useMainClue();
 
   &__time {
     font-size: 48px * $scale;
-    font-weight: bold;
+    // font-weight: bold;
     line-height: 1;
   }
 
   &__date {
     font-size: 8px * $scale;
     font-weight: bold;
+    text-transform: uppercase;
     line-height: 1;
   }
 }

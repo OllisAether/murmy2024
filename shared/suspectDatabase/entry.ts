@@ -1,18 +1,10 @@
-import { JsonMap } from "../json"
+import { TextContent } from "../textContent"
 
-export interface Entry extends JsonMap {
-  matterId: string
-  suspectId: string
+export interface Entry {
+  id: string
+  suspectId: string,
 
-  title: string,
-  description?: string,
-  image?: {
-    imageAssetId: string,
-    imageCrop?: {
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-    }
-  }
+  title: TextContent | string,
+  description?: TextContent | string,
+  imageAssetId?: string,
 }

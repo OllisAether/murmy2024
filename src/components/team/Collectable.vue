@@ -1,13 +1,14 @@
 <template>
   <div
     :class="['collectable', {
-      'collectable--inline': inline
+      'collectable--inline': inline,
     }]"
     ref="root"
   >
     <!-- @click="collected = !collected" -->
     <!-- {{ collected }} -->
     <slot />
+
     <Teleport
       v-if="showOrb"
       to="body"
@@ -26,8 +27,8 @@
 import { useCollectables } from '@/store/collectables'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { idGen } from '../../../shared/random'
-import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager'
+import { getPathToElement } from '@/utils/getPathToElement';
 
 const collectable = useCollectables()
 const game = useGameManager()
@@ -35,20 +36,20 @@ const game = useGameManager()
 const root = ref<HTMLDivElement | null>(null)
 
 const props = defineProps<{
-  entry: Entry
+  entryId: string
   inline?: boolean
-  disappear?: boolean
 }>()
 
 const id = idGen()
 
 // const collected = ref(false)
-const collected = computed(() => game.database.entries.some((e) => e.matterId === props.entry.matterId))
+const collected = computed(() => game.database.entries.some((e) => e === props.entryId))
 const rect = ref<{
   x: number
   y: number
   width: number
   height: number
+  rotation: number
 } | null>(null)
 
 watch(collected, () => {
@@ -56,11 +57,22 @@ watch(collected, () => {
 
   const boundingRect = root.value.getBoundingClientRect()
 
+  const path = getPathToElement(root.value).reverse()
+  const matrix: DOMMatrix = new DOMMatrix()
+
+  path.forEach((p) => {
+    const m = new DOMMatrix(getComputedStyle(p).transform)
+    matrix.preMultiplySelf(m)
+  })
+
+  const rotation = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI)
+
   rect.value = {
     x: boundingRect.left,
     y: boundingRect.top,
     width: boundingRect.width,
-    height: boundingRect.height
+    height: boundingRect.height,
+    rotation
   }
 
   if (collected.value) {
@@ -72,7 +84,7 @@ onMounted(() => {
   if (!root.value) return
 
   collectable.setCollectable(id, {
-    entry: props.entry,
+    entryId: props.entryId,
     element: root.value
   })
 })
@@ -94,11 +106,12 @@ async function startOrbAnimation () {
     {
       top: rect.value.y + rect.value.height / 2 + 'px',
       left: rect.value.x + rect.value.width / 2 + 'px',
+      transform: `rotate(${rect.value.rotation}deg)`,
       easing: 'cubic-bezier(0.4, 0, 0.8, 0.1)'
     },
     {
-      top: '50%',
-      left: !!document.querySelector('.sus-db') ? '12.5rem' : '0',
+      top: '22rem',
+      left: '12.5rem'
     }
   ], {
     duration: 700,
@@ -138,11 +151,14 @@ async function startOrbAnimation () {
 .collectable {
   &--inline {
     display: inline;
+    padding: .5em;
+    margin: -.5em;
   }
 
   &__orb {
     pointer-events: none;
     position: fixed;
+    transform-origin: top left;
 
     div {
       border-radius: 1.5rem;
@@ -152,18 +168,18 @@ async function startOrbAnimation () {
       $neon2: #00b7ff;
       
       box-shadow:
-      inset 0 0 1rem #fff,
-      
-      inset .2rem 0 .5rem $neon1,
-      inset -.2rem 0 .5rem $neon2,
-      
-      inset 1rem 0 2rem -.5rem $neon1,
-      inset -1rem 0 2rem -.5rem $neon2,
-      
-      0 0 1.5rem #fff,
-      -.5rem 0 1rem $neon1,
-      .5rem 0 1rem $neon2,
-      0 0 3rem 1rem #000;
+        inset 0 0 1rem #fff,
+        
+        inset .2rem 0 .5rem $neon1,
+        inset -.2rem 0 .5rem $neon2,
+        
+        inset 1rem 0 2rem -.5rem $neon1,
+        inset -1rem 0 2rem -.5rem $neon2,
+        
+        0 0 1.5rem #fff,
+        -.5rem 0 1rem $neon1,
+        .5rem 0 1rem $neon2,
+        0 0 3rem 1rem #000;
     }
   }
 }

@@ -42,15 +42,19 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldChoice } from '@/../shared/form';
+import { FormFieldChoice, FormFieldChoiceValue } from '@/../shared/form';
 import TextContentRenderer from '../TextContentRenderer.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
   field: FormFieldChoice
+  value?: FormFieldChoiceValue
 }>()
 
-const activeChoices = ref<string[]>([])
+const emit = defineEmits(['setForm'])
+
+const activeChoices = ref<FormFieldChoiceValue>(props.value ?? [])
+watch(activeChoices, () => emit('setForm', activeChoices.value), { deep: true })
 
 const max = computed(() =>{
   if (props.field.multiple === true) {

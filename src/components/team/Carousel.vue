@@ -71,34 +71,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, useModel, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import Btn from '../Btn.vue';
-
-const props = withDefaults(defineProps<{
-  modelValue?: number
-}>(), {
-  modelValue: 0
-})
+import { useSwipe } from '@vueuse/core';
 
 const emit = defineEmits(['update:modelValue'])
 
 const items = ref(0)
 
-const value = useModel(props, 'modelValue')
-
-watch(() => props.modelValue, (index) => {
-  if (index < 0) {
-    value.value = 0
-  }
-
-  items.value = root.value?.querySelectorAll('.carousel-item').length ?? 0
-
-  if (index >= items.value) {
-    value.value = items.value - 1
-  }
-
-  scrollTo(value.value)
-})
+const value = ref(0)
 
 watch(value, () => {
   if (cycle.value) {
@@ -106,17 +87,46 @@ watch(value, () => {
   }
 })
 
+let animationFrameScroll: number | null = null
 function scrollTo (index: number) {
   if (root.value) {
-    // value.value = index
-    root.value.scrollTo({
-      left: index * root.value.clientWidth,
-      behavior: 'smooth'
-    })
+    const targetLeft = index * root.value.clientWidth
+
+    if (animationFrameScroll) {
+      cancelAnimationFrame(animationFrameScroll)
+    }
+
+    const startLeft = root.value.scrollLeft
+    const start = Date.now()
+    // exponential easing out
+    const easing = (t: number) => 1 - Math.pow(2, -10 * t)
+
+    function update () {
+      const now = Date.now()
+      const time = Math.min(1, (now - start) / 500)
+      const progress = easing(time)
+
+      root.value!.scrollLeft = startLeft + (targetLeft - startLeft) * progress
+
+      if (time < 1) {
+        animationFrameScroll = requestAnimationFrame(update)
+      }
+    }
+
+    animationFrameScroll = requestAnimationFrame(update)
   }
 }
 
 const root = ref<HTMLElement | null>(null)
+useSwipe(root, {
+  onSwipeEnd(_, direction) {
+    if (direction === 'left') {
+      scrollTo(value.value + 1)
+    } else if (direction === 'right') {
+      scrollTo(value.value - 1)
+    }
+  },
+})
 
 onMounted(() => {
   scroll()
@@ -183,15 +193,21 @@ function scroll () {
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .carousel {
   position: relative;
+  background: $surface;
+  box-shadow: 0 0 15rem 0 #8db7ff11 inset;
+  background-repeat: no-repeat;
+  border-radius: 1rem;
+  border: 1px solid $stroke;
 
   &__content {
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    overflow: hidden;
     scrollbar-width: none;
+    // pointer-events: none;
 
     &::-webkit-scrollbar {
       display: none;
@@ -200,7 +216,6 @@ function scroll () {
     & > * {
       // width: 100%;
       flex: 0 0 100%;
-      scroll-snap-align: start;
     }
   }
 
@@ -225,7 +240,7 @@ function scroll () {
     align-items: center;
     gap: 2rem;
     padding: 1rem;
-    margin: 0 auto;
+    margin: 0 auto 1rem;
   }
 
   &__indicator {

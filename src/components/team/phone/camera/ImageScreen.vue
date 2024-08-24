@@ -35,7 +35,7 @@
               class="image-screen__content__image-entry"
               v-for="(entry, i) in image?.entries"
               :key="i"
-              :entry="entry.entry"
+              :entryId="entry.entry.id"
               :style="{
                 top: `${entry.rect.x * 100}%`,
                 left: `${entry.rect.y * 100}%`,
@@ -144,7 +144,7 @@ watch(imageIndex, () => {
       }
 
       const progress = Math.min((Date.now() - startTime) / 200, 1);
-      const targetLeft = imageIndex.value * (imagesPreview.value.querySelector('button')?.offsetWidth || 0);
+      const targetLeft = imageIndex.value * ((imagesPreview.value.querySelector('button')?.offsetWidth || 0) * 1.1);
 
       if (!imagesPreview.value) {
         return;
@@ -188,7 +188,7 @@ onMounted(() => {
 
   if (imagesPreview.value) {
     imagesPreview.value.scrollTo({
-      left: imageIndex.value * (imagesPreview.value.querySelector('button')?.offsetWidth || 0),
+      left: imageIndex.value * ((imagesPreview.value.querySelector('button')?.offsetWidth || 0) * 1.1),
       behavior: 'instant'
     });
   }
@@ -284,7 +284,7 @@ onMounted(() => {
     display: flex;
     padding: 0 calc(50% - 10px * $scale);
     overflow: hidden;
-    gap: 1px * $scale;
+    gap: 10%;
 
     &__image {
       flex-shrink: 0;

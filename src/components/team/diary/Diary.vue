@@ -208,8 +208,10 @@ function leave (el: Element, done: () => void, i: number) {
       filter: brightness($brightness)blur($blur);
     }
 
+    pointer-events: none;
     &--current {
       z-index: 1;
+      pointer-events: all;
 
       .diary:not(.diary--locked) & {
         filter: brightness(calc(1 - var(--progress-abs, 0) * 2 * (1 - $brightness)))blur(calc(var(--progress-abs, 0) * 2 * $blur));

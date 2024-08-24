@@ -17,12 +17,6 @@ export const VoteMainClue = (duration?: number | FieldReference): Playback => ({
       }
     },
     {
-      type: CueType.SetMedia,
-      options: {
-        media: FieldReference('media')
-      }
-    },
-    {
       type: CueType.AddVoteOptions,
       options: {
         options: {
@@ -46,7 +40,6 @@ export const VoteMainClue = (duration?: number | FieldReference): Playback => ({
       }
     },
     { type: CueType.WaitForVote },
-    { type: CueType.WaitForMediaFinished },
     { type: CueType.EndVote},
     {
       type: CueType.AssignMainClueType,

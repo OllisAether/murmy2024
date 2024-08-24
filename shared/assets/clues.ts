@@ -14,20 +14,12 @@ export const clues: Clue<ClueTypes>[] = [
         {
           index: 0,
           entry: {
-            matterId: 'camera1',
+            id: 'camera1',
             suspectId: 'carpentier',
 
             title: 'Kamera 1',
             description: 'Eine Kamera, die den Eingangsbereich überwacht.\nVermutlich ist sie mit dem Sicherheitssystem verbunden.',
-            image: {
-              imageAssetId: 'floorplan/floorplan_eg.png',
-              imageCrop: {
-                x: (825 - 50) / 1600,
-                y: (560 - 50) / 1200,
-                width: 150 / 1600,
-                height: 150 / 1200
-              }
-            },
+            imageAssetId: 'floorplan/floorplan_eg.png',
           },
           rect: {
             x: 825 / 1600,

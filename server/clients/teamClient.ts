@@ -1,3 +1,4 @@
+import { FormFieldValue } from "../../shared/form";
 import { Role } from "../../shared/roles";
 import { Entry } from "../../shared/suspectDatabase/entry";
 import { colorize, Fg } from "../console";
@@ -74,10 +75,10 @@ export class TeamClient extends WebSocketClient {
         handler: (payload) => {
           console.log(colorize('[Client: Team]', Fg.Blue), 'Adding suspect database entry', payload);
           const game = Game.get();
-          const entry = payload?.entry;
+          const entryId = payload?.entryId;
 
-          if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
-            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid entry', entry)
+          if (!entryId || typeof entryId !== 'string') {
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid entry', entryId)
             this.send('suspectDatabaseEntry:response', {
               success: false,
               message: 'Invalid Format'
@@ -85,7 +86,7 @@ export class TeamClient extends WebSocketClient {
             return
           }
 
-          game.suspectDatabaseManager.addEntry(this.teamId, entry as Entry)
+          game.suspectDatabaseManager.addEntry(this.teamId, entryId)
 
           this.send('suspectDatabaseEntry:response', {
             success: true
@@ -128,7 +129,67 @@ export class TeamClient extends WebSocketClient {
             success: true
           })
         }
+      },
+      {
+        action: 'setMainClueUnlocked',
+        handler: (payload) => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Setting main clue unlocked', payload);
+          const unlocked = payload?.unlocked;
+
+          if (typeof unlocked !== 'boolean') {
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid unlocked', unlocked)
+            this.send('setMainClueUnlocked:response', {
+              success: false,
+              message: 'Invalid Format'
+            })
+            return
+          }
+
+          game.clueManager.setMainClueUnlocked(this.teamId, unlocked)
+
+          this.send('setMainClueUnlocked:response', {
+            success: true
+          })
+        }
+      },
+
+      // #region Form
+      {
+        action: 'setField',
+        handler: (payload) => {
+          console.log(colorize('[Client: Team]', Fg.Blue), 'Setting form', payload);
+          const fieldId = payload?.fieldId;
+          const value = payload?.value;
+
+          if (typeof fieldId !== 'string') {
+            console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid value', fieldId, value)
+            this.send('setField:response', {
+              success: false,
+              message: 'Invalid Format'
+            })
+            return
+          }
+
+          game.formManager.setField(this.teamId, fieldId, value as FormFieldValue)
+
+          this.send('setField:response', {
+            success: true
+          })
+        }
+      },
+      {
+        action: 'getForm',
+        handler: () => {
+          game.sendFormToTeamClient(this)
+        }
+      },
+      {
+        action: 'submitForm',
+        handler: () => {
+          game.formManager.submitForm(this.teamId)
+        }
       }
+      // #endregion
     ]));
   }
 }

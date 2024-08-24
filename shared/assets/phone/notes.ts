@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Note } from "../../phone/note";
+import { Note } from "../../phone/notes";
 import { p, textContent } from "../../textContent";
 
 export const notes: Note[] = [

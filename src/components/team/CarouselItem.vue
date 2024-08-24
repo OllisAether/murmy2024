@@ -51,6 +51,8 @@
   &__title {
     margin-top: 2rem;
     font-size: 2rem;
+    font-family: $fontHeading;
+    font-weight: bold;
   }
 
   &__text {

@@ -8,7 +8,8 @@
       <div
         v-if="progress > 0"
         :class="['hold-indicator', {
-          'hold-indicator--nothing-found': nothingFound
+          'hold-indicator--nothing-found': nothingFound,
+          'hold-indicator--already-found': alreadyFound
         }]"
         :style="{
           '--progress': progress,
@@ -61,12 +62,14 @@ const holdDelay = 200;
 // cubic ease in out
 const progressEase = (t: number) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 const nothingFound = ref(false);
+const alreadyFound = ref(false);
 
 function onPointerDown (e: PointerEvent) {
   let start = Date.now();
 
   holdPosition.value = [e.clientX - (root.value?.getBoundingClientRect().x ?? 0), e.clientY - (root.value?.getBoundingClientRect().y ?? 0)];
   nothingFound.value = false;
+  alreadyFound.value = false;
 
   let animation: number | null = null;
   async function counter () {
@@ -75,7 +78,10 @@ function onPointerDown (e: PointerEvent) {
     if (progress.value >= 1) {
       const success = collectables.markCollectableAt(e.clientX, e.clientY);
 
-      if (!success) {
+      if (success === 'alreadyCollected') {
+        alreadyFound.value = true;
+        await new Promise(resolve => setTimeout(resolve, 200));
+      } else if (!success) {
         nothingFound.value = true;
         await new Promise(resolve => setTimeout(resolve, 200));
       }
@@ -151,7 +157,7 @@ function onPointerDown (e: PointerEvent) {
     color: #A23946;
     animation: wiggle .3s forwards;
     animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
-
+      
     @keyframes wiggle {
       0% {
         transform: translateX(-1rem)translate(-50%, -50%);
@@ -170,6 +176,25 @@ function onPointerDown (e: PointerEvent) {
       }
       100% {
         transform: translateX(0rem)translate(-50%, -50%);
+      }
+    }
+  }
+
+  &--already-found {
+    mix-blend-mode: normal !important;
+    filter: drop-shadow(0 0 0.5rem #000)hue-rotate(0);
+    color: #ff7948;
+    animation: scaleUp .3s forwards;
+
+    @keyframes scaleUp {
+      0% {
+        transform: translate(-50%, -50%)scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%)scale(.9);
+      }
+      100% {
+        transform: translate(-50%, -50%)scale(1);
       }
     }
   }

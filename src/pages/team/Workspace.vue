@@ -11,11 +11,7 @@
                 <Timer class="workspace__timer" />
               </div>
             </VExpandXTransition>
-            <span class="workspace__ep">
-              <VIcon size="1em">
-                mdi-star-four-points-circle
-              </VIcon> {{ game.clues.investigationCoins }}
-            </span>
+            <InvestigationCoinsDisplay class="workspace__ep" />
           </div>
           <div class="workspace__indicators__center">
             <span class="workspace__teamname">
@@ -28,35 +24,27 @@
 
         <div class="workspace__scroller">
           <div class="workspace__content">
-            <FormCard class="workspace__main-clue" v-if="game.phase.meta?.form" />
-
             <MainClueTypeCard class="workspace__main-clue" v-if="game.clues.mainClueType"/>
 
-            <div class="workspace__content__header">
-              Transkripte
-
-              <HelpBtn>
-                <template #header>
-                  Transkripte
-                </template>
-
-                Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Medien. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
-
-                Es lohnt sich, die Transkripte genau zu lesen, da sie oft <b class="help-color">wichtige Informationen</b> enthalten, die <b class="help-color">markiert</b> werden können.
-              </HelpBtn>
-            </div>
-
-            <div class="workspace__clue-grid mb-8">
-              <ClueCard
-                v-for="transcript in game.availableTranscripts"
-                :key="transcript.id"
-                :transcript="transcript"
-              />
-            </div>
-
-            <div class="workspace__no-clues" v-if="game.availableTranscripts.length === 0">
-              Keine Transkripte verfügbar
-            </div>
+            <template v-if="game.availableTranscripts.length > 0">
+              <div class="workspace__content__header">
+                Transkripte
+                <HelpBtn>
+                  <template #header>
+                    Transkripte
+                  </template>
+                  Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Medien. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
+                  Es lohnt sich, die Transkripte genau zu lesen, da sie oft <b class="help-color">wichtige Informationen</b> enthalten, die <b class="help-color">markiert</b> werden können.
+                </HelpBtn>
+              </div>
+              <div class="workspace__clue-grid mb-8">
+                <ClueCard
+                  v-for="transcript in game.availableTranscripts"
+                  :key="transcript.id"
+                  :transcript="transcript"
+                />
+              </div>
+            </template>
 
             <div class="workspace__content__header">
               Hinweise
@@ -85,6 +73,8 @@
             </div>
           </div>
         </div>
+
+        <FormCard class="workspace__form-card" v-if="game.phase.meta?.form" />
       </div>
     </VLayout>
   </ScreenWrapper>
@@ -96,6 +86,7 @@ import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
 import FormCard from '@/components/team/FormCard.vue';
 import HelpBtn from '@/components/team/HelpBtn.vue';
+import InvestigationCoinsDisplay from '@/components/team/InvestigationCoinsDisplay.vue';
 import MainClueTypeCard from '@/components/team/MainClueTypeCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
 import Timer from '@/components/Timer.vue';
@@ -176,11 +167,6 @@ const auth = useAuthManager();
     font-size: 2rem;
   }
 
-  &__ep {
-    font-size: 1.5rem;
-    font-family: $fontDisplay;
-  }
-
   &__scroller {
     flex: 1;
     overflow-y: auto;
@@ -190,7 +176,7 @@ const auth = useAuthManager();
   &__content {
     max-width: calc(100vw - 25rem);
     margin: 0 auto;
-    padding: 6rem 8rem;
+    padding: 6rem 8rem 25%;
 
     &__header {
       margin: 1.5rem -1rem;
@@ -214,6 +200,9 @@ const auth = useAuthManager();
 
   &__main-clue {
     margin-bottom: 3rem;
+  }
+
+  &__form-card {
   }
 
   &__clue-grid {

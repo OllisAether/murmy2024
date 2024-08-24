@@ -14,15 +14,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { suspects } from '../../../../shared/assets/suspects';
-import { FormFieldSuspect } from '../../../../shared/form';
+import { FormFieldSuspect, FormFieldSuspectValue } from '../../../../shared/form';
 
-defineProps<{
+const props = defineProps<{
   field: FormFieldSuspect
+  value?: FormFieldSuspectValue
 }>()
 
-const suspect = ref<string | null>(null)
+const emit = defineEmits(['setForm'])
+
+const suspect = ref<FormFieldSuspectValue | null>(props.value ?? null)
+watch(suspect, () => emit('setForm', suspect.value), { deep: true })
 
 function toggleSuspect(newSuspect: string) {
   if (suspect.value === newSuspect) {

@@ -7,42 +7,105 @@
     </RouterView>
 
     <div class="controls">
-      <VFadeTransition>
-        <VBtn
-          v-if="!game.wakelock.isActive"
-          icon
-          variant="text"
-          color="red"
-          @click="game.wakelock.request('screen')"
-        >
+      <VBtn
+        icon
+        variant="text"
+        :color="game.wakelock.isActive
+          ? '#fff8'
+          : (game.wakelockShouldBeActive
+            ? '#df507b'
+            : '#fff8')"
+      >
+        <template v-if="game.wakelock.isActive">
+          <VIcon>mdi-eye-lock</VIcon>
+        </template>
+        <template v-else-if="game.wakelockShouldBeActive">
           <VIcon>mdi-eye-lock-open</VIcon>!
+        </template>
+        <template v-else>
+          <VIcon>mdi-eye-lock-open</VIcon>
+        </template>
 
-          <VOverlay
-            activator="parent"
-            width="400"
-            location-strategy="connected"
-            :scrim="false"
-            location="bottom"
-          >
-            <VCard>
+        <VOverlay
+          activator="parent"
+          width="400"
+          location-strategy="connected"
+          :scrim="false"
+          location="bottom"
+        >
+          <template #="{ isActive }">
+            <VCard rounded="lg">
+              <VToolbar color="transparent">
+                <VToolbarTitle>
+                  <template v-if="game.wakelock.isActive">
+                    <VIcon>mdi-eye-lock</VIcon>
+                  </template>
+                  <template v-else>
+                    <VIcon>mdi-eye-lock-open</VIcon>
+                  </template>
+                  Bildschirmsperre
+                </VToolbarTitle>
+                <VBtn icon @click="isActive.value = false">
+                  <VIcon>mdi-close</VIcon>
+                </VBtn>
+              </VToolbar>
+
               <VCardText style="font-size: 1rem;">
-                <p class="mb-3" v-if="!game.wakelock.isSupported">
-                  Die Bildschirmsperre konnte nicht aktiviert werden, da der Browser dies nicht unterstützt.
-                </p>
-                <p class="mb-3" v-else>
-                  Die Bildschirmsperre konnte nicht aktiviert werden.
-                </p>
-                <p class="mb-3">
-                  Es kann sein, dass der Bildschirm während des Spiels ausgeht.
-                </p>
-                <p>
-                  Um dies zu verhindern, könnt ihr den Bildschirmtimeout in den Einstellungen eures Geräts deaktivieren.
-                </p>
+                <template v-if="!game.wakelock.isSupported && !game.wakelock.isActive">
+                  <p class="mb-3" v-if="!game.wakelock.isSupported">
+                    Die Bildschirmsperre konnte nicht aktiviert werden, da der Browser dies nicht unterstützt.
+                  </p>
+                  <p class="mb-3" v-else-if="!game.wakelock.isActive">
+                    Die Bildschirmsperre konnte nicht aktiviert werden.
+                  </p>
+                  <p class="mb-3">
+                    Es kann sein, dass der Bildschirm während des Spiels ausgeht.
+                  </p>
+                  <p>
+                    Um dies zu verhindern, könnt ihr den Bildschirmtimeout in den Einstellungen eures Geräts deaktivieren.
+                  </p>
+                </template>
+
+                <template v-else-if="!game.wakelock.isActive && game.wakelockShouldBeActive">
+                  <p class="mb-3">
+                    Die Bildschirmsperre ist deaktiviert, sollte aber aktiviert sein.
+                  </p>
+                  <p>
+                    Um die Bildschirmsperre manuell zu aktivieren, klickt auf den Button unten.
+                  </p>
+                </template>
+
+                <template v-else-if="game.wakelock.isActive">
+                  <p class="mb-3">
+                    Die Bildschirmsperre ist <em><b>aktiviert</b></em>.
+                  </p>
+
+                  <p>
+                    Der Bildschirm wird während des Spiels nicht ausgehen.
+                  </p>
+                </template>
+
+                <template v-else>
+                  <p class="mb-3">
+                    Die Bildschirmsperre ist <em><b>deaktiviert</b></em>.
+                  </p>
+
+                  <p>
+                    Der Bildschirm kann während des Spiels ausgehen.
+                  </p>
+                </template>
               </VCardText>
+
+              <VCardActions v-if="game.wakelock.isSupported && !game.wakelock.isActive && game.wakelockShouldBeActive">
+                <VSpacer />
+                <VBtn @click="game.wakelockShouldBeActive && game.wakelock.request('screen')">
+                  Aktivieren
+                </VBtn>
+              </VCardActions>
             </VCard>
-          </VOverlay>
-        </VBtn>
-      </VFadeTransition>
+          </template>
+        </VOverlay>
+      </VBtn>
 
       <Btn
         v-if="game.canFullscreen"
@@ -160,13 +223,14 @@
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
 import { useAuthManager } from '../../store/authManager';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeMount, ref, watch, onUnmounted } from 'vue';
 import { useGameManager } from '../../store/gameManager';
 // import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
 import Btn from '@/components/Btn.vue';
 import SkewBox from '@/components/SkewBox.vue';
 import { VOverlay } from 'vuetify/components';
+import { VBtn } from 'vuetify/components/VBtn';
 
 // const display = useDisplay()
 
@@ -244,12 +308,12 @@ watch(() => game.phase.type, () => {
   router.replace('/team')
 })
 
-onMounted(() => {
-  game.initGameManager()
+onBeforeMount(() => {
+  game.wakelockShouldBeActive = true
+})
 
-  onBeforeUnmount(() => {
-    game.deinitGameManager()
-  })
+onUnmounted(() => {
+  game.wakelockShouldBeActive = false
 })
 
 const helpIsError = ref(false)

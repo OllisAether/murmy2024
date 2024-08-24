@@ -34,4 +34,8 @@ export enum CueType {
 
   SetMedia = 'SetMedia',
   WaitForMediaFinished = 'WaitForMediaFinished',
+
+  CalculateResults = 'CalculateResults',
+  ClearAllForms = 'ClearAllForms',
+  WaitForAllFormsSubmitted = 'WaitForAllFormsSubmitted',
 }

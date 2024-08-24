@@ -61,13 +61,11 @@ export const transcripts: Transcript[] = [
       ['ermittler1', textContent([
         'Guten Tag, ',
         bold(color(getSuspectById('ferluci')?.color, entry({
-          matterId: 'ferluci',
+          id: 'ferluci',
           title: 'Terrylin Ferluci',
           suspectId: 'ferluci',
           description: 'Schulleiterin',
-          image: {
-            imageAssetId: 'thumbnails/ferluci.png',
-          }
+          imageAssetId: 'thumbnails/ferluci.png',
         }, 'Frau Ferluci.'))),
         ' Wir haben erfahren, dass Sie eine wichtige Position in der Schule haben. Könnten Sie uns bitte für die Formalität Ihren Namen und Ihre Rolle in der Schule nennen?'
       ])],

@@ -8,6 +8,7 @@ import { WaitForTimer } from "./WaitForTimer";
 import { AddVoteOptions, ClearVotePool, CloseVote, EndVote, OpenVote, PauseVote, RemoveVoteOption, ResumeVote, SetRandomWinner, StartTiebreaker, WaitForVote } from "./Vote";
 import { AddClues, AddInvestigationCoins, AssignMainClueType, AssignMainClueTypeRandomly, SetAssignFurtherMainClueTypesRandomly } from "./Clue";
 import { SetMedia, WaitForMediaFinished } from "./Media";
+import { CalculateResults, ClearAllForms, WaitForAllFormsSubmitted } from "./form";
 
 export const CueTypes: Record<CueType, typeof CueHandle>= {
   [CueType.StartTimer]: StartTimer,
@@ -47,6 +48,11 @@ export const CueTypes: Record<CueType, typeof CueHandle>= {
   // Media
   [CueType.SetMedia]: SetMedia,
   [CueType.WaitForMediaFinished]: WaitForMediaFinished,
+
+  // Form
+  [CueType.CalculateResults]: CalculateResults,
+  [CueType.ClearAllForms]: ClearAllForms,
+  [CueType.WaitForAllFormsSubmitted]: WaitForAllFormsSubmitted,
 }
 
 export function getHandle (type: CueType): CueHandle {

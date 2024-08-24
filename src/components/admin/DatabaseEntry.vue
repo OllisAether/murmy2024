@@ -1,10 +1,10 @@
 <template>
   <VListItem>
     <VListItemTitle>
-      {{ entry.suspectId }} - {{ entry.matterId }}
+      {{ entry.suspectId }} - {{ entry.title }}
     </VListItemTitle>
     <VListItemSubtitle>
-      {{ entry.matterId }}
+      {{ entry.id }}
     </VListItemSubtitle>
 
     <template #append>
@@ -18,7 +18,7 @@
             </VCardText>
             <VCardActions>
               <VBtn @click="deleteDialog = false">Abbrechen</VBtn>
-              <VBtn color="error" @click="admin.removeEntry(team.id, entry.matterId)">Löschen</VBtn>
+              <VBtn color="error" @click="admin.removeEntry(team.id, entry.id)">Löschen</VBtn>
             </VCardActions>
           </VCard>
         </VDialog>
@@ -29,17 +29,25 @@
 
 <script lang="ts" setup>
 import { useAdmin } from '@/store/admin';
-import { Entry } from '../../../shared/suspectDatabase/entry';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useGameManager } from '@/store/gameManager';
 
-defineProps<{
+const props = defineProps<{
   team: {
     id: string
     name: string
     code: string
   },
-  entry: Entry
+  entryId: string
 }>();
+
+const game = useGameManager();
+
+const entry = computed(() => game.allEntries.find(e => e.id === props.entryId) ?? {
+  id: props.entryId,
+  suspectId: '???',
+  title: 'Eintrag nicht gefunden'
+});
 
 const deleteDialog = ref(false);
 

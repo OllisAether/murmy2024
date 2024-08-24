@@ -1,71 +1,41 @@
 <template>
   <button :class="['database-entry', {
-    'database-entry--has-image': !!entry.image
+    'database-entry--has-image': !!entry.imageAssetId,
+    'database-entry--has-description': !!entry.description,
+    'database-entry--dragging': dragging
   }]" ref="root" @pointerdown="pointerdown">
+    <img
+      v-if="entry.imageAssetId"
+      class="database-entry__image"
+      :src="game.getAsset(entry.imageAssetId)?.content"
+    />
+
     <div class="database-entry__content">
       <div class="database-entry__title">
-        {{ entry.title }}
+        <TextContentRenderer :text-content="entry.title" />
       </div>
       <div v-if="entry.description" class="database-entry__description">
-        {{ entry.description }}
+        <TextContentRenderer :text-content="entry.description" />
       </div>
     </div>
 
     <VIcon class="database-entry__fullscreen-icon">mdi-fullscreen</VIcon>
 
-    <div
-      v-if="entry.image"
-      class="database-entry__image"
-      :style="{
-        aspectRatio: entry.image.imageCrop ? `${
-          (entry.image.imageCrop.width * game.getAsset(entry.image.imageAssetId)?.metadata.width) /
-          (entry.image.imageCrop.height * game.getAsset(entry.image.imageAssetId)?.metadata.height)}` : undefined
-      }"
-    >
-      <img
-        :src="game.getAsset(entry.image.imageAssetId)?.content"
-        :style="entry.image.imageCrop ? {
-          position: 'absolute',
-          top: `${-entry.image.imageCrop.y * 100 * 1 / entry.image.imageCrop.height}%`,
-          left: `${-entry.image.imageCrop.x * 100 * 1 / entry.image.imageCrop.width}%`,
-          width: `${1 / entry.image.imageCrop.width * 100}%`,
-          height: `${1 / entry.image.imageCrop.height * 100}%`,
-          objectFit: 'fill',
-        } : {}"
-      />
-    </div>
-
     <VDialog v-model="dialog" activator="parent" width="fit-content">
       <div class="database-entry__overlay">
+        <img
+          v-if="entry.imageAssetId"
+          class="database-entry__overlay__image"
+          :src="game.getAsset(entry.imageAssetId)?.content"
+        />
+
         <div class="database-entry__overlay__content">
           <div class="database-entry__overlay__title">
-            {{ entry.title }}
+            <TextContentRenderer :text-content="entry.title" />
           </div>
           <div class="database-entry__overlay__description">
-            {{ entry.description }}
+            <TextContentRenderer v-if="entry.description" :text-content="entry.description" />
           </div>
-        </div>
-
-        <div
-          v-if="entry.image"
-          class="database-entry__overlay__image"
-          :style="{
-            aspectRatio: entry.image.imageCrop ? `${
-              (entry.image.imageCrop.width * game.getAsset(entry.image.imageAssetId)?.metadata.width) /
-              (entry.image.imageCrop.height * game.getAsset(entry.image.imageAssetId)?.metadata.height)}` : undefined
-          }"
-        >
-          <img
-            :src="game.getAsset(entry.image.imageAssetId)?.content"
-            :style="entry.image.imageCrop ? {
-              position: 'absolute',
-              top: `${-entry.image.imageCrop.y * 100 * 1 / entry.image.imageCrop.height}%`,
-              left: `${-entry.image.imageCrop.x * 100 * 1 / entry.image.imageCrop.width}%`,
-              width: `${1 / entry.image.imageCrop.width * 100}%`,
-              height: `${1 / entry.image.imageCrop.height * 100}%`,
-              objectFit: 'fill',
-            } : {}"
-          />
         </div>
 
         <Btn
@@ -82,11 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';
 import { useEntryDrag } from '@/store/team/entryDrag';
+import TextContentRenderer from './TextContentRenderer.vue';
 
 const game = useGameManager()
 
@@ -94,11 +65,15 @@ const props = defineProps<{
   entry: Entry
 }>()
 
+const entry = computed(() => game.allEntries.find(e => e.id === props.entry.id) ?? props.entry)
+
 const dialog = ref(false)
 
 const root = ref<HTMLDivElement | null>(null)
 
 const entryDrag = useEntryDrag()
+const dragging = computed(() => entryDrag.draggedEntry === props.entry.id)
+
 function pointerdown (event: PointerEvent) {
   if (entryDrag.dropZones.length === 0) return
 
@@ -119,7 +94,7 @@ function pointerdown (event: PointerEvent) {
     
     if (!thresholdSurpassed && distance > 10) {
       thresholdSurpassed = true
-      entryDrag.startDrag(props.entry.matterId)
+      entryDrag.startDrag(props.entry.id)
     } else if (!thresholdSurpassed) {
       return
     }
@@ -161,6 +136,12 @@ function pointerdown (event: PointerEvent) {
   align-items: stretch;
   padding: .5rem;
 
+  transition: opacity .2s;
+
+  &--dragging {
+    opacity: .3;
+  }
+
   &__content {
     z-index: 1;
     padding: 0 .5rem;
@@ -172,9 +153,13 @@ function pointerdown (event: PointerEvent) {
   }
 
   &__title {
-    padding: .5rem 0 .1rem;
+    padding: .5rem 0;
     font-family: $fontHeading;
     font-size: 1.2rem;
+
+    .database-entry--has-description &, .database-entry--has-image & {
+      padding: 0 0 .2rem;
+    }
   }
 
   &__description {
@@ -192,24 +177,14 @@ function pointerdown (event: PointerEvent) {
     overflow: hidden;
   }
 
-  &__image, &__overlay__image {
-    z-index: 1;
-    grid-row: 1 / span 2;
-    grid-column: 2;
-
-    position: relative;
+  &__image {
+    display: block;
+    pointer-events: none;
+    height: auto;
+    object-fit: cover;
     width: 5rem;
-    height: fit-content;
-    overflow: hidden;
     border-radius: .5rem;
-
-    img {
-      display: block;
-      pointer-events: none;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-    }
+    margin-right: .5rem;
   }
 
   &__fullscreen-icon {
@@ -234,7 +209,7 @@ function pointerdown (event: PointerEvent) {
     display: flex;
     flex-direction: row;
     // align-items: center;
-    padding: 1rem 1rem 1rem 2rem;
+    padding: 1rem 1rem 1rem 1rem;
     gap: 1rem;
 
     background: #1f212299;
@@ -261,8 +236,8 @@ function pointerdown (event: PointerEvent) {
       flex: 1 1 auto;
       width: 0;
       font-size: 1.2rem;
-      padding: 1rem 0;
-
+      padding: 1rem 1rem;
+      
       display: flex;
       flex-direction: column;
     }
@@ -270,6 +245,7 @@ function pointerdown (event: PointerEvent) {
     &__title {
       font-family: $fontHeading;
       font-size: 2rem;
+      margin-bottom: 1rem;
     }
 
     &__description {
@@ -278,6 +254,10 @@ function pointerdown (event: PointerEvent) {
     }
 
     &__image {
+      display: block;
+      pointer-events: none;
+      height: auto;
+      object-fit: cover;
       width: 20vw;
       border-radius: 1rem;
     }

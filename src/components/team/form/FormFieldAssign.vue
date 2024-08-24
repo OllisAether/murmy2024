@@ -75,17 +75,21 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldAssign } from '@/../shared/form';
-import { computed, ref } from 'vue';
+import { FormFieldAssign, FormFieldAssignValue } from '@/../shared/form';
+import { computed, ref, watch } from 'vue';
 import TextContentRenderer from '../TextContentRenderer.vue';
 
 const props = defineProps<{
-  field: FormFieldAssign
+  field: FormFieldAssign,
+  value?: FormFieldAssignValue
 }>()
+
+const emit = defineEmits(['setForm'])
 
 const choices = ref<HTMLDivElement[]>([])
 
-const pairs = ref<{ a: string, b: string[] }[]>([])
+const pairs = ref<FormFieldAssignValue>(props.value ?? [])
+watch(pairs, () => emit('setForm', pairs.value), { deep: true })
 
 const computedPairs = computed(() => props.field.choicesA.map(choice => {
   return {

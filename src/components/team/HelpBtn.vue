@@ -13,6 +13,7 @@
       transition="dialog-transition"
       close-on-back
       close-on-content-click
+      scroll-strategy="close"
       offset="8"
     >
       <div class="help-btn__tooltip">
@@ -67,7 +68,7 @@ const help = ref(false);
 @use '@/scss/vars' as *;
 
 .help-btn {
-  color: #c184ff66;
+  color: #c184ff99;
   text-shadow: 0 0 1rem #9123ff;
   width: 2rem;
   height: 2rem;

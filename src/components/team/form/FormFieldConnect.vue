@@ -101,19 +101,24 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldConnect } from '@/../shared/form';
+import { FormFieldConnect, FormFieldConnectValue } from '@/../shared/form';
 import TextContentRenderer from '../TextContentRenderer.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   field: FormFieldConnect
+  value?: FormFieldConnectValue
 }>()
+
+const emit = defineEmits(['setForm'])
 
 const root = ref<HTMLElement | null>(null)
 const choicesA = ref<HTMLElement[]>([])
 const choicesB = ref<HTMLElement[]>([])
 
-const pairs = ref<{ a: string, b: string }[]>([])
+const pairs = ref<FormFieldConnectValue>(props.value ?? [])
+watch(pairs, () => emit('setForm', pairs.value), { deep: true })
+
 const computedPairs = computed(() => pairs.value.map(pair => {
   const elA = choicesA.value.find(el => el.dataset.choiceId === pair.a)
   const elB = choicesB.value.find(el => el.dataset.choiceId === pair.b)
@@ -189,6 +194,7 @@ function pointerdownA (event: PointerEvent, choiceId: string) {
 
   window.addEventListener('pointermove', move)
   window.addEventListener('pointerup', up)
+  window.addEventListener('pointercancel', up)
 
   function move (event: PointerEvent) {
     if (!currentPair.value) return
@@ -234,6 +240,7 @@ function pointerdownA (event: PointerEvent, choiceId: string) {
 
     window.removeEventListener('pointermove', move)
     window.removeEventListener('pointerup', up)
+    window.removeEventListener('pointercancel', up)
   }
 }
 
@@ -345,7 +352,7 @@ function addPair (a: string, b: string) {
   &__choice {
     position: relative;
     padding: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     background: #393c3fa1;
     border: 1px solid #fff2;
     color: #fff;
@@ -365,7 +372,7 @@ function addPair (a: string, b: string) {
     }
 
     &__port {
-      z-index: 9999;
+      z-index: 1;
       position: absolute;
       width: .8rem;
       height: .8rem;

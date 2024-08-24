@@ -1,10 +1,15 @@
 import { computed } from "@vue/reactivity";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
+import { useGameManager } from "../gameManager";
 
 export const useMainClue = defineStore('mainClue', () => {
+  const game = useGameManager()
   // #region Pin
-  const locked = ref(true)
+  const locked = ref(!game.clues.mainClueUnlocked)
+  watch(() => game.clues.mainClueUnlocked, (value) => {
+    locked.value = !value
+  })
 
   const pin = import.meta.env.VITE_PIN as string
   const pinTimeoutSeconds = ref(0)
@@ -58,6 +63,7 @@ export const useMainClue = defineStore('mainClue', () => {
         return true
       }
 
+      game.setMainClueUnlocked(true)
       locked.value = false
       pinTimeoutSeconds.value = 0
       pinUnlockedAt.value = 0
@@ -94,13 +100,66 @@ export const useMainClue = defineStore('mainClue', () => {
     return `${weekday}, ${day}. ${month} ${year}`
   })()
 
+  interface Alert {
+    title: string
+    message: string
+    actions: {
+      text: string
+      callback: () => void
+    }[]
+  }
+
+  // #region Alert
+  const alert = ref<Alert | null>(null)
+  function showAlert (opt: Partial<Alert>) {
+    const options = {
+      title: opt.title ?? 'Alert',
+      message: opt.message ?? '',
+      actions: opt.actions ?? [
+        {
+          text: 'Ok',
+          callback: () => dismissAlert()
+        }
+      ]
+    }
+
+    alert.value = options
+  }
+
+  function dismissAlert () {
+    alert.value = null
+  }
+  // #endregion
+
+  // #region CrashApp
+  function openCrashApp (appName: string) {
+    openApp('crash')
+
+    setTimeout(() => {
+      if (currentApp.value !== 'crash') {
+        return
+      }
+
+      openApp('home')
+      showAlert({
+        title: `${appName} ist abgestürzt`,
+        message: 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      })
+    }, 500)
+  }
+  // #endregion
+
   // #region Navigation
   const currentApp = ref<string>('home')
   const paths = ref<Record<string, string[]>>({})
   const currentPath = computed(() => paths.value[currentApp.value] ?? [])
 
   function homeBtn () {
-    openApp('home')
+    if (currentApp.value === 'home') {
+      openApp('home', [])
+    } else {
+      openApp('home')
+    }
     homeBtnListeners.forEach(listener => listener())
   }
 
@@ -210,7 +269,6 @@ export const useMainClue = defineStore('mainClue', () => {
   // #region Save to localStorage
   function saveToLocalStorage () {
     localStorage.setItem('mainClue', JSON.stringify({
-      locked: locked.value,
       pinTries: pinTries.value,
       pinUnlockedAt: pinUnlockedAt.value,
 
@@ -228,7 +286,6 @@ export const useMainClue = defineStore('mainClue', () => {
     if (data) {
       try {
         const json = JSON.parse(data)
-        locked.value = json.locked ?? true
         pinTries.value = json.pinTries ?? 0
         pinUnlockedAt.value = json.pinUnlockedAt ?? 0
 
@@ -258,6 +315,12 @@ export const useMainClue = defineStore('mainClue', () => {
     unlock,
 
     // #region Phone
+    alert,
+    showAlert,
+    dismissAlert,
+
+    openCrashApp,
+
     homeBtn,
     onHomeBtn,
     offHomeBtn,

@@ -10,10 +10,11 @@ export const form: Form = [
         id: '1',
         type: 'entry',
         title: 'Vandalismus?',
+        description: 'Beschreibung',
         amount: 1,
-        solutions: (gallery.map(g => g.entries?.[0].entry.matterId).filter(Boolean) as string[])
+        solutions: (gallery.map(g => g.entries?.[0].entry.id).filter(Boolean) as string[])
           .map(id => ({
-            matterId: id,
+            id: id,
             points: 2,
           })),
       },
@@ -26,9 +27,9 @@ export const form: Form = [
           max: 3,
           points: 1,
         },
-        solutions: (gallery.map(g => g.entries?.[0].entry.matterId).filter(Boolean) as string[])
+        solutions: (gallery.map(g => g.entries?.[0].entry.id).filter(Boolean) as string[])
           .map(id => ({
-            matterId: id,
+            id: id,
             points: 2,
           })),
       },
@@ -47,11 +48,11 @@ export const form: Form = [
           id: String(i),
           text: `Choice ${i + 1}`,
         })),
-        solutionIds: ['1', '2'],
-        points: 3,
+        solutionIds: ['1', '2', '3'],
+        points: 2,
       },
       {
-        id: '3',
+        id: '3.5',
         type: 'choice',
         title: '2 choices',
         multiple: {
@@ -65,7 +66,7 @@ export const form: Form = [
         points: 3,
       },
       {
-        id: '3.5',
+        id: '3.7',
         type: 'choice',
         title: 'Single choice',
         choices: Array.from({ length: 4 }, (_, i) => ({
@@ -149,7 +150,7 @@ export const form: Form = [
           a: `a${i}`,
           b: [`b${i}`],
         })),
-        points: 4,
+        points: 1,
       }
     ],
   },
@@ -175,3 +176,7 @@ export const form: Form = [
     ],
   }
 ]
+
+export function getFieldFromId (id: string) {
+  return form.flatMap(f => f.fields).find(f => f.id === id)
+}
