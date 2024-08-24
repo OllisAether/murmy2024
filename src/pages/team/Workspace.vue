@@ -66,6 +66,16 @@
                 :key="clue"
                 :clueId="clue"
               />
+              <ClueCard
+                v-for="clue in game.clues.available"
+                :key="clue"
+                :clueId="clue"
+              />
+              <ClueCard
+                v-for="clue in game.clues.available"
+                :key="clue"
+                :clueId="clue"
+              />
             </div>
 
             <div class="workspace__no-clues" v-if="game.clues.available.length === 0">
@@ -200,9 +210,6 @@ const auth = useAuthManager();
 
   &__main-clue {
     margin-bottom: 3rem;
-  }
-
-  &__form-card {
   }
 
   &__clue-grid {

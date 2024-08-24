@@ -104,9 +104,9 @@ import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
 import { chats } from '../../../../../shared/assets/phone/chats';
 import { computed } from 'vue';
-import Collectable from '../../Collectable.vue';
+import Collectable from '../../../Collectable.vue';
 import { GroupChat, PrivateChat } from '../../../../../shared/phone/chat';
-import TextContentRenderer from '../../TextContentRenderer.vue';
+import TextContentRenderer from '../../../TextContentRenderer.vue';
 
 const game = useGameManager();
 const phone = useMainClue();

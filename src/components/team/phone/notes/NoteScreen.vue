@@ -20,7 +20,7 @@ import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
 import { computed } from 'vue';
 import { notes } from '../../../../../shared/assets/phone/notes';
-import TextContentRenderer from '../../TextContentRenderer.vue';
+import TextContentRenderer from '../../../TextContentRenderer.vue';
 
 const phone = useMainClue();
 

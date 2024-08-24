@@ -68,7 +68,7 @@ import { useGameManager } from '@/store/gameManager';
 import { Transcript, TranscriptLine, TranscriptSpeakerBase } from '../../../shared/transcript';
 import { computed } from 'vue';
 import Color from 'color';
-import TextContentRenderer from './TextContentRenderer.vue';
+import TextContentRenderer from '../TextContentRenderer.vue';
 
 const game = useGameManager();
 

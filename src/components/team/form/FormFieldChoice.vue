@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { FormFieldChoice, FormFieldChoiceValue } from '@/../shared/form';
-import TextContentRenderer from '../TextContentRenderer.vue';
+import TextContentRenderer from '../../TextContentRenderer.vue';
 import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{

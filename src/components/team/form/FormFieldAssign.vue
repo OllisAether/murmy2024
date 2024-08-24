@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { FormFieldAssign, FormFieldAssignValue } from '@/../shared/form';
 import { computed, ref, watch } from 'vue';
-import TextContentRenderer from '../TextContentRenderer.vue';
+import TextContentRenderer from '../../TextContentRenderer.vue';
 
 const props = defineProps<{
   field: FormFieldAssign,

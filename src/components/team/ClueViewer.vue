@@ -19,6 +19,19 @@
       >
         <VIcon>mdi-chevron-right</VIcon>
       </Btn>
+
+      <div class="clue-viewer__dots">
+        <div
+          v-for="i in pageCount"
+          :key="i"
+          class="clue-viewer__dot"
+          :class="{'clue-viewer__dot--active': (i - 1) === currentPage}"
+        />
+
+        <div class="clue-viewer__page-counter">
+          {{ currentPage + 1 }} / {{ pageCount }}
+        </div>
+      </div>
     </template>
 
     <HoldIndicator
@@ -139,7 +152,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } 
 import { Asset } from '@/../shared/asset';
 import { useSwipe } from '@vueuse/core';
 import Btn from '../Btn.vue';
-import Collectable from './Collectable.vue';
+import Collectable from '../Collectable.vue';
 import { pages } from './diary/pages';
 import { useMainClue } from '@/store/team/mainClue';
 import HoldIndicator from './HoldIndicator.vue';
@@ -685,6 +698,34 @@ watch(swipe.isSwiping, (isSwiping) => {
     left: 3rem;
     transform: translateY(-50%);
     z-index: 99;
+  }
+
+  &__dots {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+  }
+
+  &__dot {
+    width: .4rem;
+    height: .4rem;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: 0.2;
+    transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
+
+    &--active {
+      opacity: 1;
+    }
+  }
+
+  &__page-counter {
+    color: #fff8;
+    font-size: .8rem;
   }
 }
 </style>

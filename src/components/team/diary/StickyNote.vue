@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import Collectable from '../Collectable.vue';
+import Collectable from '../../Collectable.vue';
 
 defineProps<{
   entryId?: string,

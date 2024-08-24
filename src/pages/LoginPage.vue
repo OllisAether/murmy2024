@@ -102,7 +102,7 @@ import { codeLength, codeRegex } from '../../shared/teamcode';
 import { useRoute } from 'vue-router';
 import { useGameManager } from '../store/gameManager';
 import SkewBox from '@/components/SkewBox.vue';
-import TextContentRenderer from '@/components/team/TextContentRenderer.vue';
+import TextContentRenderer from '@/components/TextContentRenderer.vue';
 import { bold, wiggly } from '../../shared/textContent';
 
 const route = useRoute()

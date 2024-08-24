@@ -52,24 +52,17 @@
             Zurück
           </Btn>
           <Btn
-            :disabled="pageIndex === form.length - 1"
+            v-if="pageIndex !== form.length - 1"
             @click="pageIndex++"
           >
             Weiter
             <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
           </Btn>
-          <Btn
-            @click="showForm = false"
-            color="#A23946"
-          >
-            Schließen
-            <VIcon size="1em" class="ml-2">mdi-close</VIcon>
-          </Btn>
-          <VDialog max-width="400">
+          <VDialog max-width="400" v-else>
             <template #activator="{ props }">
               <Btn color="#006d3e" v-bind="props">
                 Absenden
-                <VIcon size="1em" class="ml-2">mdi-arrow-top-right</VIcon>
+                <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
               </Btn>
             </template>
             <template #="{ isActive }">
@@ -108,6 +101,13 @@
               </VCard>
             </template>
           </VDialog>
+          <Btn
+            @click="showForm = false"
+            color="#A23946"
+          >
+            Schließen
+            <VIcon size="1em" class="ml-2">mdi-close</VIcon>
+          </Btn>
         </div>
       </div>
     </VOverlay>
@@ -138,17 +138,21 @@ function submit() {
 
 .form-card {
   &__content {
-    background: white;
-    color: black;
+    background: #393c3fa1;
+    border: 1px solid #fff2;
+    border-radius: 1rem 1rem 0 0;
+
+    -webkit-backdrop-filter: blur(2rem);
+    backdrop-filter: blur(2rem);
+
     position: absolute;
     right: 2rem;
     bottom: -5rem;
 
     width: 30rem;
-    box-shadow: 0 0 1rem #000;
+    // box-shadow: 0 0 4rem #000;
 
-    padding: 1.5rem 2rem;
-    padding-bottom: 7rem;
+    padding: 1.5rem 2rem 7rem;
 
     text-align: left;
 
@@ -162,7 +166,7 @@ function submit() {
     &__icon {
       position: absolute;
       top: 1.5rem;
-      right: 1rem;
+      right: 1.5rem;
     }
 
     &__text {
@@ -170,15 +174,15 @@ function submit() {
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
-      gap: 0.5rem;
+      gap: .5rem;
 
       &__title {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-family: $fontHeading;
       }
 
       &__description {
-        color: #000a;
+        color: #fff8;
       }
     }
   }

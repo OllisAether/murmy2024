@@ -58,17 +58,17 @@ img, svg {
 }
 
 /* prevent pull-to-refresh for Chrome 63+ */
-// body:not(.admin) {
-//   overscroll-behavior-y: none;
-//   overflow: hidden;
-// }
+body:not(.admin) {
+  overscroll-behavior-y: none;
+  overflow: hidden;
+}
 
 /* prevent pinch-zoom for Chrome 36+, Safari 13+ */
-// body:not(.admin) {
-//   // overflow: hidden;
-//   touch-action: pan-x pan-y;
-//   // min-height: 100%; /* prevent pinch-zoom at page bottom */
-// }
+body:not(.admin) {
+  // overflow: hidden;
+  touch-action: pan-x pan-y;
+  // min-height: 100%; /* prevent pinch-zoom at page bottom */
+}
 
 :not(.admin) #app {
   position: fixed;

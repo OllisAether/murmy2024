@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { FormField, FormFieldAssignValue, FormFieldChoiceValue, FormFieldConnectValue, FormFieldEntryValue, FormFieldOrderValue, FormFieldSuspectValue, FormFieldValue, getMaxPoints } from '@/../shared/form';
-import TextContentRenderer from '../TextContentRenderer.vue';
+import TextContentRenderer from '../../TextContentRenderer.vue';
 import FormFieldEntry from './FormFieldEntry.vue';
 import FormFieldChoice from './FormFieldChoice.vue';
 import FormFieldOrder from './FormFieldOrder.vue';

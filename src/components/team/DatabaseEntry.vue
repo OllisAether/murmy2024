@@ -57,7 +57,7 @@ import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';
 import { useEntryDrag } from '@/store/team/entryDrag';
-import TextContentRenderer from './TextContentRenderer.vue';
+import TextContentRenderer from '../TextContentRenderer.vue';
 
 const game = useGameManager()
 

@@ -83,7 +83,7 @@ import { useEntryDrag } from '@/store/team/entryDrag';
 import { useGameManager } from '@/store/gameManager';
 import { Entry } from '../../../../shared/suspectDatabase/entry';
 import { suspects } from '../../../../shared/assets/suspects';
-import TextContentRenderer from '../TextContentRenderer.vue';
+import TextContentRenderer from '../../TextContentRenderer.vue';
 
 const game = useGameManager()
 const entryDrag = useEntryDrag()
