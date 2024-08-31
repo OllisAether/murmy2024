@@ -657,11 +657,14 @@ export class Game {
   // #region Media
   private currentMedia: string | null = null
   private watchedMedia: Set<string> = new Set()
+  private progress = 0
 
   saveMedia () {
     Database.get().saveCollection('media', {
       currentMedia: this.currentMedia,
-      watchedMedia: Array.from(this.watchedMedia)
+      watchedMedia: Array.from(this.watchedMedia),
+      progress: this.progress,
+      lastMediaTime: this.lastMediaTime
     })
   }
 
@@ -669,6 +672,8 @@ export class Game {
     const media = Database.get().getCollection('media') as {
       currentMedia: string
       watchedMedia: string[]
+      progress: number
+      lastMediaTime: number
     }
 
     if (!media) {
@@ -677,6 +682,8 @@ export class Game {
 
     this.currentMedia = media.currentMedia
     this.watchedMedia = new Set(media.watchedMedia)
+    this.progress = media.progress ?? 0
+    this.lastMediaTime = media.lastMediaTime ?? 0
   }
 
   sendMediaToClients (client?: WebSocketClient) {
@@ -702,6 +709,10 @@ export class Game {
     return this.currentMedia
   }
 
+  getProgress () {
+    return this.progress
+  }
+
   getWatchedMedia () {
     return Array.from(this.watchedMedia)
   }
@@ -710,6 +721,8 @@ export class Game {
     console.log(colorize('[Media]', Fg.Cyan), 'Setting media', media)
 
     this.currentMedia = media
+    this.progress = 0
+    this.lastMediaTime = 0
     
     if (media) {
       this.watchedMedia.add(media)
@@ -731,9 +744,42 @@ export class Game {
     console.log(colorize('[Media]', Fg.Cyan), 'Media finished')
     this.setMedia(null)
     this.mediaFinishedListeners.forEach((l) => l())
+    this.progress = 0
+    this.lastMediaTime = 0
+
+    this.saveMedia()
   }
   offMediaFinished (listener: () => void) {
     this.mediaFinishedListeners = this.mediaFinishedListeners.filter((l) => l !== listener)
+  }
+
+  onMediaTimeListeners: { time: number /* in milliseconds */, listener: () => void }[] = []
+  onMediaTime (time: number, listener: () => void) {
+    this.onMediaTimeListeners.push({ time, listener })
+
+    return () => {
+      this.offMediaTime(time, listener)
+    }
+  }
+
+  lastMediaTime = 0
+  mediaTime (time: number /* in seconds */) {
+    const start = this.lastMediaTime
+    const end = Math.floor(time * 1000) // to milliseconds
+
+    // Find listeners between start and end
+    const listeners = this.onMediaTimeListeners.filter((l) => l.time > start && l.time <= end)
+
+    listeners.forEach((l) => l.listener())
+
+    this.progress = time
+    this.sendMediaProgressToAdmins();
+    this.lastMediaTime = end
+
+    this.saveMedia()
+  }
+  offMediaTime (time: number, listener: () => void) {
+    this.onMediaTimeListeners = this.onMediaTimeListeners.filter((l) => l.time !== time && l.listener !== listener)
   }
 
   playMedia () {
@@ -835,10 +881,10 @@ export class Game {
       .forEach((c) => c.send('mediaState', state))
   }
 
-  sendMediaProgressToAdmins (progress: number) {
+  sendMediaProgressToAdmins () {
     this.clients
       .filter((c) => c.type === Role.Admin)
-      .forEach((c) => c.send('mediaProgress', progress))
+      .forEach((c) => c.send('mediaProgress', this.progress))
   }
   // #endregion
 

@@ -79,8 +79,8 @@
               >
                 <img :src="asset.content" />
                 <Collectable
-                  disappear
                   class="clue-viewer__collectable"
+                  :highlight="isTutorialMarkEntry"
                   v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
                   :key="i"
                   :entryId="entry.entry.id"
@@ -156,6 +156,7 @@ import Collectable from '../Collectable.vue';
 import { pages } from './diary/pages';
 import { useMainClue } from '@/store/team/mainClue';
 import HoldIndicator from './HoldIndicator.vue';
+import { useTutorial } from '@/store/team/tutorial';
 
 const props = defineProps<{
   assetIds?: string[]
@@ -576,6 +577,11 @@ watch(swipe.isSwiping, (isSwiping) => {
     currentPage.value--;
   }
 })
+
+// #region Tutorial
+const tutorial = useTutorial()
+const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry');
+// #endregion
 </script>
 
 <style lang="scss" scoped>

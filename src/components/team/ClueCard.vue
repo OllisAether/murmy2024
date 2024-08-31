@@ -4,7 +4,9 @@
     :class="['clue-card', {
       'clue-card--unlocked': isUnlocked,
       'clue-card--affordable': isAffordable,
-      'clue-card--confirmation': showBuyConfirmation
+      'clue-card--confirmation': showBuyConfirmation,
+      'clue-card--open': showClue,
+      'clue-card--highlight': highlight
     }]"
   >
     <button
@@ -14,7 +16,8 @@
         zIndex: delayedShowBuyConfirmation ? 10 : 0
       }"
     >
-      <SkewBox color="#fff2" :corner-cut="12"/>
+      <VIcon v-if="highlight && !showBuyConfirmation" class="clue-card--highlight__icon">mdi-gesture-tap</VIcon>
+      <SkewBox color="#fff2" :corner-cut="12" />
 
       <template v-if="isUnlocked">
         <img
@@ -25,9 +28,7 @@
         >
       </template>
       <template v-else-if="clue">
-        <div class="clue-card__new" v-if="game.clues.new.includes(clue?.id)">
-          Neu
-        </div>
+        <NewBadge class="clue-card__new" v-if="game.clues.new.includes(clue?.id)" />
         <span class="clue-card__lock">
           <VIcon>mdi-lock</VIcon>
         </span>
@@ -65,7 +66,7 @@
           :color="isAffordable ? '#24AA6A' : '#fff2'"
           @click="unlockClue"
           :disabled="!isAffordable"
-          class="mr-3"
+          class="mr-3 clue-card__confirmation-overlay-confirm"
         >
           Bestätigen
           <span class="clue-card__confirmation-overlay-cost">
@@ -76,6 +77,7 @@
         <Btn
           color="#A23946"
           square
+          class="clue-card__confirmation-overlay-cancel"
         >
           <VIcon>mdi-close</VIcon>
         </Btn>
@@ -88,7 +90,9 @@
       :z-index="9"
       absolute
       :close-on-content-click="false"
-      :close-on-back="true"
+      :close-on-back="false"
+      persistent
+      no-click-animation
       height="100%"
       width="100%"
       transition="fade-transition"
@@ -133,6 +137,9 @@
           <Btn
             @click="showClue = false"
             color="#A23946"
+            :style="{
+              pointerEvents: tutorial.state.action === undefined ? undefined : 'none'
+            }"
           >
             Schließen
             <VIcon size="1em" class="ml-2">mdi-close</VIcon>
@@ -147,32 +154,48 @@
 import { useGameManager } from '@/store/gameManager';
 import SkewBox from '../SkewBox.vue';
 import { clues } from '../../../shared/assets/clues';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, useModel, watch } from 'vue';
 import Btn from '../Btn.vue';
 import ClueImageViewer from './ClueViewer.vue';
 import { Transcript } from '../../../shared/transcript';
 import TranscriptDisplay from './TranscriptDisplay.vue';
+import { useTutorial } from '@/store/team/tutorial';
+import NewBadge from '../NewBadge.vue';
 
-const game = useGameManager();
+const tutorial = useTutorial()
+const game = useGameManager()
 
 const props = defineProps<{
+  showClue?: boolean;
+  showBuyConfirmation?: boolean;
   clueId?: string;
-  transcript?: Transcript
+  transcript?: Transcript,
+  highlight?: boolean
+}>();
+
+const emit = defineEmits<{
+  'update:showClue': [boolean];
+  'update:showBuyConfirmation': [boolean];
 }>();
 
 const clue = clues.find((c) => c.id === props.clueId);
-const isUnlocked = computed(() => props.transcript ? true : game.clues.unlocked.includes(props.clueId ?? ''));
-const isAffordable = computed(() => game.clues.investigationCoins >= (clue?.cost ?? 0));
+const isUnlocked = computed(() => props.transcript ? true : game.clues.unlocked?.includes(props.clueId ?? ''));
+const isAffordable = computed(() => (game.clues.investigationCoins ?? Infinity) >= (clue?.cost ?? 0));
 
-const showBuyConfirmation = ref(false);
+const showBuyConfirmation = useModel(props, 'showBuyConfirmation');
 const delayedShowBuyConfirmation = ref(false);
-watch(showBuyConfirmation, (val) => {
+
+watch(showBuyConfirmation, (val, _, onCleanup) => {
   if (val) {
     delayedShowBuyConfirmation.value = true;
   } else {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       delayedShowBuyConfirmation.value = false;
     }, 300);
+
+    onCleanup(() => {
+      clearTimeout(timeout);
+    });
   }
 });
 
@@ -188,7 +211,7 @@ async function unlockClue() {
   }
 }
 
-const showClue = ref(false);
+const showClue = useModel(props, 'showClue');
 
 function openClue() {
   if (isUnlocked.value) {
@@ -201,10 +224,82 @@ function openClue() {
 @use '@/scss/vars' as *;
 
 .clue-card {
-  min-width: 9rem;
+  min-width: 8rem;
   max-width: 10rem;
   height: fit-content;
   text-align: center;
+
+  &--highlight {
+    &__icon {
+      z-index: 2;
+      position: absolute;
+      left: calc(100% - 1rem);
+      top: calc(100% + 1rem);
+      transform: rotate(-10deg);
+      font-size: 5rem;
+      animation: bounce 1.3s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+      text-shadow: 
+        0 0 1rem #fff8,
+        -.5rem 0 2rem rgba($neon1, 0.6),
+        .5rem 0 2rem rgba($neon2, 0.6),
+        0 0 4rem black;
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: rotate(-10deg)translateY(0);
+        }
+        50% {
+          transform: rotate(-10deg)translateY(-.5rem);
+        }
+      }
+    }
+
+    &.clue-card--confirmation .clue-card__content::after {
+      content: none;
+    }
+
+    .clue-card__content::after, .clue-card__confirmation-overlay-confirm::after {
+      content: '';
+      position: absolute;
+      inset: -1rem -1.2rem -1.2rem -1rem;
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 1rem;
+      border: 2px solid #fff;
+      box-shadow: 
+        inset 0 0 .5rem #fff,
+        
+        // inset .2rem 0 .25rem $neon1,
+        // inset -.2rem 0 .25rem $neon2,
+        
+        inset 1rem 0 2rem -.5rem rgba($neon1, 0.3),
+        inset -1rem 0 2rem -.5rem rgba($neon2, 0.3),
+        
+        0 0 1.5rem #fff,
+        -.5rem 0 3rem rgba($neon1, 0.4),
+        .5rem 0 3rem rgba($neon2, 0.4);
+      animation: pulse 1.3s infinite;
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1.2);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+    }
+
+    .clue-card__content::after {
+      inset: -2rem -3rem -4rem -2.4rem;
+      border-radius: 2rem;
+    }
+  }
 
   &__content {
     aspect-ratio: .9;
@@ -258,7 +353,6 @@ function openClue() {
     transform: scale(1.25);
     margin-left: 1.25rem;
 
-    
     :deep(.v-icon) {
       margin-right: .25rem;
     }
@@ -277,20 +371,6 @@ function openClue() {
     position: absolute;
     top: -.5rem;
     right: -2rem;
-    padding: .1rem .5rem;
-    background-color: #2b183ed5;
-    border: 1px solid #d8b1ff;
-    border-radius: .5rem;
-    color: #d8b1ff;
-    text-shadow: 0 0 .5rem #c184ff99, 0 0 1rem #9123ff;
-    box-shadow:
-      0 0 .5em #d8b1ff77 inset,
-      0 0 1rem #9123ff55 inset;
-    -webkit-backdrop-filter: blur(.2rem);
-    backdrop-filter: blur(.2rem);
-
-    font-family: $fontDisplay;
-    font-weight: bold;
   }
 
   &__cost {

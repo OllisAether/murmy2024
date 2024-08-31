@@ -3,10 +3,14 @@
     'home--info': game.phase.meta.info,
     'home--break': isBreak,
     'home--media': mediaPlaying,
-    'home--timer': isTimer
+    'home--timer': isTimer && !isBreak && !isShowNewClues,
+    'home--show-new-clues': isShowNewClues,
   }]">
     <VFadeTransition>
-      <div class="home__teamname" v-if="!mediaPlaying && !isBreak">
+      <div class="home__timer" v-if="isTimer && !isBreak && !isShowNewClues">
+        <Timer />
+      </div>
+      <div class="home__teamname" v-else-if="!mediaPlaying && !isBreak">
         {{ auth.team?.name }}
       </div>
     </VFadeTransition>
@@ -47,7 +51,7 @@
               Bitte legt alle Ablenkungen beiseite und konzentriert euch auf das Spiel.
             </p>
             <p>
-              Stellt sicher, dass eure <b class="text-primary">Handys auf lautlos</b> gestellt sind.
+              Stellt sicher, dass eure <b>Handys auf lautlos</b> gestellt sind.
             </p>
           </CarouselItem>
 
@@ -56,8 +60,11 @@
               🤫
             </template>
             <template #title>
-              <span style="color: #fff8;">
-                <em>*flüsternd*</em> nicht so laut
+              <span style="opacity: 0.5;">
+                <em>*flüsternd*
+                  &nbsp;
+                </em>
+                <TextContentRenderer :text-content="wiggly('Psst, nicht so laut')" />
               </span>
             </template>
 
@@ -65,7 +72,7 @@
               Bitte redet während des Spiels nur leise miteinander.
             </p>
             <p>
-              <em class="text-grey">
+              <em style="opacity: 0.5;">
                 Andere Teams könnten euch ausspionieren~
               </em>
             </p>
@@ -98,7 +105,7 @@
             <p>
               Wenn ihr Fragen habt oder Hilfe benötigt, könnt ihr uns jederzeit
               <br>
-              mit dem <b class="text-primary">Hilfe-Button</b> oben rechts erreichen.
+              mit dem <b>Hilfe-Button</b> oben rechts erreichen.
             </p>
             <p>
               Wir werden euch keine Hinweise zum Spiel geben, aber wir helfen euch gerne bei technischen Problemen.
@@ -109,10 +116,8 @@
       </div>
 
       <div class="home__break-info" v-else-if="isBreak">
-        <div class="home__break-info__emoji">
-          ☕
-        </div>
         <div class="home__break-info__title">
+          <span class="home__break-info__emoji">☕</span>
           Päuschen!
         </div>
         <div class="home__break-info__timer">
@@ -125,10 +130,6 @@
           Ihr könnt euch entspannen, auf die Toilette gehen oder
           etwas zum knabbern oder trinken am Verkaufsstand holen.
         </div>
-      </div>
-
-      <div class="home__timer" v-else-if="isTimer">
-        <Timer />
       </div>
     </VFadeTransition>
   </ScreenWrapper>
@@ -143,6 +144,8 @@ import CarouselItem from '@/components/team/CarouselItem.vue';
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import moment from 'moment';
 import Timer from '@/components/Timer.vue';
+import TextContentRenderer from '@/components/TextContentRenderer.vue';
+import { wiggly } from '../../../shared/textContent';
 
 const auth = useAuthManager()
 const game = useGameManager()
@@ -167,6 +170,10 @@ const isBreak = computed(() => {
 
 const isEnd = computed(() => {
   return game.phase.meta.end ?? false
+})
+
+const isShowNewClues = computed(() => {
+  return game.phase.meta.showNewClues ?? false
 })
 
 const wakelockShouldntBeActive = computed(() => {
@@ -201,7 +208,7 @@ onBeforeUnmount(() => {
 
   &--info, &--timer {
     .home__teamname {
-      top: calc(40vh - 25rem);
+      top: calc(40vh - 22rem);
       transform: translateY(0);
     }
   }
@@ -210,8 +217,11 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 100%;
+    padding: 0 4rem;
     transform: translate(-50%, -50%);
     font-size: 2rem;
+    text-align: center;
   }
 
   &__break-info {
@@ -219,25 +229,25 @@ onBeforeUnmount(() => {
     padding: 0 1rem;
 
     &__emoji {
-      font-size: 10vw;
-      font-family: $fontDisplay;
+      font-size: 1.4em;
     }
-
+    
     &__title {
-      font-size: 2rem;
-      font-family: $fontHeading;
+      font-size: 7vw;
+      font-family: $fontDisplayCursive;
       margin-bottom: 3rem;
+      
+      text-shadow: 0 0 1rem #fff9ec, 0 0 5rem #ffebc788;
     }
 
     &__timer {
       font-size: 3rem;
       margin-bottom: 1rem;
-
       font-family: $fontHeading;
 
       span {
-        font-weight: bold;
-        color: #ccb3ff;
+        font-family: $fontDisplay;
+        color: #f4e8ff;
         text-shadow: 0 0 1rem #a172ff, 0 0 3rem #9059ff, 0 0 6rem #6213ff;
       }
     }
@@ -254,9 +264,11 @@ onBeforeUnmount(() => {
     transform: translateY(-50%);
     padding: 0 10vw;
 
-    font-family: $fontDisplay;
-    font-size: 4rem;
+    font-family: $fontDisplayCursive;
+    font-size: 5vw;
     text-align: center;
+    color: #f4e8ff;
+    text-shadow: 0 0 1rem #a172ff, 0 0 3rem #9059ff, 0 0 6rem #6213ff;
 
     transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), top 1s cubic-bezier(0.19, 1, 0.22, 1);
   }
@@ -280,10 +292,11 @@ onBeforeUnmount(() => {
 
   &__timer {
     position: absolute;
-    top: 50%;
+    top: calc(40vh - 22rem);
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 13vw;
+    transform: translateX(-50%);
+    padding: 0 10vw;
+    font-size: 5vw;
   }
 
   p {

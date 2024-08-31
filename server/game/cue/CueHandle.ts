@@ -6,7 +6,9 @@ export interface CueHandleCtx<T extends JsonMap> {
   index: number
   playback: Playback
   getFieldValue: (ref: FieldReference | JsonContent) => JsonContent
-  options: T
+  options: {
+    [P in keyof T]: FieldReference | T[P]
+  }
   meta: JsonMap
 }
 

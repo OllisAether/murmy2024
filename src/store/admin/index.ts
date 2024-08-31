@@ -9,6 +9,7 @@ import { Asset } from "../../../shared/asset";
 import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
 import { JsonMap } from "../../../shared/json";
+import { Phase } from "../../../shared/phase";
 
 export interface AlertOptions {
   id: string
@@ -292,6 +293,12 @@ export const useAdmin = defineStore('admin', () => {
 
   function removeHelpRequest (teamId: string) {
     ws.send('removeHelpRequest', { teamId })
+  }
+  // #endregion
+
+  // #region Phase
+  function setPhase (phase: Phase, meta: JsonMap = {}) {
+    ws.send('setPhase', { phase, meta })
   }
   // #endregion
 
@@ -636,6 +643,9 @@ export const useAdmin = defineStore('admin', () => {
     setClientBoard,
     removeHelpRequest,
     needsHelp,
+
+    setPhase,
+
     teams,
     clients,
     alerts,

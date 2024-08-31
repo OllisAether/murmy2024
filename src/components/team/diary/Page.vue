@@ -80,7 +80,7 @@ defineProps<{
     border-bottom: 2px solid #DCC1A7;
 
     &__label {
-      font-family: $fontDiaryDate;
+      font-family: $fontDiarySmall;
       font-size: 1.5rem;
       line-height: .3;
       font-weight: bold;
@@ -101,7 +101,7 @@ defineProps<{
     left: 0;
     padding: 0 2rem;
 
-    font-family: $fontDiaryPage;
+    font-family: $fontDiaryLarge;
     line-height: 1;
     font-size: 10rem;
     font-weight: 600;

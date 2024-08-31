@@ -28,12 +28,15 @@ export const cueIconMap: Record<CueType, string> = {
 
   [CueType.AddInvestigationCoins]: 'mdi-star-four-points-circle',
   [CueType.AddClues]: 'mdi-magnify-plus',
+  [CueType.ClearNewClues]: 'mdi-magnify-remove',
+  [CueType.UnlockClueForAll]: 'mdi-lock-open-variant',
   [CueType.AssignMainClueType]: 'mdi-tablet-cellphone',
   [CueType.AssignMainClueTypeRandomly]: 'mdi-dice-multiple',
   [CueType.SetAssignFurtherMainClueTypesRandomly]: 'mdi-dice-multiple',
 
   [CueType.SetMedia]: 'mdi-video',
   [CueType.WaitForMediaFinished]: 'mdi-video-off',
+  [CueType.WhenMediaAt]: 'mdi-video-input-component',
 
   [CueType.CalculateResults]: 'mdi-calculator',
   [CueType.ClearAllForms]: 'mdi-eraser',

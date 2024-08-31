@@ -40,6 +40,7 @@ const game = useGameManager()
     0 0 1rem #000 inset;
 
   transform: scale(1.01);
+  transform-origin: right center;
 
   border-radius: 2rem .5rem .5rem 2rem !important;
 

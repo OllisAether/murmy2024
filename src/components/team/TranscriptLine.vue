@@ -119,7 +119,7 @@ function getSpeakerColor(line: TranscriptLine) {
 
 .transcript-line {
   position: relative;
-  width: calc(100vw - 25rem - 8rem);
+  width: calc(100vw - 22rem - 8rem);
   margin: -2px auto;
 
   &__line {
@@ -154,7 +154,7 @@ function getSpeakerColor(line: TranscriptLine) {
     }
 
     .transcript-line--second & {
-      width: calc((100vw - 25rem - 8rem) / 2);
+      width: calc((100vw - 22rem - 8rem) / 2);
     }
 
     .transcript-line--second &:not(&--second) {

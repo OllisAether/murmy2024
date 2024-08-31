@@ -231,6 +231,7 @@ import Btn from '@/components/Btn.vue';
 import SkewBox from '@/components/SkewBox.vue';
 import { VOverlay } from 'vuetify/components';
 import { VBtn } from 'vuetify/components/VBtn';
+import { preventGestures } from '@/main';
 
 // const display = useDisplay()
 
@@ -240,6 +241,10 @@ const game = useGameManager()
 
 const logoutDialog = ref(false)
 const helpDialog = ref(false)
+
+watch(helpDialog, () => {
+  preventGestures.value = !helpDialog.value
+})
 
 const logoutOtp = import.meta.env.VITE_TEAM_LOGOUT_PASSCODE ?? '0000'
 const otp = ref('')

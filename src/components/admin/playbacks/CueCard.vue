@@ -53,6 +53,15 @@
               {{ cue.options?.media ?? 'No Media' }}
             </span>
           </template>
+
+          <template v-if="cue.type === CueType.WhenMediaAt">
+            <VChip size="small" class="mx-2">
+              {{ cue.options?.time ?? 'No Time' }}
+            </VChip>
+            <VChip size="small">
+              ExecuteIfAlreadyAtTime: {{ cue.options?.executeIfAlreadyAtTime ?? 'false' }}
+            </VChip>
+          </template>
         </VToolbarTitle>
         <VIcon class="mr-4" v-if="Object.keys(cueSettingsMap[cue.type] ?? {}).length">
           {{ detailsShown ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
@@ -95,7 +104,8 @@ const props = defineProps<{
 const detailsShown = ref(false);
 
 const increase: CueTypes[] = [
-  CueType.If
+  CueType.If,
+  CueType.WhenMediaAt,
 ]
 const decrease: CueTypes[] = [
   CueType.EndIf
@@ -125,7 +135,7 @@ const depth = computed(() => {
     depth--;
   }
 
-  return depth;
+  return Math.max(0, depth);
 })
 </script>
 

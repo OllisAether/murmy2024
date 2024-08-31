@@ -5,7 +5,7 @@ export enum Phase {
 }
 
 export const phaseNameMap = {
-  [Phase.Idle]: 'Warten',
+  [Phase.Idle]: 'Wartephase',
   [Phase.Work]: 'Arbeitsphase',
   [Phase.Vote]: 'Abstimmung',
 }

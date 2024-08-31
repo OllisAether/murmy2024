@@ -65,6 +65,12 @@
           />
 
           <AppIcon
+            :iconSrc="game.getAsset('phone/TumblrLogo.webp')?.content"
+            name="Tumblr."
+            app="tumblr"
+          />
+
+          <AppIcon
             :iconSrc="game.getAsset('phone/Icon_PlayStore.webp')?.content"
             name="Play Store"
             app="playstore"

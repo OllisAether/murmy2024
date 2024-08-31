@@ -33,6 +33,7 @@
 
             <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
             <PinterestApp class="phone__content__app" v-else-if="phone.currentApp === 'pinterest'" />
+            <TumblrApp class="phone__content__app" v-else-if="phone.currentApp === 'tumblr'" />
             <PlayStoreApp class="phone__content__app" v-else-if="phone.currentApp === 'playstore'" />
             <ClockApp class="phone__content__app" v-else-if="phone.currentApp === 'clock'" />
             <CalculatorApp class="phone__content__app" v-else-if="phone.currentApp === 'calculator'" />
@@ -119,6 +120,7 @@ import ClockApp from './misc/ClockApp.vue';
 import CalculatorApp from './misc/CalculatorApp.vue';
 import CrashApp from './misc/CrashApp.vue';
 import PinterestApp from './misc/PinterestApp.vue';
+import TumblrApp from './misc/TumblrApp.vue';
 
 defineProps<{
   zoomScale: number;

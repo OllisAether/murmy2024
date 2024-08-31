@@ -6,8 +6,8 @@ import { StartTimer } from "./StartTimer";
 import { WaitForBoardSkip, WaitForSkip } from "./WaitForSkip";
 import { WaitForTimer } from "./WaitForTimer";
 import { AddVoteOptions, ClearVotePool, CloseVote, EndVote, OpenVote, PauseVote, RemoveVoteOption, ResumeVote, SetRandomWinner, StartTiebreaker, WaitForVote } from "./Vote";
-import { AddClues, AddInvestigationCoins, AssignMainClueType, AssignMainClueTypeRandomly, SetAssignFurtherMainClueTypesRandomly } from "./Clue";
-import { SetMedia, WaitForMediaFinished } from "./Media";
+import { AddClues, AddInvestigationCoins, AssignMainClueType, AssignMainClueTypeRandomly, ClearNewClues, MarkEntryForAll, SetAssignFurtherMainClueTypesRandomly, UnlockClueForAll } from "./Clue";
+import { SetMedia, WaitForMediaFinished, WhenMediaAt } from "./Media";
 import { CalculateResults, ClearAllForms, WaitForAllFormsSubmitted } from "./form";
 
 export const CueTypes: Record<CueType, typeof CueHandle>= {
@@ -41,6 +41,9 @@ export const CueTypes: Record<CueType, typeof CueHandle>= {
   // Clue
   [CueType.AddInvestigationCoins]: AddInvestigationCoins,
   [CueType.AddClues]: AddClues,
+  [CueType.ClearNewClues]: ClearNewClues,
+  [CueType.UnlockClueForAll]: UnlockClueForAll,
+  [CueType.MarkEntryForAll]: MarkEntryForAll,
   [CueType.AssignMainClueType]: AssignMainClueType,
   [CueType.AssignMainClueTypeRandomly]: AssignMainClueTypeRandomly,
   [CueType.SetAssignFurtherMainClueTypesRandomly]: SetAssignFurtherMainClueTypesRandomly,
@@ -48,6 +51,7 @@ export const CueTypes: Record<CueType, typeof CueHandle>= {
   // Media
   [CueType.SetMedia]: SetMedia,
   [CueType.WaitForMediaFinished]: WaitForMediaFinished,
+  [CueType.WhenMediaAt]: WhenMediaAt,
 
   // Form
   [CueType.CalculateResults]: CalculateResults,

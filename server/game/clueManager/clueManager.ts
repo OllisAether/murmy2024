@@ -224,10 +224,15 @@ export class ClueManager {
   }
 
   addClues(clueIds: string[]) {
-    this.availableClues
-      .push(...clueIds.filter(clueId => !this.availableClues.includes(clueId)))
-    
-    this.newAvailableClues.push(...clueIds.filter(clueId => !this.newAvailableClues.includes(clueId)))
+    for (const clueId of clueIds) {
+      if (!this.availableClues.includes(clueId)) {
+        this.availableClues.push(clueId)
+
+        if (!this.newAvailableClues.includes(clueId)) {
+          this.newAvailableClues.push(clueId)
+        }
+      }
+    }
 
     Game.get().sendCluesToClients()
     Game.get().sendCluesToAdmins()
@@ -237,7 +242,10 @@ export class ClueManager {
   addClue(clueId: string) {
     if (!this.availableClues.includes(clueId)) {
       this.availableClues.push(clueId)
-      this.newAvailableClues.push(clueId)
+      
+      if (!this.newAvailableClues.includes(clueId)) {
+        this.newAvailableClues.push(clueId)
+      }
     }
 
     Game.get().sendCluesToClients()
@@ -310,6 +318,49 @@ export class ClueManager {
     this.save()
 
     return true
+  }
+
+  unlockClueForAll(clueId: string) {
+    const game = Game.get()
+
+    const clue = clues.find(clue => clue.id === clueId)
+
+    if (!clue) {
+      console.error(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} not found`)
+      return false
+    }
+
+    const teams = game.getTeams()
+
+    for (const team of teams) {
+      if (!this.unlockedClues[team.id]) {
+        this.unlockedClues[team.id] = []
+      }
+
+      if (!this.usedInvestigationCoins[team.id]) {
+        this.usedInvestigationCoins[team.id] = 0
+      }
+
+      if (this.unlockedClues[team.id].includes(clueId)) {
+        console.warn(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} already unlocked for team ${team.id}`)
+        continue
+      }
+
+      if (this.getInvestigationCoins(team.id) < clue.cost) {
+        console.warn(colorize('[ClueManager]', Fg.Blue), `Team ${team.id} does not have enough investigation coins`)
+        continue
+      }
+
+      this.usedInvestigationCoins[team.id] += clue.cost
+      this.unlockedClues[team.id].push(clueId)
+
+      const teamClient = game.getTeamClient(team.id)
+
+      teamClient && game.sendCluesToClients(teamClient)
+    }
+
+    Game.get().sendCluesToAdmins()
+    this.save()
   }
 
   unlockClueWithoutCost(teamId: string, clueId: string) {

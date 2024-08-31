@@ -6,11 +6,16 @@
       :src="game.getAsset('diary/FrontCover.webp')?.content"
       class="front-cover__image"
     />
-    <PinLock class="front-cover__pin-lock" />
+    <img
+      :src="game.getAsset('diary/Stiches.webp')?.content"
+      class="front-cover__image"
+    />
 
-    <!-- <VBtn @click="diary.locked = !diary.locked">
-      Lock
-    </VBtn> -->
+    <div class="front-cover__name-label">
+      Tagebuch von:
+    </div>
+
+    <PinLock class="front-cover__pin-lock" />
   </Page>
 </template>
 
@@ -25,6 +30,8 @@ const diary = useMainClue()
 </script>
 
 <style lang="scss" scoped>
+@use '@/scss/vars' as *;
+
 .front-cover {
   position: relative;
   background: linear-gradient(#212424, #131518);
@@ -84,6 +91,18 @@ const diary = useMainClue()
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  &__name-label {
+    position: absolute;
+    top: 14.3rem;
+    left: 18.7rem;
+    width: 21.2rem;
+    height: 3.3rem;
+    border-bottom: 2px solid #a98c71;
+    font-size: 1rem;
+    color: #a98c71;
+    font-family: $fontDiarySmall;
   }
 }
 </style>

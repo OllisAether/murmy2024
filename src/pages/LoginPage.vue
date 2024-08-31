@@ -28,7 +28,12 @@
           Du kannst die Web-App nach der Murder Mystery Night gleich wieder entfernen.
         </p>
 
-        <button @click="dismissedNotice = true" class="pwa-notice__no-thanks-btn">
+        <button
+          @click="dismissedNotice = true"
+          :class="['pwa-notice__no-thanks-btn', {
+            'pwa-notice__no-thanks-btn--show': game.interacted
+          }]"
+        >
           <span>Nein, danke</span> 💔
         </button>
       </div>
@@ -171,7 +176,7 @@ async function login () {
 }
 
 @function unit($value) {
-  @return calc(math.div($value, 100) * min(50vw, 70vh));
+  @return calc(math.div($value, 100) * min(50vw, 65vh));
 }
 
 .pwa-notice {
@@ -234,7 +239,7 @@ async function login () {
   &__arrow {
     position: fixed;
     top: .5rem;
-    right: 5.6rem;
+    right: 7.5%;
     font-size: 4rem;
 
     color: #d4eeff;
@@ -243,7 +248,7 @@ async function login () {
       0 0 .5rem #2e31ff,
       0 0 1rem #2e31ff;
 
-    animation: arrow 2s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    animation: arrow 1.3s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95);
 
     mask-image: linear-gradient(black 30%, #0004);
 
@@ -267,7 +272,7 @@ async function login () {
     float: right;
     color: #fff8;
 
-    animation: appear 2s 5s both;
+    opacity: 0;
 
     @keyframes appear {
       0% {
@@ -280,6 +285,10 @@ async function login () {
     
     span {
       text-decoration: underline;
+    }
+
+    &--show {
+      animation: appear 2s 1s both;
     }
   }
 

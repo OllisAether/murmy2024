@@ -150,9 +150,9 @@ const isRandom = computed(() => {
 
   &__timer {
     position: absolute;
-    font-size: 10vh;
+    font-size: 10vw;
     font-weight: 300;
-    top: 2vh;
+    top: 2vw;
     left: 50%;
 
     transform: translateX(-50%);
@@ -166,7 +166,7 @@ const isRandom = computed(() => {
     transform: translate(-50%, -50%);
     width: 100%;
 
-    padding: 15vh 20vh;
+    padding: 5vw 10vw;
     display: flex;
     justify-content: center;
 
@@ -191,9 +191,9 @@ const isRandom = computed(() => {
   &__candidate {
     z-index: 1;
     position: relative;
-    width: 28vh;
+    width: 35vh;
 
-    margin: 0 2vh;
+    margin: 0 2vw;
 
     transition:
       transform 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -203,7 +203,7 @@ const isRandom = computed(() => {
 
     @keyframes enter {
       from {
-        transform: translateY(10vh);
+        transform: translateY(10vw);
         opacity: 0;
       }
     }
@@ -215,7 +215,7 @@ const isRandom = computed(() => {
     &--voted {
       transform: scale(math.div(1, 0.8));
       z-index: 2;
-      filter: drop-shadow(0 0 5vh rgba(var(--candidate-color-rgb), 0.3));
+      filter: drop-shadow(0 0 5vw rgba(var(--candidate-color-rgb), 0.3));
     }
 
     &--not-voted {
@@ -237,17 +237,19 @@ const isRandom = computed(() => {
       height: 90%;
       object-fit: contain;
       z-index: 1;
-      filter: drop-shadow(0 0 3vh #000);
+      filter: drop-shadow(0 0 3vw #000);
     }
 
     &__title {
       position: absolute;
+      line-height: 1;
+      font-family: $fontHeading;
       top: 100%;
       width: 100%;
-      transform: translateX(-12%);
-      text-align: center;
-      padding: 3vh;
-      font-size: 2.5vh;
+      transform: translateX(-10%);
+      // text-align: center;
+      padding: 2vw 0;
+      font-size: 2vw;
     }
 
     &-enter-active, &-leave-active {

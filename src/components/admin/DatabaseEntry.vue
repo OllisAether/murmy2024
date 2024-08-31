@@ -1,7 +1,7 @@
 <template>
   <VListItem>
     <VListItemTitle>
-      {{ entry.suspectId }} - {{ entry.title }}
+      {{ entry.suspectId }} - {{ getRawText(entry.title) }}
     </VListItemTitle>
     <VListItemSubtitle>
       {{ entry.id }}
@@ -31,6 +31,7 @@
 import { useAdmin } from '@/store/admin';
 import { computed, ref } from 'vue';
 import { useGameManager } from '@/store/gameManager';
+import { getRawText } from '../../../shared/textContent';
 
 const props = defineProps<{
   team: {

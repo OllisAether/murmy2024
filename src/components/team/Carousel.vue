@@ -197,22 +197,32 @@ function scroll () {
 
 .carousel {
   position: relative;
-  background: $surface;
-  box-shadow: 0 0 15rem 0 #8db7ff11 inset;
-  background-repeat: no-repeat;
-  border-radius: 1rem;
-  border: 1px solid $stroke;
+  // box-shadow: 0 0 5rem 0 #9730ff60 inset;
 
   &__content {
-    display: flex;
     overflow: hidden;
+    border-radius: 1rem;
+
+    box-shadow:
+      0 0 15rem #9123ff55,
+      0 0 6rem #c184ff55,
+      0 0 2rem #c184ff55,
+      0 0 3rem #d8b1ff77 inset,
+      0 0 10rem #9123ff55 inset;
+
+    background-color: #2b183ed5;
+    border: 1px solid #d8b1ff;
+
+    // color: #d8b1ff;
+
+    display: flex;
     scrollbar-width: none;
     // pointer-events: none;
 
     &::-webkit-scrollbar {
       display: none;
     }
-    
+
     & > * {
       // width: 100%;
       flex: 0 0 100%;
@@ -233,8 +243,11 @@ function scroll () {
   }
 
   &__indicators {
-    position: relative;
-    width: fit-content;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -263,10 +276,10 @@ function scroll () {
       transform: translate(-50%, -50%);
     }
 
-    &__cycle-btn {
-      position: absolute;
-      left: calc(100% + 1rem);
-    }
+    // &__cycle-btn {
+    //   position: absolute;
+    //   left: calc(100% + 1rem);
+    // }
   }
 }
 </style>

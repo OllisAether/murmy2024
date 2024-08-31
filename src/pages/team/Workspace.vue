@@ -1,17 +1,29 @@
 <template>
   <ScreenWrapper>
-    <VLayout class="workspace">
+    <VLayout :class="['workspace', {
+      'workspace--tutorial': tutorial.isTutorial,
+      'workspace--tutorial-unlockClue': isTutorialUnlockClue
+    }]">
       <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" />
 
-      <div class="workspace__main">
+      <div class="workspace__main" ref="workspace">
         <div class="workspace__indicators">
           <div class="workspace__indicators__left">
-            <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
+            <!-- <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
               <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
                 <Timer class="workspace__timer" />
               </div>
-            </VExpandXTransition>
+            </VExpandXTransition> -->
             <InvestigationCoinsDisplay class="workspace__ep" />
+            <HelpBtn>
+              <template #header>
+                Ermittlungspunkte
+              </template>
+
+              Ermittlungspunkte sind <b class="help-color">Währungseinheiten</b>, die ihr für das Freischalten von Hinweisen benötigt. <br><br>
+              Ihr erhaltet <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 15</b> vor jeder Arbeitsphase<br>
+              und <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 5</b> pro markiertem Hinweis.
+            </HelpBtn>
           </div>
           <div class="workspace__indicators__center">
             <span class="workspace__teamname">
@@ -22,11 +34,11 @@
 
         <BlurGradient class="workspace__blur-gradient" />
 
-        <div class="workspace__scroller">
+        <div class="workspace__scroller" ref="scroller">
           <div class="workspace__content">
             <MainClueTypeCard class="workspace__main-clue" v-if="game.clues.mainClueType"/>
 
-            <template v-if="game.availableTranscripts.length > 0">
+            <div ref="workspaceTranscript">
               <div class="workspace__content__header">
                 Transkripte
                 <HelpBtn>
@@ -44,49 +56,71 @@
                   :transcript="transcript"
                 />
               </div>
-            </template>
 
-            <div class="workspace__content__header">
-              Hinweise
-
-              <HelpBtn>
-                <template #header>
-                  Hinweise
-                </template>
-
-                Hinweise enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
-
-                Ihr könnt Hinweise mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
-              </HelpBtn>
+              <div class="workspace__no-clues" v-if="game.availableTranscripts.length === 0">
+                Keine Transkripte verfügbar
+              </div>
             </div>
 
-            <div class="workspace__clue-grid">
-              <ClueCard
-                v-for="clue in game.clues.available"
-                :key="clue"
-                :clueId="clue"
-              />
-              <ClueCard
-                v-for="clue in game.clues.available"
-                :key="clue"
-                :clueId="clue"
-              />
-              <ClueCard
-                v-for="clue in game.clues.available"
-                :key="clue"
-                :clueId="clue"
-              />
-            </div>
+            <div ref="workspaceClues">
+              <div class="workspace__content__header">
+                Hinweise
 
-            <div class="workspace__no-clues" v-if="game.clues.available.length === 0">
-              Keine Hinweise verfügbar
+                <HelpBtn>
+                  <template #header>
+                    Hinweise
+                  </template>
+
+                  Hinweise enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
+
+                  Ihr könnt Hinweise mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
+                </HelpBtn>
+              </div>
+
+              <div class="workspace__clue-grid">
+                <ClueCard
+                  v-for="(clue, i) in game.clues.available"
+                  :key="clue"
+                  :clueId="clue"
+                  v-model:showClue="showClues[clue]"
+                  v-model:showBuyConfirmation="showBuyConfirmations[clue]"
+                  :highlight="isTutorialUnlockClue && i === 0 && !showClues[clue]"
+                  :style="{
+                    pointerEvents: isTutorialUnlockClue && i === 0 ? 'all' : undefined
+                  }"
+                />
+              </div>
+
+              <div class="workspace__no-clues" v-if="game.clues.available.length === 0">
+                Keine Hinweise verfügbar
+              </div>
             </div>
           </div>
         </div>
 
         <FormCard class="workspace__form-card" v-if="game.phase.meta?.form" />
       </div>
+
+      <!-- <Teleport to="body"> -->
+        <!-- </Teleport> -->
     </VLayout>
+    <Transition name="tutorial__highlighted-element">
+      <div
+        v-if="tutorial.highlightedElementPos"
+        :class="['tutorial__highlighted-element', {}]"
+        :style="{
+          top: tutorial.highlightedElementPos.y + 'px',
+          left: tutorial.highlightedElementPos.x + 'px',
+          width: tutorial.highlightedElementPos.width + 'px',
+          height: tutorial.highlightedElementPos.height + 'px'
+        }"
+      >
+        <div :style="{
+          borderRadius: tutorial.highlightedElementPos.borderRadius !== undefined ?
+            tutorial.highlightedElementPos.borderRadius + 'px' : undefined,
+        }" />
+      </div>
+    </Transition>
   </ScreenWrapper>
 </template>
 
@@ -99,15 +133,115 @@ import HelpBtn from '@/components/team/HelpBtn.vue';
 import InvestigationCoinsDisplay from '@/components/team/InvestigationCoinsDisplay.vue';
 import MainClueTypeCard from '@/components/team/MainClueTypeCard.vue';
 import SuspectDatabase from '@/components/team/SuspectDatabase.vue';
-import Timer from '@/components/Timer.vue';
 import { useAuthManager } from '@/store/authManager';
 import { useGameManager } from '@/store/gameManager';
-import { ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useTutorial } from '@/store/team/tutorial';
 
 const databaseExpanded = ref(true);
 
 const game = useGameManager();
 const auth = useAuthManager();
+
+const showBuyConfirmations = ref<{
+  [clueId: string]: boolean;
+}>({});
+
+const showClues = ref<{
+  [clueId: string]: boolean;
+}>({});
+
+const scroller = ref<HTMLElement | null>(null);
+
+const tutorial = useTutorial();
+
+const workspaceTranscript = ref<HTMLElement | null>(null);
+watch(workspaceTranscript, (el) => {
+  if (el) {
+    tutorial.registerHighlightElement('transcripts', {
+      element: el,
+      margin: 32
+    });
+  } else {
+    tutorial.unregisterHighlightElement('transcripts');
+  }
+});
+
+const workspaceClues = ref<HTMLElement | null>(null);
+watch(workspaceClues, (el) => {
+  if (el) {
+    tutorial.registerHighlightElement('clues', {
+      element: el,
+      margin: 32
+    });
+  } else {
+    tutorial.unregisterHighlightElement('clues');
+  }
+});
+
+const workspace = ref<HTMLElement | null>(null);
+watch(workspace, (el) => {
+  if (el) {
+    tutorial.registerHighlightElement('workspace', {
+      element: el,
+      borderRadius: 8,
+      margin: -8
+    });
+  } else {
+    tutorial.unregisterHighlightElement('workspace');
+  }
+});
+
+onBeforeUnmount(() => {
+  tutorial.unregisterHighlightElement('workspace');
+  tutorial.unregisterHighlightElement('transcripts');
+  tutorial.unregisterHighlightElement('clues');
+});
+
+// #region Tutorial Unlock Clue
+const isTutorialUnlockClue = computed(() => tutorial.state.action === 'unlockClue');
+const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry');
+
+const shouldScrollToBottom = computed(() => {
+  return isTutorialUnlockClue.value || tutorial.state.highlight === 'clues' || isTutorialMarkEntry.value;
+});
+
+onMounted(() => {
+  watch(shouldScrollToBottom, (scrollToBottom) => {
+    if (scrollToBottom) {
+      scroller.value?.scrollTo({
+        top: scroller.value.scrollHeight,
+        behavior: 'smooth'
+      })
+    } else {
+      setTimeout(() => {
+        scroller.value?.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      }, 500)
+    }
+  }, { immediate: true });
+
+  watch([isTutorialMarkEntry, isTutorialUnlockClue], () => {
+    if (isTutorialMarkEntry.value || (isTutorialUnlockClue.value && game.clues.unlocked.includes(game.clues.available[0]))) {
+      const clue = game.clues.available[0]
+
+      if (!clue) {
+        return
+      }
+
+      showClues.value = {
+        [clue]: true
+      }
+      showBuyConfirmations.value = {};
+    } else if (!isTutorialUnlockClue.value && !isTutorialMarkEntry.value) {
+      showClues.value = {};
+      showBuyConfirmations.value = {};
+    }
+  }, { immediate: true, deep: true });
+})
+// #endregion
 </script>
 
 <style lang="scss" scoped>
@@ -116,6 +250,10 @@ const auth = useAuthManager();
 .workspace {
   height: 100%;
   display: flex;
+
+  &--tutorial, &--tutorial > * {
+    pointer-events: none !important;
+  }
 
   &__sus-db {
     z-index: 99;
@@ -184,12 +322,12 @@ const auth = useAuthManager();
   }
 
   &__content {
-    max-width: calc(100vw - 25rem);
+    max-width: calc(100vw - 22rem);
     margin: 0 auto;
-    padding: 6rem 8rem 25%;
+    padding: 6rem 5rem 15rem;
 
     &__header {
-      margin: 1.5rem -1rem;
+      margin: 1.5rem 0;
       font-size: 1.5rem;
       font-family: $fontHeading;
       font-weight: 300;
@@ -205,6 +343,7 @@ const auth = useAuthManager();
     align-items: center;
     gap: 1rem;
     margin-top: 3rem;
+    padding-bottom: 2rem;
     opacity: 0.5;
   }
 
@@ -213,9 +352,10 @@ const auth = useAuthManager();
   }
 
   &__clue-grid {
+    padding: 0 1rem;
     display: grid;
     gap: 3rem;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
     justify-content: center;
   }
 
@@ -223,6 +363,81 @@ const auth = useAuthManager();
     font-size: 2rem;
     font-family: $fontDisplay;
     font-weight: 300;
+  }
+}
+
+.tutorial {
+  &__highlighted-element {
+    pointer-events: none;
+
+    position: fixed;
+    z-index: 9999;
+    transition: top 1s, left 1s, width 1s, height 1s;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+
+    div {
+      position: absolute;
+      inset: 0;
+      border: 2px solid #fff;
+      border-radius: 1rem;
+
+      box-shadow:
+        inset 0 0 .5rem #fff,
+
+        inset 1rem 0 2rem -.5rem rgba($neon1, 0.3),
+        inset -1rem 0 2rem -.5rem rgba($neon2, 0.3),
+        
+        0 0 1.5rem #fff,
+        -.5rem 0 3rem rgba($neon1, 0.4),
+        .5rem 0 3rem rgba($neon2, 0.4),
+        0 0 0 max(100vw, 100vh) #000a;
+
+      transition: border-radius 1s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    // &--interact div {
+    //   box-shadow: 
+    //     inset 0 0 .5rem #fff,
+        
+    //     // inset .2rem 0 .25rem $neon1,
+    //     // inset -.2rem 0 .25rem $neon2,
+        
+    //     inset 1rem 0 2rem -.5rem rgba($neon1, 0.3),
+    //     inset -1rem 0 2rem -.5rem rgba($neon2, 0.3),
+        
+    //     0 0 1.5rem #fff,
+    //     -.5rem 0 3rem rgba($neon1, 0.4),
+    //     .5rem 0 3rem rgba($neon2, 0.4);
+    //   animation: pulse 1.3s infinite;
+
+    //   @keyframes pulse {
+    //     0% {
+    //       transform: scale(1.2);
+    //       opacity: 0;
+    //     }
+    //     50% {
+    //       opacity: 1;
+    //     }
+    //     100% {
+    //       transform: scale(1);
+    //       opacity: 0;
+    //     }
+    //   }
+    // }
+
+    &-enter-active, &-leave-active {
+      div {
+        transition: inset 1s, opacity 1s, border-radius 1s;
+        transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+      }
+    }
+
+    &-enter-from, &-leave-to {
+      div {
+        inset: -4rem;
+        opacity: 0;
+      }
+    }
   }
 }
 </style>

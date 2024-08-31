@@ -60,7 +60,7 @@ export class Database {
       });
   }
 
-  createBackups: boolean = true;
+  public createBackups: boolean = true;
   lastBackup: number = 0;
   backupInterval: number = 1000 * 60; // 1 minute
   async createBackup (reason: string, force = false) {
@@ -69,6 +69,7 @@ export class Database {
     }
 
     if (!this.createBackups) {
+      console.log(colorize('[Database]', Fg.Yellow, Bg.Gray), 'Skipping backup creation for', reason);
       return;
     }
 
@@ -91,12 +92,14 @@ export class Database {
 
   // #region Singleton
   private static instance: Database;
-  public static get(createBackups = true) {
+  public static get(createBackups?: boolean) {
     if (!Database.instance) {
       Database.instance = new Database(path.resolve(__dirname, '../saved'));
     }
 
-    Database.instance.createBackups = createBackups;
+    if (createBackups !== undefined) {
+      Database.instance.createBackups = createBackups;
+    }
 
     return Database.instance;
   }

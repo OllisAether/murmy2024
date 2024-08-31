@@ -1,5 +1,7 @@
 <template>
-  <VBtn icon variant="text" class="help-btn">
+  <VBtn icon variant="text" :class="['help-btn', {
+    'help-btn--highlight': tutorial.state.highlightOracle
+  }]">
     <VIcon>mdi-crystal-ball</VIcon>
 
     <VOverlay
@@ -24,7 +26,7 @@
               Orakel der Behilflichkeit
             </div>
 
-            <div>
+            <div class="help-btn__tooltip__content__header__slot">
               <slot name="header" />
             </div>
           </div>
@@ -48,6 +50,7 @@
 </template>
 
 <script setup lang="ts">
+import { useTutorial } from '@/store/team/tutorial';
 import { ref } from 'vue';
 
 declare const block: readonly ["top", "bottom"];
@@ -62,16 +65,48 @@ defineProps<{
 }>();
 
 const help = ref(false);
+
+const tutorial = useTutorial()
 </script>
 
 <style scoped lang="scss">
 @use '@/scss/vars' as *;
 
 .help-btn {
+  position: relative;
   color: #c184ff99;
   text-shadow: 0 0 1rem #9123ff;
   width: 2rem;
   height: 2rem;
+
+  &--highlight{
+    color: #eddaff;
+    text-shadow: 0 0 1rem #c184ff99, 0 0 1rem #c184ff99, 0 0 2rem #9123ff;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0rem;
+      border-radius: 50%;
+      border: 1px solid #fff;
+      box-shadow:
+        0 0 1rem #c184ff99,
+        0 0 2rem #9123ff,
+        0 0 .2rem #c184ff99 inset,
+        0 0 .5rem #9123ff inset;
+
+      animation: pulse2 1.3s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95) both;
+
+      @keyframes pulse2 {
+        0%, 100% {
+          transform: scale(1.3);
+        }
+        50% {
+          transform: scale(1);
+        }
+      }
+    }
+  }
 
   &__tooltip {
     position: relative;
@@ -98,9 +133,6 @@ const help = ref(false);
       line-height: 1.5;
 
       &__header {
-        font-size: 1.5rem;
-        font-weight: 500;
-        font-family: $fontHeading;
         margin-bottom: 1rem;
         display: grid;
         grid-template-columns: auto 1fr;
@@ -111,15 +143,23 @@ const help = ref(false);
         text-shadow: 0 0 1rem #c184ff99, 0 0 2rem #9123ff;
 
         &__icon {
-          font-size: 2em;
+          font-size: 3.5rem;
           grid-row: 1 / span 2;
         }
 
         &__title {
-          font-size: .7rem;
-          opacity: .5;
-          font-family: $fontDisplay;
-          font-weight: bold;
+          font-size: 1rem;
+          line-height: 1;
+          opacity: .6;
+          font-family: $fontDisplayCursive;
+        }
+
+        &__slot {
+          font-size: 2rem;
+          line-height: 1;
+          margin-top: .2rem;
+          font-family: $fontHeading;
+          letter-spacing: -.05em;
         }
       }
 

@@ -24,7 +24,7 @@ import Page from '../Page.vue';
 
   .page0__title {
     font-size: 7rem;
-    font-family: $fontDiaryPage;
+    font-family: $fontDiaryLarge;
   }
 
   .page0__copyright-info {

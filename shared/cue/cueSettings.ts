@@ -79,4 +79,14 @@ export const cueSettingsMap: {
       default: null
     }
   },
+  [CueType.WhenMediaAt]: {
+    time: {
+      type: 'number',
+      default: null
+    },
+    executeIfAlreadyAtTime: {
+      type: 'boolean',
+      default: false
+    }
+  },
 }

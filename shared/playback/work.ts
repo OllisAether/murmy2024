@@ -20,6 +20,7 @@ export const Work = (duration = 60_000 * 10): Playback => ({
       },
     },
     { type: CueType.WaitForTimer },
+    { type: CueType.ClearNewClues },
   ],
   fields: {
     duration

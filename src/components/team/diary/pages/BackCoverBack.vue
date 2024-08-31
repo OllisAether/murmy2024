@@ -32,6 +32,7 @@ const game = useGameManager()
     0 0 1rem #000 inset;
 
   transform: scale(1.01);
+  transform-origin: left center;
 
   border-radius: .5rem 2rem 2rem .5rem !important;
 

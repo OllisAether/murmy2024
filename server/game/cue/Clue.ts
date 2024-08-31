@@ -38,6 +38,44 @@ export class AddClues extends CueHandle {
   public stop(): void {}
 }
 
+export class ClearNewClues extends CueHandle {
+  public start(next: CueHandleNext, ctx: CueHandleCtx<{}>): void {
+    const game = Game.get()
+
+    game.clueManager.clearNewAvailableClues()
+    next()
+  }
+  public stop(): void {}
+}
+
+export class UnlockClueForAll extends CueHandle {
+  public start(next: CueHandleNext, ctx: CueHandleCtx<{
+    clueId?: string
+  }>): void {
+    const game = Game.get()
+
+    const clueId = ctx.getFieldValue(ctx.options.clueId) as string
+
+    game.clueManager.unlockClueForAll(clueId)
+    next()
+  }
+  public stop(): void {}
+}
+
+export class MarkEntryForAll extends CueHandle {
+  public start(next: CueHandleNext, ctx: CueHandleCtx<{
+    entryId?: string
+  }>): void {
+    const game = Game.get()
+
+    const entryId = ctx.getFieldValue(ctx.options.entryId) as string
+
+    game.suspectDatabaseManager.addEntryForAll(entryId)
+    next()
+  }
+  public stop(): void {}
+}
+
 export class AssignMainClueType extends CueHandle {
   public start(next: CueHandleNext, ctx: CueHandleCtx<{
     votes: Votes

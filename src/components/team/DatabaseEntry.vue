@@ -2,7 +2,8 @@
   <button :class="['database-entry', {
     'database-entry--has-image': !!entry.imageAssetId,
     'database-entry--has-description': !!entry.description,
-    'database-entry--dragging': dragging
+    'database-entry--dragging': dragging,
+    'database-entry--draggable': draggable
   }]" ref="root" @pointerdown="pointerdown">
     <img
       v-if="entry.imageAssetId"
@@ -17,9 +18,9 @@
       <div v-if="entry.description" class="database-entry__description">
         <TextContentRenderer :text-content="entry.description" />
       </div>
+  
+      <VIcon class="database-entry__fullscreen-icon">mdi-fullscreen</VIcon>
     </div>
-
-    <VIcon class="database-entry__fullscreen-icon">mdi-fullscreen</VIcon>
 
     <VDialog v-model="dialog" activator="parent" width="fit-content">
       <div class="database-entry__overlay">
@@ -52,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Entry } from '../../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';
@@ -62,6 +63,7 @@ import TextContentRenderer from '../TextContentRenderer.vue';
 const game = useGameManager()
 
 const props = defineProps<{
+  scroller: HTMLElement
   entry: Entry
 }>()
 
@@ -73,42 +75,91 @@ const root = ref<HTMLDivElement | null>(null)
 
 const entryDrag = useEntryDrag()
 const dragging = computed(() => entryDrag.draggedEntry === props.entry.id)
+const draggable = computed(() => entryDrag.dropZones.length > 0)
 
-function pointerdown (event: PointerEvent) {
-  if (entryDrag.dropZones.length === 0) return
+watch([draggable, root], () => {
+  if (draggable.value) {
+    root.value?.addEventListener('touchstart', touchstart, { passive: false })
+  } else {
+    root.value?.removeEventListener('touchstart', touchstart)
+  }
+}, { immediate: true, deep: true })
+
+function touchstart (event: TouchEvent) {
+  if (!draggable.value) return
 
   const start = {
-    x: event.clientX,
-    y: event.clientY
+    x: event.touches[0].clientX,
+    y: event.touches[0].clientY
   }
 
-  window.addEventListener('pointermove', pointermove)
-  window.addEventListener('pointerup', pointerup)
+  window.addEventListener('touchmove', touchmove, { passive: false })
+  window.addEventListener('touchend', touchend)
 
   let thresholdSurpassed = false
-  function pointermove (event: PointerEvent) {
-    const distance = Math.sqrt(
-      Math.pow(event.clientX - start.x, 2) +
-      Math.pow(event.clientY - start.y, 2)
-    )
-    
-    if (!thresholdSurpassed && distance > 10) {
+  function touchmove (event: TouchEvent) {
+    const distanceX = Math.abs(event.touches[0].clientX - start.x)
+    const distanceY = Math.abs(event.touches[0].clientY - start.y)
+
+    if (distanceY > 50 && !thresholdSurpassed) {
+      touchend()
+      return
+    }
+
+    if (!thresholdSurpassed && distanceX > 10) {
       thresholdSurpassed = true
       entryDrag.startDrag(props.entry.id)
+
+      props.scroller.style.overflow = 'hidden'
+
     } else if (!thresholdSurpassed) {
       return
     }
 
+    event.preventDefault()
+
+    entryDrag.moveDrag({
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    })
+  }
+
+  function touchend () {
+    if (thresholdSurpassed) {
+      entryDrag.endDrag()
+    }
+    window.removeEventListener('touchmove', touchmove)
+    window.removeEventListener('touchend', touchend)
+
+    props.scroller.style.overflow = ''
+  }
+}
+
+function pointerdown (event: PointerEvent) {
+  if (!draggable.value) return
+  if (event.pointerType === 'touch') return
+
+  window.addEventListener('pointermove', pointermove)
+  window.addEventListener('pointerup', pointerup)
+
+  entryDrag.startDrag(props.entry.id)
+  entryDrag.moveDrag({
+    x: event.clientX,
+    y: event.clientY,
+  })
+
+  function pointermove (event: PointerEvent) {
+    event.preventDefault()
+
     entryDrag.moveDrag({
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
     })
   }
 
   function pointerup () {
-    if (thresholdSurpassed) {
-      entryDrag.endDrag()
-    }
+    entryDrag.endDrag()
+
     window.removeEventListener('pointermove', pointermove)
     window.removeEventListener('pointerup', pointerup)
   }
@@ -124,7 +175,7 @@ function pointerdown (event: PointerEvent) {
   text-align: left;
 
   position: relative;
-  background: #BCD1F111;
+  background: #393c3fa1;
   border: 1px solid #fff1;
   border-radius: 1rem;
   margin: 0 1rem .5rem;
@@ -140,16 +191,29 @@ function pointerdown (event: PointerEvent) {
 
   &--dragging {
     opacity: .3;
+    cursor: grab;
+  }
+
+  &--draggable {
+    animation: pulse 1.5s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95);
+
+    @keyframes pulse {
+      0%, 100% {}
+      50% {
+        border-color: #79ccff88;
+      }
+    }
   }
 
   &__content {
     z-index: 1;
-    padding: 0 .5rem;
+    margin: 0 .5rem;
     flex: 1 1 auto;
     width: 0;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto min-content;
+    grid-template-rows: min-content auto;
   }
 
   &__title {
@@ -163,8 +227,9 @@ function pointerdown (event: PointerEvent) {
   }
 
   &__description {
-    height: 0;
     flex: 1 1 auto;
+
+    grid-column: 1 / -1;
 
     min-height: 1.5rem;
 
@@ -188,18 +253,18 @@ function pointerdown (event: PointerEvent) {
   }
 
   &__fullscreen-icon {
-    // z-index: 1;
-    // position: absolute;
-    // top: 1rem;
-    // right: 1rem;
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
     color: #fff8;
     font-size: 1.5rem;
-    margin-right: .5rem;
-    
-    // .database-entry--has-image & {
-    //   color: #fff;
-    //   text-shadow: 0 0 .3rem #000;
-    // }
+    justify-self: end;
+    align-self: center;
+
+    .database-entry--has-description &, .database-entry--has-image & {
+      align-self: start;
+      margin-top: .2rem;
+    }
   }
 
   &__overlay {

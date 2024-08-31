@@ -1,11 +1,11 @@
 <template>
   <div class="sticky-note">
+    <slot />
     <Collectable
       v-if="entryId"
       :entryId="entryId"
       class="sticky-note__collectable"
     />
-    <slot />
   </div>
 </template>
 

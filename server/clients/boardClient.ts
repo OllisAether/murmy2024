@@ -61,14 +61,16 @@ export class BoardClient extends WebSocketClient {
       {
         action: 'mediaProgress',
         handler: (payload) => {
-          // console.log(colorize('[Client: Board]', Fg.Blue), 'Received media progress', payload);
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Received media progress', payload);
+
+          // in seconds
           const progress = payload?.progress;
 
           if (typeof progress !== 'number') {
             return;
           }
 
-          game.sendMediaProgressToAdmins(progress);
+          game.mediaTime(progress);
         }
       },
       {

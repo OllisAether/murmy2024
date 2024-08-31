@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, ref } from 'vue'
 import { createPinia } from 'pinia'
 import './scss/main.scss'
 
@@ -34,8 +34,12 @@ createApp(App)
   .use(router)
   .mount('#app')
 
+export const preventGestures = ref(true)
+
 function preventDefault(e: Event) {
-  e.preventDefault()
+  if (preventGestures.value) {
+    e.preventDefault()
+  }
 }
 
 // Standalone PWA
@@ -48,4 +52,8 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
   document.addEventListener('click', (e) => {
     if (e.detail > 1) preventDefault(e)
   })
+  // Prevent double tap to zoom on mobile devices
+  // document.addEventListener('touchstart', (e) => {
+  //   preventDefault(e)
+  // }, { passive: true })
 }

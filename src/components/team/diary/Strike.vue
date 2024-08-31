@@ -65,7 +65,6 @@ const randomSequence = Array.from({ length: text.value.length * 6 }, () => Math.
     position: relative;
     display: inline-block;
     white-space: pre-wrap;
-
   }
 
   &__line {

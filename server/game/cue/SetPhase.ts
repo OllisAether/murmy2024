@@ -9,10 +9,10 @@ export class SetPhase extends CueHandle {
     meta: JsonMap
   }>): void {
     const game = Game.get()
-    const phase = ctx.getFieldValue(ctx.options.phase) as Phase
-    const meta = ctx.getFieldValue(ctx.options.meta) as JsonMap
+    const phase = ctx.getFieldValue(ctx.options.phase) as Phase | undefined
+    const meta = ctx.getFieldValue(ctx.options.meta) as JsonMap | undefined
 
-    game.setPhase(phase, meta)
+    game.setPhase(phase ?? game.currentPhase, meta)
     next()
   }
   public stop(): void {}

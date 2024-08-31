@@ -6,7 +6,7 @@
       <div
         v-for="choice in field.choicesA"
         :key="choice.id"
-        :class="['form-field-connect__choice', {
+        :class="['form-field-connect__choice form-field-connect__choice--a', {
           'form-field-connect__choice--active': currentPair ? currentPair.a === choice.id : false,
           'form-field-connect__choice--hover': currentPair ? hoveringA === choice.id && currentPair.a === null : false,
         }]"
@@ -14,9 +14,11 @@
         ref="choicesA"
         :data-choice-id="choice.id"
       >
-        <TextContentRenderer :text-content="choice.text" />
-
-        <div class="form-field-connect__choice__port"></div>
+        <div class="form-field-connect__choice__content">
+          <TextContentRenderer :text-content="choice.text" />
+          
+          <div class="form-field-connect__choice__port"></div>
+        </div>
       </div>
     </div>
     <div class="form-field-connect__connections" ref="root">
@@ -84,7 +86,7 @@
       <div
         v-for="choice in field.choicesB"
         :key="choice.id"
-        :class="['form-field-connect__choice', {
+        :class="['form-field-connect__choice form-field-connect__choice--b', {
           'form-field-connect__choice--active': currentPair ? currentPair.b === choice.id : false,
           'form-field-connect__choice--hover': currentPair ? hoveringB === choice.id && currentPair.b === null : false,
         }]"
@@ -92,9 +94,11 @@
         ref="choicesB"
         :data-choice-id="choice.id"
       >
-        <TextContentRenderer :text-content="choice.text" />
+        <div class="form-field-connect__choice__content">
+          <TextContentRenderer :text-content="choice.text" />
 
-        <div class="form-field-connect__choice__port"></div>
+          <div class="form-field-connect__choice__port"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -119,6 +123,8 @@ const choicesB = ref<HTMLElement[]>([])
 const pairs = ref<FormFieldConnectValue>(props.value ?? [])
 watch(pairs, () => emit('setForm', pairs.value), { deep: true })
 
+const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+
 const computedPairs = computed(() => pairs.value.map(pair => {
   const elA = choicesA.value.find(el => el.dataset.choiceId === pair.a)
   const elB = choicesB.value.find(el => el.dataset.choiceId === pair.b)
@@ -141,7 +147,7 @@ const computedPairs = computed(() => pairs.value.map(pair => {
   const aTop = aRect.top - rootRect.top + aRect.height / 2
   const bTop = bRect.top - rootRect.top + bRect.height / 2
 
-  const width = bRect.left - aRect.right
+  const width = bRect.left - aRect.right + 4 * rem
   const height = Math.abs(bTop - aTop)
 
   return {
@@ -177,7 +183,7 @@ function pointerdownA (event: PointerEvent, choiceId: string) {
     a: choiceId,
     b: null,
     aPos: {
-      x: choiceEl.getBoundingClientRect().right,
+      x: choiceEl.getBoundingClientRect().right - 2 * rem,
       y: choiceEl.getBoundingClientRect().top + choiceEl.getBoundingClientRect().height / 2
     },
     bPos: {
@@ -208,7 +214,7 @@ function pointerdownA (event: PointerEvent, choiceId: string) {
 
     if (choiceEl) {
       currentPair.value.bPos = {
-        x: choiceEl.getBoundingClientRect().left,
+        x: choiceEl.getBoundingClientRect().left + 2 * rem,
         y: choiceEl.getBoundingClientRect().top + choiceEl.getBoundingClientRect().height / 2
       }
     } else {
@@ -258,7 +264,7 @@ function pointerdownB (event: PointerEvent, choiceId: string) {
       y: event.clientY
     },
     bPos: {
-      x: choiceEl.getBoundingClientRect().left,
+      x: choiceEl.getBoundingClientRect().left + 2 * rem,
       y: choiceEl.getBoundingClientRect().top + choiceEl.getBoundingClientRect().height / 2
     },
     width: 0,
@@ -284,7 +290,7 @@ function pointerdownB (event: PointerEvent, choiceId: string) {
 
     if (choiceEl) {
       currentPair.value.aPos = {
-        x: choiceEl.getBoundingClientRect().right,
+        x: choiceEl.getBoundingClientRect().right - 2 * rem,
         y: choiceEl.getBoundingClientRect().top + choiceEl.getBoundingClientRect().height / 2
       }
     } else {
@@ -350,25 +356,39 @@ function addPair (a: string, b: string) {
   }
 
   &__choice {
-    position: relative;
-    padding: 1rem;
-    border-radius: 1rem;
-    background: #393c3fa1;
-    border: 1px solid #fff2;
-    color: #fff;
     touch-action: none;
 
-    text-align: left;
-
-    & > * {
-      pointer-events: none;
+    &--a {
+      padding-right: 2rem;
+      margin-right: -2rem;
     }
 
-    transition: background-color 0.2s, border-color 0.2s;
+    &--b {
+      padding-left: 2rem;
+      margin-left: -2rem;
+    }
 
-    &--hover, &--active {
-      background: #79ccff44;
-      border-color: #79ccff88;
+    &__content {
+      position: relative;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: #393c3fa1;
+      border: 1px solid #fff2;
+      color: #fff;
+      pointer-events: none;
+
+      text-align: left;
+
+      & > * {
+        pointer-events: none;
+      }
+
+      transition: background-color 0.2s, border-color 0.2s;
+
+      .form-field-connect__choice--hover &, .form-field-connect__choice--active  &{
+        background: #79ccff44;
+        border-color: #79ccff88;
+      }
     }
 
     &__port {

@@ -20,11 +20,14 @@
         <div class="vote-screen__candidates">
           <TransitionGroup name="vote-screen__candidate">
             <div
-              v-for="candidate in candidates"
+              v-for="(candidate, i) in candidates"
               :key="candidate.id"
               :class="['vote-screen__candidate', {
                 'vote-screen__candidate--has-image': candidate.image
               }]"
+              :style="{
+                animationDelay: `${i * 0.1 + 0.3}s`
+              }"
             >
               <SkewBox
                 :img="candidate.image && game.getAsset(candidate.image)?.content"
@@ -70,6 +73,7 @@ import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
+import Color from 'color';
 
 const game = useGameManager()
 
@@ -157,7 +161,7 @@ watch(nextTiebreaker, (value) => {
 
   &__timer {
     position: absolute;
-    font-size: 10vh;
+    font-size: 10vw;
     font-weight: 300;
     top: 2vh;
     left: 50%;
@@ -168,7 +172,7 @@ watch(nextTiebreaker, (value) => {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 30vh;
+      font-size: 15vw;
     }
   }
 
@@ -180,10 +184,10 @@ watch(nextTiebreaker, (value) => {
     transform: translate(-50%, -50%);
     width: 100%;
 
-    padding: 15vh 10vh;
+    padding: 15vw 10vw;
     display: flex;
     justify-content: center;
-    gap: 3vh;
+    gap: 3vw;
 
     transition:
       filter 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -192,6 +196,15 @@ watch(nextTiebreaker, (value) => {
     .vote-screen--next-tiebreaker & {
       transform: translate(-50%, -50%)scale(0.8);
       filter: brightness(0.4)saturate(0.3);
+    }
+
+    animation: enter 1s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+
+    @keyframes enter {
+      from {
+        transform: translateY(10vw);
+        opacity: 0;
+      }
     }
   }
 
@@ -206,12 +219,14 @@ watch(nextTiebreaker, (value) => {
 
     &__title {
       position: absolute;
+      line-height: 1;
+      font-family: $fontHeading;
       top: 100%;
       width: 100%;
-      transform: translateX(-12%);
-      text-align: center;
-      padding: 3vh;
-      font-size: 2.5vh;
+      transform: translateX(-10%);
+      // text-align: center;
+      padding: 2vw 0;
+      font-size: 2vw;
     }
 
     &-enter-active, &-leave-active {

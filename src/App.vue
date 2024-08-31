@@ -126,13 +126,13 @@ onMounted(() => {
 
 .loading {
   font-family: $fontDisplay;
+  font-weight: 600;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 2rem;
   font-size: 2rem;
-  font-weight: bold;
 
   &__progress {
     transition: none;

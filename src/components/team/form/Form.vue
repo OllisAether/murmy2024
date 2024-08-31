@@ -106,7 +106,7 @@ watch(pageIndex, (newIndex, oldIndex) => {
       padding-top: 3rem;
       mask-image: linear-gradient(transparent, black 1rem, black calc(100% - 1rem), transparent);
       height: 0;
-      width: calc(100vw - 25rem);
+      width: calc(100vw - 22rem);
       flex: 1 1 auto;
       overflow-y: auto;
       margin: 0 auto;

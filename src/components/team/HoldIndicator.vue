@@ -56,11 +56,13 @@ const root = ref<HTMLElement | null>(null);
 
 const holdPosition = ref([0, 0]);
 const progress = ref(0);
+
 const holdDuration = 2000;
+const holdCheck = 1800;
 const holdDelay = 200;
 
-// cubic ease in out
-const progressEase = (t: number) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+// quadratic ease in out
+const progressEase = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 const nothingFound = ref(false);
 const alreadyFound = ref(false);
 
@@ -71,13 +73,19 @@ function onPointerDown (e: PointerEvent) {
   nothingFound.value = false;
   alreadyFound.value = false;
 
+  let success: boolean | 'alreadyCollected' | undefined = undefined
+
   let animation: number | null = null;
   async function counter () {
-    progress.value = progressEase(Math.max(0, Math.min(1, (Date.now() - start - holdDelay) / holdDuration)))
-    
-    if (progress.value >= 1) {
-      const success = collectables.markCollectableAt(e.clientX, e.clientY);
+    const now = Date.now()
+    const timeElapsed = now - start - holdDelay
+    progress.value = progressEase(Math.max(0, Math.min(1, timeElapsed / holdDuration)))
 
+    if (timeElapsed >= holdCheck && success === undefined) {
+      setTimeout(() => {
+        success = collectables.markCollectableAt(e.clientX, e.clientY);
+      }, holdDuration - holdCheck);
+    } else if (progress.value >= 1) {
       if (success === 'alreadyCollected') {
         alreadyFound.value = true;
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -89,7 +97,7 @@ function onPointerDown (e: PointerEvent) {
       up();
       return;
     }
-    
+
     animation = requestAnimationFrame(counter);
   }
 

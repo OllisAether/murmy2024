@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { Transition, watch } from 'vue';
 import { pages } from './pages';
-import Cover from './pages/Cover.vue';
+import Cover from './pages/FrontCover.vue';
 import BackCover from './pages/BackCover.vue';
 import { useMainClue } from '@/store/team/mainClue';
 

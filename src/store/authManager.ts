@@ -89,7 +89,7 @@ export const useAuthManager = defineStore('authManager', () => {
         if (router.currentRoute.value.name !== 'team') {
           router.replace('/team')
         }
-        viewport?.setAttribute('content', 'width=1500, user-scalable=0')
+        viewport?.setAttribute('content', 'width=1366, user-scalable=0')
         break
       default:
         team.value = null

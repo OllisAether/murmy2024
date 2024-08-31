@@ -74,6 +74,31 @@ export class SuspectDatabaseManager {
     this.save()
   }
 
+  public addEntryForAll (entryId: string): void {
+    console.log(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Adding entry for all teams', entryId)
+    const game = Game.get()
+
+    for (const team of game.getTeams()) {
+      if (!this.databases[team.id]) {
+        this.databases[team.id] = { entries: [] }
+      }
+
+      if (this.databases[team.id].entries.some((e) => e === entryId)) {
+        console.log(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Entry already exists for team', team.id)
+        continue
+      }
+
+      this.databases[team.id].entries.push(entryId)
+      game.clueManager.earnInvestigationCoins(team.id, 5)
+
+      const teamClient = game.getTeamClient(team.id)
+      teamClient && game.sendSuspectDatabaseToTeams(teamClient)
+    }
+
+    game.sendSuspectDatabasesToAdmins()
+    this.save()
+  }
+
   public removeEntry (teamId: string, entryId: string): void {
     const game = Game.get()
     const team = game.getTeam(teamId)

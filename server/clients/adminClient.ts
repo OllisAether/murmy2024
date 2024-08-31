@@ -7,6 +7,8 @@ import WebSocket from 'ws';
 import { TeamClient } from "./teamClient";
 import { VoteOption } from "../../shared/vote";
 import { colorize, Fg } from "../console";
+import { Phase } from "../../shared/phase";
+import { JsonMap } from "../../shared/json";
 
 export class AdminClient extends WebSocketClient {
   type: Role.Admin = Role.Admin;
@@ -419,6 +421,32 @@ export class AdminClient extends WebSocketClient {
           }
 
           game.removeHelpRequest(teamId);
+        }
+      },
+      // #endregion
+
+      // #region Phase
+      {
+        action: 'setPhase',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting phase', payload);
+
+          const phase = payload?.phase;
+          const meta = payload?.meta;
+
+          if (typeof phase !== 'string' || !Object.values(Phase).includes(phase as Phase) ||
+              (meta && (typeof meta !== 'object' || Array.isArray(meta)))) {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setPhase:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.setPhase(phase as Phase, meta as JsonMap);
         }
       },
       // #endregion

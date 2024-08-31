@@ -13,7 +13,9 @@ import { AddInvestigationCoins } from "../../../shared/playback/investigationCoi
 import { Media } from "../../../shared/playback/media";
 import { VoteMainClue } from "../../../shared/playback/voteMainClue";
 import { colorize, Fg } from "../../console";
+import { Tutorial } from "../../../shared/playback/tutorial";
 import { ClearAllForms, FilloutForms } from "../../../shared/playback/forms";
+import { ShowNewClues } from "../../../shared/playback/showNewClues";
 
 export class CueManager {
   currentPlayback: Playback | null = null
@@ -36,12 +38,15 @@ export class CueManager {
       info: true
     }),
 
-    { divider: 'Intro' },
+    { divider: 'Tutorial' },
 
     VoteMainClue(),
 
+    Tutorial(),
+
     Vote(),
     Media(),
+    ShowNewClues(),
 
     AddInvestigationCoins(10),
     Work(),
@@ -51,7 +56,7 @@ export class CueManager {
       break: true
     }),
     Idle(),
-    
+
     { divider: 'Ende' },
     ClearAllForms(),
     FilloutForms(),
@@ -309,6 +314,13 @@ export class CueManager {
           ? voteManager.getPools()[activeSession.pool]
           : null,
         session: activeSession
+      }
+    },
+    'clues': () => {
+      const game = Game.get()
+
+      return {
+        new: game.clueManager.getNewAvailableClues()
       }
     }
   }

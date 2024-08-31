@@ -2,7 +2,7 @@
   <div :class="['main-clue-card', {
     'main-clue-card--phone': game.clues.mainClueType === 'phone',
     'main-clue-card--diary': game.clues.mainClueType === 'diary',
-  }]">
+  }]" ref="mainClueCard">
     <button @click="showClue = true" class="main-clue-card__content">
       <SkewBox color="#fff2" :corner-cut="12" class="main-clue-card__content__box" />
 
@@ -81,15 +81,35 @@
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
 import ClueImageViewer from './ClueViewer.vue';
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, onBeforeUnmount, ref, watch } from 'vue';
 import Btn from '../Btn.vue';
 import SkewBox from '../SkewBox.vue';
+import { useTutorial } from '@/store/team/tutorial';
 
 const Phone = defineAsyncComponent(() => import('./phone/Phone.vue'));
 const Diary = defineAsyncComponent(() => import('./diary/Diary.vue'));
 
 const game = useGameManager();
 const showClue = ref(false);
+
+const tutorial = useTutorial();
+
+const mainClueCard = ref<HTMLElement | null>(null);
+watch(mainClueCard, (el) => {
+  if (el) {
+    tutorial.registerHighlightElement('mainClueCard', {
+      element: el,
+      margin: [0, 40, 30, 40],
+      borderRadius: 30,
+    });
+  } else {
+    tutorial.unregisterHighlightElement('mainClueCard');
+  }
+});
+
+onBeforeUnmount(() => {
+  tutorial.unregisterHighlightElement('mainClueCard');
+});
 </script>
 
 <style lang="scss" scoped>
