@@ -136,6 +136,13 @@ export const useGameManager = defineStore('gameManager', () => {
         })
         ws.send('getMedia')
       }),
+      new Promise<void>(resolve => {
+        ws.once('shownSuspects').then(() => {
+          console.log('Fetched shownSuspects')
+          resolve()
+        })
+        ws.send('getShownSuspects')
+      }),
       (async () => {
         switch (auth.role) {
           case Role.Team:
@@ -733,10 +740,16 @@ export const useGameManager = defineStore('gameManager', () => {
     entries: []
   })
 
+  const shownSuspects = ref<string[]>([])
+
   ws.onAction('suspectDatabase', (db: {
     entries: string[]
   }) => {
     database.value = db
+  })
+
+  ws.onAction('shownSuspects', (suspects: string[]) => {
+    shownSuspects.value = suspects
   })
 
   function addDatabaseEntry (entryId: string) {
@@ -920,6 +933,7 @@ export const useGameManager = defineStore('gameManager', () => {
     addVote,
 
     database,
+    shownSuspects,
     addDatabaseEntry,
     collectAllEntries,
     allEntries,

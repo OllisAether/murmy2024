@@ -2,7 +2,7 @@
   <VBtn icon variant="text" :class="['help-btn', {
     'help-btn--highlight': tutorial.state.highlightOracle
   }]">
-    <VIcon>mdi-crystal-ball</VIcon>
+    <VIcon size="small">mdi-crystal-ball</VIcon>
 
     <VOverlay
       v-model="help"

@@ -88,6 +88,12 @@ export function genericActions (client: WebSocketClient): {
       handler: () => {
         game.sendMediaToClients(client);
       }
+    },
+    {
+      action: 'getShownSuspects',
+      handler: () => {
+        game.sendShownSuspectsToClients(client);
+      }
     }
   ]
 }

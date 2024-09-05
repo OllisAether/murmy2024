@@ -932,6 +932,21 @@ export class Game {
       .filter((c) => c.type === Role.Team)
       .forEach((c) => (c as TeamClient).send('suspectDatabase', this.suspectDatabaseManager.getDatabase((c as TeamClient).teamId)))
   }
+
+  sendShownSuspectsToClients (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending shown suspects to clients')
+
+    const shownSuspects = this.suspectDatabaseManager.getShownSuspects()
+
+    if (client) {
+      client.send('shownSuspects', shownSuspects)
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type !== Role.Unauthorized)
+      .forEach((c) => c.send('shownSuspects', shownSuspects))
+  }
   // #endregion
 
   // #region Clues

@@ -278,6 +278,7 @@ onMounted(() => {
     observer.observe(root.value)
   }
 
+
   onBeforeUnmount(() => {
     observer.disconnect()
   })

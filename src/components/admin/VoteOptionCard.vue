@@ -75,6 +75,37 @@
 
           <VCard
             class="mt-2"
+            title="Verdächtige"
+          >
+            <VCardText>
+              <VList rounded bg-color="transparent">
+                <VListItem
+                  v-for="(suspect, i) in shownSuspects"
+                  :key="suspect?.id"
+                  rounded
+                  :class="['bg-background py-3', {
+                    'mt-1': i !== 0,
+                  }]"
+                >
+                  <VListItemTitle>
+                    {{ suspect?.name }}
+                  </VListItemTitle>
+                </VListItem>
+
+                <VListItem
+                  v-if="!shownSuspects?.length"
+                  rounded
+                >
+                  <VListItemTitle class="text-grey font-italic">
+                    Keine Verdächtigen
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VCardText>
+          </VCard>
+
+          <VCard
+            class="mt-2"
             title="Optionen"
           >
             <VCardText>
@@ -120,11 +151,13 @@
 <script lang="ts" setup>
 import { useAdmin } from '@/store/admin/index';
 import { VoteOption } from '../../../shared/vote';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import VoteOptionEditCard from './VoteOptionEditCard.vue';
 import { useGameManager } from '@/store/gameManager';
+import { suspects } from '../../../shared/assets/suspects';
+import { Suspect } from '../../../shared/suspectDatabase/suspect';
 
-defineProps<{
+const props = defineProps<{
   vote: VoteOption;
   index: number;
 }>();
@@ -134,4 +167,6 @@ const admin = useAdmin();
 
 const editDialog = ref(false);
 const expanded = ref(false);
+
+const shownSuspects = computed(() => props.vote.suspectIds?.map(suspectId => suspects.find(s => s.id === suspectId)).filter(Boolean) as Suspect[] ?? []);
 </script>

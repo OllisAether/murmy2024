@@ -184,7 +184,7 @@
             </VToolbar>
             <VCardText style="position: relative;">
               <p class="mb-2">
-                Falls ihr <b>technische Probleme</b> habt, könnt ihr hier die Spielleitung zu eurem Tisch rufen.
+                Falls euch das Orakel nicht weiterhelfen kann, z. B. bei technischen Problemen, könnt ihr hier die liebe <b>Technik-Crew</b>💗 um Hilfe bitten.
               </p>
               <p class="mb-8">
                 <b>

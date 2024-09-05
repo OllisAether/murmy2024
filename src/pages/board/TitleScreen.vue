@@ -123,29 +123,39 @@ const newClues = computed(() => {
     font-family: $fontDisplayCursive;
     display: grid;
 
-    @keyframes appear {
+    @keyframes appear1 {
       0% {
-        transform: translateY(-5vw);
+        transform: translate(5vw);
         opacity: 0;
       }
       100% {
         transform: translateY(0);
       }
     }
+    @keyframes appear2 {
+      0% {
+        transform: translate(-5vw);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
     span:nth-child(1) {
       font-size: 1.1em;
 
-      animation: appear 1s cubic-bezier(0.19, 1, 0.22, 1) both;
+      animation: appear1 1s cubic-bezier(0.19, 1, 0.22, 1) both;
     }
 
     span:nth-child(2) {
-      animation: appear 2s .1s cubic-bezier(0.19, 1, 0.22, 1) both;
+      animation: appear2 2s .1s cubic-bezier(0.19, 1, 0.22, 1) both;
     }
 
     span:nth-child(3) {
       font-size: 1.5em;
 
-      animation: appear 3s .2s cubic-bezier(0.19, 1, 0.22, 1) both;
+      animation: appear1 3s .2s cubic-bezier(0.19, 1, 0.22, 1) both;
     }
 
     &--countdown .title-screen__title__top, &--countdown .title-screen__title__bottom {

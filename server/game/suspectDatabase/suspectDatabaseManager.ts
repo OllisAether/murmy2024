@@ -12,8 +12,13 @@ export class SuspectDatabaseManager {
     [teamId: string]: SuspectDatabase
   } = {}
 
+  private shownSuspects: string[] = []
+
   public save (): void {
-    Database.get().saveCollection("suspectDatabases", this.databases)
+    Database.get().saveCollection("suspectDatabases", {
+      databases: this.databases,
+      shownSuspects: this.shownSuspects
+    })
   }
 
   public load (): void {
@@ -23,19 +28,23 @@ export class SuspectDatabaseManager {
       return
     }
 
-    if (
-      typeof data !== "object" ||
-      Array.isArray(data) ||
-      Object.keys(data).some((key) =>
-        typeof key !== "string"
-        || !(data[key] as SuspectDatabase).entries
-        || !Array.isArray((data[key] as SuspectDatabase).entries))
-    ) {
+    if (!data.databases ||
+      typeof data.databases !== 'object' ||
+      !Array.isArray(data.shownSuspects) ||
+      Object.keys(data.databases).some((teamId) => !Game.get().getTeam(teamId))) {
       console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid data', data)
-      return
+    } else {
+      this.databases = data.databases as { [teamId: string]: SuspectDatabase }
     }
 
-    this.databases = data as { [teamId: string]: SuspectDatabase }
+
+    if (!data.shownSuspects ||
+      !Array.isArray(data.shownSuspects) ||
+      data.shownSuspects.some((s) => typeof s !== 'string')) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid shown suspects', data.shownSuspects)
+    } else {
+      this.shownSuspects = data.shownSuspects as string[]
+    }
   }
 
   public clean (): void {
@@ -58,6 +67,38 @@ export class SuspectDatabaseManager {
 
   public getDatabases (): { [teamId: string]: SuspectDatabase } {
     return this.databases
+  }
+
+  public getShownSuspects (): string[] {
+    return this.shownSuspects
+  }
+
+  public addShownSuspect (suspectId: string): void {
+    if (this.shownSuspects.some((s) => s === suspectId)) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Suspect already shown', suspectId)
+      return
+    }
+
+    console.log(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Adding shown suspect', suspectId)
+    this.shownSuspects.push(suspectId)
+
+    Game.get().sendShownSuspectsToClients()
+    this.save()
+  }
+
+  public removeShownSuspect (suspectId: string): void {
+    const index = this.shownSuspects.findIndex((s) => s === suspectId)
+
+    if (index === -1) {
+      console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Suspect not shown', suspectId)
+      return
+    }
+
+    console.log(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Removing shown suspect', suspectId)
+    this.shownSuspects.splice(index, 1)
+
+    Game.get().sendShownSuspectsToClients()
+    this.save()
   }
 
   public addEntry (teamId: string, entryId: string): void {

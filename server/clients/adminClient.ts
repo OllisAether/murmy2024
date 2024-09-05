@@ -1020,6 +1020,48 @@ export class AdminClient extends WebSocketClient {
           });
         }
       },
+      {
+        action: 'removeShownSuspect',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing shown suspect', payload);
+
+          const suspectId = payload?.suspectId;
+
+          if (typeof suspectId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('removeShownSuspect:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.suspectDatabaseManager.removeShownSuspect(suspectId);
+        }
+      },
+      {
+        action: 'addShownSuspect',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Adding shown suspect', payload);
+
+          const suspectId = payload?.suspectId;
+
+          if (typeof suspectId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('addShownSuspect:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.suspectDatabaseManager.addShownSuspect(suspectId);
+        }
+      },
       // #endregion
     
       // #region Clues

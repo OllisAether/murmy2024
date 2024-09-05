@@ -9,6 +9,7 @@ import { AddVoteOptions, ClearVotePool, CloseVote, EndVote, OpenVote, PauseVote,
 import { AddClues, AddInvestigationCoins, AssignMainClueType, AssignMainClueTypeRandomly, ClearNewClues, MarkEntryForAll, SetAssignFurtherMainClueTypesRandomly, UnlockClueForAll } from "./Clue";
 import { SetMedia, WaitForMediaFinished, WhenMediaAt } from "./Media";
 import { CalculateResults, ClearAllForms, WaitForAllFormsSubmitted } from "./form";
+import { AddShownSuspects } from "./shownSuspects";
 
 export const CueTypes: Record<CueType, typeof CueHandle>= {
   [CueType.StartTimer]: StartTimer,
@@ -37,6 +38,9 @@ export const CueTypes: Record<CueType, typeof CueHandle>= {
   [CueType.PauseVote]: PauseVote,
   [CueType.ResumeVote]: ResumeVote,
   [CueType.WaitForVote]: WaitForVote,
+
+  // Suspects
+  [CueType.AddShownSuspects]: AddShownSuspects,
 
   // Clue
   [CueType.AddInvestigationCoins]: AddInvestigationCoins,

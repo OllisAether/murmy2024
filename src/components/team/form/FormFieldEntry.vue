@@ -40,13 +40,13 @@
           Noch
           {{ amount - entries.length }} {{ amount - entries.length === 1 ? 'Eintrag' : 'Einträge' }}
         </template>
-        aus der Datenbank hierrein ziehen
+        aus der Verdächtigen-Datenbank hierrein ziehen
         <HelpBtn>
           <template #header>
             Drag & Drop
           </template>
 
-          Ziehe Einträge per Drag & Drop aus der Datenbank links in diesen Bereich, um sie auszuwählen.
+          Ziehe Einträge per Drag & Drop aus der Verdächtigen-Datenbank links in diesen Bereich, um sie auszuwählen.
         </HelpBtn>
       </div>
     </div>

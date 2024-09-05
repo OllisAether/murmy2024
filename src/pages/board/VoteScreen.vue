@@ -71,7 +71,7 @@ import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import SkewBox from '@/components/SkewBox.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed, watch } from 'vue';
+import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
 
 const game = useGameManager()
@@ -113,6 +113,42 @@ const isRandom = computed(() => {
   return game.vote.session?.isRandom
 })
 
+const audio = new Audio(game.getAsset('sounds/vote.mp3')?.content ?? '')
+
+// watch(nextTiebreaker, (value) => {
+//   if (value) {
+//     if (audio.currentTime - 31 > 0.1) {
+//       audio.currentTime = 31
+//     } 
+//   }
+// }, { immediate: true })
+
+onMounted(() => {
+  audio.play()
+})
+
+onUnmounted(() => {
+  // fade out audio
+  const start = audio.volume
+  const startTime = Date.now()
+
+  const duration = 1500
+  
+  function step () {
+    const elapsed = Date.now() - startTime
+
+    audio.volume = Math.max(0, start - elapsed / duration)
+
+    if (audio.volume > 0) {
+      requestAnimationFrame(step)
+    } else {
+      audio.pause()
+    }
+  }
+
+  step()
+})
+
 watch(showWinner, (value) => {
   if (value) {
     setTimeout(() => {
@@ -140,6 +176,7 @@ watch(nextTiebreaker, (value) => {
 
 <style lang="scss" scoped>
 @use '@/scss/vars' as *;
+@use 'sass:math';
 
 .vote-screen {
   height: 100%;
@@ -183,10 +220,13 @@ watch(nextTiebreaker, (value) => {
     transform: translate(-50%, -50%);
     width: 100%;
 
-    padding: 15vw 10vw;
+    padding: 5vw 10vw;
     display: flex;
     justify-content: center;
-    gap: 3vw;
+
+    .vote-screen--private & {
+      justify-content: space-around;
+    }
 
     transition:
       filter 1s cubic-bezier(0.19, 1, 0.22, 1),
@@ -196,6 +236,18 @@ watch(nextTiebreaker, (value) => {
       transform: translate(-50%, -50%)scale(0.8);
       filter: brightness(0.4)saturate(0.3);
     }
+  }
+
+  &__candidate {
+    z-index: 1;
+    position: relative;
+    width: 35vh;
+
+    margin: 0 2vw;
+
+    transition:
+      transform 1s cubic-bezier(0.19, 1, 0.22, 1),
+      filter 1s cubic-bezier(0.19, 1, 0.22, 1);
 
     animation: enter 1s cubic-bezier(0.19, 1, 0.22, 1) backwards;
 
@@ -205,12 +257,6 @@ watch(nextTiebreaker, (value) => {
         opacity: 0;
       }
     }
-  }
-
-  &__candidate {
-    z-index: 1;
-    position: relative;
-    width: 35vh;
 
     & > :deep(.skew-box) {
       aspect-ratio: 5 / 9;
@@ -236,8 +282,8 @@ watch(nextTiebreaker, (value) => {
     }
 
     &-enter-from, &-leave-to {
-      margin-left: -20vh;
-      margin-right: -20vh;
+      margin-left: math.div(-35vh, 2);
+      margin-right: math.div(-35vh, 2);
       opacity: 0;
     }
   }

@@ -110,6 +110,12 @@ export const Vote = (
           clues: FieldReference('vote.results.finalWinner.availableClues')
         }
       },
+      {
+        type: CueType.AddShownSuspects,
+        options: {
+          suspects: FieldReference('vote.results.finalWinner.suspectIds')
+        }
+      },
     { type: CueType.EndIf },
   ],
   fields: {

@@ -26,6 +26,8 @@ export const cueIconMap: Record<CueType, string> = {
   [CueType.EndVote]: 'mdi-close-box-multiple',
   [CueType.WaitForVote]: 'mdi-text-box-check',
 
+  [CueType.AddShownSuspects]: 'mdi-account-search',
+
   [CueType.AddInvestigationCoins]: 'mdi-star-four-points-circle',
   [CueType.AddClues]: 'mdi-magnify-plus',
   [CueType.ClearNewClues]: 'mdi-magnify-remove',

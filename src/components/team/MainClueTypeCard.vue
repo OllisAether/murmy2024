@@ -63,6 +63,15 @@
               <span>
                 Halten, um Hinweise zu markieren
               </span>
+              <HelpBtn style="margin-top: -.5rem; margin-bottom: -.5rem;">
+                <template #header>
+                  Hinweise markieren
+                </template>
+
+                <p class="mb-2">
+                  Halte den Finger auf einem Hinweis, um ihn zu markieren. Markierte Hinweise werden zur <b class="help-color">Verdächtigen-Datenbank</b> hinzugefügt.
+                </p>
+              </HelpBtn>
             </div>
           </div>
           <Btn
@@ -83,6 +92,7 @@ import { useGameManager } from '@/store/gameManager';
 import ClueImageViewer from './ClueViewer.vue';
 import { defineAsyncComponent, onBeforeUnmount, ref, watch } from 'vue';
 import Btn from '../Btn.vue';
+import HelpBtn from './HelpBtn.vue';
 import SkewBox from '../SkewBox.vue';
 import { useTutorial } from '@/store/team/tutorial';
 

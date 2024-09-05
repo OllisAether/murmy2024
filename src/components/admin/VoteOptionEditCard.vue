@@ -80,6 +80,62 @@
         >
           <VListItem>
             <VListItemTitle class="text-body-1">
+              Sichtbare Verdächtige zum hinzufügen
+            </VListItemTitle>
+          </VListItem>
+
+          <VListItem
+            v-for="(_, i) in suspectIds"
+            :key="i"
+          >
+            <div class="d-flex align-center pt-2">
+              <VSelect
+                density="compact"
+                variant="outlined"
+                v-model="suspectIds[i]"
+                :items="suspects.map(suspect => ({
+                  title: `${suspect.name} (ID: ${suspect.id})`,
+                  value: suspect.id
+                }))"
+                label="Verdächtiger"
+                outlined
+                hide-details
+                class="mr-3"
+              />
+              <VBtn
+                icon
+                @click="suspectIds.splice(i, 1)"
+                flat
+                color="error"
+                variant="tonal"
+                size="small"
+              >
+                <VIcon>mdi-close</VIcon>
+              </VBtn>
+            </div>
+          </VListItem>
+          <VListItem
+            @click="suspectIds.push(undefined)"
+          >
+            <VListItemTitle>
+              <VIcon>mdi-plus</VIcon>
+              <span class="text-body-1">
+                Verdächtigen hinzufügen
+              </span>
+            </VListItemTitle>
+          </VListItem>
+        </VList>
+
+        <VList
+          bg-color="background"
+          rounded
+          nav
+          density="compact"
+          class="my-4"
+          style="margin: 0 -.5rem;"
+        >
+          <VListItem>
+            <VListItemTitle class="text-body-1">
               Hinweise zum freischalten
             </VListItemTitle>
           </VListItem>
@@ -271,6 +327,7 @@ import { clues } from '../../../shared/assets/clues';
 import { useAdmin } from '@/store/admin/index';
 import AssetSelect from './AssetSelect.vue';
 import { useGameManager } from '@/store/gameManager';
+import { suspects } from '../../../shared/assets/suspects';
 
 const admin = useAdmin()
 const game = useGameManager()
@@ -297,6 +354,7 @@ const description = ref(props.option?.description ?? '')
 const color = ref(props.option?.color ?? '')
 const placeImageOverBox = ref(props.option?.placeImageOverBox ?? false)
 
+const suspectIds = ref<(string | undefined)[]>(props.option?.suspectIds ?? [])
 const removeSelf = ref(props.option?.removeSelf ?? true)
 const availableClues = ref<(string | undefined)[]>(props.option?.availableClues ?? [])
 
@@ -342,6 +400,7 @@ async function submit () {
     description: description.value.length ? description.value : undefined,
     color: color.value.length ? color.value : undefined,
     placeImageOverBox: placeImageOverBox.value,
+    suspectIds: suspectIds.value.filter(id => !!id) as string[],
     removeSelf: removeSelf.value,
     availableClues: availableClues.value.filter(clue => !!clue) as string[],
     options: options.value,

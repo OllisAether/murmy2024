@@ -213,10 +213,16 @@ onBeforeUnmount(() => {
 .home {
   // background: $surface;
 
-  &--info, &--timer, &--results {
+  &--info, &--timer {
     .home__teamname {
       top: calc(40vh - 22rem);
       transform: translateY(0);
+    }
+  }
+
+  &--results {
+    .home__teamname {
+      top: calc(25vh);
     }
   }
 

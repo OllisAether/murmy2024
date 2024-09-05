@@ -586,6 +586,14 @@ export const useAdmin = defineStore('admin', () => {
   function addEntry (teamId: string, entryId: string) {
     ws.send('addEntry', { teamId, entryId })
   }
+
+  function removeShownSuspect (suspectId: string) {
+    ws.send('removeShownSuspect', { suspectId })
+  }
+
+  function addShownSuspect (suspectId: string) {
+    ws.send('addShownSuspect', { suspectId })
+  }
   // #endregion
 
   // #region Clues
@@ -715,6 +723,8 @@ export const useAdmin = defineStore('admin', () => {
     suspectDatabases,
     removeEntry,
     addEntry,
+    removeShownSuspect,
+    addShownSuspect,
 
     clues,
     setGivenInvestigationCoins,

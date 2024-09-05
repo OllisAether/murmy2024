@@ -26,6 +26,8 @@ export enum CueType {
   ResumeVote = 'ResumeVote',
   WaitForVote = 'WaitForVote',
 
+  AddShownSuspects = 'AddShownSuspects',
+
   AddInvestigationCoins = 'AddInvestigationCoins',
   AddClues = 'AddClues',
   ClearNewClues = 'ClearNewClues',

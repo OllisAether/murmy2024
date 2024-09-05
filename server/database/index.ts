@@ -34,7 +34,7 @@ export class Database {
   }
 
   getCollection (name: string) {
-    return this.collections[name] ?? {};
+    return this.collections[name];
   }
 
   async saveCollections () {
