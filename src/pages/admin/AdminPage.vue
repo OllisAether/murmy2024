@@ -166,7 +166,7 @@
     </VAppBar>
 
     <VMain class="main">
-      <div class="alerts-wrapper" v-if="admin.alert.length > 0">
+      <div class="alerts-wrapper" v-if="admin.alerts.length > 0">
         <div class="alerts">
           <VAlert
             v-for="alert in admin.alerts"
@@ -177,9 +177,22 @@
             :type="alert.type === 'default' ? undefined : alert.type"
             @click:close="alert.close?.()"
             :closable="true"
-            variant="elevated"
+            variant="outlined"
           >
             <TimedProgress v-if="alert.closeAfter" :duration="alert.closeAfter" />
+
+            <template #text>
+              <div class="mt-2">
+                <VBtn
+                  v-for="action in alert.actions"
+                  :key="action.label"
+                  @click="action.action()"
+                  variant="tonal"
+                  >
+                  {{ action.label }}
+                </VBtn>
+              </div>
+            </template>
           </VAlert>
         </div>
       </div>
@@ -252,14 +265,14 @@ async function logout() {
 @use '@/scss/vars' as *;
 
 .alerts {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  // position: absolute;
+  // top: 1rem;
+  // right: 1rem;
 
-  @media screen and (max-width: 768px) {
-    position: static;
-    margin: 1rem 1rem;
-  }
+  // @media screen and (max-width: 768px) {
+  position: static;
+  margin: 1rem 1rem;
+  // }
 
   &-wrapper {
     z-index: 100;

@@ -57,6 +57,23 @@
         <p class="text-error">
           {{ error }}
         </p>
+
+        <VCheckbox
+          v-model="active"
+          label="Aktiv"
+        />
+
+        <VTextarea
+          v-model="metaTextarea"
+          @blur="computedMeta = metaTextarea"
+          label="Meta"
+          variant="outlined"
+          hint="JSON-Objekt"
+        />
+
+        <p class="text-error">
+          {{ metaError }}
+        </p>
       </VCardText>
       <VCardActions>
         <VBtn
@@ -110,21 +127,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { generateCode, validateCode } from '../../../shared/teamcode';
 import { idGen } from '../../../shared/random';
 import { VIcon } from 'vuetify/components';
+import { JsonMap } from '../../../shared/json';
 
 const props = defineProps<{
   team?: {
     id: string
     name: string
     code: string
+    active: boolean
+    meta: JsonMap
   },
   submitFn: (team: {
     id: string
     name: string
     code: string
+    active: boolean
+    meta: JsonMap
   }) => Promise<{
     success: boolean
     message?: string
@@ -141,6 +163,35 @@ const removeDialog = ref(false)
 const id = ref(props.team?.id ?? idGen())
 const name = ref(props.team?.name ?? '')
 const code = ref(props.team?.code ?? generateCode())
+const active = ref(props.team?.active ?? true)
+const meta = ref(props.team?.meta ?? {})
+
+const metaError = ref('')
+const metaTextarea = ref(JSON.stringify(meta.value, null, 2))
+const computedMeta = computed({
+  get: () => JSON.stringify(meta.value, null, 2),
+  set: (v: string) => {
+    if (v.trim() === '') {
+      meta.value = {}
+      metaError.value = ''
+      setTimeout(() => {
+        metaTextarea.value = JSON.stringify(meta.value, null, 2)
+      })
+      return
+    }
+
+    try {
+      meta.value = JSON.parse(v)
+      metaError.value = ''
+
+      setTimeout(() => {
+        metaTextarea.value = JSON.stringify(meta.value, null, 2)
+      })
+    } catch {
+      metaError.value = 'Ungültiges JSON-Objekt'
+    }
+  }
+})
 
 function setCode () {
   code.value = code.value.trim().toUpperCase().slice(0, 6)
@@ -159,7 +210,9 @@ async function submit () {
   const res = await props.submitFn({
     id: id.value,
     name: name.value,
-    code: code.value
+    code: code.value,
+    active: active.value,
+    meta: meta.value
   })
 
   if (res.success) {

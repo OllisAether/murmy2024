@@ -34,8 +34,10 @@ export class AdminClient extends WebSocketClient {
           const id = payload?.id;
           const name = payload?.name;
           const code = payload?.code;
+          const active = payload?.active;
+          const meta = payload?.meta
 
-          if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string') {
+          if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string' || typeof active !== 'boolean') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('addTeam:response', {
@@ -106,7 +108,9 @@ export class AdminClient extends WebSocketClient {
           game.addTeam(new Team(
             id,
             name,
-            code
+            code,
+            active ?? true,
+            meta as JsonMap ?? {}
           ));
 
           this.send('teams', game.getTeams());
@@ -124,8 +128,10 @@ export class AdminClient extends WebSocketClient {
           const id = payload?.id;
           const name = payload?.name;
           const code = payload?.code;
+          const active = payload?.active;
+          const meta = payload?.meta;
 
-          if (typeof name !== 'string' || typeof code !== 'string') {
+          if (typeof name !== 'string' || typeof code !== 'string' || typeof id !== 'string' || typeof active !== 'boolean') {
             console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
 
             this.send('editTeam:response', {
@@ -197,6 +203,8 @@ export class AdminClient extends WebSocketClient {
 
           team.name = name;
           team.code = code;
+          team.active = active;
+          team.meta = meta as JsonMap;
 
           game.saveTeams();
 

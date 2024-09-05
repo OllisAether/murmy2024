@@ -1,4 +1,3 @@
-import { clues } from "../assets/clues";
 import { CueType } from "../cue/CueTypes";
 import { Phase } from "../phase";
 import { TutorialState } from "../tutorial";

@@ -102,18 +102,18 @@ const phase = computed({
   }
 })
 
-const meta = computed({
-  get: () => {
-    if (newMeta.value) {
-      return newMeta.value
-    }
+// const meta = computed({
+//   get: () => {
+//     if (newMeta.value) {
+//       return newMeta.value
+//     }
 
-    return game.phase.meta
-  },
-  set: (value: string) => {
-    newMeta.value = value
-  }
-})
+//     return game.phase.meta
+//   },
+//   set: (value: string) => {
+//     newMeta.value = value
+//   }
+// })
 
 const phaseChanged = computed(() => {
   return newPhase.value !== null || newMeta.value !== null

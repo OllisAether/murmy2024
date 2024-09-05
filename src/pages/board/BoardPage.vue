@@ -8,6 +8,8 @@
     <VFadeTransition mode="out-in">
       <MediaScreen v-if="game.currentMedia !== null" />
       <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
+      <ResultsScreen v-if="game.phase.meta.results" />
+      <ShownewCluesScreen v-if="game.phase.meta.showNewClues" />
       <TitleScreen v-else />
     </VFadeTransition>
   </template>
@@ -57,6 +59,8 @@ import { Phase } from '../../../shared/phase';
 import TitleScreen from './TitleScreen.vue';
 import MediaScreen from './MediaScreen.vue';
 import VoteScreen from './VoteScreen.vue';
+import ResultsScreen from './ResultsScreen.vue';
+import ShownewCluesScreen from './ShownewCluesScreen.vue';
 
 const auth = useAuthManager()
 const game = useGameManager()

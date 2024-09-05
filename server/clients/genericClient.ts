@@ -6,6 +6,7 @@ import WebSocket from 'ws';
 import { TeamClient } from "./teamClient";
 import { Role } from "../../shared/roles";
 import { Bg, colorize, Fg } from "../console";
+import { JsonMap } from "../../shared/json";
 
 export class GenericClient extends WebSocketClient {
   type: Role.Unauthorized = Role.Unauthorized;
@@ -35,12 +36,14 @@ export class GenericClient extends WebSocketClient {
     return new BoardClient(this.ws, this.id, this.userAgent);
   }
 
-  promoteToTeam (teamId: string, teamName: string, teamCode: string) {
+  promoteToTeam (teamId: string, teamName: string, teamCode: string, teamActive: boolean, teamMeta: JsonMap) {
     this.send('auth', {
       type: 'team',
       teamId,
       teamName,
-      teamCode
+      teamCode,
+      teamActive,
+      teamMeta
     })
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Promoting client to team', this.id)
     return new TeamClient(this.ws, this.id, teamId, teamName, this.userAgent);

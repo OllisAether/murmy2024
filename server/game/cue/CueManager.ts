@@ -29,7 +29,9 @@ export class CueManager {
   private playbacks: (Playback | {
     divider: string
   })[] = [
-    { divider: 'Einlass' },
+    { divider: '=== Prolog ===' },
+
+    { divider: '- Einlass -' },
 
     Idle(0, {
       info: true
@@ -38,7 +40,10 @@ export class CueManager {
       info: true
     }),
 
-    { divider: 'Tutorial' },
+    { divider: '- Intro -' },
+    Idle(),
+
+    { divider: '- Tutorial -' },
 
     VoteMainClue(),
 
@@ -51,17 +56,28 @@ export class CueManager {
     AddInvestigationCoins(10),
     Work(),
 
-    { divider: 'Pause' },
+    { divider: '=== Interlude ===' },
+
+    Idle(),
+
+    { divider: '=== Pause ===' },
     Idle(15 * 60_000, {
       break: true
     }),
     Idle(),
 
-    { divider: 'Ende' },
+    { divider: '=== Finale ===' },
+
     ClearAllForms(),
     FilloutForms(),
     Idle(0, {
       end: true
+    }),
+
+    { divider: '=== Epilog ===' },
+
+    Idle(0, {
+      results: true
     }),
   ]
 

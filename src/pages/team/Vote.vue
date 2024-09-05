@@ -183,9 +183,9 @@ const isRandom = computed(() => {
       filter: brightness(0.4)saturate(0.3);
     }
 
-    .vote-screen--has-voted & {
-      transform: translate(-50%, -50%)scale(0.8);
-    }
+    // .vote-screen--has-voted & {
+    //   transform: translate(-50%, -50%)scale(0.8);
+    // }
   }
 
   &__candidate {
@@ -213,7 +213,7 @@ const isRandom = computed(() => {
     }
 
     &--voted {
-      transform: scale(math.div(1, 0.8));
+      transform: scale(1.1);
       z-index: 2;
       filter: drop-shadow(0 0 5vw rgba(var(--candidate-color-rgb), 0.3));
     }
@@ -260,8 +260,8 @@ const isRandom = computed(() => {
     }
 
     &-enter-from, &-leave-to {
-      margin-left: -14vh;
-      margin-right: -14vh;
+      margin-left: math.div(-35vh, 2);
+      margin-right: math.div(-35vh, 2);
       opacity: 0;
     }
   }

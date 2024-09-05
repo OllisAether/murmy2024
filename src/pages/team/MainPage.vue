@@ -8,6 +8,46 @@
 
     <div class="controls">
       <VBtn
+        v-if="!auth.team?.active"
+        icon
+        variant="text"
+        color="#fff8"
+      >
+        <VIcon>mdi-cancel</VIcon>
+
+        <VOverlay
+          activator="parent"
+          width="400"
+          location-strategy="connected"
+          :scrim="false"
+          location="bottom"
+        >
+          <template #="{ isActive }">
+            <VCard rounded="lg">
+              <VToolbar color="transparent">
+                <VToolbarTitle>
+                  <VIcon>mdi-cancel</VIcon>
+                  Passives Team
+                </VToolbarTitle>
+                <VBtn icon @click="isActive.value = false">
+                  <VIcon>mdi-close</VIcon>
+                </VBtn>
+              </VToolbar>
+
+              <VCardText style="font-size: 1rem;">
+                <p class="mb-3">
+                  Euer Team ist <em>passiv</em> und hat nur eingeschränkte Funktionen.
+                </p>
+
+                <p>
+                  Ihr könnt nicht an Umfragen teilnehmen oder den Lösungsbogen einreichen.
+                </p>
+              </VCardText>
+            </VCard>
+          </template>
+        </VOverlay>
+      </VBtn>
+      <VBtn
         icon
         variant="text"
         :color="game.wakelock.isActive

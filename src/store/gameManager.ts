@@ -17,6 +17,7 @@ import { transcripts } from "../../shared/assets/transcripts";
 import { FormFieldValue } from "../../shared/form";
 import { notes } from "../../shared/assets/phone/notes";
 import { diaryEntries } from "../../shared/assets/diary/entries";
+import { Result } from "../../shared/results";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -66,7 +67,6 @@ export const useGameManager = defineStore('gameManager', () => {
     startTimeSync()
     syncTime()
 
-    
     await Promise.all([
       ...(auth.role === Role.Team ? [
         new Promise<void>(resolve => {
@@ -82,6 +82,15 @@ export const useGameManager = defineStore('gameManager', () => {
             resolve()
           })
           ws.send('getForm')
+        }),
+      ] : []),
+      ...(auth.role === Role.Board ? [
+        new Promise<void>(resolve => {
+          ws.once('results').then(() => {
+            console.log('Fetched results')
+            resolve()
+          })
+          ws.send('getResults')
         }),
       ] : []),
       new Promise<void>(resolve => {
@@ -599,20 +608,43 @@ export const useGameManager = defineStore('gameManager', () => {
     const id = useAuthManager().team?.id ?? ''
 
     if (vote.value.session.isTiebreaker) {
-      if (!vote.value.session.tiebreakerVotes) {
-        return false
+      let found: string | false = false
+      if (vote.value.session.tiebreakerVotes) {
+        let _found = Object.keys(vote.value.session.tiebreakerVotes)
+          .find(option => vote.value.session!.tiebreakerVotes![option].includes(id)) ?? false
+
+        if (_found) {
+          found = _found
+        }
       }
 
-      return Object.keys(vote.value.session.tiebreakerVotes)
-        .find(option => vote.value.session!.tiebreakerVotes![option].includes(id)) ?? false
+      if (vote.value.session.passiveTiebreakerVotes) {
+        let _found = Object.keys(vote.value.session.passiveTiebreakerVotes)
+          .find(option => vote.value.session!.passiveTiebreakerVotes![option].includes(id)) ?? false
+
+        if (_found) {
+          found = _found
+        }
+      }
+    
+      return found
     }
 
     if (vote.value.session.isRandom) {
       return false
     }
 
-    return Object.keys(vote.value.session.votes)
+    let found1 = Object.keys(vote.value.session.votes)
       .find(option => vote.value.session!.votes[option].includes(id)) ?? false
+
+    if (found1) {
+      return found1
+    }
+
+    let found2 = Object.keys(vote.value.session.passiveVotes)
+      .find(option => vote.value.session!.passiveVotes[option].includes(id)) ?? false
+
+    return found2
   })
 
   const pool = computed(() => {
@@ -837,6 +869,14 @@ export const useGameManager = defineStore('gameManager', () => {
   function submitForm () {
     ws.send('submitForm')
   }
+
+  // Board only
+  
+  const results = ref<Result[]>([])
+
+  ws.onAction('results', (data: Result[]) => {
+    results.value = data
+  })
   // #endregion
 
   return {
@@ -896,5 +936,6 @@ export const useGameManager = defineStore('gameManager', () => {
     formSubmitted,
     setFieldValue,
     submitForm,
+    results
   }
 })

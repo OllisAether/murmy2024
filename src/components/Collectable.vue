@@ -41,7 +41,7 @@ const root = ref<HTMLDivElement | null>(null)
 const props = defineProps<{
   entryId: string
   inline?: boolean,
-  highlight: boolean,
+  highlight?: boolean,
 }>()
 
 const id = idGen()

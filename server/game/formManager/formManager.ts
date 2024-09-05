@@ -1,5 +1,6 @@
 import { FormFieldValue, getPoints } from '../../../shared/form'
 import { form as finalForm, getFieldFromId } from '../../../shared/assets/form'
+import { Result } from '../../../shared/results'
 import { colorize, Fg } from '../../console'
 import { Database } from '../../database'
 import { Game } from '../game'
@@ -11,7 +12,7 @@ export class FormManager {
   private submittedForms: string[] = []
   private results: Record<string, number> = {}
 
-  save () {
+  public save () {
     Database.get().saveCollection('forms', {
       forms: this.forms,
       results: this.results,
@@ -19,7 +20,7 @@ export class FormManager {
     })
   }
 
-  load () {
+  public load () {
     const data = Database.get().collections['forms']
 
     if (!data) {
@@ -70,6 +71,35 @@ export class FormManager {
     }
   }
 
+  public clean (): void {
+    const game = Game.get()
+
+    Object.keys(this.forms).forEach((teamId) => {
+      const team = game.getTeam(teamId)
+
+      if (!team) {
+        console.error(colorize('[FormManager]', Fg.Blue), 'Invalid team', teamId)
+        delete this.forms[teamId]
+      }
+    })
+
+    this.submittedForms = this.submittedForms.filter((teamId) => game.getTeam(teamId))
+
+    Object.keys(this.results).forEach((teamId) => {
+      const team = game.getTeam(teamId)
+
+      if (!team) {
+        console.error(colorize('[FormManager]', Fg.Blue), 'Invalid team', teamId)
+        delete this.results[teamId]
+      }
+    })
+
+    this.save()
+    Game.get().sendFormToTeamClient()
+    Game.get().sendResultsToBoard()
+    Game.get().sendFormsToAdmins()
+  }
+
   public getForms(): Record<string, Record<string, FormFieldValue>> {
     return this.forms
   }
@@ -78,8 +108,29 @@ export class FormManager {
     return this.forms[teamId]
   }
 
-  public getResults(): Record<string, number> {
-    return this.results
+  public getResults(): Result[] {
+    const game = Game.get()
+    const suspectDatabaseManager = game.suspectDatabaseManager
+
+    const teams = game.getTeams()
+
+    const results: Result[] = teams.map((team) => {
+      const teamId = team.id
+      const teamName = team.name
+      const teamMeta = team.meta
+
+      return {
+        team: {
+          id: teamId,
+          name: teamName,
+          meta: teamMeta,
+        },
+        score: this.results[teamId] || 0,
+        entries: suspectDatabaseManager.getDatabase(teamId).entries.length,
+      }
+    })
+
+    return results
   }
 
   public getResult(teamId: string): number {
@@ -107,6 +158,7 @@ export class FormManager {
 
     this.save()
     teamClient && Game.get().sendFormToTeamClient(teamClient)
+    Game.get().sendFormsToAdmins()
   }
 
   public clearAllForms(): void {
@@ -116,6 +168,7 @@ export class FormManager {
 
     this.save()
     Game.get().sendFormToTeamClient()
+    Game.get().sendFormsToAdmins()
   }
 
   public clearForm(teamId: string): void {
@@ -143,6 +196,7 @@ export class FormManager {
 
     this.save()
     teamClient && Game.get().sendFormToTeamClient(teamClient)
+    Game.get().sendFormsToAdmins()
   }
 
   public calculateResult(teamId: string): number {
@@ -183,10 +237,11 @@ export class FormManager {
 
     this.save()
     Game.get().sendResultsToBoard()
+    Game.get().sendFormsToAdmins()
   }
 
   public getAllFormsSubmitted (): boolean {
-    return this.submittedForms.length === Game.get().getTeams().length
+    return Game.get().getTeams().filter(team => team.active).every(team => this.submittedForms.includes(team.id))
   }
 
   allFormsSubmittedListeners: (() => void)[] = []

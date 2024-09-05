@@ -38,6 +38,20 @@ export class SuspectDatabaseManager {
     this.databases = data as { [teamId: string]: SuspectDatabase }
   }
 
+  public clean (): void {
+    Object.keys(this.databases).forEach((teamId) => {
+      const team = Game.get().getTeam(teamId)
+
+      if (!team) {
+        console.error(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Invalid team', teamId)
+        delete this.databases[teamId]
+      }
+    })
+    this.save()
+    Game.get().sendSuspectDatabasesToAdmins()
+    Game.get().sendSuspectDatabaseToTeams()
+  }
+
   public getDatabase (teamId: string): SuspectDatabase {
     return this.databases[teamId] ?? { entries: [] }
   }

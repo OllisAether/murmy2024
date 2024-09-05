@@ -3,11 +3,11 @@
     'home--info': game.phase.meta.info,
     'home--break': isBreak,
     'home--media': mediaPlaying,
-    'home--timer': isTimer && !isBreak && !isShowNewClues,
-    'home--show-new-clues': isShowNewClues,
+    'home--timer': isTimer && !isBreak,
+    'home--results': isResults
   }]">
     <VFadeTransition>
-      <div class="home__timer" v-if="isTimer && !isBreak && !isShowNewClues">
+      <div class="home__timer" v-if="isTimer && !isBreak">
         <Timer />
       </div>
       <div class="home__teamname" v-else-if="!mediaPlaying && !isBreak">
@@ -131,6 +131,12 @@
           etwas zum knabbern oder trinken am Verkaufsstand holen.
         </div>
       </div>
+
+      <div class="home__results-info" v-else-if="isResults">
+        <VIcon>mdi-arrow-up</VIcon>
+        Ihr könnt eure Ergebnisse auf dem Board einsehen! 📺
+        <VIcon>mdi-arrow-up</VIcon>
+      </div>
     </VFadeTransition>
   </ScreenWrapper>
 </template>
@@ -172,12 +178,13 @@ const isEnd = computed(() => {
   return game.phase.meta.end ?? false
 })
 
-const isShowNewClues = computed(() => {
-  return game.phase.meta.showNewClues ?? false
+const isResults = computed(() => {
+  return game.phase.meta.results ?? false
 })
 
+
 const wakelockShouldntBeActive = computed(() => {
-  return isBreak.value || isEnd.value
+  return isBreak.value || isEnd.value || isResults.value
 })
 
 let wakelockShouldBeActiveBefore: boolean = game.wakelockShouldBeActive
@@ -206,14 +213,14 @@ onBeforeUnmount(() => {
 .home {
   // background: $surface;
 
-  &--info, &--timer {
+  &--info, &--timer, &--results {
     .home__teamname {
       top: calc(40vh - 22rem);
       transform: translateY(0);
     }
   }
 
-  &__media-info, &__break-info {
+  &__media-info, &__break-info, &__results-info {
     position: absolute;
     top: 50%;
     left: 50%;

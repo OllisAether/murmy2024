@@ -79,7 +79,16 @@ export class BoardClient extends WebSocketClient {
           console.log(colorize('[Client: Board]', Fg.Blue), 'Received media finished');
           game.mediaFinished();
         }
-      }
+      },
+
+      {
+        action: 'getResults',
+        handler: () => {
+          console.log(colorize('[Client: Board]', Fg.Blue), 'Getting results');
+
+          game.sendResultsToBoard();
+        }
+      },
     ]));
   }
 }

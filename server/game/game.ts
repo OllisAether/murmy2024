@@ -57,7 +57,9 @@ export class Game {
       teams: this.teams.map((t) => ({
         id: t.id,
         name: t.name,
-        code: t.code
+        code: t.code,
+        active: t.active,
+        meta: t.meta
       }))
     })
   }
@@ -219,7 +221,9 @@ export class Game {
     const teamClient = (client as GenericClient).promoteToTeam(
       team.id,
       team.name,
-      team.code
+      team.code,
+      team.active,
+      team.meta
     )
     this.replaceClient(teamClient)
   }

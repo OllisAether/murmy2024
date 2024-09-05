@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useWsClient } from "./wsClient";
 import router from "../router";
 import { Role } from "../../shared/roles";
+import { JsonMap } from "../../shared/json";
 
 export const useAuthManager = defineStore('authManager', () => {
   const wsClient = useWsClient()
@@ -11,6 +12,8 @@ export const useAuthManager = defineStore('authManager', () => {
   const team = ref<{
     id: string
     name: string
+    active: boolean
+    meta: JsonMap
   } | null>(null)
 
   const role = ref<Role>(Role.Unauthorized)
@@ -53,6 +56,8 @@ export const useAuthManager = defineStore('authManager', () => {
     type: Role,
     teamId?: string,
     teamName?: string,
+    teamActive?: boolean,
+    teamMeta?: JsonMap,
     teamCode?: string,
     password?: string
   }) => {
@@ -80,7 +85,9 @@ export const useAuthManager = defineStore('authManager', () => {
         role.value = Role.Team
         team.value = {
           id: data.teamId ?? '',
-          name: data.teamName ?? ''
+          name: data.teamName ?? '',
+          active: data.teamActive ?? true,
+          meta: data.teamMeta ?? {}
         }
         localStorage.setItem('savedCred', JSON.stringify({
           type: Role.Team,

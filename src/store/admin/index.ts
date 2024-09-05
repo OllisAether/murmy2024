@@ -19,7 +19,11 @@ export interface AlertOptions {
   closable: boolean
   closeAfter?: number
   close?: () => void
-  type: 'info' | 'warning' | 'error' | 'success' | 'default'
+  type: 'info' | 'warning' | 'error' | 'success' | 'default',
+  actions: {
+    label: string
+    action: () => void
+  }[]
 }
 
 export const useAdmin = defineStore('admin', () => {
@@ -42,7 +46,7 @@ export const useAdmin = defineStore('admin', () => {
         const removedAlerts = needsHelp.value.filter((id) => !n.includes(id))
 
         needsHelp.value = n
-        
+
         newAlerts.forEach(teamId => {
           const team = teams.value.find(team => team.id === teamId)
 
@@ -52,7 +56,16 @@ export const useAdmin = defineStore('admin', () => {
               title: `"${team.name}" fordert Hilfe an`,
               id: `help:${teamId}`,
               closable: true,
-              type: 'warning'
+              closeAfter: 0,
+              type: 'warning',
+              actions: [
+                {
+                  label: 'Anfrage entfernen',
+                  action: () => {
+                    removeHelpRequest(teamId)
+                  }
+                }
+              ]
             }
           )
         })
@@ -191,11 +204,15 @@ export const useAdmin = defineStore('admin', () => {
     id: string
     name: string
     code: string
+    active: boolean
+    meta: JsonMap
   }[]>([])
 
   async function addTeam (team: {
     name: string
     code: string
+    active: boolean
+    meta: JsonMap
   }) {
     const res = await ws.request('addTeam', team)
 
@@ -214,6 +231,8 @@ export const useAdmin = defineStore('admin', () => {
     id: string
     name: string
     code: string
+    active: boolean
+    meta: JsonMap
   }) {
     const res = await ws.request('editTeam', team)
 
@@ -306,6 +325,8 @@ export const useAdmin = defineStore('admin', () => {
   const alerts = ref<AlertOptions[]>([])
   
   function alert (options: Partial<AlertOptions> = {}) {
+    console.log('%c[Alert]', 'color: #ff00ff', options)
+
     const opt: AlertOptions = {
       id: options.id ?? idGen(),
       title: options.title ?? null,
@@ -314,10 +335,15 @@ export const useAdmin = defineStore('admin', () => {
       closable: options.closable ?? true,
       closeAfter: options.closeAfter ?? 5000,
       close: options.close,
-      type: options.type ?? 'default'
+      type: options.type ?? 'default',
+      actions: options.actions ?? []
     }
 
     alerts.value.push(opt)
+
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate([400, 100, 400])
+    }
 
     opt.closeAfter && setTimeout(() => {
       closeAlert(opt.id)

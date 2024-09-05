@@ -14,7 +14,7 @@ export class VoteManager {
   private voteOptions: VoteOption[] = []
   private pools: Record<string, Set<string>> = {}
   private activeSession: VoteSession | null = null
-  private voteHistory: VoteSession[] = []
+  // private voteHistory: VoteSession[] = []
 
   load () {
     this.loadVoteOptions()
@@ -187,9 +187,9 @@ export class VoteManager {
 
     console.log(colorize('[VoteManager]', Fg.Green), 'Open vote', opt)
 
-    if (this.activeSession) {
-      this.voteHistory.push(this.activeSession)
-    }
+    // if (this.activeSession) {
+    //   this.voteHistory.push(this.activeSession)
+    // }
 
     this.activeSession = {
       open: true,
@@ -421,15 +421,21 @@ export class VoteManager {
 
         this.activeSession.passiveTiebreakerVotes[optionId].push(teamId)
 
+        Game.get().sendVoteSessionToClients()
+        this.saveActiveSession()
+
         return true
       } else {
         // Register passive vote but don't count it
         if (!this.activeSession.passiveVotes[optionId]) {
           this.activeSession.passiveVotes[optionId] = []
         }
-        
+
         this.activeSession.passiveVotes[optionId].push(teamId)
       }
+
+      Game.get().sendVoteSessionToClients()
+      this.saveActiveSession()
 
       return true
     }

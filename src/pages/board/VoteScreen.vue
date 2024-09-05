@@ -4,9 +4,9 @@
       'vote-screen--next-tiebreaker': nextTiebreaker && !game.phase.meta?.private,
       'vote-screen--private': game.phase.meta?.private
     }]">
-      <span class="vote-screen__elite-text">
+      <div class="vote-screen__elite-text">
         ELITE
-      </span>
+      </div>
 
       <!-- <pre>{{ game.vote.session }}</pre> -->
 
@@ -73,7 +73,6 @@ import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
-import Color from 'color';
 
 const game = useGameManager()
 

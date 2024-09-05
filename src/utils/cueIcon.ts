@@ -30,6 +30,7 @@ export const cueIconMap: Record<CueType, string> = {
   [CueType.AddClues]: 'mdi-magnify-plus',
   [CueType.ClearNewClues]: 'mdi-magnify-remove',
   [CueType.UnlockClueForAll]: 'mdi-lock-open-variant',
+  [CueType.MarkEntryForAll]: 'mdi-account-check',
   [CueType.AssignMainClueType]: 'mdi-tablet-cellphone',
   [CueType.AssignMainClueTypeRandomly]: 'mdi-dice-multiple',
   [CueType.SetAssignFurtherMainClueTypesRandomly]: 'mdi-dice-multiple',

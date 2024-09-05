@@ -22,7 +22,7 @@ export class ClueManager {
     [teamId: string]: boolean
   } = {}
 
-  save () {
+  public save () {
     Database.get().saveCollection('clues', {
       availableClues: this.availableClues,
       newAvailableClues: this.newAvailableClues,
@@ -35,7 +35,7 @@ export class ClueManager {
     })
   }
 
-  load () {
+  public load () {
     const data = Database.get().getCollection('clues')
     
     if (!data) {
@@ -117,6 +117,28 @@ export class ClueManager {
     // this.usedInvestigationCoins = data.usedInvestigationCoins as Record<string, number>
     // this.mainClueType = data.mainClueType as Record<string, 'phone' | 'diary'>
     // this.assignFurtherMainClueTypesRandomly = data.assignFurtherMainClueTypesRandomly
+  }
+
+  public clean () {
+    this.availableClues = this.availableClues.filter(clueId => clues.find(clue => clue.id === clueId))
+    this.newAvailableClues = this.newAvailableClues.filter(clueId => clues.find(clue => clue.id === clueId))
+
+    const game = Game.get()
+
+    Object.keys(this.unlockedClues).forEach(teamId => {
+      const team = game.getTeam(teamId)
+
+      if (!team) {
+        console.error(colorize('[ClueManager]', Fg.Blue), 'Invalid team', teamId)
+        delete this.unlockedClues[teamId]
+      } else {
+        this.unlockedClues[teamId] = this.unlockedClues[teamId].filter(clueId => clues.find(clue => clue.id === clueId))
+      }
+    })
+
+    this.save()
+    Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
   }
 
   // #region Investigation Coins

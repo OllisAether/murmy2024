@@ -204,9 +204,9 @@ async function unlockClue() {
 
   const res = await game.unlockClue(props.clueId);
 
-  console.log(res);
   if (res.success) {
     showBuyConfirmation.value = false;
+    delayedShowBuyConfirmation.value = false;
     showClue.value = true;
   }
 }

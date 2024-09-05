@@ -19,13 +19,14 @@
       </VToolbar>
 
       <VCardText>
-        <VList nav>
-          <TeamListItem
-            v-for="team in admin.teams"
-            :key="team.id"
-            :team="team"
-          />
-        </VList>
+        <TeamListItem
+          v-for="team in admin.teams"
+          :key="team.id"
+          :team="team"
+          :class="{
+            'mb-2': team !== admin.teams[admin.teams.length - 1]
+          }"
+        />
       </VCardText>
     </VCard>
   </VContainer>
