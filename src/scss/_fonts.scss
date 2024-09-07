@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'Lostar';
-  src: url('../assets/fonts/Lostar.woff2') format('truetype');
+  src: url('../assets/fonts/Lostar.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -11,14 +11,14 @@
 // Sora
 @font-face {
   font-family: 'Sora';
-  src: url('../assets/fonts/Sora-Regular.woff2') format('truetype');
+  src: url('../assets/fonts/Sora-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Sora';
-  src: url('../assets/fonts/Sora-Bold.woff2') format('truetype');
+  src: url('../assets/fonts/Sora-Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
 }
@@ -26,56 +26,56 @@
 // Good Times
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Light.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Light.woff2') format('woff2');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Light Italic.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Light Italic.woff2') format('woff2');
   font-weight: 100;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Book.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Book.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Book Italic.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Book Italic.woff2') format('woff2');
   font-weight: 300;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Regular.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Italic.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Italic.woff2') format('woff2');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Bold.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Good Times';
-  src: url('../assets/fonts/Good Times Bold Italic.woff2') format('truetype');
+  src: url('../assets/fonts/Good Times Bold Italic.woff2') format('woff2');
   font-weight: bold;
   font-style: italic;
 }
@@ -83,21 +83,21 @@
 // Fraunces
 @font-face {
   font-family: 'Fraunces 9pt';
-  src: url('../assets/fonts/Fraunces_9pt-Bold.woff2') format('truetype');
+  src: url('../assets/fonts/Fraunces_9pt-Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Fraunces 144pt';
-  src: url('../assets/fonts/Fraunces_144pt-SemiBold.woff2') format('truetype');
+  src: url('../assets/fonts/Fraunces_144pt-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Caveat';
-  src: url('../assets/fonts/Caveat-VariableFont_wght.woff2') format('truetype');
+  src: url('../assets/fonts/Caveat-VariableFont_wght.woff2') format('woff2');
   font-weight: 400 700;
   font-style: normal;
 }
@@ -110,7 +110,7 @@
   font-style: italic;
   font-weight: 100;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-ThinItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-ThinItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -118,7 +118,7 @@
   font-style: italic;
   font-weight: 200;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-ExtraLightItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-ExtraLightItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -126,7 +126,7 @@
   font-style: italic;
   font-weight: 300;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-LightItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-LightItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -134,7 +134,7 @@
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-RegularItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-RegularItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -142,7 +142,7 @@
   font-style: italic;
   font-weight: 500;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-MediumItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-MediumItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -150,7 +150,7 @@
   font-style: italic;
   font-weight: 600;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-SemiBoldItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-SemiBoldItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -158,7 +158,7 @@
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-BoldItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-BoldItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -166,7 +166,7 @@
   font-style: italic;
   font-weight: 800;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-ExtraBoldItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-ExtraBoldItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -174,7 +174,7 @@
   font-style: italic;
   font-weight: 900;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-BlackItalic.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-BlackItalic.woff2') format('woff2');
 }
 
 @font-face {
@@ -182,7 +182,7 @@
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Thin.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Thin.woff2') format('woff2');
 }
 
 @font-face {
@@ -190,7 +190,7 @@
   font-style: normal;
   font-weight: 200;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-ExtraLight.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-ExtraLight.woff2') format('woff2');
 }
 
 @font-face {
@@ -198,7 +198,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Light.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Light.woff2') format('woff2');
 }
 
 @font-face {
@@ -206,7 +206,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Regular.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -214,7 +214,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Medium.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -222,7 +222,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-SemiBold.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-SemiBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -230,7 +230,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Bold.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Bold.woff2') format('woff2');
 }
 
 @font-face {
@@ -238,7 +238,7 @@
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-ExtraBold.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-ExtraBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -246,5 +246,5 @@
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url('../assets/fonts/Poppins-Black.woff2') format('ttf');
+  src: url('../assets/fonts/Poppins-Black.woff2') format('woff2');
 }
