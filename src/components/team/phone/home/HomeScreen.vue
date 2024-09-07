@@ -3,7 +3,7 @@
     'home-screen--menu-open': phone.isPath('menu'),
   }]">
     <img
-      :src="game.getAsset('phone/background.png')?.content"
+      :src="game.getAsset('phone/background.webp')?.content"
       class="home-screen__background"
     >
 
@@ -65,7 +65,7 @@
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/TumblrLogo.webp')?.content"
+            :iconSrc="game.getAsset('phone/Icon_Tumblr.webp')?.content"
             name="Tumblr."
             app="tumblr"
           />
