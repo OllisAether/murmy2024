@@ -268,9 +268,20 @@ export const useGameManager = defineStore('gameManager', () => {
 
   console.log('User agent', ua)
 
-  if (!(ua.browser.name === 'Safari' && ua.device.type === 'tablet') && ua.os.name !== 'iOS') {
-    canFullscreen.value = true
+  function checkCanFullscreen () {
+    console.log('Checking fullscreen support')
+    if (
+      !(ua.browser.name === 'Safari' && ua.device.type === 'tablet') &&
+      ua.os.name !== 'iOS' &&
+      window.outerWidth >= 1366) {
+      canFullscreen.value = true
+    } else {
+      canFullscreen.value = false
+    }
   }
+  checkCanFullscreen()
+
+  window.addEventListener('resize', checkCanFullscreen)
 
   const isFullscreen = ref(false)
 
