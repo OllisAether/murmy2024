@@ -1,5 +1,5 @@
-import { Clue, ClueTypes } from '../clue';
-import { map } from './clues/map';
+import { Clue, ClueTypes } from '../../clue';
+import { map } from './map';
 
 export const clues: Clue<ClueTypes>[] = [
   map,

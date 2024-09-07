@@ -9,7 +9,7 @@ import { Phase } from "../../shared/phase";
 import { VoteOption, VoteSession } from "../../shared/vote";
 import { Entry } from "../../shared/suspectDatabase/entry";
 import { useWakeLock } from "@vueuse/core";
-import { clues as cluesAsset } from "@/../shared/assets/clues";
+import { clues as cluesAsset } from "@/../shared/assets/clues/index";
 import { getEntries } from "../../shared/textContent";
 import { gallery } from "../../shared/assets/phone/gallery";
 import { chats } from "../../shared/assets/phone/chats";

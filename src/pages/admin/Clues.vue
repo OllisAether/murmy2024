@@ -261,7 +261,7 @@
 <script lang="ts" setup>
 import { useAdmin } from '@/store/admin';
 import { useGameManager } from '@/store/gameManager';
-import { clues } from '../../../shared/assets/clues';
+import { clues } from '../../../shared/assets/clues/index';
 import { Clue, ClueTypes } from '../../../shared/clue';
 import { computed } from 'vue';
 import ClueListItem from '@/components/admin/ClueListItem.vue';

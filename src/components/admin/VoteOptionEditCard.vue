@@ -323,7 +323,7 @@
 import { computed, ref } from 'vue';
 import { VoteOption } from '../../../shared/vote';
 import { idGen } from '../../../shared/random';
-import { clues } from '../../../shared/assets/clues';
+import { clues } from '../../../shared/assets/clues/index';
 import { useAdmin } from '@/store/admin/index';
 import AssetSelect from './AssetSelect.vue';
 import { useGameManager } from '@/store/gameManager';

@@ -1,6 +1,6 @@
 import { Database } from '../../database'
 import { Game } from '../game'
-import { clues } from '../../../shared/assets/clues'
+import { clues } from '../../../shared/assets/clues/index'
 import { Votes } from '../../../shared/vote'
 import { colorize, Fg } from '../../console'
 

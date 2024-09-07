@@ -49,7 +49,7 @@
 
 <script lang="ts" setup>
 import { useAdmin } from '@/store/admin';
-import { clues } from '../../../shared/assets/clues';
+import { clues } from '../../../shared/assets/clues/index';
 import ClueListItem from './ClueListItem.vue';
 
 const props = defineProps<{

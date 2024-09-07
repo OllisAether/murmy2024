@@ -211,27 +211,27 @@ function pointerdown (event: PointerEvent) {
     flex: 1 1 auto;
     width: 0;
 
-    display: grid;
-    grid-template-columns: auto min-content;
-    grid-template-rows: min-content auto;
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
     padding: .5rem 0;
+    padding-right: 2rem;
     font-family: $fontHeading;
     font-size: 1.2rem;
 
     .database-entry--has-description &, .database-entry--has-image & {
       padding: 0 0 .2rem;
+      padding-right: 1.5rem;
     }
   }
 
   &__description {
     flex: 1 1 auto;
 
-    grid-column: 1 / -1;
-
     min-height: 1.5rem;
+    height: 0;
 
     color: #fff8;
     line-height: 1rem;
@@ -253,17 +253,19 @@ function pointerdown (event: PointerEvent) {
   }
 
   &__fullscreen-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    right: 1rem;
     display: block;
-    grid-column: 2;
-    grid-row: 1;
     color: #fff8;
     font-size: 1.5rem;
-    justify-self: end;
-    align-self: center;
 
     .database-entry--has-description &, .database-entry--has-image & {
-      align-self: start;
-      margin-top: .2rem;
+      top: .5rem;
+      right: .5rem;
+      transform: none;
     }
   }
 

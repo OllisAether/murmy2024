@@ -162,7 +162,7 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import SkewBox from '../SkewBox.vue';
-import { clues } from '../../../shared/assets/clues';
+import { clues } from '../../../shared/assets/clues/index';
 import { computed, ref, useModel, watch } from 'vue';
 import Btn from '../Btn.vue';
 import ClueImageViewer from './ClueViewer.vue';
@@ -321,7 +321,7 @@ function openClue() {
     .clue-card--confirmation & {
       transform: scale(1.2)translateY(-.5rem);
     }
-  
+
     & > :deep(.skew-box) {
       position: absolute;
       inset: 0;
