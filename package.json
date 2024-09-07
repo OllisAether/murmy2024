@@ -1,7 +1,7 @@
 {
   "name": "murmy2024",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run watch:server\" \"vite --host\" \"npm run serve\"",
@@ -10,7 +10,8 @@
     "build:client": "vue-tsc && vite build --mode=production",
     "build:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws",
     "watch:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws --watch",
-    "start": "PORT=443 node dist/server/index.cjs"
+    "start": "PORT=443 node dist/server/index.cjs",
+    "copyAssets": "cp -r public/assets dist/client"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

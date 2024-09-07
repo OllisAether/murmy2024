@@ -46,7 +46,7 @@
     color="transparent"
     elevation="0"
     max-width="400"
-    width="100%"
+    width="calc(100% - 4rem)"
     style="overflow: visible;"
   >
     <SkewBox
@@ -68,7 +68,7 @@
     <VCardText style="position: relative;">
       <p class="mb-6">
         Auf eurem <b class="text-primary">Einführungsbogen</b> findet ihr einen
-        <b class="text-primary">6-stelligen Code</b>, den ihr hier eingeben könnt.
+        <b class="text-primary">{{ codeLength }}-stelligen Code</b>, den ihr hier eingeben könnt.
       </p>
 
       <VOtpInput
@@ -307,21 +307,21 @@ async function login () {
       pointer-events: none;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 72%;
-      left: 27.7%;
-      width: 65.5%;
-      height: 17.3%;
-      border-radius: unit(3);
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: 72%;
+    //   left: 27.7%;
+    //   width: 65.5%;
+    //   height: 17.3%;
+    //   border-radius: unit(3);
 
-      border: unit(.4) solid #92deff;
-      box-shadow:
-        0 0 unit(5) #0385ff inset,
-        0 0 unit(4) #0385ff,
-      ;
-    }
+    //   border: unit(.4) solid #92deff;
+    //   box-shadow:
+    //     0 0 unit(5) #0385ff inset,
+    //     0 0 unit(4) #0385ff,
+    //   ;
+    // }
   }
 
   &__unforgettable {

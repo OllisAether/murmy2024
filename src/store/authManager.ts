@@ -4,6 +4,7 @@ import { useWsClient } from "./wsClient";
 import router from "../router";
 import { Role } from "../../shared/roles";
 import { JsonMap } from "../../shared/json";
+import { codeLength } from "../../shared/teamcode";
 
 export const useAuthManager = defineStore('authManager', () => {
   const wsClient = useWsClient()
@@ -112,8 +113,8 @@ export const useAuthManager = defineStore('authManager', () => {
   const loginLoading = ref(false)
   const loginError = ref<string | null>(null)
   async function loginTeam (code: string) {
-    if (!code || code.length !== 6) {
-      loginError.value = 'Bitte 6-stelligen Code eingeben'
+    if (!code || code.length !== codeLength) {
+      loginError.value = `Bitte ${codeLength}-stelligen Code eingeben`
       return false
     }
 

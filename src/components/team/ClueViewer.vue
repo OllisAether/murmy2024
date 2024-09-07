@@ -295,6 +295,7 @@ watch(customContainer, (el) => {
 })
 
 const scale = ref(1);
+const maxScale = 10;
 const translate = ref({ x: 0, y: 0 });
 
 const startPos = ref({ x: 0, y: 0 })
@@ -379,7 +380,7 @@ function onTouchMove (e: TouchEvent) {
       y: startTouchPos.value.y - rootRect.top - rootRect.height / 2 - startPos.value.y
     }
 
-    scale.value = Math.min(5, Math.max(1, startScale.value * distance / startDistance.value))
+    scale.value = Math.min(maxScale, Math.max(1, startScale.value * distance / startDistance.value))
 
     composedTranslate = {
       x: startPos.value.x + (touchOrigin.x - startTouchPos.value.x) - touchRelToTransformOrigin.x * (scale.value - startScale.value) / startScale.value,
@@ -486,7 +487,7 @@ function onScroll (e: WheelEvent) {
     }
   } else {
     const startScale = scale.value
-    scale.value = Math.min(5, Math.max(1, scale.value - Math.min(e.deltaY, 50) / 100))
+    scale.value = Math.min(maxScale, Math.max(1, scale.value - Math.min(e.deltaY, 50) / 100))
     
     const mouseRelToTransformOrigin = {
       x: e.clientX - rootRect.left - rootRect.width / 2 - translate.value.x,
@@ -591,11 +592,6 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
   height: 100%;
   touch-action: none;
 
-  &__hold-indicator {
-    width: 100%;
-    height: 100%;
-  }
-
   &__canvas {
     position: relative;
 
@@ -610,6 +606,8 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
 
   &__hold-indicator {
     position: absolute;
+    width: 100%;
+    height: 100%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

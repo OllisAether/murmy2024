@@ -1,5 +1,5 @@
 export const codeRegex = /^[A-Z0-9]+$/;
-export const codeLength = 6;
+export const codeLength = 4;
 export const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 export function validateCode (code: string) {
@@ -13,7 +13,7 @@ export function validateCode (code: string) {
   if (code.length !== codeLength) {
     return {
       valid: false,
-      message: 'Code muss genau 6 Zeichen lang sein'
+      message: `Code muss genau ${codeLength} Zeichen lang sein`
     }
   }
 
