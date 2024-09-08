@@ -130,8 +130,12 @@ const audioVoteTiebreaker = new Audio(game.getAsset('sounds/vote/vote_tiebreaker
 watch(nextTiebreaker, (value) => {
   if (value) {
     if (31 - audioVote.currentTime > 0.5) {
+      audioVoteTiebreaker.currentTime = 0
       audioVoteTiebreaker.play()
+
+      audioVoteEnd.currentTime = 0
       audioVoteEnd.play()
+
       audio.fade(audioVote, 500)
 
       setTimeout(() => {
@@ -139,6 +143,7 @@ watch(nextTiebreaker, (value) => {
       }, 4000)
     } else {
       setTimeout(() => {
+        audioVoteTiebreaker.currentTime = 0
         audioVoteTiebreaker.play()
         
         setTimeout(() => {
@@ -153,11 +158,15 @@ watch(showWinner, (value) => {
   if (value) {
     if (audioVoteTiebreaker.currentTime > 0) {
       if (14 - audioVoteTiebreaker.currentTime > 0.5) {
+        audioVoteEnd.currentTime = 0
         audioVoteEnd.play()
+
         audio.fade(audioVoteTiebreaker, 500)
       }
     } else if (31 - audioVote.currentTime > 0.5) {
+      audioVoteEnd.currentTime = 0
       audioVoteEnd.play()
+      
       audio.fade(audioVote, 500)
     }
 
@@ -175,7 +184,7 @@ onMounted(() => {
   if (!showWinner.value && !nextTiebreaker.value && game.timer.state === 'stopped') {
     const off = watch(() => game.timer.state, (value) => {
       if (value === 'running') {
-        console.log('asd')
+        audioVote.currentTime = 0
         audioVote.play()
         off()
       }
@@ -186,12 +195,11 @@ onMounted(() => {
 
     if (offset > 0) {
       setTimeout(() => {
-        console.log('asd')
+        audioVote.currentTime = 0
         audioVote.play()
       }, offset)
     } else {
       audioVote.currentTime = -offset / 1000
-      console.log('asd')
       audioVote.play()
     }
   }
@@ -210,14 +218,6 @@ onUnmounted(() => {
   audio.offControlVolume(audioVoteEnd)
   audio.offControlVolume(audioVoteTiebreaker)
 })
-
-// watch(isRandom, (value) => {
-//   if (value) {
-//     setTimeout(() => {
-//       game.triggerBoardSkip()
-//     }, 3000)
-//   }
-// }, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

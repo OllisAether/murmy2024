@@ -55,7 +55,7 @@ export const useAudio = defineStore('audio', () => {
         const progress = elapsed / duration
         const volume = start * (1 - easing(progress))
 
-        audio.volume = volume
+        audio.volume = Math.max(0, volume)
 
         if (audio.volume > 0) {
           requestAnimationFrame(step)
