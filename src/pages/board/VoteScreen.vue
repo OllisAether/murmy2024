@@ -12,7 +12,7 @@
 
       <div class="vote-screen__timer">
         <VFadeTransition>
-          <Timer v-if="!nextTiebreaker && !showWinner" />
+          <Timer v-if="!nextTiebreaker && !showWinner && game.timer.state !== 'stopped'" />
         </VFadeTransition>
       </div>
 
@@ -77,6 +77,10 @@ import { VoteOption } from '../../../shared/vote';
 const game = useGameManager()
 
 const showWinner = computed(() => {
+  if (game.phase.meta?.private) {
+    return null
+  }
+
   if (isRandom.value) {
     return game.candidates.find(c => c.id === game.vote.session?.winner) ?? null
   }
@@ -87,10 +91,10 @@ const showWinner = computed(() => {
 })
 
 const isTiebreaker = computed(() => {
-  return game.vote.session?.isTiebreaker
+  return game.vote.session?.isTiebreaker && !game.phase.meta?.private
 })
 const nextTiebreaker = computed(() => {
-  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value
+  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value && !game.phase.meta?.private
 })
 
 const candidates = computed(() => {
@@ -113,27 +117,80 @@ const isRandom = computed(() => {
   return game.vote.session?.isRandom
 })
 
-const audio = new Audio(game.getAsset('sounds/vote.mp3')?.content ?? '')
+const audioVote = new Audio(game.getAsset('sounds/vote.mp3')?.content ?? '')
+const audioVoteEnd = new Audio(game.getAsset('sounds/vote_end.mp3')?.content ?? '')
+const audioVoteTiebreaker = new Audio(game.getAsset('sounds/vote_tiebreaker.mp3')?.content ?? '')
 
-// watch(nextTiebreaker, (value) => {
-//   if (value) {
-//     if (audio.currentTime - 31 > 0.1) {
-//       audio.currentTime = 31
-//     } 
-//   }
-// }, { immediate: true })
+watch(nextTiebreaker, (value) => {
+  if (value) {
+    if (31 - audioVote.currentTime > 0.5) {
+      audioVoteTiebreaker.play()
+      audioVoteEnd.play()
+      fadeAudio(audioVote, 500)
+
+      setTimeout(() => {
+        game.triggerBoardSkip()
+      }, 4000)
+    } else {
+      setTimeout(() => {
+        audioVoteTiebreaker.play()
+        
+        setTimeout(() => {
+          game.triggerBoardSkip()
+        }, 4000)
+      }, (31 - audioVote.currentTime) * 1000)
+    }
+  }
+}, { immediate: true })
+
+watch(showWinner, (value) => {
+  if (value) {
+    if (audioVoteTiebreaker.currentTime > 0) {
+      if (14 - audioVoteTiebreaker.currentTime > 0.5) {
+        audioVoteEnd.play()
+        fadeAudio(audioVoteTiebreaker, 500)
+      }
+    } else if (31 - audioVote.currentTime > 0.5) {
+      audioVoteEnd.play()
+      fadeAudio(audioVote, 500)
+    }
+
+    setTimeout(() => {
+      game.triggerBoardSkip()
+    }, 5000)
+  }
+}, { immediate: true })
 
 onMounted(() => {
-  audio.play()
+  if (!showWinner.value && !nextTiebreaker.value && game.timer.state === 'stopped') {
+    const off = watch(() => game.timer.state, (value) => {
+      if (value === 'running') {
+        console.log('asd')
+        audioVote.play()
+        off()
+      }
+    })
+    game.triggerBoardSkip()
+  } else if (game.timer.state !== 'stopped') {
+    const offset = (game.timer.startTime ?? Date.now()) + game.timeSync.diff - Date.now() - 800
+
+    if (offset > 0) {
+      setTimeout(() => {
+        console.log('asd')
+        audioVote.play()
+      }, offset)
+    } else {
+      audioVote.currentTime = -offset / 1000
+      console.log('asd')
+      audioVote.play()
+    }
+  }
 })
 
-onUnmounted(() => {
-  // fade out audio
+function fadeAudio (audio: HTMLAudioElement, duration: number) {
   const start = audio.volume
   const startTime = Date.now()
 
-  const duration = 1500
-  
   function step () {
     const elapsed = Date.now() - startTime
 
@@ -147,23 +204,17 @@ onUnmounted(() => {
   }
 
   step()
+}
+
+onUnmounted(() => {
+  if (audioVote.currentTime < 30) {
+    fadeAudio(audioVote, 1000)
+  }
+  
+  if (audioVoteEnd.currentTime < 13) {
+    fadeAudio(audioVoteEnd, 1000)
+  }
 })
-
-watch(showWinner, (value) => {
-  if (value) {
-    setTimeout(() => {
-      game.triggerBoardSkip()
-    }, 3000)
-  }
-}, { immediate: true })
-
-watch(nextTiebreaker, (value) => {
-  if (value) {
-    setTimeout(() => {
-      game.triggerBoardSkip()
-    }, 3000)
-  }
-}, { immediate: true })
 
 // watch(isRandom, (value) => {
 //   if (value) {

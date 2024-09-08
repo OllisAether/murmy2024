@@ -46,6 +46,7 @@ export const Vote = (
           condition: condition(FieldReference('vote.pool.length'), '>', 1)
         }
       },
+        { type: CueType.WaitForBoardSkip },
         {
           type: CueType.StartTimer,
           options: {
