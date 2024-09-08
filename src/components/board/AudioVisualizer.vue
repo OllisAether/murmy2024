@@ -133,7 +133,7 @@ function draw(canvas: HTMLCanvasElement) {
     ctx.beginPath()
     ctx.lineCap = 'round'
 
-    const barWidth = canvas.width / (smoothDataArray.length * 2)
+    const barWidth = canvas.width / (smoothDataArray.length * 2 - 2)
     const lineOffset = 3
 
     let x = 0
@@ -141,7 +141,7 @@ function draw(canvas: HTMLCanvasElement) {
     let lastPosY: number | null = null
     let lastPosY2: number | null = null
 
-    for (let i = -smoothDataArray.length; i < smoothDataArray.length; i++) {
+    for (let i = -smoothDataArray.length + 1; i < smoothDataArray.length; i++) {
       const value = smoothDataArray[Math.abs(i)] / 255
       const barHeight = value * canvas.height * 0.5
 
