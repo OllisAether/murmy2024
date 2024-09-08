@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
 import { useGameManager } from '@/store/gameManager';
@@ -114,6 +114,14 @@ onMounted(() => {
   onBeforeUnmount(() => {
     game.deinitGameManager()
   })
+})
+
+onBeforeMount(() => {
+  game.wakelockShouldBeActive = true
+})
+
+onUnmounted(() => {
+  game.wakelockShouldBeActive = false
 })
 </script>
 
