@@ -211,8 +211,8 @@ onUnmounted(() => {
     fadeAudio(audioVote, 1000)
   }
   
-  if (audioVoteEnd.currentTime < 13) {
-    fadeAudio(audioVoteEnd, 1000)
+  if (audioVoteTiebreaker.currentTime < 14) {
+    fadeAudio(audioVoteTiebreaker, 1000)
   }
 })
 
