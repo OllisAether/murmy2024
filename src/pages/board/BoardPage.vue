@@ -14,7 +14,7 @@
     </VFadeTransition>
   </template>
 
-  <VDialog v-model="navigationDialog" max-width="300" :persistent="persistent">
+  <VDialog v-model="navigationDialog" max-width="500" :persistent="persistent">
     <VCard>
       <VToolbar>
         <VToolbarTitle>
@@ -27,6 +27,77 @@
       </VToolbar>
 
       <VCardText>
+        <VExpandTransition>
+          <div v-if="volumePanel">
+            <VCard class="mb-2 pa-4" color="background" flat>
+              <div>
+                <VIcon>mdi-volume-high</VIcon>
+                Hauptlautstärke
+              </div>
+              <VSlider
+                v-model="audio.masterVolume"
+                thumb-size="16"
+                step=".01"
+                min="0"
+                max="1"
+                hide-details
+                color="primary"
+                class="mb-2"
+              />
+
+              <VDivider class="mb-4" />
+
+              <div>
+                <VIcon>mdi-music</VIcon>
+                Music Volume
+              </div>
+              <VSlider
+                v-model="audio.rawMusicVolume"
+                thumb-size="16"
+                step=".01"
+                min="0"
+                max="1"
+                hide-details
+                class="mb-2"
+              />
+              <div>
+                <VIcon>mdi-play-circle</VIcon>
+                Media Volume
+              </div>
+              <VSlider
+                v-model="audio.rawMediaVolume"
+                thumb-size="16"
+                step=".01"
+                min="0"
+                max="1"
+                hide-details
+                class="mb-2"
+              />
+              <div>
+                <VIcon>mdi-poll</VIcon>
+                Vote Volume
+              </div>
+              <VSlider
+                v-model="audio.rawVoteVolume"
+                thumb-size="16"
+                step=".01"
+                min="0"
+                max="1"
+                hide-details
+              />
+            </VCard>
+          </div>
+        </VExpandTransition>
+        
+        <VBtn
+          variant="text"
+          @click="volumePanel = !volumePanel"
+          class="w-100 mb-2"
+        >
+          Lautstärke-Optionen
+          <VIcon>{{ volumePanel ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</VIcon>
+        </VBtn>
+
         <VBtn
           variant="tonal"
           color="primary"
@@ -61,9 +132,13 @@ import MediaScreen from './MediaScreen.vue';
 import VoteScreen from './VoteScreen.vue';
 import ResultsScreen from './ResultsScreen.vue';
 import ShownewCluesScreen from './ShownewCluesScreen.vue';
+import { useAudio } from '@/store/board/audio';
 
 const auth = useAuthManager()
 const game = useGameManager()
+const audio = useAudio()
+
+const volumePanel = ref(false)
 
 const navigationDialog = ref(false)
 

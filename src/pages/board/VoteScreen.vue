@@ -73,6 +73,7 @@ import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
+import { useAudio } from '@/store/board/audio';
 
 const game = useGameManager()
 
@@ -117,16 +118,18 @@ const isRandom = computed(() => {
   return game.vote.session?.isRandom
 })
 
-const audioVote = new Audio(game.getAsset('sounds/vote.mp3')?.content ?? '')
-const audioVoteEnd = new Audio(game.getAsset('sounds/vote_end.mp3')?.content ?? '')
-const audioVoteTiebreaker = new Audio(game.getAsset('sounds/vote_tiebreaker.mp3')?.content ?? '')
+const audio = useAudio()
+
+const audioVote = new Audio(game.getAsset('sounds/vote/vote.mp3')?.content ?? '')
+const audioVoteEnd = new Audio(game.getAsset('sounds/vote/vote_end.mp3')?.content ?? '')
+const audioVoteTiebreaker = new Audio(game.getAsset('sounds/vote/vote_tiebreaker.mp3')?.content ?? '')
 
 watch(nextTiebreaker, (value) => {
   if (value) {
     if (31 - audioVote.currentTime > 0.5) {
       audioVoteTiebreaker.play()
       audioVoteEnd.play()
-      fadeAudio(audioVote, 500)
+      audio.fade(audioVote, 500)
 
       setTimeout(() => {
         game.triggerBoardSkip()
@@ -148,11 +151,11 @@ watch(showWinner, (value) => {
     if (audioVoteTiebreaker.currentTime > 0) {
       if (14 - audioVoteTiebreaker.currentTime > 0.5) {
         audioVoteEnd.play()
-        fadeAudio(audioVoteTiebreaker, 500)
+        audio.fade(audioVoteTiebreaker, 500)
       }
     } else if (31 - audioVote.currentTime > 0.5) {
       audioVoteEnd.play()
-      fadeAudio(audioVote, 500)
+      audio.fade(audioVote, 500)
     }
 
     setTimeout(() => {
@@ -162,6 +165,10 @@ watch(showWinner, (value) => {
 }, { immediate: true })
 
 onMounted(() => {
+  audio.controlVolume(audioVote, 'vote')
+  audio.controlVolume(audioVoteEnd, 'vote')
+  audio.controlVolume(audioVoteTiebreaker, 'vote')
+
   if (!showWinner.value && !nextTiebreaker.value && game.timer.state === 'stopped') {
     const off = watch(() => game.timer.state, (value) => {
       if (value === 'running') {
@@ -187,33 +194,18 @@ onMounted(() => {
   }
 })
 
-function fadeAudio (audio: HTMLAudioElement, duration: number) {
-  const start = audio.volume
-  const startTime = Date.now()
-
-  function step () {
-    const elapsed = Date.now() - startTime
-
-    audio.volume = Math.max(0, start - elapsed / duration)
-
-    if (audio.volume > 0) {
-      requestAnimationFrame(step)
-    } else {
-      audio.pause()
-    }
-  }
-
-  step()
-}
-
 onUnmounted(() => {
   if (audioVote.currentTime < 30) {
-    fadeAudio(audioVote, 1000)
+    audio.fade(audioVote, 1000)
   }
   
   if (audioVoteTiebreaker.currentTime < 14) {
-    fadeAudio(audioVoteTiebreaker, 1000)
+    audio.fade(audioVoteTiebreaker, 1000)
   }
+
+  audio.offControlVolume(audioVote)
+  audio.offControlVolume(audioVoteEnd)
+  audio.offControlVolume(audioVoteTiebreaker)
 })
 
 // watch(isRandom, (value) => {
