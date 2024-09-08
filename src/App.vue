@@ -87,25 +87,31 @@ const loadProgress = computed(() => {
 
 watch(() => game.wakelockShouldBeActive, (shouldBeActive) => {
   if (shouldBeActive) {
+    console.log('requesting wakelock')
     game.wakelock.request('screen')
   } else {
+    console.log('releasing wakelock')
     game.wakelock.release()
   }
 })
 
 onMounted(() => {
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
+    if (document.visibilityState === 'visible' && game.wakelockShouldBeActive) {
+      console.log('requesting wakelock')
       game.wakelock.request('screen')
     } else {
+      console.log('releasing wakelock')
       game.wakelock.release()
     }
   })
 
   document.addEventListener('pointerdown', () => {
     if (game.wakelockShouldBeActive) {
+      console.log('requesting wakelock')
       game.wakelock.request('screen')
     } else {
+      console.log('releasing wakelock')
       game.wakelock.release()
     }
   })
