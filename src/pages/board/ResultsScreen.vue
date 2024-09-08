@@ -21,11 +21,11 @@
 
       <div
         class="results-screen__table__row"
-        v-for="(result, i) in results"
+        v-for="result in results"
         :key="result.team.id"
       >
         <div class="results-screen__table__cell text-right">
-          {{ i + 1 }}.
+          {{ getPosition(result.score, result.entries) }}.
         </div>
 
         <div class="results-screen__table__cell">
@@ -61,6 +61,10 @@ const results = computed(() => {
     return b.score - a.score
   })
 })
+
+function getPosition (score: number, entries: number) {
+  return results.value.findIndex(result => result.score === score && result.entries === entries) + 1;
+}
 </script>
 
 <style lang="scss" scoped>

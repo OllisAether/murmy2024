@@ -10,6 +10,8 @@ import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
 import { JsonMap } from "../../../shared/json";
 import { Phase } from "../../../shared/phase";
+import { FormFieldValue } from "../../../shared/form";
+import { Result } from "../../../shared/results";
 
 export interface AlertOptions {
   id: string
@@ -109,7 +111,10 @@ export const useAdmin = defineStore('admin', () => {
       }),
       ws.onAction('adminClues', (cluesData) => {
         clues.value = cluesData
-      })
+      }),
+      ws.onAction('forms', (data) => {
+        forms.value = data
+      }),
     ]
 
     ws.send('getTeams')
@@ -120,6 +125,7 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('getMediaState')
     ws.send('getSuspectDatabases')
     ws.send('getAdminClues')
+    ws.send('getForms')
 
     await getAssets()
     console.log('Assets loaded')
@@ -661,6 +667,20 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('assignRandomMainClueType')
   }
   // #endregion
+
+  // #region Forms
+  const forms = ref<{
+    forms: Record<string, Record<string, FormFieldValue>>
+    results: Result[]
+  }>({
+    forms: {},
+    results: []
+  })
+
+  function clearForms () {
+    ws.send('clearForms')
+  }
+  // #endregion
   
   return {
     initAdmin,
@@ -737,6 +757,9 @@ export const useAdmin = defineStore('admin', () => {
     setMainClueType,
     setMainClueUnlocked,
     assignRandomMainClueType,
-    assignRandomMainClueTypeForAllTeams
+    assignRandomMainClueTypeForAllTeams,
+
+    forms,
+    clearForms
   }
 })

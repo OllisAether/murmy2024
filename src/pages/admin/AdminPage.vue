@@ -80,6 +80,12 @@
           </VListItemTitle>
         </VListItem>
 
+        <VListItem to="/admin/forms">
+          <VListItemTitle>
+            <VIcon>mdi-file-document</VIcon>
+            Lösungsbögen
+          </VListItemTitle>
+        </VListItem>
 
         <div class="divider">
           <span>Verwaltung</span>

@@ -143,6 +143,13 @@ const router = createRouter({
             title: "Hinweise"
           },
         },
+        {
+          path: "forms",
+          component: () => import("./pages/admin/Forms.vue"),
+          meta: {
+            title: "Lösungsbögen"
+          },
+        }
       ],
     },
     {

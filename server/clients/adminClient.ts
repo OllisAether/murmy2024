@@ -1325,8 +1325,23 @@ export class AdminClient extends WebSocketClient {
             success: true,
           });
         }
-      }
+      },
       // #endregion
+
+      // #region Forms 
+      {
+        action: 'getForms',
+        handler: () => {
+          game.sendFormsToAdmins(this);
+        }
+      },
+      {
+        action: 'clearForms',
+        handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Clearing forms');
+          game.formManager.clearAllForms();
+        }
+      }
     ]))
   }
 }

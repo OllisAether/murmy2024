@@ -894,8 +894,7 @@ export const useGameManager = defineStore('gameManager', () => {
     ws.send('submitForm')
   }
 
-  // Board only
-  
+  // Board only & Admin only
   const results = ref<Result[]>([])
 
   ws.onAction('results', (data: Result[]) => {
