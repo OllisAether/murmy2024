@@ -3,10 +3,26 @@
     <div :class="['vote-screen', {
       'vote-screen--next-tiebreaker': nextTiebreaker,
       'vote-screen--has-voted': game.voted,
-      'vote-screen--private': game.phase.meta.private
+      'vote-screen--private': isPrivate
     }]">
       <span class="vote-screen__elite-text">
         ELITE
+      </span>
+
+      <span class="vote-screen__views-text">
+        Viewsrunde
+        <HelpBtn>
+          <template #header>
+            Viewsrunde
+          </template>
+
+          <p class="mb-2">
+            In Viewsrunden entscheidet ihr, welches Video- oder Audioview ihr sehen wollt.
+          </p>
+          <p>
+            Wählt euren Favoriten aus, indem ihr auf das Bild klickt.
+          </p>
+        </HelpBtn>
       </span>
 
       <!-- <pre>{{ game.vote.session }}</pre> -->
@@ -79,9 +95,10 @@ import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import SkewBox from '@/components/SkewBox.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
 import Color from 'color';
+import HelpBtn from '@/components/team/HelpBtn.vue';
 
 const game = useGameManager()
 
@@ -99,11 +116,18 @@ const showWinner = computed(() => {
     : game.vote.session?.voteResults?.finalWinner ?? null
 })
 
+const isPrivate = ref(game.phase.meta?.private)
+watch(() => game.phase.meta?.private, (val) => {
+  setTimeout(() => {
+    isPrivate.value = val
+  }, 1000)
+})
+
 const isTiebreaker = computed(() => {
-  return game.vote.session?.isTiebreaker
+  return game.vote.session?.isTiebreaker && !isPrivate.value
 })
 const nextTiebreaker = computed(() => {
-  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value
+  return game.vote.session?.voteResults?.next === 'tiebreaker' && !isTiebreaker.value && !isPrivate.value
 })
 
 const candidates = computed(() => {
@@ -123,7 +147,7 @@ const candidates = computed(() => {
 })
 
 const isRandom = computed(() => {
-  return game.vote.session?.isRandom
+  return game.vote.session?.isRandom && !isPrivate.value
 })
 </script>
 
@@ -148,9 +172,20 @@ const isRandom = computed(() => {
     mask-image: linear-gradient(black, transparent)
   }
 
+  &__views-text {
+    position: absolute;
+    top: 4vh;
+    left: 4vh;
+    line-height: 1;
+    font-size: 3vh;
+
+    font-family: $fontDisplay;
+    color: #fff4;
+  }
+
   &__timer {
     position: absolute;
-    font-size: 10vw;
+    font-size: 8vw;
     font-weight: 300;
     top: 2vw;
     left: 50%;
@@ -280,7 +315,7 @@ const isRandom = computed(() => {
     will-change: transform, opacity, filter;
 
     &-enter-active {
-      transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: 3s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     &-enter-from {

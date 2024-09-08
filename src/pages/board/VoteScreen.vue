@@ -4,6 +4,9 @@
       'vote-screen--next-tiebreaker': nextTiebreaker && !game.phase.meta?.private,
       'vote-screen--private': game.phase.meta?.private
     }]">
+      <div class="vote-screen__views-text">
+        Viewsrunde
+      </div>
       <div class="vote-screen__elite-text">
         ELITE
       </div>
@@ -238,6 +241,17 @@ onUnmounted(() => {
     mask-image: linear-gradient(black, transparent)
   }
 
+  &__views-text {
+    position: absolute;
+    top: 4vh;
+    left: 4vh;
+    line-height: 1;
+    font-size: 3vh;
+
+    font-family: $fontDisplay;
+    color: #fff4;
+  }
+
   &__timer {
     position: absolute;
     font-size: 10vw;
@@ -338,14 +352,14 @@ onUnmounted(() => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 10vh;
+    font-size: 16vh;
 
     font-family: $fontDisplay;
 
     will-change: transform, opacity, filter;
 
     &-enter-active {
-      transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: 3s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     &-enter-from {

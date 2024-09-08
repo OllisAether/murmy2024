@@ -11,8 +11,13 @@
       @ended="finished"
       :src="game.getAsset(game.currentMedia)?.content"
     />
-    {{ isAudio }}
-    <canvas v-if="isAudio" ref="canvas" class="media__canvas" />
+
+    <AudioVisualizer
+      v-if="isAudio"
+      :video="video"
+      class="media__audiovisualizer"
+    />
+
     <div class="media__controls">
       <VBtn
         icon
@@ -42,7 +47,9 @@
 </template>
 
 <script lang="ts" setup>
+import AudioVisualizer from '@/components/board/AudioVisualizer.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
+import { useAudio } from '@/store/board/audio';
 import { useGameManager } from '@/store/gameManager'
 import { useWsClient } from '@/store/wsClient';
 import { useEventListener } from '@vueuse/core';
@@ -53,7 +60,20 @@ const ws = useWsClient()
 
 const video = ref<HTMLVideoElement | null>(null)
 const state = ref<'playing' | 'paused'>('paused')
-const canvas = ref<HTMLCanvasElement | null>(null)
+
+const audio = useAudio()
+
+let offControl: (() => void) | null = null
+watch(video, () => {
+  if (video.value) {
+    offControl = audio.controlVolume(video.value, 'media')
+  } else {
+    offControl?.()
+  }
+})
+onBeforeUnmount(() => {
+  offControl?.()
+})
 
 onMounted(() => {
   if (video.value) {
@@ -166,91 +186,6 @@ function updateProgress () {
 function finished () {
   game.mediaFinished()
 }
-
-watch(canvas, () => {
-  if (!canvas.value) return
-  if (!video.value) return
-
-  canvas.value.width = window.innerWidth
-  canvas.value.height = window.innerHeight
-
-  const ctx = canvas.value.getContext('2d')
-
-  if (!ctx) return
-
-  const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
-  let audioSource: MediaElementAudioSourceNode | null = null
-  let analyser: AnalyserNode | null = null
-
-  audioSource = audioCtx.createMediaElementSource(video.value as HTMLMediaElement)
-  analyser = audioCtx.createAnalyser()
-  audioSource.connect(analyser)
-  analyser.connect(audioCtx.destination)
-
-  analyser.fftSize = 2 ** 10
-  analyser.smoothingTimeConstant = 0.8
-  const bufferLength = analyser.frequencyBinCount
-  const dataArray = new Uint8Array(bufferLength)
-
-  const displayLength = 128
-  // const offset = 0
-  // const exponent = Math.log(dataArray.length - offset) / displayLength
-  let smoothDataArray = new Array(displayLength).fill(0)
-
-  // function smooth (data: number[], factor: number, iterations = 1) {
-  //   const newData = new Array(data.length).fill(0)
-
-  //   for (let i = 0; i < data.length; i++) {
-  //     const prev = data[i - 1] || 0
-  //     const next = data[i + 1] || 0
-  //     newData[i] = (prev + data[i] + next) / 3
-  //   }
-
-  //   for (let i = 0; i < data.length; i++) {
-  //     data[i] = data[i] * (1 - factor) + newData[i] * factor
-  //   }
-
-  //   if (iterations > 1) {
-  //     return smooth(data, factor, iterations - 1)
-  //   }
-
-  //   return data
-  // }
-
-  let x = 0
-  function animate () {
-    if (!ctx) return
-    if (!canvas.value) return
-    canvas.value.width = window.innerWidth
-    canvas.value.height = window.innerHeight
-
-    x = 0
-    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
-    analyser?.getByteFrequencyData(dataArray)
-
-    const barWidth = canvas.value.width / smoothDataArray.length
-    for (let i = 0; i < smoothDataArray.length; i++) {
-      // smoothDataArray[i] = dataArray[Math.floor(Math.exp(exponent * (i + offset)))]
-      smoothDataArray[i] = dataArray[Math.floor(i * dataArray.length / smoothDataArray.length)]
-    }
-
-    // smoothDataArray = smooth(smoothDataArray, 0.8, 2)
-
-    for (let i = 0; i < smoothDataArray.length; i++) {
-      const barHeight = smoothDataArray[i] / 255 * canvas.value.height * 0.8 + barWidth / 2
-      ctx.beginPath()
-      ctx.fillStyle = 'white'
-      ctx.roundRect(x, (canvas.value.height - barHeight) / 2, barWidth / 2, barHeight, barWidth / 2)
-      ctx.closePath()
-      ctx.fill()
-      x += barWidth
-    }
-
-    requestAnimationFrame(animate)
-  }
-
-  animate()
-})
 </script>
 
 <style lang="scss" scoped>
@@ -287,7 +222,7 @@ watch(canvas, () => {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent);
   }
 
-  &__canvas {
+  &__audiovisualizer {
     position: absolute;
     inset: 0;
     width: 100%;

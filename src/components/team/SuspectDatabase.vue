@@ -571,7 +571,7 @@ onBeforeUnmount(() => {
       flex: 0 0 auto;
       position: relative;
       width: 7rem;
-      height: 7rem * math.div(5, 3);
+      height: 7rem * math.div(9, 5);
       margin-bottom: 1rem;
 
       &__skew {
