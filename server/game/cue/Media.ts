@@ -31,7 +31,7 @@ export class WhenMediaAt extends CueHandle {
   }>): void {
     console.log(colorize('[Cue: WhenMediaAt]', Fg.Magenta), `Waiting for media to reach ${ctx.options.time}ms`);
 
-    const executeIfAlreadyAtTime = ctx.getFieldValue(ctx.options.executeIfAlreadyAtTime) ?? false;
+    const executeIfAlreadyAtTime = ctx.getFieldValue(ctx.options.executeIfAlreadyAtTime) ?? true;
     const time = ctx.getFieldValue(ctx.options.time);
 
     if (typeof time !== 'number') {

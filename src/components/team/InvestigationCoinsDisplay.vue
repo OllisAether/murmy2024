@@ -1,5 +1,5 @@
 <template>
-  <div class="investigation-coins-display">
+  <div class="investigation-coins-display" ref="investigationCoinsEl">
     <VIcon size="1em">
       mdi-star-four-points-circle
     </VIcon> {{ investigationCoins }}
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
+import { useTutorial } from '@/store/team/tutorial';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const game = useGameManager()
@@ -56,13 +57,26 @@ function animateInvestigationCoins (to: number) {
   step()
 }
 
+const tutorial = useTutorial()
+
+const investigationCoinsEl = ref<HTMLElement | null>(null)
 onMounted(() => {
   game.startInvestigationCoinsDelay()
+
+  if (!investigationCoinsEl.value) return
+
+  tutorial.registerHighlightElement('investigationCoins', {
+    element: investigationCoinsEl.value,
+    margin: [20, 60, 30, 40],
+  })
 })
 
 onBeforeUnmount(() => {
   game.stopInvestigationCoinsDelay()
+
+  tutorial.unregisterHighlightElement('investigationCoins')
 })
+
 </script>
 
 <style lang="scss" scoped>

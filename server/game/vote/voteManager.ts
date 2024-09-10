@@ -7,7 +7,8 @@ import { colorize, Fg } from '../../console'
 export interface OpenVoteOptions {
   title?: string,
   pool: string,
-  pauseOnOpen?: boolean
+  pauseOnOpen?: boolean,
+  autoClose?: boolean
 }
 
 export class VoteManager {
@@ -197,6 +198,8 @@ export class VoteManager {
       pool: opt.pool,
 
       title: opt.title ?? undefined,
+
+      autoClose: opt.autoClose ?? true,
 
       votes: {},
       passiveVotes: {},
@@ -568,7 +571,9 @@ export class VoteManager {
 
   allVotesReceivedListeners: (() => void)[] = []
   allVotesReceived () {
-    this.allVotesReceivedListeners.forEach(listener => listener())
+    if (this.activeSession?.autoClose) {
+      this.allVotesReceivedListeners.forEach(listener => listener())
+    }
   }
   onAllVotesReceived (listener: () => void) {
     this.allVotesReceivedListeners.push(listener)

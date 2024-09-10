@@ -5,7 +5,7 @@
   >
     <VToolbar>
       <VToolbarTitle>
-        {{ team.name }} ({{ team.id }}) - {{ unlockedClues.length }} Hinweise freigeschalte
+        {{ team.name }} ({{ team.id }}) - {{ unlockedClues.length }} Clues freigeschalten
       </VToolbarTitle>
 
       <VBtn icon>
@@ -34,6 +34,48 @@
                 <VListItemTitle>
                   Hinweis {{ clue }} nicht gefunden
                 </VListItemTitle>
+
+                <template #append>
+                  <VBtn
+                    color="error"
+                    variant="text"
+                    icon
+                    size="small"
+                  >
+                    <VIcon>mdi-close</VIcon>
+                    <VDialog activator="parent" max-width="400">
+                      <template #="{ isActive }">
+                        <VCard>
+                          <VToolbar>
+                            <VToolbarTitle>
+                              Hinweis verriegeln
+                            </VToolbarTitle>
+                            <VBtn
+                              icon
+                              @click="isActive.value = false"
+                            >
+                              <VIcon>mdi-close</VIcon>
+                            </VBtn>
+                          </VToolbar>
+                          <VCardText>
+                            <p>
+                              Bist du sicher, dass du den Hinweis verriegeln möchtest?
+                            </p>
+                          </VCardText>
+                          <VCardActions>
+                            <VSpacer />
+                            <VBtn
+                              color="error"
+                              @click="admin.lockClue(team.id, clue); isActive.value = false"
+                            >
+                              Verriegeln
+                            </VBtn>
+                          </VCardActions>
+                        </VCard>
+                      </template>
+                    </VDialog>
+                  </VBtn>
+                </template>
               </VListItem>
             </template>
             <template v-else>
@@ -84,7 +126,7 @@
           </template>
           <VListItem v-if="!unlockedClues.length">
             <VListItemTitle>
-              Keine Hinweise freigeschaltet
+              Keine Clues freigeschaltet
             </VListItemTitle>
           </VListItem>
         </VList>

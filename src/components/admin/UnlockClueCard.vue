@@ -2,7 +2,7 @@
   <VCard>
     <VToolbar>
       <VToolbarTitle>
-        Hinweise freischalten für {{ props.team.name }}
+        Clues freischalten für {{ props.team.name }}
       </VToolbarTitle>
 
       <VBtn

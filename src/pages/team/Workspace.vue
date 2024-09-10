@@ -20,7 +20,7 @@
                 Ermittlungspunkte
               </template>
 
-              Ermittlungspunkte sind <b class="help-color">Währungseinheiten</b>, die ihr für das Freischalten von Hinweisen benötigt. <br><br>
+              Ermittlungspunkte sind <b class="help-color">Währungseinheiten</b>, die ihr für das Freischalten von Clues benötigt. <br><br>
               Ihr erhaltet <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 15</b> vor jeder Arbeitsphase<br>
               und <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 5</b> pro markiertem Hinweis.
             </HelpBtn>
@@ -45,7 +45,7 @@
                   <template #header>
                     Transkripte
                   </template>
-                  Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Medien. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
+                  Transkripte sind die verschriftlichten Inhalte der am Board gezeigten Views. Sie können Hinweise auf den Täter oder die Tat enthalten. <br><br>
                   Es lohnt sich, die Transkripte genau zu lesen, da sie oft <b class="help-color">wichtige Informationen</b> enthalten, die <b class="help-color">markiert</b> werden können.
                 </HelpBtn>
               </div>
@@ -64,16 +64,16 @@
 
             <div ref="workspaceClues">
               <div class="workspace__content__header">
-                Hinweise
+                Clues
 
                 <HelpBtn>
                   <template #header>
-                    Hinweise
+                    Clues
                   </template>
 
-                  Hinweise enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
+                  Clues enthalten <b class="help-color">wichtige Informationen</b> über den Fall, die <b class="help-color">markiert</b> werden können und euch bei der Ermittlung helfen. <br><br>
 
-                  Ihr könnt Hinweise mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
+                  Ihr könnt Clues mit <b class="help-color"><VIcon size="1em">mdi-star-four-points-circle</VIcon> Ermittlungspunkten</b> freischalten.
                 </HelpBtn>
               </div>
 
@@ -92,7 +92,7 @@
               </div>
 
               <div class="workspace__no-clues" v-if="game.clues.available.length === 0">
-                Keine Hinweise verfügbar
+                Keine Clues verfügbar
               </div>
             </div>
           </div>

@@ -138,7 +138,7 @@
                 </template>
 
                 <p class="mb-2">
-                  Halte den Finger auf einem Hinweis, um ihn zu markieren. Markierte Hinweise werden zur <b class="help-color">Verdächtigen-Datenbank</b> hinzugefügt.
+                  Halte den Finger auf einem Hinweis, um ihn zu markieren. Markierte Hinweise werden zur <b class="help-color">Datenbank</b> hinzugefügt.
                 </p>
               </HelpBtn>
             </div>

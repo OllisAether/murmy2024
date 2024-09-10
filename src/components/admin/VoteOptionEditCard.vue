@@ -136,7 +136,7 @@
         >
           <VListItem>
             <VListItemTitle class="text-body-1">
-              Hinweise zum freischalten
+              Clues zum freischalten
             </VListItemTitle>
           </VListItem>
 

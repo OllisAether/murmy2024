@@ -133,14 +133,14 @@ const router = createRouter({
           path: "suspectDatabases",
           component: () => import("./pages/admin/SuspectDatabases.vue"),
           meta: {
-            title: "Verdächtigendatenbanken"
+            title: "Datenbanken"
           },
         },
         {
           path: "clues",
           component: () => import("./pages/admin/Clues.vue"),
           meta: {
-            title: "Hinweise"
+            title: "Clues"
           },
         },
         {

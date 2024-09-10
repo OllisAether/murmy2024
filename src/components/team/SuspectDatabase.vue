@@ -15,11 +15,11 @@
           <div class="sus-db__help-btn">
             <HelpBtn>
               <template #header>
-                Verdächtigen-Datenbank
+                Datenbank
               </template>
 
               <p class="mb-2">
-                Die Verdächtigen-Datenbank bietet eine Überischt über alle bisher
+                Die Datenbank bietet eine Überischt über alle bisher
                 <b class="help-color">
                   bekannten Verdächtigen
                 </b>

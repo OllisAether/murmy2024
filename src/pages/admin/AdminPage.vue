@@ -69,14 +69,14 @@
         <VListItem to="/admin/suspectDatabases">
           <VListItemTitle>
             <VIcon>mdi-database-search</VIcon>
-            Verdächtigendatenbanken
+            Datenbanken
           </VListItemTitle>
         </VListItem>
 
         <VListItem to="/admin/clues">
           <VListItemTitle>
             <VIcon>mdi-magnify</VIcon>
-            Hinweise
+            Clues
           </VListItemTitle>
         </VListItem>
 

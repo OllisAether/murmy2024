@@ -3,7 +3,7 @@
     <VCard class="mb-4">
       <VToolbar>
         <VToolbarTitle>
-          Hinweise
+          Clues
         </VToolbarTitle>
       </VToolbar>
 
@@ -84,7 +84,7 @@
     <VCard class="mb-4">
       <VToolbar>
         <VToolbarTitle>
-          Freigeschaltete Hinweise
+          Freigeschaltete Clues
         </VToolbarTitle>
       </VToolbar>
       <VCardText>

@@ -6,7 +6,8 @@ import { CueHandle, CueHandleCtx, CueHandleNext } from './CueHandle'
 export class OpenVote extends CueHandle {
   public start(next: CueHandleNext, ctx: CueHandleCtx<{
     pool?: string,
-    title?: string
+    title?: string,
+    autoClose?: boolean
   }>): void {
     const game = Game.get()
     const voteManager = game.voteManager
@@ -29,9 +30,18 @@ export class OpenVote extends CueHandle {
       return
     }
 
+    const autoClose = ctx.getFieldValue(options.autoClose) as boolean | undefined
+
+    if (autoClose && typeof autoClose !== 'boolean') {
+      console.error(colorize('[Cue: OpenVote]', Fg.Magenta), 'Invalid autoClose', autoClose)
+      next()
+      return
+    }
+
     voteManager.openVote({
       pool,
-      title: title ?? undefined
+      title: title ?? undefined,
+      autoClose: autoClose ?? true
     })
 
     next()

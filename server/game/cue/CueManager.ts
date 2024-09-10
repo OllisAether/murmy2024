@@ -40,14 +40,11 @@ export class CueManager {
       info: true
     }),
 
-    { divider: '- Intro -' },
-    Idle(),
-
-    { divider: '- Tutorial -' },
-
-    VoteMainClue(),
+    { divider: '- Prolog -' },
 
     Tutorial(),
+
+    { divider: '- Akt 1 -' },
 
     Vote(),
     Media(),

@@ -1,6 +1,6 @@
 <template>
   <ScreenWrapper :class="['home', {
-    'home--info': game.phase.meta.info,
+    'home--info': isInfo,
     'home--break': isBreak,
     'home--media': mediaPlaying,
     'home--timer': isTimer && !isBreak,
@@ -22,7 +22,7 @@
         <VIcon>mdi-arrow-up</VIcon>
       </div>
 
-      <div class="home__carousel" v-else-if="game.phase.meta.info">
+      <div class="home__carousel" v-else-if="isInfo">
         <!-- <SkewBox class="home__carousel__skew-box" :skew="0" /> -->
 
         <Carousel>
@@ -178,13 +178,17 @@ const isEnd = computed(() => {
   return game.phase.meta.end ?? false
 })
 
+const isInfo = computed(() => {
+  return game.phase.meta.info ?? false
+})
+
 const isResults = computed(() => {
   return game.phase.meta.results ?? false
 })
 
 
 const wakelockShouldntBeActive = computed(() => {
-  return isBreak.value || isEnd.value || isResults.value
+  return isBreak.value || isEnd.value || isResults.value || isInfo.value
 })
 
 let wakelockShouldBeActiveBefore: boolean = game.wakelockShouldBeActive

@@ -23,7 +23,7 @@
 
     <template v-if="isShowNewClues">
       <div class="title-screen__new-clues-title">
-        Neue Hinweise Verfügbar
+        Neue Clues Verfügbar
       </div>
       <div class="title-screen__new-clues">
 

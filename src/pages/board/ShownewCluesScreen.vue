@@ -3,7 +3,7 @@
     <div class="show-new-clues-screen__elite-text">Elite</div>
 
     <div class="show-new-clues-screen__title">
-      Neue Hinweise Verfügbar
+      Neue Clues Verfügbar
     </div>
     <div class="show-new-clues-screen__new-clues">
 

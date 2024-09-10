@@ -69,7 +69,7 @@
                 </template>
 
                 <p class="mb-2">
-                  Halte den Finger auf einem Hinweis, um ihn zu markieren. Markierte Hinweise werden zur <b class="help-color">Verdächtigen-Datenbank</b> hinzugefügt.
+                  Halte den Finger auf einem Hinweis, um ihn zu markieren. Markierte Hinweise werden zur <b class="help-color">Datenbank</b> hinzugefügt.
                 </p>
               </HelpBtn>
             </div>
@@ -107,18 +107,18 @@ const tutorial = useTutorial();
 const mainClueCard = ref<HTMLElement | null>(null);
 watch(mainClueCard, (el) => {
   if (el) {
-    tutorial.registerHighlightElement('mainClueCard', {
+    tutorial.registerHighlightElement('mainClue', {
       element: el,
       margin: [0, 40, 30, 40],
       borderRadius: 30,
     });
   } else {
-    tutorial.unregisterHighlightElement('mainClueCard');
+    tutorial.unregisterHighlightElement('mainClue');
   }
 });
 
 onBeforeUnmount(() => {
-  tutorial.unregisterHighlightElement('mainClueCard');
+  tutorial.unregisterHighlightElement('c');
 });
 </script>
 

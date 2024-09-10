@@ -6,7 +6,7 @@
       </button>
 
       <div class="gallery-screen__title">
-        Gallerie
+        Galerie
       </div>
     </div>
     <ScrollView class="gallery-screen__content">
