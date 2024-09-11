@@ -15,81 +15,81 @@
 
         <div class="home-screen__appgrid">
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Gallery.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Gallery.webp')?.content"
             name="Galerie"
             app="camera"
             :path="['gallery']"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Internet.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Internet.webp')?.content"
             name="Internet"
             app="internet"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Camera.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Camera.webp')?.content"
             name="Kamera"
             app="camera"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Contacts.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Contacts.webp')?.content"
             name="Kontakte"
             app="calls"
             :path="['contacts']"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Notes.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Notes.webp')?.content"
             name="Memo"
             app="notes"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Minecraft.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Minecraft.webp')?.content"
             name="Minecraft: Pocket Edition"
             crash
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_SMS.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_SMS.webp')?.content"
             name="Nachrichten"
             app="sms"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Pinterest.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Pinterest.webp')?.content"
             name="Pinterest"
             app="pinterest"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Tumblr.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Tumblr.webp')?.content"
             name="Tumblr."
             app="tumblr"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_PlayStore.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_PlayStore.webp')?.content"
             name="Play Store"
             app="playstore"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Calculator.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Calculator.webp')?.content"
             name="Taschenrechner"
             app="calculator"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Phone.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Phone.webp')?.content"
             name="Telefon"
             app="calls"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Clock.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Clock.webp')?.content"
             name="Uhr"
             app="clock"
           />
@@ -106,12 +106,12 @@
 
         <div class="home-screen__appbar">
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Phone.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Phone.webp')?.content"
             app="calls"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Internet.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Internet.webp')?.content"
             app="internet"
           />
 
@@ -132,12 +132,12 @@
           </button>
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_SMS.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_SMS.webp')?.content"
             app="sms"
           />
 
           <AppIcon
-            :iconSrc="game.getAsset('phone/Icon_Camera.webp')?.content"
+            :iconSrc="game.getAsset('phone/icons/Icon_Camera.webp')?.content"
             app="camera"
           />
         </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="chats-screen">
     <div class="chats-screen__title">
-      <img :src="game.getAsset('phone/Icon_SMS.webp')?.content" />
+      <img :src="game.getAsset('phone/icons/Icon_SMS.webp')?.content" />
       Nachrichten
     </div>
 

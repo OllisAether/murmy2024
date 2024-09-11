@@ -1,8 +1,9 @@
+import { Moment } from "moment"
 import { ImageEntry } from "../clue"
 
 export interface GalleryItem {
   assetId: string,
-  date: string,
+  date: Moment,
   entries?: ImageEntry[]
 }
 

@@ -6,7 +6,8 @@
       </button>
 
       <div class="image-screen__title">
-        {{ image?.date }}, {{ imageWidth }}x{{ imageHeight }}px
+        {{ image?.date.format('DD.MM.YYYY, HH:mm') }},
+        {{ imageWidth }}x{{ imageHeight }}px
       </div>
     </div>
     <div class="image-screen__content" data-no-pan ref="container">

@@ -1,7 +1,7 @@
 <template>
   <div class="notes-screen">
     <div class="notes-screen__title">
-      <img :src="game.getAsset('phone/Icon_Notes.webp')?.content" />
+      <img :src="game.getAsset('phone/icons/Icon_Notes.webp')?.content" />
       Memos
     </div>
 
