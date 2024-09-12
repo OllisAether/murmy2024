@@ -68,7 +68,8 @@
                   top: `${entry.rect.x * 100}%`,
                   left: `${entry.rect.y * 100}%`,
                   width: `${entry.rect.width * 100}%`,
-                  height: `${entry.rect.height * 100}%`
+                  height: `${entry.rect.height * 100}%`,
+                  transform: entry.rect.transform,
                 }"
               />
             </div>

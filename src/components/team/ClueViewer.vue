@@ -1,6 +1,9 @@
 <template>
   <div :class="['clue-viewer', {
-    'clue-viewer--main-clue-type': mainClueType
+    'clue-viewer--main-clue-type': mainClueType,
+    'clue-viewer--odd': currentPage % 2 === 0,
+    'clue-viewer--book': book,
+    'clue-viewer--swiping': pageTransitionProgress !== 0,
   }]">
     <template v-if="pageCount > 1">
       <Btn
@@ -57,41 +60,72 @@
           v-if="rootWidth > 0 && rootHeight > 0"
         >
           <template v-if="assets.length > 0">
-            <template v-for="(asset, index) in assets">
+            <template v-if="book">
               <div
-                :class="['clue-viewer__image-container', {
-                  'clue-viewer__image-container--current': index === currentPage,
-                  'clue-viewer__image-container--next': index === currentPage + 1,
-                  'clue-viewer__image-container--prev': index === currentPage - 1,
-                  'clue-viewer__image-container--transition-next': pageTransitionProgress < 0,
-                  'clue-viewer__image-container--transition-prev': pageTransitionProgress > 0
-                }]"
-                ref="images"
-                v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1"
+                class="clue-viewer__image-container clue-viewer__image-container--book"
+                ref="bookContainer"
                 :style="{
                   '--scale': Math.min(
-                    (rootHeight - 16 * 6) / asset.metadata.height,
-                    (rootWidth - 16 * 6) / asset.metadata.width),
+                    (rootHeight - 16 * 6) / assets[0].metadata.height,
+                    (rootWidth - 16 * 6) / assets[0].metadata.width),
                   '--canvasScale': scale,
                   '--pageTransitionProgress': pageTransitionProgress,
                   '--rootWidth': rootWidth + 'px',
                 }"
               >
-                <img :src="asset.content" />
-                <Collectable
-                  class="clue-viewer__collectable"
-                  :highlight="isTutorialMarkEntry"
-                  v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
-                  :key="i"
-                  :entryId="entry.entry.id"
+                <Book
+                  :zoomScale="scale"
+                  :currentPage="currentPage"
+                  :pageTransitionProgress="pageTransitionProgress"
+                  :pageAssets="assets"
+                  :entries="entries"
                   :style="{
-                    'left': entry.rect.x * 100 + '%',
-                    'top': entry.rect.y * 100 + '%',
-                    'width': entry.rect.width * 100 + '%',
-                    'height': entry.rect.height * 100 + '%',
+                    width: assets[0].metadata.width + 'px',
+                    height: assets[0].metadata.height + 'px',
                   }"
+                  filter
                 />
               </div>
+            </template>
+            <template v-else>
+              <template v-for="(asset, index) in [...assets].reverse()">
+                <div
+                  :class="['clue-viewer__image-container', {
+                    'clue-viewer__image-container--current': (assets.length - index - 1) === currentPage,
+                    'clue-viewer__image-container--next': (assets.length - index - 1) >= currentPage + 1,
+                    'clue-viewer__image-container--prev': (assets.length - index - 1) <= currentPage - 1,
+                    'clue-viewer__image-container--transition-next': pageTransitionProgress < 0,
+                    'clue-viewer__image-container--transition-prev': pageTransitionProgress > 0,
+                  }]"
+                  ref="images"
+                  :style="{
+                    '--scale': Math.min(
+                      (rootHeight - 16 * 6) / asset.metadata.height,
+                      (rootWidth - 16 * 6) / asset.metadata.width),
+                    '--canvasScale': scale,
+                    '--pageTransitionProgress': pageTransitionProgress,
+                    '--rootWidth': rootWidth + 'px',
+                  }"
+                >
+                <!-- v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1" -->
+                  <img :src="asset.content" />
+                  <Collectable
+                    class="clue-viewer__collectable"
+                    :highlight="isTutorialMarkEntry"
+                    v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
+                    :key="i"
+                    :entryId="entry.entry.id"
+                    :style="{
+                      pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
+                      'left': entry.rect.x * 100 + '%',
+                      'top': entry.rect.y * 100 + '%',
+                      'width': entry.rect.width * 100 + '%',
+                      'height': entry.rect.height * 100 + '%',
+                      transform: entry.rect.transform,
+                    }"
+                  />
+                </div>
+              </template>
             </template>
           </template>
           <template v-else-if="$slots.custom">
@@ -157,10 +191,12 @@ import { pages } from './diary/pages';
 import { useMainClue } from '@/store/team/mainClue';
 import HoldIndicator from './HoldIndicator.vue';
 import { useTutorial } from '@/store/team/tutorial';
+import Book from './Book.vue';
 
 const props = defineProps<{
   assetIds?: string[]
   entries?: ImageEntry[],
+  book?: boolean,
   mainClueType?: 'phone' | 'diary' | null
 }>()
 
@@ -198,6 +234,7 @@ const game = useGameManager();
 
 const root = ref<HTMLElement | null>(null);
 const images = ref<HTMLElement[]>([]);
+const bookContainer = ref<HTMLElement | null>(null);
 const mainClueTypeContainer = ref<HTMLElement | null>(null);
 const mainClueTypeSize = ref({ width: 0, height: 0 });
 
@@ -207,6 +244,10 @@ const customSize = ref({ width: 0, height: 0 });
 const currentElement = computed(() => {
   if (customContainer.value) {
     return customContainer.value;
+  }
+
+  if (bookContainer.value) {
+    return bookContainer.value;
   }
 
   if (mainClueTypeContainer.value) {
@@ -633,22 +674,19 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
     width: min-content;
     height: min-content;
     transform: scale(var(--scale))translate(-50%, -50%);
-    transition: transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 
     will-change: transform;
 
     img {
       display: block;
-      transition: filter .5s cubic-bezier(0.19, 1, 0.22, 1),
-                  transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: filter 1s cubic-bezier(0.19, 1, 0.22, 1),
+                  transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 
       will-change: filter, transform;
-
     }
 
     &--next {
-      z-index: -1;
-
       img {
         filter: brightness(0.7);
         transform: rotate(2deg)translate(1.5rem, 1rem)scale(.99);
@@ -681,11 +719,6 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
       z-index: 1;
       pointer-events: all;
     }
-  }
-
-  &__collectable__image {
-    position: absolute;
-    object-fit: cover;
   }
   
   &__next-button {

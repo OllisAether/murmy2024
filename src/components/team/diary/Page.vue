@@ -53,7 +53,7 @@ defineProps<{
 
   border-radius: 1rem 0 0 1rem;
 
-  .diary__page-wrapper--odd & {
+  .book__page-wrapper--odd & {
     border-radius: 0 1rem 1rem 0;
   }
 
@@ -109,7 +109,7 @@ defineProps<{
     color: #DCC1A7;
     background: #EDE0CF;
 
-    .diary__page-wrapper--odd & {
+    .book__page-wrapper--odd & {
       left: auto;
       right: 0;
     }

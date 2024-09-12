@@ -103,10 +103,11 @@
         </div>
         <div class="clue-card__clue-display__content">
           <template v-if="clue">
-            <template v-if="clue.type === 'images'">
+            <template v-if="clue.type === 'images' || clue.type === 'book'">
               <ClueImageViewer
                 :assetIds="clue.images?.assetIds"
                 :entries="clue.images?.entries"
+                :book="clue.type === 'book'"
               />
             </template>
           </template>

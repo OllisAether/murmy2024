@@ -155,6 +155,8 @@ async function startOrbAnimation () {
 @use '@/scss/vars' as *;
 
 .collectable {
+  outline: red solid 2px;
+
   :deep(*) {
     pointer-events: none;
   }
@@ -165,7 +167,7 @@ async function startOrbAnimation () {
     margin: -.5em;
   }
 
-  &--highlight{
+  &--highlight {
     &__icon {
       z-index: 2;
       position: absolute;

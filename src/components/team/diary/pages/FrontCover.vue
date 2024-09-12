@@ -43,11 +43,7 @@ const diary = useMainClue()
 
   transform: scale(1.01);
 
-  border-radius: 2rem .5rem .5rem 2rem;
-
-  .diary__page-wrapper--odd & {
-    border-radius: .5rem 2rem 2rem .5rem;
-  }
+  border-radius: .5rem 2rem 2rem .5rem !important;
 
   &--locked {
     transform-style: preserve-3d;
