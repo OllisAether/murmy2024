@@ -1,10 +1,13 @@
 import { Clue, ClueTypes } from '../../clue';
 import { kursbuch } from './kursbuch';
 import { map } from './map';
+import { liebesRitual, rituale } from './rituale';
 
 export const clues: Clue<ClueTypes>[] = [
   map,
-  kursbuch
+  kursbuch,
+  rituale,
+  liebesRitual
   // {
   //   id: 'fp1',
   //   type: 'images',
