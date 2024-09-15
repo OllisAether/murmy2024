@@ -94,9 +94,10 @@
                     'clue-viewer__image-container--current': (assets.length - index - 1) === currentPage,
                     'clue-viewer__image-container--next': (assets.length - index - 1) >= currentPage + 1,
                     'clue-viewer__image-container--prev': (assets.length - index - 1) <= currentPage - 1,
-                    'clue-viewer__image-container--transition-next': pageTransitionProgress < 0,
-                    'clue-viewer__image-container--transition-prev': pageTransitionProgress > 0,
+                    'clue-viewer__image-container--transition-next': pageTransitionProgress < 0 && ((assets.length - index - 1) === currentPage + 1 || (assets.length - index - 1) === currentPage),
+                    'clue-viewer__image-container--transition-prev': pageTransitionProgress > 0 && ((assets.length - index - 1) === currentPage - 1 || (assets.length - index - 1) === currentPage),
                   }]"
+                  v-show="(assets.length - index - 1) >= currentPage - 1"
                   ref="images"
                   :style="{
                     '--scale': Math.min(
@@ -104,7 +105,7 @@
                       (rootWidth - 16 * 6) / asset.metadata.width),
                     '--canvasScale': scale,
                     '--pageTransitionProgress': pageTransitionProgress,
-                    '--rootWidth': rootWidth + 'px',
+                    '--rootWidth': rootWidth + 'px'
                   }"
                 >
                 <!-- v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1" -->
@@ -688,7 +689,7 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
 
     &--next {
       img {
-        filter: brightness(0.7);
+        filter: brightness(0.7)drop-shadow(0 0 2rem #0007);
         transform: rotate(2deg)translate(1.5rem, 1rem)scale(.99);
       }
     }
@@ -697,7 +698,7 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
       transform: translateX(calc(-0.5 * var(--rootWidth)))translateX(3rem)scale(var(--scale))scale(0.9)translate(-100%, -50%);
       
       img {
-        filter: brightness(0.7);
+        filter: brightness(0.7)drop-shadow(0 0 2rem #0007);
       }
     }
     
