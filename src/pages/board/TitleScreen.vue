@@ -50,11 +50,22 @@
 
     <Transition name="title-screen__countdown">
       <div class="title-screen__countdown title-screen__countdown--blur" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
+        <div class="title-screen__countdown__next" v-if="game.phase.meta.next">
+          <template v-if="game.phase.meta.next === 'vote'">
+            Nächste Viewsrunde beginnt in
+          </template>
+        </div>
         <Timer />
       </div>
     </Transition>
     <Transition name="title-screen__countdown">
       <div class="title-screen__countdown" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
+        <div class="title-screen__countdown__next" v-if="game.phase.meta.next">
+          <template v-if="game.phase.meta.next === 'vote'">
+            Nächste Viewsrunde beginnt in
+          </template>
+        </div>
+
         <Timer />
       </div>
     </Transition>
@@ -227,6 +238,15 @@ const newClues = computed(() => {
       color: #8596a4;
       filter: blur(1vw);
       mix-blend-mode: color-dodge;
+
+      .title-screen__countdown__next {
+        color: #8596a4;
+      }
+    }
+
+    &__next {
+      font-size: 2vw;
+      color: white;
     }
   }
 

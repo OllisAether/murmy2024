@@ -1,4 +1,5 @@
 import { Entry } from "./suspectDatabase/entry"
+import { TextContent } from "./textContent"
 // import { TextContent } from "./textContent"
 
 export type ClueTypes = 'images' | 'book'
@@ -9,7 +10,7 @@ export interface Clue <T extends ClueTypes> {
   cost: number
   title: string
   thumbnailAssetId: string
-  description?: string
+  description?: TextContent | string
 
   images: {
     assetIds: string[]
@@ -26,5 +27,6 @@ export interface ImageEntry {
     height: number
     transform?: string
   }
-  entry: Entry
+  entry?: Entry
+  entryId?: string
 }

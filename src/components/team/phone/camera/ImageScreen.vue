@@ -31,20 +31,24 @@
               ref="imageRefs"
             >
 
-            <Collectable
-              disappear
-              class="image-screen__content__image-entry"
+            <template
               v-for="(entry, i) in image?.entries"
               :key="i"
-              :entryId="entry.entry.id"
-              :style="{
-                top: `${entry.rect.x * 100}%`,
-                left: `${entry.rect.y * 100}%`,
-                width: `${entry.rect.width * 100}%`,
-                height: `${entry.rect.height * 100}%`,
-                transform: entry.rect.transform,
-              }"
-            />
+            >
+              <Collectable
+                disappear
+                class="image-screen__content__image-entry"
+                v-if="entry.entryId ?? entry.entry?.id"
+                :entryId="(entry.entryId ?? entry.entry?.id)!"
+                :style="{
+                  top: `${entry.rect.x * 100}%`,
+                  left: `${entry.rect.y * 100}%`,
+                  width: `${entry.rect.width * 100}%`,
+                  height: `${entry.rect.height * 100}%`,
+                  transform: entry.rect.transform,
+                }"
+              />
+            </template>
           </div>
         </Transition>
       </template>

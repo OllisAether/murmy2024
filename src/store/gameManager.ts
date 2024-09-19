@@ -779,7 +779,9 @@ export const useGameManager = defineStore('gameManager', () => {
 
     cluesAsset.forEach((clue) => {
       clue.images?.entries?.forEach((entry) => {
-        entries.push(entry.entry)
+        if (entry.entry) {
+          entries.push(entry.entry)
+        }
       })
 
       // getEntries(clue.text?.content ?? '').forEach((entry) => {
@@ -789,7 +791,9 @@ export const useGameManager = defineStore('gameManager', () => {
 
     gallery.forEach((item) => {
       item.entries?.forEach((entry) => {
-        entries.push(entry.entry)
+        if (entry.entry) {
+          entries.push(entry.entry)
+        }
       })
     })
 
@@ -803,7 +807,9 @@ export const useGameManager = defineStore('gameManager', () => {
 
         if (message.type === 'image') {
           message.entries?.forEach((entry) => {
-            entries.push(entry.entry)
+            if (entry.entry) {
+              entries.push(entry.entry)
+            }
           })
         }
       })

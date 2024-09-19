@@ -52,6 +52,10 @@ export class CueManager {
 
     AddInvestigationCoins(10),
     Work(),
+    Idle(10_000, {
+      next: 'vote'
+    }),
+    Vote(),
 
     { divider: '=== Interlude ===' },
 
