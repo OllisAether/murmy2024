@@ -75,16 +75,22 @@ function onPointerDown (e: PointerEvent) {
 
   let success: boolean | 'alreadyCollected' | undefined = undefined
 
+  let requested = false;
   let animation: number | null = null;
   async function counter () {
     const now = Date.now()
     const timeElapsed = now - start - holdDelay
     progress.value = progressEase(Math.max(0, Math.min(1, timeElapsed / holdDuration)))
+    animation = requestAnimationFrame(counter);
 
     if (timeElapsed >= holdCheck && success === undefined) {
-      setTimeout(() => {
-        success = collectables.markCollectableAt(e.clientX, e.clientY);
-      }, holdDuration - holdCheck);
+      if (!requested) {
+        requested = true;
+        
+        setTimeout(() => {
+          success = collectables.markCollectableAt(e.clientX, e.clientY);
+        }, holdDuration - holdCheck);
+      }
     } else if (progress.value >= 1) {
       if (success === 'alreadyCollected') {
         alreadyFound.value = true;
@@ -97,8 +103,6 @@ function onPointerDown (e: PointerEvent) {
       up();
       return;
     }
-
-    animation = requestAnimationFrame(counter);
   }
 
   const startTouchPos = {

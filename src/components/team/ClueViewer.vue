@@ -100,31 +100,42 @@
                   v-show="(assets.length - index - 1) >= currentPage - 1"
                   ref="images"
                   :style="{
-                    '--scale': Math.min(
-                      (rootHeight - 16 * 6) / asset.metadata.height,
-                      (rootWidth - 16 * 6) / asset.metadata.width),
                     '--canvasScale': scale,
                     '--pageTransitionProgress': pageTransitionProgress,
-                    '--rootWidth': rootWidth + 'px'
+                    '--rootWidth': rootWidth + 'px',
+                    width: asset.metadata.width * Math.min(
+                      (rootHeight - 16 * 6) / asset.metadata.height,
+                      (rootWidth - 16 * 6) / asset.metadata.width) + 'px',
+                    height: asset.metadata.height * Math.min(
+                      (rootHeight - 16 * 6) / asset.metadata.height,
+                      (rootWidth - 16 * 6) / asset.metadata.width) + 'px',
                   }"
                 >
                 <!-- v-show="index === currentPage || index === currentPage + 1 || index === currentPage - 1" -->
-                  <img :src="asset.content" />
-                  <Collectable
-                    class="clue-viewer__collectable"
-                    :highlight="isTutorialMarkEntry"
-                    v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === index : true)"
+                  <img :src="asset.content" :style="{
+                    '--imgScale': Math.min(
+                      (rootHeight - 16 * 6) / asset.metadata.height,
+                      (rootWidth - 16 * 6) / asset.metadata.width),
+                  }">
+                  <template
+                    v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === (assets.length - index - 1) : true)"
                     :key="i"
-                    :entryId="entry.entry.id"
-                    :style="{
-                      pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
-                      'left': entry.rect.x * 100 + '%',
-                      'top': entry.rect.y * 100 + '%',
-                      'width': entry.rect.width * 100 + '%',
-                      'height': entry.rect.height * 100 + '%',
-                      transform: entry.rect.transform,
-                    }"
-                  />
+                  >
+                    <Collectable
+                      class="clue-viewer__collectable"
+                      :highlight="isTutorialMarkEntry && tutorial.state.entryId === (entry.entryId ?? entry.entry?.id)"
+                      v-if="entry.entryId ?? entry.entry?.id"
+                      :entryId="(entry.entryId ?? entry.entry?.id)!"
+                      :style="{
+                        pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
+                        'left': entry.rect.x * 100 + '%',
+                        'top': entry.rect.y * 100 + '%',
+                        'width': entry.rect.width * 100 + '%',
+                        'height': entry.rect.height * 100 + '%',
+                        transform: entry.rect.transform,
+                      }"
+                    />
+                  </template>
                 </div>
               </template>
             </template>
@@ -337,7 +348,7 @@ watch(customContainer, (el) => {
 })
 
 const scale = ref(1);
-const maxScale = 10;
+const maxScale = 5;
 const translate = ref({ x: 0, y: 0 });
 
 const startPos = ref({ x: 0, y: 0 })
@@ -674,13 +685,15 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
     transform-origin: top left;
     width: min-content;
     height: min-content;
-    transform: scale(var(--scale))translate(-50%, -50%);
+    transform: scale(var(--scale, 1))translate(-50%, -50%);
     transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 
     will-change: transform;
 
     img {
+      transform-origin: top left;
       display: block;
+      transform: scale(var(--imgScale, 1));
       transition: filter 1s cubic-bezier(0.19, 1, 0.22, 1),
                   transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -690,12 +703,12 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
     &--next {
       img {
         filter: brightness(0.7)drop-shadow(0 0 2rem #0007);
-        transform: rotate(2deg)translate(1.5rem, 1rem)scale(.99);
+        transform: scale(var(--imgScale, 1))rotate(2deg)translate(1.5rem, 1rem)scale(.99);
       }
     }
 
     &--prev {
-      transform: translateX(calc(-0.5 * var(--rootWidth)))translateX(3rem)scale(var(--scale))scale(0.9)translate(-100%, -50%);
+      transform: translateX(calc(-0.5 * var(--rootWidth)))translateX(3rem)scale(var(--scale, 1))scale(0.9)translate(-100%, -50%);
       
       img {
         filter: brightness(0.7)drop-shadow(0 0 2rem #0007);
@@ -711,7 +724,7 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
     &--prev.clue-viewer__image-container--transition-prev {
       img {
         transition: none;
-        transform: translateX(calc(var(--pageTransitionProgress) * var(--rootWidth) / (var(--scale) * var(--canvasScale))));
+        transform: scale(var(--imgScale, 1))translateX(calc(var(--pageTransitionProgress) * var(--rootWidth) / var(--canvasScale)));
       }
     }
 

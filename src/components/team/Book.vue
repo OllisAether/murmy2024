@@ -38,21 +38,25 @@
                 :src="page?.content"
                 class="book__page-wrapper__image"
               />
-              <Collectable
-                class="book__collectable"
-                :highlight="isTutorialMarkEntry && i === 0"
+              <template
                 v-for="(entry, index) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === i : true)"
                 :key="index"
-                :entryId="entry.entry.id"
-                :style="{
-                  pointerEvents: tutorial.isTutorial && !(isTutorialMarkEntry && i === 0) ? 'none' : '',
-                  'left': entry.rect.x * 100 + '%',
-                  'top': entry.rect.y * 100 + '%',
-                  'width': entry.rect.width * 100 + '%',
-                  'height': entry.rect.height * 100 + '%',
-                  transform: entry.rect.transform,
-                }"
-              />
+              >
+                <Collectable
+                  class="book__collectable"
+                  :highlight="isTutorialMarkEntry && i === 0"
+                  v-if="entry.entryId ?? entry.entry?.id"
+                  :entryId="(entry.entryId ?? entry.entry?.id)!"
+                  :style="{
+                    pointerEvents: tutorial.isTutorial && !(isTutorialMarkEntry && i === 0) ? 'none' : '',
+                    'left': entry.rect.x * 100 + '%',
+                    'top': entry.rect.y * 100 + '%',
+                    'width': entry.rect.width * 100 + '%',
+                    'height': entry.rect.height * 100 + '%',
+                    transform: entry.rect.transform,
+                  }"
+                />
+            </template>
             </template>
           </div>
         </Transition>

@@ -8,9 +8,17 @@
   }]">
     <VFadeTransition>
       <div class="home__timer" v-if="isTimer && !isBreak">
+        <div class="home__timer__next" v-if="game.phase.meta.next">
+          <template v-if="game.phase.meta.next === 'vote'">
+            Nächste Viewsrunde beginnt in
+          </template>
+        </div>
+
         <Timer />
       </div>
-      <div class="home__teamname" v-else-if="!mediaPlaying && !isBreak">
+    </VFadeTransition>
+    <VFadeTransition>
+      <div class="home__teamname" v-if="!mediaPlaying && !isBreak && !isInfo">
         {{ auth.team?.name }}
       </div>
     </VFadeTransition>
@@ -308,12 +316,26 @@ onBeforeUnmount(() => {
   }
 
   &__timer {
+    text-align: center;
     position: absolute;
-    top: calc(40vh - 22rem);
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     padding: 0 10vw;
-    font-size: 5vw;
+    font-size: 15vw;
+    
+    transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+
+    .home--info & {
+      font-size: 5vw;
+      top: calc(40vh - 22rem);
+      transform: translateX(-50%);
+    }
+
+    &__next {
+      font-size: 2rem;
+      margin-bottom: -4vw;
+    }
   }
 
   p {

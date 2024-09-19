@@ -273,25 +273,26 @@ export const Tutorial = (): Playback => ({
         options: {
           meta: {
             tutorial: {
-              action: 'markEntry'
+              action: 'markEntry',
+              entryId: 'max-planck-gymnasium'
             } satisfies TutorialState
           }
         }
       },
-      {
-        type: CueType.MarkEntryForAll,
-        options: {
-          entryId: 'camera1'
-        }
-      },
     { type: CueType.EndIf },
-
+    
     {
       type: CueType.WhenMediaAt,
       options: {
         time: 215_000
       }
     },
+      {
+        type: CueType.MarkEntryForAll,
+        options: {
+          entryId: 'camera1'
+        }
+      },
       {
         type: CueType.SetPhase,
         options: {

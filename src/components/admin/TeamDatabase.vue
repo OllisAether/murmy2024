@@ -19,7 +19,7 @@
                 :items="game.allEntries
                   .filter(entry => !admin.suspectDatabases[team.id]?.entries.find(e => e === entry.id))
                   .map(entry => ({
-                    title: `${entry.title} - ${entry.suspectId} (${entry.id})`,
+                    title: `${getRawText(entry.title)} - ${entry.suspectId} (${entry.id})`,
                     value: entry.id
                   }))"
                 label="Eintrag"
@@ -61,6 +61,7 @@ import DatabaseEntry from '@/components/admin/DatabaseEntry.vue';
 import { useAdmin } from '@/store/admin';
 import { ref } from 'vue';
 import { useGameManager } from '@/store/gameManager';
+import { getRawText } from '../../../shared/textContent';
 
 const admin = useAdmin()
 const game = useGameManager()

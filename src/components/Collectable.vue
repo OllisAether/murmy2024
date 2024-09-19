@@ -7,9 +7,8 @@
     }]"
     ref="root"
   >
-    <!-- @click="collected = !collected" -->
-    <!-- {{ collected }} -->
     <VIcon v-if="highlight && !collected" class="collectable--highlight__icon">mdi-gesture-tap</VIcon>
+
     <slot />
 
     <Teleport

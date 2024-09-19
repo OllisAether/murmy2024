@@ -118,7 +118,7 @@
           </template>
         </div>
         <div v-if="clue?.description" class="clue-card__clue-display__description">
-          {{ clue?.description }}
+          <TextContentRenderer :text-content="clue.description" />
         </div>
         <div class="clue-card__clue-display__actions">
           <div class="clue-card__clue-display__tooltip">
@@ -172,6 +172,7 @@ import TranscriptDisplay from './TranscriptDisplay.vue';
 import { useTutorial } from '@/store/team/tutorial';
 import NewBadge from '../NewBadge.vue';
 import HelpBtn from './HelpBtn.vue';
+import TextContentRenderer from '../TextContentRenderer.vue';
 
 const tutorial = useTutorial()
 const game = useGameManager()
