@@ -10,7 +10,7 @@ export const phoebe: Suspect = {
 export const phineas: Suspect = {
   id: 'phineas',
   name: 'Phineas X',
-  color: '#7dff04',
+  color: '#f89b44',
   imageAssetId: 'suspects/phoebe.webp',
 }
 
@@ -21,24 +21,31 @@ export const justin: Suspect = {
   imageAssetId: 'suspects/phoebe.webp',
 }
 
-export const delora: Suspect = {
-  id: 'delora',
-  name: 'X Delora',
-  color: '#c9cdec',
+export const ivy: Suspect = {
+  id: 'ivy',
+  name: 'Ivy Delora',
+  color: '#82f573',
   imageAssetId: 'suspects/phoebe.webp',
 }
 
 export const lehrer: Suspect = {
   id: 'lehrer',
   name: 'Lehrer',
-  color: '#5044f8',
+  color: '#61f0c3',
   imageAssetId: 'suspects/phoebe.webp',
 }
 
-export const okkult: Suspect = {
-  id: 'okkult',
-  name: 'Okkult Leader',
-  color: '#8940ff',
+export const cassandra: Suspect = {
+  id: 'cassandra',
+  name: 'Cassandra Novak',
+  color: '#9834b6',
+  imageAssetId: 'suspects/phoebe.webp',
+}
+
+export const orakel: Suspect = {
+  id: 'orakel',
+  name: 'Das Orakel',
+  color: '#d7a7ff',
   imageAssetId: 'suspects/phoebe.webp',
 }
 
@@ -46,9 +53,10 @@ export const suspects: Suspect[] = [
   phoebe,
   phineas,
   justin,
-  delora,
+  ivy,
   lehrer,
-  okkult,
+  cassandra,
+  orakel,
 ]
 
 export function getSuspectById(id: string) {

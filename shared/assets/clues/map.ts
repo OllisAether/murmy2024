@@ -1,10 +1,12 @@
 import { Clue } from '../../clue';
+import { bold, italic, textContent } from '../../textContent';
 
 export const map: Clue<'images'> = {
   type: 'images',
   id: 'map',
   cost: 10,
-  title: 'Stadtplan',
+  title: 'Stadtplan von Alt-Arborwinde',
+  description: textContent(['Der Stadtplan der kleinen Stadt ', bold(italic('Alt-Arborwinde')), '. Ein abgelegener, aber dennoch schöner Ort in Deutschland. Die seit ', italic('200'), ' Jahren bestehende Stadt hat eine Bevölkerung von gerade mal über ', italic('10.000'), ' Einwohnern und ist bekannt für ihre ruhige und ', italic('friedliche'), ' Atmosphäre.']),
   thumbnailAssetId: 'thumbnails/Map.webp',
   images: {
     assetIds: ['clues/Map.webp'],
@@ -21,7 +23,7 @@ export const map: Clue<'images'> = {
           id: 'max-planck-gymnasium',
           title: 'Max-Planck-Gymnasium',
           suspectId: 'general',
-          description: 'Die Schule, an der die meisten der Opfer studierten.',
+          description: 'Das Max-Planck-Gymnasium, ist das einzige Gymnasium der Stadt und liegt gegenüber des Tannen-Weiher Parks.',
         }
       },
 
@@ -37,7 +39,7 @@ export const map: Clue<'images'> = {
           id: 'polizeipräsidium',
           title: 'Polizeipräsidium',
           suspectId: 'general',
-          description: 'Der Ort, an dem die Ermittlungen geführt werden.',
+          description: 'Das Polizeipräsidium, in dem diese Ermittlung gerade stattfindet.',
         }
       },
 
@@ -53,7 +55,7 @@ export const map: Clue<'images'> = {
           id: 'klinikum',
           title: 'Klinikum',
           suspectId: 'general',
-          description: 'Das Krankenhaus, in dem die Opfer behandelt wurden.',
+          description: 'Das städtische Klilnikum befindet sich gegenüber des Polizeipräsidiums.',
         }
       },
 
@@ -69,7 +71,7 @@ export const map: Clue<'images'> = {
           id: 'park',
           title: 'Tannen-Weiher Park',
           suspectId: 'general',
-          description: 'Der Park, in dem die Leichen gefunden wurden.',
+          description: 'Der Tannen-Weiher Park befindet sich gegenüber dem Max-Planck-Gymnasium und besitzt ein See, ein Kinderspielplatz, ein Bolzplatz, ein Skatepark, ein Hundepark und eine große Wiese.',
         }
       },
 
@@ -85,10 +87,9 @@ export const map: Clue<'images'> = {
           id: 'wald',
           title: 'Stadtwald',
           suspectId: 'general',
-          description: 'Der Wald, in dem die Leichen gefunden wurden.',
+          description: 'Der Stadtwald ist ein großer Wald, der sich im Süd-Östlichen Teil der Stadt befindet. Es liegt eine abgelegene Holzfällerhütte mit einem kleinen See im Wald.',
         }
-      }
+      },
     ]
   },
-  description: 'Der Stadtplan von Larissa.',
 }
