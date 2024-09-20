@@ -21,6 +21,7 @@
       <div class="help-btn__tooltip">
         <div class="help-btn__tooltip__content">
           <div class="help-btn__tooltip__content__header">
+            <img class="help-btn__tooltip__content__img" :src="game.getAsset('suspects/orakel.webp')?.content">
             <VIcon class="help-btn__tooltip__content__header__icon">mdi-crystal-ball</VIcon>
             <div class="help-btn__tooltip__content__header__title">
               Orakel der Behilflichkeit
@@ -32,6 +33,7 @@
           </div>
 
           <slot />
+
         </div>
 
         <VIcon class="help-btn__icon help-btn__icon--shimmer">mdi-shimmer</VIcon>
@@ -52,12 +54,15 @@
 <script setup lang="ts">
 import { useTutorial } from '@/store/team/tutorial';
 import { ref } from 'vue';
+import { useGameManager } from '@/store/gameManager';
 
 declare const block: readonly ["top", "bottom"];
 declare const inline: readonly ["start", "end", "left", "right"];
 type Tblock = typeof block[number];
 type Tinline = typeof inline[number];
 type Anchor = Tblock | Tinline | 'center' | 'center center' | `${Tblock} ${Tinline | 'center'}` | `${Tinline} ${Tblock | 'center'}`;
+
+const game = useGameManager();
 
 defineProps<{
   maxWidth?: number;
@@ -131,6 +136,7 @@ const tutorial = useTutorial()
       padding: 1.5rem;
       // font-size: 1.2rem;
       line-height: 1.5;
+      overflow: hidden;
 
       &__header {
         margin-bottom: 1rem;
@@ -163,6 +169,17 @@ const tutorial = useTutorial()
         }
       }
 
+      &__img {
+        z-index: -1;
+        opacity: .2;
+        position: absolute;
+        bottom: -2rem;
+        right: 0;
+        transform: translateX(30%);
+        width: 20rem;
+        filter: blur(.2rem);
+      }
+
       :deep(.help-color) {
         color: #d8b1ff;
         text-shadow: 0 0 .5rem #9123ff;
@@ -171,6 +188,7 @@ const tutorial = useTutorial()
   }
 
   &__icon {
+    z-index: 1;
     position: absolute;
     font-size: 3rem;
     color: #d8b1ff;

@@ -45,7 +45,7 @@
                 <Collectable
                   class="book__collectable"
                   :highlight="isTutorialMarkEntry && i === 0"
-                  v-if="entry.entryId ?? entry.entry?.id"
+                  v-if="(entry.entryId ?? entry.entry?.id) && currentPage === entry.index"
                   :entryId="(entry.entryId ?? entry.entry?.id)!"
                   :style="{
                     pointerEvents: tutorial.isTutorial && !(isTutorialMarkEntry && i === 0) ? 'none' : '',
@@ -245,7 +245,7 @@ const isTutorialMarkEntry = computed(() => tutorial.state.action === 'markEntry'
       filter: brightness($brightness)blur($blur);
     }
 
-    &:not(&--current) {
+    &:not(.book__page-wrapper--current) {
       pointer-events: none;
     }
 

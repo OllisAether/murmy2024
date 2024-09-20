@@ -5,9 +5,9 @@ export const schülerakteKopelius: Clue<'images'> = {
   id: 'schuelerakteKopelius',
   cost: 10,
   title: 'Schülerakte von Kopelius',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
@@ -16,9 +16,9 @@ export const schüleraktePhoebe: Clue<'images'> = {
   id: 'schueleraktePhoebe',
   cost: 10,
   title: 'Schülerakte von Phoebe',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
@@ -27,9 +27,9 @@ export const schülerakteCassandra: Clue<'images'> = {
   id: 'schuelerakteCassandra',
   cost: 10,
   title: 'Schülerakte von Cassandra',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
@@ -38,9 +38,9 @@ export const schülerakteIvy: Clue<'images'> = {
   id: 'schuelerakteIvy',
   cost: 10,
   title: 'Schülerakte von Ivy',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
@@ -50,8 +50,8 @@ export const schüleraktePhineas: Clue<'images'> = {
   id: 'schueleraktePhineas',
   cost: 10,
   title: 'Schülerakte von Phineas',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }

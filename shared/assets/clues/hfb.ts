@@ -5,9 +5,9 @@ export const hfbChloroformTuch: Clue<'images'> = {
   id: 'hfbChloroformTuch',
   cost: 10,
   title: 'Hinweisfundbericht: Chloroformtuch',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
@@ -16,8 +16,8 @@ export const hfbDolch: Clue<'images'> = {
   id: 'hfbDolch',
   cost: 10,
   title: 'Hinweisfundbericht: Dolch',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.png',
+  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-01.png'],
+    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }

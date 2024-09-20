@@ -86,7 +86,7 @@ export const liebesRitual: Clue<'images'> = {
         },
         entry: {
           id: 'stirb-einer-folgt-der-andere',
-          title: '„Stirb einer, folgt der andere“',
+          title: italic('„Stirb einer, folgt der andere“'),
           description: 'Nach dem Ritual ist das Leben der beiden Liebenden untrennbar miteinander verbunden. Stirbt einer, so folgt der andere.\n\nDoch ist das wirklich wahr?',
           suspectId: 'orakel',
         },

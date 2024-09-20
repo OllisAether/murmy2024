@@ -9,7 +9,7 @@ export const phoebe: Suspect = {
 
 export const phineas: Suspect = {
   id: 'phineas',
-  name: 'Phineas X',
+  name: 'Phineas Musé',
   color: '#f89b44',
   imageAssetId: 'suspects/phoebe.webp',
 }
@@ -29,8 +29,8 @@ export const ivy: Suspect = {
 }
 
 export const lehrer: Suspect = {
-  id: 'lehrer',
-  name: 'Lehrer',
+  id: 'montague',
+  name: 'Hugo Montague',
   color: '#61f0c3',
   imageAssetId: 'suspects/phoebe.webp',
 }
@@ -46,7 +46,7 @@ export const orakel: Suspect = {
   id: 'orakel',
   name: 'Das Orakel',
   color: '#d7a7ff',
-  imageAssetId: 'suspects/phoebe.webp',
+  imageAssetId: 'suspects/orakel.webp',
 }
 
 export const suspects: Suspect[] = [
