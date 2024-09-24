@@ -18,7 +18,7 @@
       </div>
     </VFadeTransition>
     <VFadeTransition>
-      <div class="home__teamname" v-if="!mediaPlaying && !isBreak && !isInfo">
+      <div class="home__teamname" v-if="!mediaPlaying && !isBreak && !(isTimer && isInfo)">
         {{ auth.team?.name }}
       </div>
     </VFadeTransition>
