@@ -6,14 +6,14 @@ export const rituale: Clue<'images'> = {
   id: 'rituale',
   cost: 10,
   title: 'Rituale',
-  thumbnailAssetId: 'clues/Ritual3.webp',
+  thumbnailAssetId: 'thumbnails/Rituale.webp',
   description: 'Verschiedene voll gekritzelte Blätter mit Ritualen aus dem Okkultclub-Raum.',
   images: {
     assetIds: [
-      'clues/Ritual3.webp',
       'clues/Ritual4.webp',
+      'clues/Ritual5.webp',
+      'clues/Ritual3.webp',
       'clues/Ritual2.webp',
-      'clues/Ritual1.webp',
     ],
     entries: [
       {
@@ -70,11 +70,11 @@ export const liebesRitual: Clue<'images'> = {
   id: 'liebesRitual',
   cost: 10,
   title: 'Ritual der ewigen Liebe',
-  thumbnailAssetId: 'clues/Ritual5.webp',
+  thumbnailAssetId: 'thumbnails/Ritual1.webp',
   description: 'Ein verkritzeltes Blatt mit einem Ritual der ewigen Liebe.',
   images: {
     assetIds: [
-      'clues/Ritual5.webp',
+      'clues/Ritual1.webp',
     ],
     entries: [
       {
