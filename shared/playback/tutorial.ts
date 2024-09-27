@@ -290,7 +290,7 @@ export const Tutorial = (): Playback => ({
       {
         type: CueType.MarkEntryForAll,
         options: {
-          entryId: 'camera1'
+          entryId: 'max-planck-gymnasium'
         }
       },
       {

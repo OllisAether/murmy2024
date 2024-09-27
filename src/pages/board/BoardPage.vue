@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
-import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue';
+import { onBeforeMount, onUnmounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
 import { useGameManager } from '@/store/gameManager';
@@ -182,14 +182,6 @@ function tap () {
 function logout () {
   auth.logout()
 }
-
-onMounted(() => {
-  game.initGameManager()
-
-  onBeforeUnmount(() => {
-    game.deinitGameManager()
-  })
-})
 
 onBeforeMount(() => {
   game.wakelockShouldBeActive = true

@@ -236,10 +236,9 @@ router.beforeEach(async (to, _, next) => {
 
 router.beforeEach(async (to, _, next) => {
   const auth = useAuthManager()
+  const game = useGameManager()
 
-  if (auth.role === Role.Team) {
-    const game = useGameManager()
-
+  if (auth.role === Role.Team || auth.role === Role.Board) {
     if (!game.initialized || game.loading) {
       console.log("Waiting for game to load")
       if (!game.initialized) {
@@ -255,7 +254,9 @@ router.beforeEach(async (to, _, next) => {
         }, { immediate: true})
       })
     }
+  }
 
+  if (auth.role === Role.Team) {
     console.log("Phase check", to.meta.phase, game.phase.type)
 
     if (to.meta.phase && Array.isArray(to.meta.phase)
