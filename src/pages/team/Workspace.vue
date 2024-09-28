@@ -4,10 +4,10 @@
       'workspace--tutorial': tutorial.isTutorial,
       'workspace--tutorial-unlockClue': isTutorialUnlockClue
     }]">
-      <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" />
+      <SuspectDatabase class="workspace__sus-db" v-model:open="databaseExpanded" v-if="!showClue" />
 
       <div class="workspace__main" ref="workspace">
-        <div class="workspace__indicators">
+        <div class="workspace__indicators" v-if="!showClue">
           <div class="workspace__indicators__left">
             <!-- <VExpandXTransition style="transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); transition-duration: .75s;">
               <div class="workspace__timer-wrapper" v-if="!databaseExpanded">
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <BlurGradient class="workspace__blur-gradient" />
+        <!-- <BlurGradient class="workspace__blur-gradient" /> -->
 
         <div class="workspace__scroller" ref="scroller">
           <div class="workspace__content">
@@ -82,6 +82,7 @@
                   v-for="(clue, i) in game.clues.available"
                   :key="clue"
                   :clueId="clue"
+                  :closable="!showClue"
                   v-model:showClue="showClues[clue]"
                   v-model:showBuyConfirmation="showBuyConfirmations[clue]"
                   :highlight="isTutorialUnlockClue && i === 0 && !showClues[clue]"
@@ -206,6 +207,11 @@ const shouldScrollToBottom = computed(() => {
   return isTutorialUnlockClue.value || tutorial.state.highlight === 'clues' || isTutorialMarkEntry.value;
 });
 
+const showClue = computed(() => {
+  return game.phase.meta.showClue ?? null;
+});
+
+
 onMounted(() => {
   watch(shouldScrollToBottom, (scrollToBottom) => {
     if (scrollToBottom) {
@@ -240,6 +246,14 @@ onMounted(() => {
       showBuyConfirmations.value = {};
     }
   }, { immediate: true, deep: true });
+
+  watch(showClue, (show) => {
+    if (show) {
+      showClues.value = {
+        [show]: true
+      }
+    }
+  }, { immediate: true });
 })
 // #endregion
 </script>

@@ -145,6 +145,7 @@
             </div>
           </div>
           <Btn
+            v-if="closable"
             @click="showClue = false"
             color="#A23946"
             :style="{
@@ -182,7 +183,8 @@ const props = defineProps<{
   showBuyConfirmation?: boolean;
   clueId?: string;
   transcript?: Transcript,
-  highlight?: boolean
+  highlight?: boolean,
+  closable?: boolean
 }>();
 
 const emit = defineEmits<{

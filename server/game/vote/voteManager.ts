@@ -1,7 +1,7 @@
 import { Game } from '../game'
 import { VoteOption, VoteResults, VoteSession } from '../../../shared/vote'
 import { Database } from '../../database'
-import { JsonMap } from '../../../shared/json'
+import { voteOptions } from '../../../shared/assets/voteOptions'
 import { colorize, Fg } from '../../console'
 
 export interface OpenVoteOptions {
@@ -12,7 +12,7 @@ export interface OpenVoteOptions {
 }
 
 export class VoteManager {
-  private voteOptions: VoteOption[] = []
+  private voteOptions: VoteOption[] = voteOptions
   private pools: Record<string, Set<string>> = {}
   private activeSession: VoteSession | null = null
   // private voteHistory: VoteSession[] = []
@@ -42,11 +42,11 @@ export class VoteManager {
   }
 
   loadVoteOptions () {
-    const data = Database.get().getCollection('voteOptions')
+    // const data = Database.get().getCollection('voteOptions')
 
-    if (data) {
-      this.voteOptions = (data.voteOptions as VoteOption[]) ?? []
-    }
+    // if (data) {
+    //   this.voteOptions = (data.voteOptions as VoteOption[]) ?? []
+    // }
   }
 
   loadPools () {

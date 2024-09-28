@@ -2,20 +2,12 @@ import { JsonContent, JsonMap } from "../../../shared/json";
 import { Cue } from "../../../shared/cue/Cue";
 import { CueHandle } from "./CueHandle";
 import { FieldReference } from "../../../shared/cue/FieldRefrence";
-import { Idle } from "../../../shared/playback/idle";
-import { Vote } from "../../../shared/playback/vote";
-import { Work } from "../../../shared/playback/work";
 import { Playback } from "../../../shared/playback/Playback";
 import { getHandle } from "./registeredCueTypes";
 import { Game } from "../game";
 import { Database } from "../../database";
-import { AddInvestigationCoins } from "../../../shared/playback/investigationCoins";
-import { Media } from "../../../shared/playback/media";
-import { VoteMainClue } from "../../../shared/playback/voteMainClue";
 import { colorize, Fg } from "../../console";
-import { Tutorial } from "../../../shared/playback/tutorial";
-import { ClearAllForms, FilloutForms } from "../../../shared/playback/forms";
-import { ShowNewClues } from "../../../shared/playback/showNewClues";
+import { playbacks } from "../../../shared/assets/playbacks";
 
 export class CueManager {
   currentPlayback: Playback | null = null
@@ -28,59 +20,7 @@ export class CueManager {
 
   private playbacks: (Playback | {
     divider: string
-  })[] = [
-    { divider: '=== Prolog ===' },
-
-    { divider: '- Einlass -' },
-
-    Idle(0, {
-      info: true
-    }),
-    Idle(30_000, {
-      info: true
-    }),
-
-    { divider: '- Prolog -' },
-
-    Tutorial(),
-
-    { divider: '- Akt 1 -' },
-
-    Vote(),
-    Media(),
-    ShowNewClues(),
-
-    AddInvestigationCoins(10),
-    Work(),
-    Idle(10_000, {
-      next: 'vote'
-    }),
-    Vote(),
-
-    { divider: '=== Interlude ===' },
-
-    Idle(),
-
-    { divider: '=== Pause ===' },
-    Idle(15 * 60_000, {
-      break: true
-    }),
-    Idle(),
-
-    { divider: '=== Finale ===' },
-
-    ClearAllForms(),
-    FilloutForms(),
-    Idle(0, {
-      end: true
-    }),
-
-    { divider: '=== Epilog ===' },
-
-    Idle(0, {
-      results: true
-    }),
-  ]
+  })[] = playbacks
 
   public save () {
     Database.get().saveCollection('playbacks', {
