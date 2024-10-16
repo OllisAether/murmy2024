@@ -32,14 +32,14 @@ export const lehrer: Suspect = {
   id: 'montague',
   name: 'Hugo Montague',
   color: '#61f0c3',
-  imageAssetId: 'suspects/phoebe.webp',
+  imageAssetId: 'suspects/Hugo1.png',
 }
 
 export const cassandra: Suspect = {
   id: 'cassandra',
   name: 'Cassandra Novak',
   color: '#9834b6',
-  imageAssetId: 'suspects/phoebe.webp',
+  imageAssetId: 'suspects/Cassy1.png',
 }
 
 export const orakel: Suspect = {

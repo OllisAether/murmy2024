@@ -126,7 +126,6 @@
 </template>
 
 <script setup lang="ts">
-import BlurGradient from '@/components/BlurGradient.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
 import FormCard from '@/components/team/FormCard.vue';
