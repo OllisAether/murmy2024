@@ -1,10 +1,10 @@
 import { Clue } from "../../clue";
 
-export const polizeilichesFührungszeugnis: Clue<'images'> = {
+export const polizeilichesFuehrungszeugnis: Clue<'images'> = {
   type: 'images',
-  id: 'polizeilichesFührungszeugnis',
-  cost: 10,
-  title: 'Polizeiliches Führungszeugnis von Hr. Montague',
+  id: 'polizeilichesFuehrungszeugnis',
+  cost: 20,
+  title: 'Polizeiliches Führungszeugnis von Hugo Montague',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
     assetIds: ['clues/kursbuch/Kursbuch-21.webp'],

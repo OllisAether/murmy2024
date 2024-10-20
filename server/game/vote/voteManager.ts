@@ -118,6 +118,7 @@ export class VoteManager {
     console.log(colorize('[VoteManager]', Fg.Green), `Remove options from pool ${pool}`, option)
 
     if (!this.pools[pool]) {
+      console.error(colorize('[VoteManager]', Fg.Green), 'Pool not found')
       return
     }
 
@@ -196,6 +197,7 @@ export class VoteManager {
       open: true,
       paused: opt.pauseOnOpen || false,
       pool: opt.pool,
+      candidateIds: Array.from(this.pools[opt.pool]),
 
       title: opt.title ?? undefined,
 
@@ -536,8 +538,8 @@ export class VoteManager {
       )
     } else {
       votes = Object.fromEntries(
-        (Array.from(this.pools[this.activeSession.pool]) as string[])
-        .map((optionId) => [optionId, this.activeSession!.votes[optionId]?.length || 0])
+        this.activeSession.candidateIds
+          .map((optionId) => [optionId, this.activeSession!.votes[optionId]?.length || 0])
       )
     }
 

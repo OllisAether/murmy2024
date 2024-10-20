@@ -3,7 +3,7 @@ import { Clue } from "../../clue";
 export const hfbChloroformTuch: Clue<'images'> = {
   type: 'images',
   id: 'hfbChloroformTuch',
-  cost: 10,
+  cost: 20,
   title: 'Hinweisfundbericht: Chloroformtuch',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
@@ -14,7 +14,7 @@ export const hfbChloroformTuch: Clue<'images'> = {
 export const hfbDolch: Clue<'images'> = {
   type: 'images',
   id: 'hfbDolch',
-  cost: 10,
+  cost: 20,
   title: 'Hinweisfundbericht: Dolch',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {

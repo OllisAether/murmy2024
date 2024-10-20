@@ -101,6 +101,7 @@ function getSpeakerColor(line: TranscriptLine) {
       color: speakerObj.color ?? s?.color,
       flipAvatar: speakerObj.flipAvatar ?? s?.flipAvatar,
       alignment: speakerObj.alignment ?? s?.alignment,
+      avatarAssetId: speakerObj.avatarAssetId ?? s?.avatarAssetId
     }
   }
 
@@ -158,11 +159,11 @@ function getSpeakerColor(line: TranscriptLine) {
     }
 
     .transcript-line--second &:not(&--second) {
-      padding-right: 0;
+      padding-right: .25rem;
     }
 
     .transcript-line--second &--second {
-      padding-left: 0;
+      padding-left: .25rem;
     }
   }
 
@@ -174,7 +175,12 @@ function getSpeakerColor(line: TranscriptLine) {
     display: flex;
     gap: 1rem;
     align-items: center;
-    padding: 2rem 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    
+    .transcript-line--directive + & {
+      margin-top: -2rem;
+    }
 
     &::before, &::after {
       content: '';

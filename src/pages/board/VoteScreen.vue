@@ -74,7 +74,7 @@ import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import SkewBox from '@/components/SkewBox.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed, onMounted, onUnmounted, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { VoteOption } from '../../../shared/vote';
 import { useAudio } from '@/store/board/audio';
 
@@ -127,6 +127,8 @@ const audioVote = new Audio(game.getAsset('sounds/vote/vote.mp3')?.content ?? ''
 const audioVoteEnd = new Audio(game.getAsset('sounds/vote/vote_end.mp3')?.content ?? '')
 const audioVoteTiebreaker = new Audio(game.getAsset('sounds/vote/vote_tiebreaker.mp3')?.content ?? '')
 
+const playedEnd = ref(false)
+
 watch(nextTiebreaker, (value) => {
   if (value) {
     if (31 - audioVote.currentTime > 0.5) {
@@ -158,14 +160,20 @@ watch(showWinner, (value) => {
   if (value) {
     if (audioVoteTiebreaker.currentTime > 0) {
       if (14 - audioVoteTiebreaker.currentTime > 0.5) {
-        audioVoteEnd.currentTime = 0
-        audioVoteEnd.play()
+        if (!playedEnd.value) {
+          audioVoteEnd.currentTime = 0
+          audioVoteEnd.play()
+          playedEnd.value = true
+        }
 
         audio.fade(audioVoteTiebreaker, 500)
       }
     } else if (31 - audioVote.currentTime > 0.5) {
-      audioVoteEnd.currentTime = 0
-      audioVoteEnd.play()
+        if (!playedEnd.value) {
+          audioVoteEnd.currentTime = 0
+          audioVoteEnd.play()
+          playedEnd.value = true
+        }
       
       audio.fade(audioVote, 500)
     }

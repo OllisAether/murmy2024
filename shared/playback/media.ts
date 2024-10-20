@@ -5,7 +5,7 @@ import { Playback } from "./Playback";
 
 export function Media (media?: string | FieldReference): Playback {
   return {
-    name: 'Medien abspielen',
+    name: typeof media === 'string' ? media : 'Medien abspielen',
     trigger: 'auto',
     cues: [
       {

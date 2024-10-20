@@ -4,7 +4,7 @@ import { italic } from "../../textContent";
 export const rituale: Clue<'images'> = {
   type: 'images',
   id: 'rituale',
-  cost: 10,
+  cost: 20,
   title: 'Rituale',
   thumbnailAssetId: 'thumbnails/Rituale.webp',
   description: 'Verschiedene voll gekritzelte Blätter mit Ritualen aus dem Okkultclub-Raum.',
@@ -68,7 +68,7 @@ export const rituale: Clue<'images'> = {
 export const liebesRitual: Clue<'images'> = {
   type: 'images',
   id: 'liebesRitual',
-  cost: 10,
+  cost: 20,
   title: 'Ritual der ewigen Liebe',
   thumbnailAssetId: 'thumbnails/Ritual1.webp',
   description: 'Ein verkritzeltes Blatt mit einem Ritual der ewigen Liebe.',

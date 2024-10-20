@@ -6,7 +6,8 @@
       'clue-card--affordable': isAffordable,
       'clue-card--confirmation': showBuyConfirmation,
       'clue-card--open': showClue,
-      'clue-card--highlight': highlight
+      'clue-card--highlight': highlight,
+      'clue-card--transcript': transcript
     }]"
   >
     <button
@@ -17,14 +18,13 @@
       }"
     >
       <VIcon v-if="highlight && !showBuyConfirmation" class="clue-card--highlight__icon">mdi-gesture-tap</VIcon>
-      <SkewBox color="#fff2" :corner-cut="12" />
+      <SkewBox color="#ffffff18" :corner-cut="12" :img="transcript ? game.getAsset(transcript.thumbnailAssetId)?.content : null" />
 
       <template v-if="isUnlocked">
         <img
+          v-if="!transcript"
           class="clue-card__thumbnail"
-          :src="transcript
-            ? game.getAsset(transcript.thumbnailAssetId)?.content
-            : game.getAsset(clue?.thumbnailAssetId)?.content"
+          :src="game.getAsset(clue?.thumbnailAssetId)?.content"
         >
       </template>
       <template v-else-if="clue">
@@ -236,6 +236,7 @@ function openClue() {
 
 <style lang="scss" scoped>
 @use '@/scss/vars' as *;
+@use 'sass:math';
 
 .clue-card {
   min-width: 8rem;
@@ -316,7 +317,7 @@ function openClue() {
   }
 
   &__content {
-    aspect-ratio: .9;
+    aspect-ratio: math.div(5, 8 * .8);
     width: 100%;
     position: relative;
     transform-origin: bottom center;
@@ -329,8 +330,11 @@ function openClue() {
     & > :deep(.skew-box) {
       position: absolute;
       inset: 0;
-      opacity: .5;
       z-index: -1;
+    }
+
+    .clue-card--transcript & {
+      aspect-ratio: 5 / 8;
     }
   }
   

@@ -54,6 +54,7 @@
                   v-for="transcript in game.availableTranscripts"
                   :key="transcript.id"
                   :transcript="transcript"
+                  :closable="true"
                 />
               </div>
 

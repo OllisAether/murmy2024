@@ -4,7 +4,7 @@ import { bold, italic, textContent } from '../../textContent';
 export const map: Clue<'images'> = {
   type: 'images',
   id: 'map',
-  cost: 10,
+  cost: 20,
   title: 'Stadtplan von Alt-Arborwinde',
   description: textContent(['Der Stadtplan der kleinen Stadt ', bold(italic('Alt-Arborwinde')), '. Ein abgelegener, aber dennoch schöner Ort in Deutschland. Die seit ', italic('200'), ' Jahren bestehende Stadt hat eine Bevölkerung von gerade mal über ', italic('10.000'), ' Einwohnern und ist bekannt für ihre ruhige und ', italic('friedliche'), ' Atmosphäre.']),
   thumbnailAssetId: 'thumbnails/Map.webp',

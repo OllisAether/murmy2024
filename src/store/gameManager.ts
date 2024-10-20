@@ -13,7 +13,7 @@ import { clues as cluesAsset } from "@/../shared/assets/clues/index";
 import { getEntries } from "../../shared/textContent";
 import { gallery } from "../../shared/assets/phone/gallery";
 import { chats } from "../../shared/assets/phone/chats";
-import { transcripts } from "../../shared/assets/transcripts";
+import { transcripts } from "../../shared/assets/transcripts/index";
 import { FormFieldValue } from "../../shared/form";
 import { notes } from "../../shared/assets/phone/notes";
 import { diaryEntries } from "../../shared/assets/diary/entries";

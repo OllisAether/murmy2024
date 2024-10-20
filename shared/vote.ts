@@ -22,6 +22,7 @@ export interface VoteSession extends JsonMap {
   open: boolean
   paused: boolean
   pool: string
+  candidateIds: string[]
 
   title?: string
   autoClose: boolean

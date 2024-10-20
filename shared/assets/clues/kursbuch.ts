@@ -4,7 +4,7 @@ export const kursbuch: Clue<'book'> = {
   type: 'book',
   id: 'kursbuch',
 
-  cost: 10,
+  cost: 20,
   title: 'Kursbuch',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-01.webp',
   images: {
@@ -87,7 +87,7 @@ export const kursbuch: Clue<'book'> = {
           id: 'beurlaubung',
           title: 'Beurlaubung vom 10.12. bis 14.12.2012',
           description: 'Herr Montague war vom 10.12. bis 14.12.2012 beurlaubt.',
-          suspectId: 'montague',
+          suspectId: 'hugo',
         }
       },
       {

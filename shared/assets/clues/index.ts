@@ -3,9 +3,9 @@ import { besucherliste } from './besucherliste';
 import { hfbChloroformTuch, hfbDolch } from './hfb';
 import { kursbuch } from './kursbuch';
 import { map } from './map';
-import { polizeilichesFührungszeugnis } from './polizeilichesFührungszeugnis';
+import { polizeilichesFuehrungszeugnis } from './polizeilichesFuehrungszeugnis';
 import { liebesRitual, rituale } from './rituale';
-import { schülerakteCassandra, schülerakteIvy, schülerakteKopelius, schüleraktePhineas, schüleraktePhoebe } from './schülerakte';
+import { schuelerakteCassandra, schuelerakteIvy, schuelerakteKopelius, schueleraktePhineas, schueleraktePhoebe } from './schuelerakte';
 import { spurensicherungIvy, spurensicherungPhineas } from './spurensicherung';
 import { stundenplan } from './stundenplan';
 import { todesurkundeElena, todesurkundeIvy } from './todesurkunde';
@@ -21,25 +21,25 @@ export const clues: Clue<ClueTypes>[] = [
   todesurkundeIvy,
 
   // Schülerakten
-  schülerakteKopelius,
-  schüleraktePhoebe,
-  schülerakteCassandra,
-  schülerakteIvy,
-  schüleraktePhineas,
+  schuelerakteKopelius,
+  schueleraktePhoebe,
+  schuelerakteCassandra,
+  schuelerakteIvy,
+  schueleraktePhineas,
 
   // Spurensicherungen
-  spurensicherungIvy,
-  spurensicherungPhineas,
+  spurensicherungIvy, // TODO
+  spurensicherungPhineas, // TODO
 
   // Hinweisfundberichte
-  hfbChloroformTuch,
-  hfbDolch,
+  hfbChloroformTuch, // TODO
+  hfbDolch, // TODO
 
   // Sonstige
   map,
-  polizeilichesFührungszeugnis,
+  polizeilichesFuehrungszeugnis, // TODO
   kursbuch,
-  besucherliste,
+  besucherliste, // TODO
   stundenplan,
   zeitung
 ]

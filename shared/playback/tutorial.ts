@@ -5,7 +5,7 @@ import { TutorialState } from "../tutorial";
 import { Playback } from "./Playback";
 
 export const Tutorial = (): Playback => ({
-  name: 'Tutorial (Arbeitsphase)',
+  name: 'Tutorial',
   trigger: 'auto',
   cues: [
     // Setup
