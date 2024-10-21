@@ -12,19 +12,10 @@ export const schuelerakteKopelius: Clue<'images'> = {
     entries: [
       {
         rect: {
-          x: 0.2874322916666667,
-          y: 0.6232383578431373,
-          width: 0.6211927083333333,
-          height: 0.1851780185758514,
-        },
-        entryId: 'justin-problemschueler',
-      },
-      {
-        rect: {
-          x: 0.29073958333333333,
-          y: 0.4325375709494324,
-          width: 0.34446354166666665,
-          height: 0.05692482585139319,
+          x: 0.2854528635778636,
+          y: 0.43142447657028915,
+          width: 0.6466377091377091,
+          height: 0.3756153414755733,
         },
         entryId: 'justin-problemschueler',
       },

@@ -1,9 +1,9 @@
 import { Clue, ClueTypes } from '../../clue';
 import { besucherliste } from './besucherliste';
-import { hfbChloroformTuch, hfbDolch } from './hfb';
+import { bfbChloroformTuch, bfbDolch } from './bfb';
 import { kursbuch } from './kursbuch';
 import { map } from './map';
-import { polizeilichesFuehrungszeugnis } from './polizeilichesFuehrungszeugnis';
+import { fuehrungszeugnis } from './fuehrungszeugnis';
 import { liebesRitual, rituale } from './rituale';
 import { schuelerakteCassandra, schuelerakteIvy, schuelerakteKopelius, schueleraktePhineas, schueleraktePhoebe } from './schuelerakte';
 import { spurensicherungIvy, spurensicherungPhineas } from './spurensicherung';
@@ -32,14 +32,14 @@ export const clues: Clue<ClueTypes>[] = [
   spurensicherungPhineas, // TODO
 
   // Hinweisfundberichte
-  hfbChloroformTuch, // TODO
-  hfbDolch, // TODO
+  bfbChloroformTuch, // TODO
+  bfbDolch, // TODO
 
   // Sonstige
   map,
-  polizeilichesFuehrungszeugnis, // TODO
+  fuehrungszeugnis, // TODO
   kursbuch,
-  besucherliste, // TODO
+  besucherliste,
   stundenplan,
   zeitung
 ]

@@ -4,12 +4,21 @@
       :src="game.getAsset('diary/Stiches.webp')?.content"
       class="back-cover-back__image"
     />
+
+    <Collectable
+      :entry-id="'phineas-kindheitsfoto'"
+      class="back-cover-back__polaroid"
+    >
+      <img :src="game.getAsset('Kindheitsfoto.webp')?.content" />
+    </Collectable>
+    <div class="back-cover-back__tape"></div>
   </Page>
 </template>
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import Page from '../Page.vue';
+import Collectable from '@/components/Collectable.vue';
 
 defineProps<{
   pageNumber: number,
@@ -36,19 +45,38 @@ const game = useGameManager()
 
   border-radius: .5rem 2rem 2rem .5rem !important;
 
-  &__sticky {
-    position: absolute;
-    top: 40%;
-    left: 45%;
-    transform: translate(-50%, -50%)rotate(-5deg);
-  }
-
   &__image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  &__tape {
+    position: absolute;
+    top: 18rem;
+    left: 22rem;
+    transform: rotate(1deg);
+    width: 15rem;
+    height: 5rem;
+    
+    background: linear-gradient(#fff9, #fff2);
+    box-shadow: 0 0 1rem #0003;
+  }
+
+  &__polaroid {
+    position: absolute;
+    top: 20rem;
+    left: 8rem;
+    transform: rotate(3deg);
+    width: 40rem;
+
+    img {
+      display: block;
+      width: 100%;
+      box-shadow: 0 3rem 2rem #0003;
+    }
   }
 }
 </style>

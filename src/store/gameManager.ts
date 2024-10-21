@@ -813,6 +813,10 @@ export const useGameManager = defineStore('gameManager', () => {
           })
         }
       })
+
+      if (chat.entry && typeof chat.entry !== 'string') {
+        entries.push(chat.entry)
+      }
     })
 
     notes.forEach((note) => {

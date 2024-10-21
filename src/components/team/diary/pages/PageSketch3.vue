@@ -1,5 +1,11 @@
 <template>
   <Page>
+    <template #date>
+      10.12.2012
+    </template>
+    <template #text>
+      Zeit was zu zeichnen!
+    </template>
     <img :src="game.getAsset('diary/Sketch4.webp')?.content">
   </Page>
 </template>

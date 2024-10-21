@@ -4,7 +4,7 @@ export const stundenplan: Clue<'images'> = {
   type: 'images',
   id: 'stundenplan',
   cost: 20,
-  title: 'Stundenplan von Hr. Montague',
+  title: 'Stundenplan von Hugo Montague',
   thumbnailAssetId: 'thumbnails/Stundenplan.webp',
   images: {
     assetIds: ['clues/Stundenplan.webp'],

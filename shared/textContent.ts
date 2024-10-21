@@ -16,7 +16,7 @@ export interface TextContent {
   css?: {
     [key: string]: string
   },
-  entry?: Entry
+  entry?: Entry | string
   content: (string | TextContent)[]
 }
 
@@ -26,7 +26,7 @@ export function textContent(content: (TextContent | string)[]): TextContent {
   }
 }
 
-export function entry(entry: Entry | undefined | null, content: TextContent | string): TextContent | string {
+export function entry(entry: Entry | string | undefined | null, content: TextContent | string): TextContent | string {
   if (!entry) {
     return content
   }
@@ -235,14 +235,28 @@ export function getRawText (text: TextContent | string): string {
 
   return text.content.map(getRawText).join('')
 }
+
 export function getEntries (text: TextContent | string): Entry[] {
   if (typeof text === 'string') {
     return []
   }
 
-  if (text.entry) {
+  if (text.entry && typeof text.entry !== 'string') {
     return [text.entry, ...text.content.flatMap(getEntries)]
   }
 
   return [...text.content.flatMap(getEntries)]
+}
+
+export function getEntryIds (text: TextContent | string): string[] {
+  if (typeof text === 'string') {
+    return []
+  }
+
+  if (text.entry) {
+    const id = typeof text.entry === 'string' ? text.entry : text.entry.id
+    return [id, ...text.content.flatMap(getEntryIds)]
+  }
+
+  return [...text.content.flatMap(getEntryIds)]
 }

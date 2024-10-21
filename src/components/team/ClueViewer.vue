@@ -118,23 +118,27 @@
                       (rootWidth - 16 * 6) / asset.metadata.width),
                   }">
                   <template
-                    v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === (assets.length - index - 1) : true)"
-                    :key="i"
+                    v-if="(assets.length - index - 1) === currentPage"
                   >
-                    <Collectable
-                      class="clue-viewer__collectable"
-                      :highlight="isTutorialMarkEntry && tutorial.state.entryId === (entry.entryId ?? entry.entry?.id)"
-                      v-if="entry.entryId ?? entry.entry?.id"
-                      :entryId="(entry.entryId ?? entry.entry?.id)!"
-                      :style="{
-                        pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
-                        'left': entry.rect.x * 100 + '%',
-                        'top': entry.rect.y * 100 + '%',
-                        'width': entry.rect.width * 100 + '%',
-                        'height': entry.rect.height * 100 + '%',
-                        transform: entry.rect.transform,
-                      }"
-                    />
+                    <template
+                      v-for="(entry, i) in entries?.filter(e => (e.index !== undefined && e.index !== null) ? e.index === (assets.length - index - 1) : true)"
+                      :key="i"
+                    >
+                      <Collectable
+                        class="clue-viewer__collectable"
+                        :highlight="isTutorialMarkEntry && tutorial.state.entryId === (entry.entryId ?? entry.entry?.id)"
+                        v-if="entry.entryId ?? entry.entry?.id"
+                        :entryId="(entry.entryId ?? entry.entry?.id)!"
+                        :style="{
+                          pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
+                          'left': entry.rect.x * 100 + '%',
+                          'top': entry.rect.y * 100 + '%',
+                          'width': entry.rect.width * 100 + '%',
+                          'height': entry.rect.height * 100 + '%',
+                          transform: entry.rect.transform,
+                        }"
+                      />
+                    </template>
                   </template>
                 </div>
               </template>

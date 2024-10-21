@@ -32,6 +32,61 @@ export const rituale: Clue<'images'> = {
         }
       },
       {
+        index: 0,
+        rect: {
+          x: 0.0521733710106383,
+          y: 0.21374937686939183,
+          width: 0.20811689660904256,
+          height: 0.18969653539381853,
+        },
+        entry: {
+          id: 'phineas-kritzelei',
+          title: 'Kritzelei „Phineas“',
+          suspectId: 'orakel',
+          description: 'Jemand hat auf das Ritualblatt „Phineas“ gekritzelt.\n\nIst Phineas in den Okkult-Club involviert?',
+        }
+      },
+      {
+        index: 0,
+        rect: {
+          x: 0.09731852213541667,
+          y: 0.901595140781108,
+          width: 0.2846132960464015,
+          height: 0.017743102861035424
+        },
+        entry: {
+          id: 'brettspiel',
+          title: 'Kreis des Orakels Brettspiel',
+          suspectId: 'orakel',
+          description: 'Scheinbar handelt es sich um Karten eines Brettspiel, das „Kreis des Orakels“ genannt wird.\n\nIst das Orakel nichts weiter als ein Spiel?',
+        }
+      },
+      {
+        index: 0,
+        rect: {
+          x: 0.28895341589095747,
+          y: 0.7528001931704885,
+          width: 0.632817694481383,
+          height: 0.1838313185443669,
+        },
+        entry: {
+          id: 'ritual-kritzeleien',
+          title: 'Kritzeleien',
+          suspectId: 'orakel',
+          description: 'Die Blätter sind voller Kritzeleien und Zeichnungen.\n\nHaben das die Mitglieder des Okkult-Clubs getan?',
+        }
+      },
+      {
+        index: 1,
+        rect: {
+          x: 0.6238779920212766,
+          y: 0.21675598205383848,
+          width: 0.3310339095744681,
+          height: 0.19986524800598204,
+        },
+        entryId: 'ritual-kritzeleien',
+      },
+      {
         index: 1,
         rect: {
           x: 0.09731852213541667,
@@ -44,12 +99,32 @@ export const rituale: Clue<'images'> = {
       {
         index: 2,
         rect: {
+          x: 0.5653361868351063,
+          y: 0.550422949900299,
+          width: 0.365717461768617,
+          height: 0.23274707128614158,
+        },
+        entryId: 'ritual-kritzeleien',
+      },
+      {
+        index: 2,
+        rect: {
           x: 0.09731852213541667,
           y: 0.901595140781108,
           width: 0.2846132960464015,
           height: 0.017743102861035424
         },
         entryId: 'brettspiel',
+      },
+      {
+        index: 3,
+        rect: {
+          x: 0.4539093666888298,
+          y: 0.2085501308574277,
+          width: 0.4775182845744681,
+          height: 0.3651934820538385,
+        },
+        entryId: 'ritual-kritzeleien',
       },
       {
         index: 3,
@@ -71,7 +146,6 @@ export const liebesRitual: Clue<'images'> = {
   cost: 20,
   title: 'Ritual der ewigen Liebe',
   thumbnailAssetId: 'thumbnails/Ritual1.webp',
-  description: 'Ein verkritzeltes Blatt mit einem Ritual der ewigen Liebe.',
   images: {
     assetIds: [
       'clues/Ritual1.webp',

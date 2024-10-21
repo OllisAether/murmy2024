@@ -14,7 +14,7 @@
         :style="textContent.css"
         ref="root"
       >
-        <Collectable v-if="textContent.entry" :entryId="textContent.entry.id" inline>
+        <Collectable v-if="textContent.entry" :entryId="typeof textContent.entry === 'string' ? textContent.entry : textContent.entry.id" inline>
           <TextContentRenderer
             v-for="(content, i) in textContent.content"
             :key="i"
@@ -31,7 +31,7 @@
       </span>
     </template>
     <template v-else>
-      <Collectable v-if="textContent.entry" :entryId="textContent.entry.id">
+      <Collectable v-if="textContent.entry" :entryId="typeof textContent.entry === 'string' ? textContent.entry : textContent.entry.id" inline>
         <TextContentRenderer
           v-for="(content, i) in textContent.content"
           :key="i"

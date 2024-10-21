@@ -8,7 +8,7 @@
   >
     <img
       class="phone-lock-screen__background"
-      :src="game.getAsset('dokumente/Hawthornes Bild.jpg')?.content"
+      :src="game.getAsset('phone/background.webp')?.content"
     >
 
     <div class="phone-lock-screen__content">

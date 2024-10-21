@@ -144,6 +144,11 @@
               </HelpBtn>
             </div>
           </div>
+
+          <div class="clue-card__clue-display__found-entries">
+            {{ unlockedEntries.length }} von {{ entriesInClue.length }} Hinweise markiert
+          </div>
+
           <Btn
             v-if="closable"
             @click="showClue = false"
@@ -174,6 +179,7 @@ import { useTutorial } from '@/store/team/tutorial';
 import NewBadge from '../NewBadge.vue';
 import HelpBtn from './HelpBtn.vue';
 import TextContentRenderer from '../TextContentRenderer.vue';
+import { getEntryIds } from '../../../shared/textContent';
 
 const tutorial = useTutorial()
 const game = useGameManager()
@@ -198,6 +204,20 @@ const isAffordable = computed(() => (game.clues.investigationCoins ?? Infinity) 
 
 const showBuyConfirmation = useModel(props, 'showBuyConfirmation');
 const delayedShowBuyConfirmation = ref(false);
+
+const entriesInClue = computed(() => {
+  let entries: string[] = [];
+  if (props.transcript) {
+    entries = props.transcript.content.flatMap(l => getEntryIds(l[1]))
+  } else {
+    entries = clue?.images.entries
+      ?.map((entry) => entry.entry?.id ?? entry.entryId)
+      .filter((x) => x) as string[] ?? [];
+  }
+
+  return entries.filter((c, i, s) => s.indexOf(c) === i);
+});
+const unlockedEntries = computed(() => entriesInClue.value.filter((c) => game.database.entries.includes(c)));
 
 watch(showBuyConfirmation, (val, _, onCleanup) => {
   if (val) {
@@ -444,7 +464,7 @@ function openClue() {
       z-index: 2000;
       font-size: 2rem;
       line-height: 2rem;
-      padding: 1.5rem 1.5rem 0;
+      padding: 1.5rem 8rem 0;
       font-family: $fontDisplay;
       
       font-weight: 300;
@@ -458,13 +478,14 @@ function openClue() {
 
     &__description {
       padding: .75rem 2rem;
-      max-height: 1.5rem * 4;
+      max-height: 1.5rem * 3;
       mask-image: linear-gradient(transparent, black .75rem, black calc(100% - .75rem), transparent);
       overflow: auto;
       opacity: .75;
       font-size: 1rem;
       line-height: 1.5rem;
       text-align: center;
+      margin-bottom: .25rem;
     }
 
     &__actions {
@@ -490,6 +511,11 @@ function openClue() {
         align-items: center;
         gap: 0.5rem;
       }
+    }
+
+    &__found-entries {
+      padding: 0 1rem;
+      align-self: center;
     }
   }
 }

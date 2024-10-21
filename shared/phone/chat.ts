@@ -1,11 +1,13 @@
 import { Moment } from "moment"
 import { ImageEntry } from "../clue"
 import { TextContent } from "../textContent"
+import { Entry } from "../suspectDatabase/entry"
 
 export type Chat = GroupChat | PrivateChat
 
 export interface ChatBase {
   type: 'private' | 'group'
+  entry?: Entry | string
   messages: (ChatMessage | ChatTimestamp | ChatImage)[]
 }
 

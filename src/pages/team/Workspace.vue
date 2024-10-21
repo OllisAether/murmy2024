@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <!-- <BlurGradient class="workspace__blur-gradient" /> -->
+        <BlurGradient class="workspace__blur-gradient" :steps="2" :blur="10" />
 
         <div class="workspace__scroller" ref="scroller">
           <div class="workspace__content">
@@ -127,6 +127,7 @@
 </template>
 
 <script setup lang="ts">
+import BlurGradient from '@/components/BlurGradient.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import ClueCard from '@/components/team/ClueCard.vue';
 import FormCard from '@/components/team/FormCard.vue';
@@ -316,12 +317,13 @@ onMounted(() => {
   }
 
   &__blur-gradient {
+    background: linear-gradient(#0008, transparent);
     z-index: 1;
-    position: absolute;
+    position: absolute !important;
     top: 0;
     left: 0;
     right: 0;
-    height: 5rem;
+    height: 6rem;
   }
 
   &__timer {

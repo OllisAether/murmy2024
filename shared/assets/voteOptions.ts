@@ -38,7 +38,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'cassy2',
-    title: 'Interview: Cassandra Nova 2',
+    title: 'Interview 2: Cassandra Nova',
     image: 'suspects/Cassy2.webp',
     suspectIds: ['cassandra'],
     color: getSuspectById('cassandra')?.color,
@@ -46,7 +46,7 @@ export const voteOptions: VoteOption[] = [
 
     media: 'Cassy 2.mp4',
     availableClues: [
-      'hfbChloroformTuch'
+      'bfbChloroformTuch'
     ]
   },
   {
@@ -59,7 +59,7 @@ export const voteOptions: VoteOption[] = [
     
     media: 'Hugo 1.mp4',
     availableClues: [
-      'polizeilichesFührungszeugnis',
+      'fuehrungszeugnis',
       'stundenplan',
       'todesurkundeElena',
       'kursbuch'
@@ -67,7 +67,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'hugo2',
-    title: 'Interview: Hugo Montague 2',
+    title: 'Interview 2: Hugo Montague',
     image: 'suspects/Hugo2.webp',
     suspectIds: ['hugo', 'phineas', 'ivy'],
     color: getSuspectById('hugo')?.color,
@@ -104,7 +104,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'justin2',
-    title: 'Interview: Justin van Bustin 2',
+    title: 'Interview 2: Justin van Bustin',
     image: 'suspects/Justin2.webp',
     suspectIds: ['justin', 'phineas', 'ivy'],
     color: getSuspectById('justin')?.color,
@@ -112,7 +112,7 @@ export const voteOptions: VoteOption[] = [
     
     media: 'Justin 2.mp4',
     availableClues: [
-      'hfbDolch'
+      'bfbDolch'
     ],
   },
   {
@@ -130,7 +130,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'phoebe2',
-    title: 'Interview: Phoebe Blight 2',
+    title: 'Interview 2: Phoebe Blight',
     image: 'suspects/phoebe.webp',
     suspectIds: ['phoebe', 'phineas', 'ivy'],
     color: getSuspectById('phoebe')?.color,

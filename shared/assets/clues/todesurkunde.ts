@@ -18,9 +18,9 @@ export const todesurkundeElena: Clue<'images'> = {
         },
         entry: {
           id: 'elenas-todesdatum',
-          title: '14.12.2012 18:32 - Zeitpunkt des Todes',
+          title: '14.12.2012 18:32 - Elenas Todeszeitpunkt',
           suspectId: 'hugo',
-          description: 'Elena ist am 14.12.2012 um 18:32 verstorben.'
+          description: 'Elena Delora-Montague ist am 14.12.2012 um 18:32 verstorben.'
         }
       },
     ]

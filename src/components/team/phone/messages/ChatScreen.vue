@@ -88,6 +88,11 @@
           <span></span>
         </div>
       </template>
+      <Collectable
+        class="chat-screen__content__collectable"
+        v-if="computedChat.entry"
+        :entryId="typeof computedChat.entry === 'string' ? computedChat.entry : computedChat.entry.id"
+      />
     </ScrollView>
 
     <div class="chat-screen__input">
@@ -228,6 +233,11 @@ const computedChat = computed(() => {
 
   &__content {
     flex: 1;
+
+    &__collectable {
+      position: absolute;
+      inset: 0;
+    }
   }
 
   &__input {
