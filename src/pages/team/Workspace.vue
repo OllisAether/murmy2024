@@ -230,7 +230,12 @@ onMounted(() => {
     }
   }, { immediate: true });
 
-  watch([isTutorialMarkEntry, isTutorialUnlockClue], () => {
+  watch([isTutorialMarkEntry, isTutorialUnlockClue, () => {
+    if (isTutorialUnlockClue.value) {
+      return game.clues.unlocked
+    }
+  }], () => {
+    console.log(isTutorialMarkEntry.value, isTutorialUnlockClue.value, game.clues.unlocked.includes(game.clues.available[0]))
     if (isTutorialMarkEntry.value || (isTutorialUnlockClue.value && game.clues.unlocked.includes(game.clues.available[0]))) {
       const clue = game.clues.available[0]
 

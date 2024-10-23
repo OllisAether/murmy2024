@@ -17,6 +17,12 @@ export const Tutorial = (): Playback => ({
         ]
       }
     },
+    { 
+      type: CueType.AddInvestigationCoins,
+      options: {
+        amount: 10
+      }
+    },
     {
       type: CueType.AddVoteOptions,
       options: {
@@ -46,7 +52,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 120_000
+        time: 2 * 60_000
       }
     },
       {
@@ -94,7 +100,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 154_000
+        time: 2 * 60_000 + 33_000
       }
     },
       {
@@ -111,7 +117,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 157_000
+        time: 2 * 60_000 + 36_000
       }
     },
       {
@@ -129,7 +135,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 168_000
+        time: 2 * 60_000 + 44_000
       }
     },
       {
@@ -147,7 +153,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 171_000
+        time: 2 * 60_000 + 46_000
       }
     },
       {
@@ -165,7 +171,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 175_000
+        time: 2 * 60_000 + 51_000
       }
     },
       {
@@ -183,7 +189,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 183_000
+        time: 3 * 60_000 + 1_000
       }
     },
       {
@@ -201,7 +207,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 189_000
+        time: 3 * 60_000 + 8_000
       }
     },
       {
@@ -219,7 +225,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 192_000
+        time: 3 * 60_000 + 10_000
       }
     },
       {
@@ -233,7 +239,25 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 200_000
+        time: 3 * 60_000 + 19_000
+      }
+    },
+      {
+        type: CueType.SetPhase,
+        options: {
+          meta: {
+            tutorial: {
+              highlight: 'clues'
+            } satisfies TutorialState
+          }
+        }
+      },
+    { type: CueType.EndIf },
+
+    {
+      type: CueType.WhenMediaAt,
+      options: {
+        time: 3 * 60_000 + 28_000
       }
     },
       {
@@ -251,7 +275,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 205_000
+        time: 3 * 60_000 + 36_000
       }
     },
       {
@@ -265,7 +289,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 210_000
+        time: 4 * 60_000
       }
     },
       {
@@ -284,7 +308,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 215_000
+        time: 4 * 60_000 + 10_000
       }
     },
       {
@@ -293,6 +317,23 @@ export const Tutorial = (): Playback => ({
           entryId: 'max-planck-gymnasium'
         }
       },
+      {
+        type: CueType.SetPhase,
+        options: {
+          meta: {
+            tutorial:  {
+              action: 'unlockClue'
+            } satisfies TutorialState
+          }
+        }
+      },
+    { type: CueType.EndIf },
+    {
+      type: CueType.WhenMediaAt,
+      options: {
+        time: 4 * 60_000 + 20_000
+      }
+    },
       {
         type: CueType.SetPhase,
         options: {
@@ -308,7 +349,7 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 210_000
+        time: 4 * 60_000 + 50_000
       }
     },
       {
@@ -322,6 +363,22 @@ export const Tutorial = (): Playback => ({
         }
       },
     { type: CueType.EndIf },
+
+    {
+      type: CueType.WhenMediaAt,
+      options: {
+        time: 5 * 60_000
+      }
+    },
+      {
+        type: CueType.SetPhase,
+        options: {
+          phase: Phase.Idle,
+        }
+      },
+    { type: CueType.EndIf },
+
+    { type: CueType.WaitForMediaFinished },
 
     { type: CueType.ClearNewClues },
   ],

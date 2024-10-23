@@ -130,7 +130,7 @@
                         v-if="entry.entryId ?? entry.entry?.id"
                         :entryId="(entry.entryId ?? entry.entry?.id)!"
                         :style="{
-                          pointerEvents: tutorial.isTutorial && !isTutorialMarkEntry ? 'none' : '',
+                          pointerEvents: tutorial.isTutorial && !(isTutorialMarkEntry && tutorial.state.entryId === (entry.entryId ?? entry.entry?.id)) ? 'none' : '',
                           'left': entry.rect.x * 100 + '%',
                           'top': entry.rect.y * 100 + '%',
                           'width': entry.rect.width * 100 + '%',

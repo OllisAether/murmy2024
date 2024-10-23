@@ -29,13 +29,13 @@ export const Interlude = (): Playback => ({
     {
       type: CueType.SetMedia,
       options: {
-        media: 'sounds/vote/vote.mp3'
+        media: 'Ivys Suizid.mp4'
       }
     },
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 5_000
+        time: 2 * 60_000 + 20_000,
       }
     },
     {

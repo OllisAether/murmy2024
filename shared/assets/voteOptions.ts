@@ -38,7 +38,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'cassy2',
-    title: 'Interview 2: Cassandra Nova',
+    title: 'Interview 2: Cassandra Novak',
     image: 'suspects/Cassy2.webp',
     suspectIds: ['cassandra'],
     color: getSuspectById('cassandra')?.color,

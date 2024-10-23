@@ -36,7 +36,7 @@ export const playbacks: (Playback | {
             ]
           }
         }
-      }
+      },
     ],
     fields: {}
   },
@@ -58,9 +58,26 @@ export const playbacks: (Playback | {
 
   { divider: '=== Akt 1 ===' },
 
-  Media('durchsage.mp3'),
-
   { divider: '- Runde 1 -' },
+
+  Media('durchsage.mp3'),
+  {
+    name: 'Todesurkunde Ivy',
+    trigger: 'auto',
+    cues: [
+      {
+        type: CueType.AddClues,
+        options: {
+          clues: ['todesurkundeIvy']
+        }
+      }
+    ],
+    fields: {}
+  },
+  ShowNewClues(),
+  Work(1 * 60_000),
+
+  { divider: '- Runde 2 -' },
 
   Vote(),
   Media(),
@@ -68,16 +85,6 @@ export const playbacks: (Playback | {
   AddInvestigationCoins(10),
 
   Work(1.5 * 60_000),
-
-  { divider: '- Runde 2 -' },
-
-  Idle(10_000, { next: 'vote' }),
-  Vote(),
-  Media(),
-  ShowNewClues(),
-  AddInvestigationCoins(10),
-
-  Work(2 * 60_000),
 
   { divider: '- Runde 3 -' },
 
@@ -87,7 +94,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(3 * 60_000),
+  Work(2 * 60_000),
 
   { divider: '- Runde 4 -' },
 
@@ -97,9 +104,19 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(3 * 60_000),
 
   { divider: '- Runde 5 -' },
+
+  Idle(10_000, { next: 'vote' }),
+  Vote(),
+  Media(),
+  ShowNewClues(),
+  AddInvestigationCoins(10),
+
+  Work(5 * 60_000),
+
+  { divider: '- Runde 6 -' },
 
   Idle(10_000, { next: 'vote' }),
   Vote(),
@@ -148,18 +165,8 @@ export const playbacks: (Playback | {
 
   Media('Recap.mp4'),
 
-  { divider: '- Runde 6 -' },
-
-  Vote(),
-  Media(),
-  ShowNewClues(),
-  AddInvestigationCoins(10),
-
-  Work(5 * 60_000),
-
   { divider: '- Runde 7 -' },
 
-  Idle(10_000, { next: 'vote' }),
   Vote(),
   Media(),
   ShowNewClues(),
@@ -218,6 +225,16 @@ export const playbacks: (Playback | {
   Work(5 * 60_000),
 
   { divider: '- Runde 13 -' },
+
+  Idle(10_000, { next: 'vote' }),
+  Vote(),
+  Media(),
+  ShowNewClues(),
+  AddInvestigationCoins(10),
+
+  Work(5 * 60_000),
+
+  { divider: '- Runde 14 -' },
 
   Idle(10_000, { next: 'vote' }),
   Vote(),

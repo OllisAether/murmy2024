@@ -154,7 +154,7 @@ async function startOrbAnimation () {
 @use '@/scss/vars' as *;
 
 .collectable {
-  outline: red solid 2px;
+  // outline: red solid 2px;
 
   :deep(*) {
     pointer-events: none;
