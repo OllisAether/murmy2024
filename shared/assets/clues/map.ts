@@ -22,6 +22,7 @@ export const map: Clue<'images'> = {
         entry: {
           id: 'max-planck-gymnasium',
           title: 'Max-Planck-Gymnasium',
+          imageAssetId: 'thumbnails/mpg.webp',
           suspectId: 'general',
           description: 'Das Max-Planck-Gymnasium, ist das einzige Gymnasium der Stadt und liegt gegenüber des Tannen-Weiher Parks.',
         }
@@ -39,6 +40,7 @@ export const map: Clue<'images'> = {
           id: 'polizeipräsidium',
           title: 'Polizeipräsidium',
           suspectId: 'general',
+          imageAssetId: 'thumbnails/polizei.webp',
           description: 'Das Polizeipräsidium, in dem diese Ermittlung gerade stattfindet.',
         }
       },
@@ -55,7 +57,8 @@ export const map: Clue<'images'> = {
           id: 'klinikum',
           title: 'Klinikum',
           suspectId: 'general',
-          description: 'Das städtische Klilnikum befindet sich gegenüber des Polizeipräsidiums.',
+          imageAssetId: 'thumbnails/klinikum.webp',
+          description: 'Das städtische Klinikum befindet sich gegenüber des Polizeipräsidiums.',
         }
       },
 
@@ -71,7 +74,8 @@ export const map: Clue<'images'> = {
           id: 'park',
           title: 'Tannen-Weiher Park',
           suspectId: 'general',
-          description: 'Der Tannen-Weiher Park befindet sich gegenüber dem Max-Planck-Gymnasium und besitzt ein See, ein Kinderspielplatz, ein Bolzplatz, ein Skatepark, ein Hundepark und eine große Wiese.',
+          imageAssetId: 'thumbnails/park.webp',
+          description: 'Der Tannen-Weiher Park befindet sich gegenüber dem Max-Planck-Gymnasium und besitzt einen See, einen Kinderspielplatz, einen Bolzplatz, einen Skatepark, einen Hundepark und eine große Wiese.',
         }
       },
 
@@ -87,7 +91,8 @@ export const map: Clue<'images'> = {
           id: 'wald',
           title: 'Stadtwald',
           suspectId: 'general',
-          description: 'Der Stadtwald ist ein großer Wald, der sich im Süd-Östlichen Teil der Stadt befindet. Es liegt eine abgelegene Holzfällerhütte mit einem kleinen See im Wald.',
+          imageAssetId: 'thumbnails/wald.webp',
+          description: 'Der Stadtwald ist ein großer Wald, der sich im südöstlichen Teil der Stadt befindet. Es liegt eine abgelegene Holzfällerhütte mit einem kleinen See im Wald.',
         }
       },
     ]

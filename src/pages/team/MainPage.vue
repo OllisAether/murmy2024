@@ -192,6 +192,12 @@
                 </b>
               </p>
               <Btn
+                class="w-100"
+                @click="reload()"
+              >
+                Seite neu laden
+              </Btn>
+              <Btn
                 color="#A23946"
                 class="w-100"
                 @click="help"
@@ -281,6 +287,10 @@ const game = useGameManager()
 
 const logoutDialog = ref(false)
 const helpDialog = ref(false)
+
+function reload () {
+  location.reload()
+}
 
 watch(helpDialog, () => {
   preventGestures.value = !helpDialog.value

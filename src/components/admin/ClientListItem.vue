@@ -91,6 +91,14 @@
           <VBtn
             class="w-100 mb-2"
             variant="tonal"
+            @click="admin.reloadClient(props.client.id)"
+          >
+            Neu laden
+          </VBtn>
+
+          <VBtn
+            class="w-100 mb-2"
+            variant="tonal"
             color="error"
             @click="admin.kickClient(props.client.id)"
           >

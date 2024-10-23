@@ -68,14 +68,14 @@ export const playbacks: (Playback | {
       {
         type: CueType.AddClues,
         options: {
-          clues: ['todesurkundeIvy']
+          clues: ['todesurkundeIvy', 'autopsieberichtIvy']
         }
       }
     ],
     fields: {}
   },
   ShowNewClues(),
-  Work(1 * 60_000),
+  Work(30_000, true),
 
   { divider: '- Runde 2 -' },
 
@@ -84,7 +84,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(1.5 * 60_000),
+  Work(1 * 60_000),
 
   { divider: '- Runde 3 -' },
 
@@ -114,7 +114,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(3 * 60_000),
 
   { divider: '- Runde 6 -' },
 
@@ -127,7 +127,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(3 * 60_000),
 
   { divider: '=== Interlude ===' },
 

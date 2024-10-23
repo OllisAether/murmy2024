@@ -73,10 +73,12 @@ export const useWsClient = defineStore('wsClient', () => {
   }
 
   function handleMessage(event: MessageEvent) {
-    
     try {
       const data = JSON.parse(event.data)
       console.log('%c[WebSocket]', 'color: purple', data)
+
+      send('ACK', { action: data.action })
+
       messageListeners.value.forEach((listener) => listener(data))
     } catch (e) {
       console.error('%c[WebSocket]', 'color: purple', e)

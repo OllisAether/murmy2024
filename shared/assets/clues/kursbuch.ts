@@ -78,21 +78,6 @@ export const kursbuch: Clue<'book'> = {
       {
         index: 4,
         rect: {
-          x: 0.10116110409007353,
-          y: 0.13142633611505683,
-          width: 0.7995694508272059,
-          height: 0.4193454256924716,
-        },
-        entry: {
-          id: 'beurlaubung',
-          title: 'Beurlaubung vom 10.12. bis 14.12.2012',
-          description: 'Herr Montague war vom 10.12. bis 14.12.2012 beurlaubt.',
-          suspectId: 'hugo',
-        }
-      },
-      {
-        index: 5,
-        rect: {
           x: 0.7878752585018383,
           y: 0.13292136452414774,
           width: 0.1132321346507353,
@@ -101,7 +86,7 @@ export const kursbuch: Clue<'book'> = {
         entryId: 'justin-fehlzeiten',
       },
       {
-        index: 5,
+        index: 4,
         rect: {
           x: 0.7880452952665441,
           y: 0.2725804554332386,
@@ -113,9 +98,24 @@ export const kursbuch: Clue<'book'> = {
       {
         index: 5,
         rect: {
+          x: 0.10116110409007353,
+          y: 0.13142633611505683,
+          width: 0.7995694508272059,
+          height: 0.2793454256924716,
+        },
+        entry: {
+          id: 'beurlaubung',
+          title: 'Beurlaubung vom 10.12. bis 14.12.2012',
+          description: 'Herr Montague war vom 10.12. bis 14.12.2012 beurlaubt.',
+          suspectId: 'hugo',
+        }
+      },
+      {
+        index: 6,
+        rect: {
           x: 0.003109633501838235,
           y: 0.8648212224786932,
-          width: 0.7640455537683823,
+          width: 0.7740455537683823,
           height: 0.032580510919744315,
         },
         entryId: 'justin-problemschueler',
@@ -143,26 +143,6 @@ export const kursbuch: Clue<'book'> = {
       {
         index: 8,
         rect: {
-          x: 0.7947456629136029,
-          y: 0.2731273304332386,
-          width: 0.10106301700367647,
-          height: 0.03063803932883523,
-        },
-        entryId: 'justin-fehlzeiten',
-      },
-      {
-        index: 8,
-        rect: {
-          x: 0.008578383501838236,
-          y: 0.8696933815696023,
-          width: 0.9708745978860294,
-          height: 0.04988519841974432,
-        },
-        entryId: 'justin-problemschueler',
-      },
-      {
-        index: 9,
-        rect: {
           x: 0.7878752585018383,
           y: 0.13292136452414774,
           width: 0.1132321346507353,
@@ -185,13 +165,43 @@ export const kursbuch: Clue<'book'> = {
         rect: {
           x: 0.008578383501838236,
           y: 0.8696933815696023,
-          width: 0.5055841423483456,
+          width: 0.9708745978860294,
           height: 0.04988519841974432,
         },
         entryId: 'justin-problemschueler',
       },
       {
         index: 10,
+        rect: {
+          x: 0.7878752585018383,
+          y: 0.13292136452414774,
+          width: 0.1132321346507353,
+          height: 0.026248834783380682,
+        },
+        entryId: 'justin-fehlzeiten',
+      },
+      {
+        index: 10,
+        rect: {
+          x: 0.7947456629136029,
+          y: 0.2731273304332386,
+          width: 0.10106301700367647,
+          height: 0.03063803932883523,
+        },
+        entryId: 'justin-fehlzeiten',
+      },
+      {
+        index: 10,
+        rect: {
+          x: 0.008578383501838236,
+          y: 0.8696933815696023,
+          width: 0.5055841423483456,
+          height: 0.04988519841974432,
+        },
+        entryId: 'justin-problemschueler',
+      },
+      {
+        index: 11,
         rect: {
           x: 0.7878752585018383,
           y: 0.13292136452414774,

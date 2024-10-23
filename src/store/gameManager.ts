@@ -316,6 +316,11 @@ export const useGameManager = defineStore('gameManager', () => {
 
     return { success: true }
   }
+
+  ws.onAction('reload', () => {
+    console.log('Reloading')
+    window.location.reload()
+  })
   // #endregion
 
   // #region Assets

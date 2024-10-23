@@ -100,6 +100,7 @@
           </div>
         </div>
 
+
         <FormCard class="workspace__form-card" v-if="game.phase.meta?.form" />
       </div>
 

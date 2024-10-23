@@ -31,6 +31,7 @@
             :iconSrc="game.getAsset('phone/icons/Icon_Camera.webp')?.content"
             name="Kamera"
             app="camera"
+            :path="[]"
           />
 
           <AppIcon
@@ -74,6 +75,12 @@
             :iconSrc="game.getAsset('phone/icons/Icon_PlayStore.webp')?.content"
             name="Play Store"
             app="playstore"
+          />
+
+          <AppIcon
+            :iconSrc="game.getAsset('phone/icons/Icon_Settings.webp')?.content"
+            name="System Info"
+            app="info"
           />
 
           <AppIcon
@@ -139,6 +146,7 @@
           <AppIcon
             :iconSrc="game.getAsset('phone/icons/Icon_Camera.webp')?.content"
             app="camera"
+            :path="[]"
           />
         </div>
       </div>

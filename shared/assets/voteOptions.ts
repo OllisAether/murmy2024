@@ -194,7 +194,7 @@ export const voteOptions: VoteOption[] = [
     removeSelf: true,
 
     availableClues: [
-      'spurensicherungPhineas',
+      'autopsieberichtPhineas',
     ],
     options: {
       main: [

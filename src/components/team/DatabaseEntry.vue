@@ -170,8 +170,8 @@ function pointerdown (event: PointerEvent) {
 @use '@/scss/vars' as *;
 
 .database-entry {
-  width: -webkit-fill-available;
-  width: stretch;
+  width: calc(100% - 2rem);
+
   text-align: left;
 
   position: relative;

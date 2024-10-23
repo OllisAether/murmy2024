@@ -5,8 +5,8 @@ export const fuehrungszeugnis: Clue<'images'> = {
   id: 'fuehrungszeugnis',
   cost: 20,
   title: 'Führungszeugnis von Hugo Montague',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
+  thumbnailAssetId: 'thumbnails/fuehrungszeugnis.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
+    assetIds: ['clues/fuehrungszeugnis.webp'],
   }
 }

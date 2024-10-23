@@ -55,7 +55,7 @@
 
       <template #close>
         <VBtn
-          @click="ws.connect"
+          @click="reload()"
           v-if="ws.status === 'disconnected'"
         >
           <VIcon size="24">mdi-refresh</VIcon>
@@ -84,6 +84,10 @@ const loadProgress = computed(() => {
       .reduce((acc, val) => acc + val, 0) / game.assetsProgress.totalAssets)
     * 100)
 })
+
+function reload () {
+  location.reload()
+}
 
 watch(() => game.wakelockShouldBeActive, (shouldBeActive) => {
   if (shouldBeActive) {

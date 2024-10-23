@@ -36,24 +36,24 @@ createApp(App)
 
 export const preventGestures = ref(true)
 
-function preventDefault(e: Event) {
-  if (preventGestures.value) {
-    e.preventDefault()
-  }
-}
+// function preventDefault(e: Event) {
+//   if (preventGestures.value) {
+//     e.preventDefault()
+//   }
+// }
 
 // Standalone PWA
-if (window.matchMedia('(display-mode: standalone)').matches) {
-} else {
-  // Prevent zooming on mobile devices
-  document.addEventListener('gesturestart', preventDefault)
+// if (window.matchMedia('(display-mode: standalone)').matches) {
+// } else {
+//   // Prevent zooming on mobile devices
+//   document.addEventListener('gesturestart', preventDefault)
 
-  // Prevent double tap to zoom on mobile devices
-  document.addEventListener('click', (e) => {
-    if (e.detail > 1) preventDefault(e)
-  })
-  // Prevent double tap to zoom on mobile devices
-  // document.addEventListener('touchstart', (e) => {
-  //   preventDefault(e)
-  // }, { passive: true })
-}
+//   // Prevent double tap to zoom on mobile devices
+//   document.addEventListener('click', (e) => {
+//     if (e.detail > 1) preventDefault(e)
+//   })
+//   // Prevent double tap to zoom on mobile devices
+//   // document.addEventListener('touchstart', (e) => {
+//   //   preventDefault(e)
+//   // }, { passive: true })
+// }

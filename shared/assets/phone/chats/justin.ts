@@ -192,6 +192,30 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
+      content: 'Zeig beweis'
+    },
+
+    {
+      type: 'image',
+      sender: 'me',
+      imageAssetId: 'phone/gallery/CD1.webp',
+    },
+
+    {
+      type: 'message',
+      sender: '+49 1521 28895456',
+      content: 'Schwör auf Mutter'
+    },
+
+    {
+      type: 'message',
+      sender: 'me',
+      content: '👍'
+    },
+
+    {
+      type: 'message',
+      sender: '+49 1521 28895456',
       content: 'Dann haben wir ein deal'
     },
     {

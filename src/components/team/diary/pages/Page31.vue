@@ -2,10 +2,10 @@
   <Page blank class="page31">
     <div class="page31__credits">
       <b>Murder Mystery Team:</b><br><br>
-      Olli - Programmierung, Story, Script, Dialoge<br>
-      Miri - Executive Writer, Story, Script<br>
-      Ari - Story, Script<br>
-      Arki - Story, Dokumente<br>
+      Olli - Programmierung, Story, Script, Dokumente<br>
+      Miri - Executive Writer, Story, Script, Dokumente<br>
+      Ari - Story, Script, Dokumente<br>
+      Arki - Story, Script, Dokumente<br>
       Mina - Story, Dokumente<br>
 
       <br><br>

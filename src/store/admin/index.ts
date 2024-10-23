@@ -304,6 +304,20 @@ export const useAdmin = defineStore('admin', () => {
     return { success: true }
   }
 
+  async function reloadClient (id: string) {
+    const res = await ws.request('reloadClient', { id })
+
+    if (!res.success) {
+      console.error('Failed to reload client', res.message)
+      return {
+        success: false,
+        message: res.message as string
+      }
+    }
+
+    return { success: true }
+  }
+
   function setClientTeam (clientId: string, teamId: string) {
     ws.send('setClientTeam', { clientId, teamId })
   }
@@ -693,6 +707,7 @@ export const useAdmin = defineStore('admin', () => {
     removeTeam,
     kickClient,
     logoutClient,
+    reloadClient,
     setClientTeam,
     setClientBoard,
     removeHelpRequest,

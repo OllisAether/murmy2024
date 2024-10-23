@@ -32,6 +32,7 @@
             <NotesApp class="phone__content__app" v-else-if="phone.currentApp === 'notes'" />
 
             <InternetApp class="phone__content__app" v-else-if="phone.currentApp === 'internet'" />
+            <InfoApp class="phone__content__app" v-else-if="phone.currentApp === 'info'" />
             <PinterestApp class="phone__content__app" v-else-if="phone.currentApp === 'pinterest'" />
             <TumblrApp class="phone__content__app" v-else-if="phone.currentApp === 'tumblr'" />
             <PlayStoreApp class="phone__content__app" v-else-if="phone.currentApp === 'playstore'" />
@@ -121,6 +122,7 @@ import CalculatorApp from './misc/CalculatorApp.vue';
 import CrashApp from './misc/CrashApp.vue';
 import PinterestApp from './misc/PinterestApp.vue';
 import TumblrApp from './misc/TumblrApp.vue';
+import InfoApp from './misc/InfoApp.vue';
 
 defineProps<{
   zoomScale: number;

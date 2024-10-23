@@ -1,21 +1,21 @@
 import { Clue } from "../../clue";
 
-export const spurensicherungIvy: Clue<'images'> = {
+export const autopsieberichtIvy: Clue<'images'> = {
   type: 'images',
-  id: 'spurensicherungIvy',
+  id: 'autopsieberichtIvy',
   cost: 20,
-  title: 'Spurensicherung von Ivy',
+  title: 'Autopsiebericht von Ivy',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
     assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
   }
 }
 
-export const spurensicherungPhineas: Clue<'images'> = {
+export const autopsieberichtPhineas: Clue<'images'> = {
   type: 'images',
-  id: 'spurensicherungPhineas',
+  id: 'autopsieberichtPhineas',
   cost: 20,
-  title: 'Spurensicherung von Phineas',
+  title: 'Autopsiebericht von Phineas',
   thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
   images: {
     assetIds: ['clues/kursbuch/Kursbuch-21.webp'],

@@ -401,6 +401,40 @@ export class AdminClient extends WebSocketClient {
           game.promoteClientToBoard(clientId);
         }
       },
+      {
+        action: 'reloadClient',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Reloading client', payload);
+
+          const id = payload?.id;
+
+          if (typeof id !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('reloadClient:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          const client = game.getClient(id);
+
+          if (!client) {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Client not found', id);
+
+            this.send('reloadClient:response', {
+              success: false,
+              message: 'Client not found'
+            });
+
+            return;
+          }
+
+          game.sendReloadRequestToClient(client);
+        }
+      },
       // #endregion
 
       // #region Help

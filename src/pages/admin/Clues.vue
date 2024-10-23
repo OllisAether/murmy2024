@@ -17,6 +17,18 @@
               <VListItemTitle>
                 Hinweis {{ clue }} nicht gefunden
               </VListItemTitle>
+
+              <template #append>
+                <VBtn
+                  color="error"
+                  variant="tonal"
+                  size="small"
+                  icon
+                  @click="admin.removeClue(clue)"
+                >
+                  <VIcon>mdi-close</VIcon>
+                </VBtn>
+              </template>
             </VListItem>
           </template>
 
@@ -261,7 +273,7 @@
 <script lang="ts" setup>
 import { useAdmin } from '@/store/admin';
 import { useGameManager } from '@/store/gameManager';
-import { clues } from '../../../shared/assets/clues/index';
+import { clues as clueList } from '../../../shared/assets/clues/index';
 import { Clue, ClueTypes } from '../../../shared/clue';
 import { computed } from 'vue';
 import ClueListItem from '@/components/admin/ClueListItem.vue';
@@ -271,12 +283,16 @@ import SetCoinsCard from '@/components/admin/SetCoinsCard.vue';
 const game = useGameManager();
 const admin = useAdmin();
 
+const clues = computed(() => {
+  return [...clueList, ...game.clues.available.filter(id => !clueList.some(clue => clue.id === id))];
+});
+
 const unlockedClues = computed(() => {
   const unlocked: Record<string, (Clue<ClueTypes> | string)[]> = {};
 
   for (const team of admin.teams) {
     unlocked[team.id] = admin.clues.unlocked[team.id]
-      ?.map(id => clues.find(clue => clue.id === id) ?? id) ?? [];
+      ?.map(id => clueList.find(clue => clue.id === id) ?? id) ?? [];
   }
 
   return unlocked;

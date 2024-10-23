@@ -39,6 +39,11 @@ export const ivy: Chat = {
       timestamp: moment('2012-12-29 13:11')
     },
     {
+      type: 'image',
+      imageAssetId: 'phone/love-gif.gif',
+      sender: '+49 174 9464308'
+    },
+    {
       type: 'message',
       sender: '+49 174 9464308',
       content: 'Miss u!!!'

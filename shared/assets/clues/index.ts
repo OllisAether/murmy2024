@@ -6,7 +6,7 @@ import { map } from './map';
 import { fuehrungszeugnis } from './fuehrungszeugnis';
 import { liebesRitual, rituale } from './rituale';
 import { schuelerakteCassandra, schuelerakteIvy, schuelerakteKopelius, schueleraktePhineas, schueleraktePhoebe } from './schuelerakte';
-import { spurensicherungIvy, spurensicherungPhineas } from './spurensicherung';
+import { autopsieberichtIvy, autopsieberichtPhineas } from './autopsiebericht';
 import { stundenplan } from './stundenplan';
 import { todesurkundeElena, todesurkundeIvy } from './todesurkunde';
 import { zeitung } from './zeitung';
@@ -28,8 +28,8 @@ export const clues: Clue<ClueTypes>[] = [
   schueleraktePhineas,
 
   // Spurensicherungen
-  spurensicherungIvy, // TODO
-  spurensicherungPhineas, // TODO
+  autopsieberichtIvy, // TODO
+  autopsieberichtPhineas, // TODO
 
   // Hinweisfundberichte
   bfbChloroformTuch, // TODO

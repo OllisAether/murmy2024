@@ -16,6 +16,8 @@ import { ClueManager } from "./clueManager/clueManager"
 import { Bg, colorize, Fg } from "../console"
 import { FormManager } from "./formManager/formManager"
 
+export const ENTRY_EARN_COINS = 4
+
 export class Game {
   private adminPassword: string
   private boardPassword: string
@@ -226,6 +228,10 @@ export class Game {
       team.meta
     )
     this.replaceClient(teamClient)
+  }
+
+  sendReloadRequestToClient (client: WebSocketClient) {
+    client.send('reload', null, true)
   }
   // #endregion
 
@@ -838,7 +844,7 @@ export class Game {
     board.send('mediaControl', {
       action: 'seek',
       progress
-    })
+    }, true)
   }
 
   requestMedia () {
@@ -888,7 +894,7 @@ export class Game {
   sendMediaProgressToAdmins () {
     this.clients
       .filter((c) => c.type === Role.Admin)
-      .forEach((c) => c.send('mediaProgress', this.progress))
+      .forEach((c) => c.send('mediaProgress', this.progress, true))
   }
   // #endregion
 

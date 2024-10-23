@@ -1,7 +1,7 @@
 import { JsonMap } from "../../../shared/json"
 import { colorize, Fg } from "../../console"
 import { Database } from "../../database"
-import { Game } from "../game"
+import { ENTRY_EARN_COINS, Game } from "../game"
 
 export interface SuspectDatabase extends JsonMap {
   entries: string[]
@@ -120,7 +120,7 @@ export class SuspectDatabaseManager {
     }
 
     this.databases[teamId].entries.push(entryId)
-    game.clueManager.earnInvestigationCoins(teamId, 5)
+    game.clueManager.earnInvestigationCoins(teamId, ENTRY_EARN_COINS)
 
     const teamClient = game.getTeamClient(teamId)
 

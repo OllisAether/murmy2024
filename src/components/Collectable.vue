@@ -47,6 +47,7 @@ const id = idGen()
 
 // const collected = ref(false)
 const collected = computed(() => game.database.entries.some((e) => e === props.entryId))
+
 const rect = ref<{
   x: number
   y: number
@@ -253,6 +254,17 @@ async function startOrbAnimation () {
         .5rem 0 1rem $neon4,
         0 0 3rem 1rem #000;
     }
+  }
+
+  &--collected {
+    background: linear-gradient(45deg, rgba($neon3, 0.05), rgba($neon4, 0.05));
+    box-shadow: 
+      inset .25rem 0 .5rem rgba($neon3, 0.2),
+      inset -.25rem 0 .5rem rgba($neon4, 0.2),
+      
+      -.25rem 0 1rem rgba($neon3, 0.2),
+      .25rem 0 1rem rgba($neon4, 0.2);
+    border-radius: .5rem;
   }
 }
 </style>
