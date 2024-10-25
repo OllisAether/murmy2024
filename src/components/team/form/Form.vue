@@ -114,6 +114,7 @@ watch(pageIndex, (newIndex, oldIndex) => {
 
       display: flex;
       flex-direction: column;
+      padding-bottom: 25vh;
     }
   }
 }

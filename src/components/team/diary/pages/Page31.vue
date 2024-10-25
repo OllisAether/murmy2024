@@ -19,6 +19,8 @@
       Arki - Justin van Bustin<br>
       Mina - Phoebe Blight<br>
       Olli - Das Orakel, Notrufzentrale<br>
+      Fr. Seck - Radiomoderatorin<br>
+      Helena - Krankenschwester Elli<br>
 
       <br>
 

@@ -5,6 +5,45 @@
         <VToolbarTitle>
           Angezeigte Verdächtige
         </VToolbarTitle>
+        <VBtn>
+          <VIcon>mdi-refresh</VIcon>
+          Alle zurücksetzen
+
+          <VDialog
+            activator="parent"
+            max-width="500"
+          >
+            <template #="{ isActive }">
+              <VCard>
+                <VToolbar>
+                  <VToolbarTitle>
+                    Alle Verdächtigen zurücksetzen
+                  </VToolbarTitle>
+
+                  <VBtn
+                    icon
+                    @click="isActive.value = false"
+                  >
+                    <VIcon>mdi-close</VIcon>
+                  </VBtn>
+                </VToolbar>
+                <VCardText>
+                  Möchtest du wirklich alle Verdächtigen zurücksetzen?
+                </VCardText>
+
+                <VCardActions>
+                  <VSpacer />
+                  <VBtn
+                    color="error"
+                    @click="admin.resetShownSuspects(); isActive.value = false"
+                  >
+                    Zurücksetzen
+                  </VBtn>
+                </VCardActions>
+              </VCard>
+            </template>
+          </VDialog>
+        </VBtn>
       </VToolbar>
       <VCardText>
         <VList nav>

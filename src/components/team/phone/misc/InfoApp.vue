@@ -39,7 +39,9 @@ import ScrollView from '../ScrollView.vue';
         <b>Hr. Kegler:</b> Hugo Montague<br>
         <b>Arki:</b> Justin van Bustin<br>
         <b>Mina:</b> Phoebe Blight<br>
-        <b>Olli:</b> Das Orakel, Notrufzentrale
+        <b>Olli:</b> Das Orakel, Notrufzentrale<br>
+        <b>Fr. Seck</b>: Radiomoderatorin<br>
+        <b>Helena</b>: Krankenschwester Elli<br>
         <br><br><br><br><br>
       </div>
     </ScrollView>

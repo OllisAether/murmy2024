@@ -6,7 +6,7 @@ import { ShowNewClues } from "../playback/showNewClues"
 import { Vote } from "../playback/vote"
 import { AddInvestigationCoins } from "../playback/investigationCoins"
 import { Work } from "../playback/work"
-import { ClearAllForms, FilloutForms } from "../playback/forms"
+import { FilloutForms } from "../playback/forms"
 import { Interlude } from "../playback/interlude"
 import { CueType } from "../cue/CueTypes"
 import { AddClues } from "../playback/addClue"
@@ -20,6 +20,7 @@ export const playbacks: (Playback | {
     name: 'Setup',
     trigger: 'manual',
     cues: [
+      { type: CueType.ClearAllForms },
       {
         type: CueType.AddVoteOptions,
         options: {
@@ -143,7 +144,7 @@ export const playbacks: (Playback | {
 
   {
     name: 'Setup Akt 2',
-    trigger: 'manual',
+    trigger: 'auto',
     cues: [
       {
         type: CueType.AddVoteOptions,
@@ -164,6 +165,9 @@ export const playbacks: (Playback | {
   { divider: '- Recap + Okkult-Video -' },
 
   Media('Recap.mp4'),
+  AddInvestigationCoins(10),
+
+  Work(5 * 60_000),
 
   { divider: '- Runde 7 -' },
 
@@ -172,7 +176,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(3 * 60_000),
 
   { divider: '- Runde 8 -' },
 
@@ -182,7 +186,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(4 * 60_000),
 
   { divider: '- Runde 9 -' },
 
@@ -246,8 +250,7 @@ export const playbacks: (Playback | {
 
   { divider: '=== Finale ===' },
 
-  ClearAllForms(),
-  FilloutForms(),
+  FilloutForms(10 * 60_000),
   Idle(0, {
     end: true
   }),

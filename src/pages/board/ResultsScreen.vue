@@ -55,7 +55,7 @@ const game = useGameManager()
 const results = computed(() => {
   return game.results.sort((a, b) => {
     if (a.score === b.score) {
-      return a.entries - b.entries
+      return b.entries - a.entries
     }
 
     return b.score - a.score

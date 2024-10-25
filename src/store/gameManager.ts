@@ -83,6 +83,13 @@ export const useGameManager = defineStore('gameManager', () => {
           })
           ws.send('getForm')
         }),
+        new Promise<void>(resolve => {
+          ws.once('formPage').then(() => {
+            console.log('Fetched formPage')
+            resolve()
+          })
+          ws.send('getFormPage')
+        }),
       ] : []),
       ...(auth.role === Role.Board ? [
         new Promise<void>(resolve => {
@@ -891,6 +898,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
   // #region Form
   const form = ref<Record<string, FormFieldValue>>({})
+  const formPage = ref<number>(0)
   const formSubmitted = ref(false)
 
   ws.onAction('form', (data: {
@@ -901,11 +909,41 @@ export const useGameManager = defineStore('gameManager', () => {
     formSubmitted.value = data.submitted ?? false
   })
 
+  ws.onAction('formPage', (data: number) => {
+    formPage.value = data
+  })
+
+  function nextPage () {
+    // Optimistic update
+    formPage.value++
+
+    ws.send('nextPage')
+  }
+
+  let fieldIdQueue: Record<string, {
+    value: FormFieldValue
+    timeout: number
+  } | undefined | null> = {}
   function setFieldValue (fieldId: string, value: FormFieldValue) {
-    ws.send('setField', { fieldId, value })
+    // ws.send('setField', { fieldId, value })
+
+    if (fieldIdQueue[fieldId] !== undefined && fieldIdQueue[fieldId] !== null) {
+      clearTimeout(fieldIdQueue[fieldId].timeout)
+    }
+
+    fieldIdQueue[fieldId] = {
+      value,
+      timeout: setTimeout(() => {
+        ws.send('setField', { fieldId, value: fieldIdQueue[fieldId]?.value })
+        fieldIdQueue[fieldId] = null
+      }, 500) as unknown as number
+    }
   }
 
   function submitForm () {
+    // Optimistic update
+    formSubmitted.value = true
+
     ws.send('submitForm')
   }
 
@@ -972,9 +1010,11 @@ export const useGameManager = defineStore('gameManager', () => {
     stopInvestigationCoinsDelay,
 
     form,
+    formPage,
     formSubmitted,
     setFieldValue,
     submitForm,
+    nextPage,
     results
   }
 })

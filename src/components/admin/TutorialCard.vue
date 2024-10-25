@@ -26,13 +26,15 @@
             Unten Links
           </p>
 
+          <p>
+            Dann gebe den Code 3010 ein.
+          </p>
+
           <h2>
             Admin & Board Login
           </h2>
           <p>
-            Um dich als Admin oder Board einzuloggen, drücke 3x Strg + Shift + A.
-            <br />
-            Oder halte 3 Finger für 2 Sekunden auf den Bildschirm.
+            Um dich als Admin oder Board einzuloggen, geh auf die Seite /admin.
           </p>
           <p>
             Danach kannst du dich mit folgenden Daten einloggen:
@@ -40,7 +42,7 @@
           <p>
             Admin: murmy2.0
             <br />
-            Board: board
+            Board: boulder
           </p>
 
           <h2>

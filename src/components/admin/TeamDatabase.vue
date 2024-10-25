@@ -7,6 +7,46 @@
         {{ team.name }} ({{ team.id }})
       </VToolbarTitle>
 
+      <VBtn>
+        <VIcon>mdi-refresh</VIcon>
+        Alles zurücksetzen
+
+        <VDialog
+          max-width="400"
+          activator="parent"
+        >
+          <template #="{ isActive }">
+            <VCard>
+              <VToolbar>
+                <VToolbarTitle>
+                  Alles zurücksetzen
+                </VToolbarTitle>
+
+                <VBtn
+                  icon
+                  @click="isActive.value = false"
+                >
+                  <VIcon>mdi-close</VIcon>
+                </VBtn>
+              </VToolbar>
+              <VCardText>
+                Möchtest du wirklich alle Einträge des Teams zurücksetzen?
+              </VCardText>
+
+              <VCardActions>
+                <VSpacer />
+                <VBtn
+                  color="error"
+                  @click="admin.resetEntries(team.id); isActive.value = false"
+                >
+                  Zurücksetzen
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </template>
+        </VDialog>
+      </VBtn>
+
       <VBtn icon>
         <VIcon>mdi-plus</VIcon>
 
@@ -62,6 +102,7 @@ import { useAdmin } from '@/store/admin';
 import { ref } from 'vue';
 import { useGameManager } from '@/store/gameManager';
 import { getRawText } from '../../../shared/textContent';
+import { VDialog } from 'vuetify/components';
 
 const admin = useAdmin()
 const game = useGameManager()

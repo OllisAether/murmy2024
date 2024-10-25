@@ -1047,6 +1047,24 @@ export class Game {
       }))
   }
 
+  sendFormPageToTeamClient (client?: WebSocketClient) {
+    console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending form page to team client')
+
+    if (client) {
+      if (client.type !== Role.Team) {
+        console.warn(colorize('[Game]', Fg.White, Bg.Blue), 'Client is not a team')
+        return
+      }
+
+      client.send('formPage', this.formManager.getFormPage((client as TeamClient).teamId))
+      return
+    }
+
+    this.clients
+      .filter((c) => c.type === Role.Team)
+      .forEach((c) => (c as TeamClient).send('formPage', this.formManager.getFormPage((c as TeamClient).teamId)))
+  }
+
   sendResultsToBoard (client?: WebSocketClient) {
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending results to board')
 
@@ -1071,8 +1089,10 @@ export class Game {
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending forms to admins')
 
     const forms = {
-      forms: this.formManager.getForms(),
-      results: this.formManager.getResults()
+      // forms: this.formManager.getForms(),
+      pages: this.formManager.getFormPages(),
+      results: this.formManager.getResults(),
+      submitted: this.formManager.getSubmittedForms()
     }
 
     if (client) {

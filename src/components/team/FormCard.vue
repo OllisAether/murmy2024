@@ -44,20 +44,51 @@
             Seite {{ pageIndex + 1 }} von {{ form.length }}
           </div>
           <VSpacer />
-          <Btn
-            :disabled="pageIndex === 0"
-            @click="pageIndex--"
-          >
-            <VIcon size="1em" class="mr-2">mdi-arrow-left</VIcon>
-            Zurück
-          </Btn>
-          <Btn
-            v-if="pageIndex !== form.length - 1"
-            @click="pageIndex++"
-          >
-            Weiter
-            <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
-          </Btn>
+          <VDialog v-if="pageIndex < form.length - 1" max-width="400">
+            <template #activator="{ props }">
+              <Btn v-bind="props">
+                Weiter
+                <VIcon size="1em" class="ml-2">mdi-arrow-right</VIcon>
+              </Btn>
+            </template>
+            <template #="{ isActive }">
+              <VCard
+                color="transparent"
+                elevation="0"
+                style="overflow: visible;"
+              >
+                <SkewBox
+                  style="
+                    position: absolute;
+                    inset: -1rem -2rem;
+                  "
+                  :rounded-corners="8"
+                  :skew="5"
+                />
+
+                <VCardTitle style="position: relative; font-size: 1.2em" class="px-0 text-red">
+                  <span style="font-size: 1.5em">
+                    <VIcon size="1em" class="mr-2">mdi-alert</VIcon>
+                    Ihr könnt nicht zurück!
+                  </span>
+                </VCardTitle>
+
+                <!-- <div style="position: relative; font-size: 1rem;"> -->
+                  <VCardText style="position: relative;" class="px-0">
+                    Nach dem Weitergehen könnt ihr eure Antworten nicht mehr ändern.
+                  </VCardText>
+                <!-- </div> -->
+                <VCardActions>
+                  <Btn class="mr-4" color="#A23946" @click="isActive.value = false">
+                    Abbrechen
+                  </Btn>
+                  <Btn color="#006d3e" @click="game.nextPage(); isActive.value = false">
+                    Weiter
+                  </Btn>
+                </VCardActions>
+              </VCard>
+            </template>
+          </VDialog>
           <VDialog max-width="400" v-else>
             <template #activator="{ props }">
               <Btn color="#006d3e" v-bind="props">
@@ -80,9 +111,11 @@
                   :skew="5"
                 />
 
-                <VCardTitle style="position: relative;" class="px-0">
-                  <VIcon size="1em" class="mr-2">mdi-alert</VIcon>
-                  Wichtig
+                <VCardTitle style="position: relative;" class="px-0 text-red">
+                  <span style="font-size: 1.5em">
+                    <VIcon size="1em" class="mr-2">mdi-alert</VIcon>
+                    Ihr könnt nicht zurück!
+                  </span>
                 </VCardTitle>
 
                 <!-- <div style="position: relative; font-size: 1rem;"> -->
@@ -92,10 +125,10 @@
                 <!-- </div> -->
                 <VCardActions>
                   <Btn class="mr-4" color="#A23946" @click="isActive.value = false">
-                    Nein
+                    Abbrechen
                   </Btn>
                   <Btn color="#006d3e" @click="submit">
-                    Ja
+                    Absenden
                   </Btn>
                 </VCardActions>
               </VCard>
@@ -116,7 +149,7 @@
 
 <script lang="ts" setup>
 import { useGameManager } from '@/store/gameManager';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Btn from '../Btn.vue';
 import SkewBox from '../SkewBox.vue';
 import Form from './form/Form.vue';
@@ -125,7 +158,7 @@ import { form } from '../../../shared/assets/form';
 const game = useGameManager();
 
 const showForm = ref(false);
-const pageIndex = ref(0);
+const pageIndex = computed(() => game.formPage);
 
 function submit() {
   game.submitForm();

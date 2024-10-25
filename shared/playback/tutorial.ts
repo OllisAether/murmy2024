@@ -28,8 +28,8 @@ export const Tutorial = (): Playback => ({
       options: {
         options: {
           mainClue: [
-            'phone',
-            'diary'
+            'diary',
+            'phone'
           ]
         }
       }

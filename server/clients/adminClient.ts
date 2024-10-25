@@ -1055,6 +1055,31 @@ export class AdminClient extends WebSocketClient {
         }
       },
       {
+        action: 'resetEntries',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Resetting entries', payload);
+
+          const teamId = payload?.teamId;
+
+          if (typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('resetEntries:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.suspectDatabaseManager.resetEntries(teamId);
+
+          this.send('resetEntries:response', {
+            success: true,
+          });
+        }
+      },
+      {
         action: 'removeShownSuspect',
         handler: (payload) => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Removing shown suspect', payload);
@@ -1094,6 +1119,13 @@ export class AdminClient extends WebSocketClient {
           }
 
           game.suspectDatabaseManager.addShownSuspect(suspectId);
+        }
+      },
+      {
+        action: 'resetShownSuspects',
+        handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Resetting shown suspects');
+          game.suspectDatabaseManager.resetShownSuspects();
         }
       },
       // #endregion
@@ -1202,6 +1234,28 @@ export class AdminClient extends WebSocketClient {
           game.clueManager.removeClue(clueId);
 
           this.send('removeClue:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'clearAvailableClues',
+        handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Clearing available clues');
+          game.clueManager.clearAvailableClues();
+
+          this.send('clearAvailableClues:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'clearUnlockedClues',
+        handler: () => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Clearing unlocked clues');
+          game.clueManager.clearUnlockedClues();
+
+          this.send('clearUnlockedClues:response', {
             success: true,
           });
         }
@@ -1374,6 +1428,75 @@ export class AdminClient extends WebSocketClient {
         handler: () => {
           console.log(colorize('[Clients: Admin]', Fg.Red), 'Clearing forms');
           game.formManager.clearAllForms();
+        }
+      },
+      {
+        action: 'clearForm',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Clearing form', payload);
+
+          const teamId = payload?.teamId;
+
+          if (typeof teamId !== 'string') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('clearForm:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.formManager.clearForm(teamId);
+
+          this.send('clearForm:response', {
+            success: true,
+          });
+        }
+      },
+      {
+        action: 'setSubmittedForm',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting submitted form', payload);
+
+          const teamId = payload?.teamId;
+          const submitted = payload?.submitted;
+
+          if (typeof teamId !== 'string' || typeof submitted !== 'boolean') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setSubmittedForm:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.formManager.setSubmittedForm(teamId, submitted);
+        }
+      },
+      {
+        action: 'setFormPage',
+        handler: (payload) => {
+          console.log(colorize('[Clients: Admin]', Fg.Red), 'Setting form page', payload);
+
+          const teamId = payload?.teamId;
+          const page = payload?.page;
+
+          if (typeof teamId !== 'string' || typeof page !== 'number') {
+            console.warn(colorize('[Clients: Admin]', Fg.Red), 'Invalid payload', payload);
+
+            this.send('setFormPage:response', {
+              success: false,
+              message: 'Invalid payload'
+            });
+
+            return;
+          }
+
+          game.formManager.setFormPage(teamId, page);
         }
       }
     ]))

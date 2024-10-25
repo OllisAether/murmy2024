@@ -290,6 +290,20 @@ export class ClueManager {
     this.save()
   }
 
+  clearAvailableClues() {
+    this.availableClues = []
+
+    Game.get().sendCluesToClients()
+  }
+
+  clearUnlockedClues() {
+    this.unlockedClues = {}
+
+    Game.get().sendCluesToClients()
+    Game.get().sendCluesToAdmins()
+    this.save()
+  }
+
   unlockClue(teamId: string, clueId: string): boolean {
     if (!this.availableClues.includes(clueId)) {
       console.error(colorize('[ClueManager]', Fg.Blue), `Clue ${clueId} is not available`)

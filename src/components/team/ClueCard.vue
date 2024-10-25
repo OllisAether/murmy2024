@@ -145,9 +145,9 @@
             </div>
           </div>
 
-          <div class="clue-card__clue-display__found-entries">
+          <!-- <div class="clue-card__clue-display__found-entries">
             {{ unlockedEntries.length }} von {{ entriesInClue.length }} Hinweise markiert
-          </div>
+          </div> -->
 
           <Btn
             v-if="closable"
@@ -179,7 +179,7 @@ import { useTutorial } from '@/store/team/tutorial';
 import NewBadge from '../NewBadge.vue';
 import HelpBtn from './HelpBtn.vue';
 import TextContentRenderer from '../TextContentRenderer.vue';
-import { getEntryIds } from '../../../shared/textContent';
+// import { getEntryIds } from '../../../shared/textContent';
 
 const tutorial = useTutorial()
 const game = useGameManager()
@@ -205,19 +205,19 @@ const isAffordable = computed(() => (game.clues.investigationCoins ?? Infinity) 
 const showBuyConfirmation = useModel(props, 'showBuyConfirmation');
 const delayedShowBuyConfirmation = ref(false);
 
-const entriesInClue = computed(() => {
-  let entries: string[] = [];
-  if (props.transcript) {
-    entries = props.transcript.content.flatMap(l => getEntryIds(l[1]))
-  } else {
-    entries = clue?.images.entries
-      ?.map((entry) => entry.entry?.id ?? entry.entryId)
-      .filter((x) => x) as string[] ?? [];
-  }
+// const entriesInClue = computed(() => {
+//   let entries: string[] = [];
+//   if (props.transcript) {
+//     entries = props.transcript.content.flatMap(l => getEntryIds(l[1]))
+//   } else {
+//     entries = clue?.images.entries
+//       ?.map((entry) => entry.entry?.id ?? entry.entryId)
+//       .filter((x) => x) as string[] ?? [];
+//   }
 
-  return entries.filter((c, i, s) => s.indexOf(c) === i);
-});
-const unlockedEntries = computed(() => entriesInClue.value.filter((c) => game.database.entries.includes(c)));
+//   return entries.filter((c, i, s) => s.indexOf(c) === i);
+// });
+// const unlockedEntries = computed(() => entriesInClue.value.filter((c) => game.database.entries.includes(c)));
 
 watch(showBuyConfirmation, (val, _, onCleanup) => {
   if (val) {

@@ -5,6 +5,46 @@
         <VToolbarTitle>
           Clues
         </VToolbarTitle>
+
+        <VBtn>
+          <VIcon>mdi-refresh</VIcon>
+          Alle zurücksetzen
+
+          <VDialog
+            activator="parent"
+            max-width="500"
+          >
+            <template #="{ isActive }">
+              <VCard>
+                <VToolbar>
+                  <VToolbarTitle>
+                    Alle Clues zurücksetzen
+                  </VToolbarTitle>
+
+                  <VBtn
+                    icon
+                    @click="isActive.value = false"
+                  >
+                    <VIcon>mdi-close</VIcon>
+                  </VBtn>
+                </VToolbar>
+                <VCardText>
+                  Möchtest du wirklich alle Clues zurücksetzen?
+                </VCardText>
+
+                <VCardActions>
+                  <VSpacer />
+                  <VBtn
+                    color="error"
+                    @click="admin.clearAvailableClues(); isActive.value = false"
+                  >
+                    Zurücksetzen
+                  </VBtn>
+                </VCardActions>
+              </VCard>
+            </template>
+          </VDialog>
+        </VBtn>
       </VToolbar>
 
       <VList>
@@ -98,6 +138,46 @@
         <VToolbarTitle>
           Freigeschaltete Clues
         </VToolbarTitle>
+
+        <VBtn>
+          <VIcon>mdi-refresh</VIcon>
+          Alle zurücksetzen
+
+          <VDialog
+            activator="parent"
+            max-width="500"
+          >
+            <template #="{ isActive }">
+              <VCard>
+                <VToolbar>
+                  <VToolbarTitle>
+                    Alle freigeschalteten Clues zurücksetzen
+                  </VToolbarTitle>
+
+                  <VBtn
+                    icon
+                    @click="isActive.value = false"
+                  >
+                    <VIcon>mdi-close</VIcon>
+                  </VBtn>
+                </VToolbar>
+                <VCardText>
+                  Möchtest du wirklich alle freigeschalteten Clues zurücksetzen?
+                </VCardText>
+
+                <VCardActions>
+                  <VSpacer />
+                  <VBtn
+                    color="error"
+                    @click="admin.clearUnlockedClues(); isActive.value = false"
+                  >
+                    Zurücksetzen
+                  </VBtn>
+                </VCardActions>
+              </VCard>
+            </template>
+          </VDialog>
+        </VBtn>
       </VToolbar>
       <VCardText>
         <UnlockedCluesTeamCard
@@ -279,6 +359,7 @@ import { computed } from 'vue';
 import ClueListItem from '@/components/admin/ClueListItem.vue';
 import UnlockedCluesTeamCard from '@/components/admin/UnlockedCluesTeamCard.vue';
 import SetCoinsCard from '@/components/admin/SetCoinsCard.vue';
+import { VIcon } from 'vuetify/components';
 
 const game = useGameManager();
 const admin = useAdmin();

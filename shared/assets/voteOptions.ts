@@ -85,7 +85,7 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'justin1',
-    title: 'Interview: Justin van Bustin',
+    title: 'Interview: Kopelius van Bustin',
     image: 'suspects/Justin1.webp',
     suspectIds: ['justin', 'ivy'],
     color: getSuspectById('justin')?.color,
@@ -200,7 +200,8 @@ export const voteOptions: VoteOption[] = [
       main: [
         'krankenhausLog',
       ]
-    }
+    },
+    media: 'Justinssprachaufnahme.mp3',
   },
   {
     id: 'krankenhausLog',
@@ -208,5 +209,7 @@ export const voteOptions: VoteOption[] = [
     image: 'suspects/phoebe.webp',
     suspectIds: ['phineas'],
     removeSelf: true,
+
+    media: 'KrankenhausLog.mp3',
   }
 ]

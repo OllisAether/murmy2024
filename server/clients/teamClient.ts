@@ -1,6 +1,5 @@
 import { FormFieldValue } from "../../shared/form";
 import { Role } from "../../shared/roles";
-import { Entry } from "../../shared/suspectDatabase/entry";
 import { colorize, Fg } from "../console";
 import { Game } from "../game/game";
 import { WebSocketClient, genericActions, handleActions } from "./client";
@@ -163,24 +162,28 @@ export class TeamClient extends WebSocketClient {
 
           if (typeof fieldId !== 'string') {
             console.error(colorize('[Client: Team]', Fg.Blue), 'Invalid value', fieldId, value)
-            this.send('setField:response', {
-              success: false,
-              message: 'Invalid Format'
-            })
             return
           }
 
           game.formManager.setField(this.teamId, fieldId, value as FormFieldValue)
-
-          this.send('setField:response', {
-            success: true
-          })
         }
       },
       {
         action: 'getForm',
         handler: () => {
           game.sendFormToTeamClient(this)
+        }
+      },
+      {
+        action: 'getFormPage',
+        handler: () => {
+          game.sendFormPageToTeamClient(this)
+        }
+      },
+      {
+        action: 'nextPage',
+        handler: () => {
+          game.formManager.goToNextFormPage(this.teamId)
         }
       },
       {

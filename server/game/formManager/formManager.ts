@@ -9,12 +9,16 @@ export class FormManager {
   private forms: {
     [teamId: string]: Record<string, FormFieldValue>
   } = {}
+  private formPage: {
+    [teamId: string]: number
+  } = {}
   private submittedForms: string[] = []
   private results: Record<string, number> = {}
 
   public save () {
     Database.get().saveCollection('forms', {
       forms: this.forms,
+      formPage: this.formPage,
       results: this.results,
       submittedForms: this.submittedForms,
     })
@@ -42,6 +46,22 @@ export class FormManager {
       return
     } else {
       this.forms = forms as Record<string, Record<string, FormFieldValue>>
+    }
+
+    const formPage = data.formPage
+
+    if (
+      !formPage ||
+      typeof formPage !== 'object' ||
+      Array.isArray(formPage) ||
+      Object.keys(formPage).some((key) =>
+        typeof key !== 'string'
+        || typeof formPage[key] !== 'number')
+    ) {
+      console.error(colorize('[FormManager]', Fg.Blue), 'Invalid formPage data', formPage)
+      return
+    } else {
+      this.formPage = formPage as Record<string, number>
     }
 
     const results = data.results
@@ -141,6 +161,33 @@ export class FormManager {
     return this.submittedForms
   }
 
+  public getFormPage(teamId: string): number {
+    return this.formPage[teamId] || 0
+  }
+
+  public getFormPages(): Record<string, number> {
+    return this.formPage
+  }
+
+  public setFormPage(teamId: string, page: number): void {
+    console.log(colorize('[FormManager]', Fg.Blue), 'Setting form page', teamId, page);
+
+    this.formPage[teamId] = page
+
+    const teamClient = Game.get().getTeamClient(teamId)
+
+    teamClient && Game.get().sendFormPageToTeamClient(teamClient)
+    Game.get().sendFormsToAdmins()
+    this.save()
+  }
+
+  public goToNextFormPage(teamId: string): void {
+    const currentPage = this.getFormPage(teamId)
+    const nextPage = currentPage + 1
+
+    this.setFormPage(teamId, nextPage)
+  }
+
   public isFormSubmitted(teamId: string): boolean {
     return this.submittedForms.includes(teamId)
   }
@@ -165,6 +212,7 @@ export class FormManager {
     this.forms = {}
     this.results = {}
     this.submittedForms = []
+    this.formPage = {}
 
     this.save()
     Game.get().sendFormToTeamClient()
@@ -174,11 +222,14 @@ export class FormManager {
   public clearForm(teamId: string): void {
     delete this.forms[teamId]
     this.submittedForms = this.submittedForms.filter((id) => id !== teamId)
+    this.formPage[teamId] = 0
 
     const teamClient = Game.get().getTeamClient(teamId)
 
     this.save()
     teamClient && Game.get().sendFormToTeamClient(teamClient)
+    teamClient && Game.get().sendFormPageToTeamClient(teamClient)
+    Game.get().sendFormsToAdmins()
   }
 
   public submitForm(teamId: string): void {
@@ -197,6 +248,20 @@ export class FormManager {
     this.save()
     teamClient && Game.get().sendFormToTeamClient(teamClient)
     Game.get().sendFormsToAdmins()
+  }
+
+  public setSubmittedForm (teamId: string, submitted: boolean): void {
+    if (submitted) {
+      this.submitForm(teamId)
+    } else {
+      this.submittedForms = this.submittedForms.filter((id) => id !== teamId)
+
+      const teamClient = Game.get().getTeamClient(teamId)
+
+      this.save()
+      teamClient && Game.get().sendFormToTeamClient(teamClient)
+      Game.get().sendFormsToAdmins()
+    }
   }
 
   public calculateResult(teamId: string): number {

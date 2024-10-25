@@ -55,7 +55,7 @@ export abstract class WebSocketClient {
   ) {
     console.log(colorize('[Client]', Fg.Blue), 'Sending', action, 'with payload', payload, 'bypassTimeout', bypassTimeout);
 
-    if (bypassTimeout) {
+    if (bypassTimeout || this.type === Role.Admin) {
       this.ws.send(JSON.stringify({
         action,
         payload
@@ -98,7 +98,7 @@ export abstract class WebSocketClient {
           return;
         }
 
-        if (n >= 3) {
+        if (n >= 5) {
           console.log(colorize('[Client]', Fg.Blue), 'Retry limit reached for', action, '. Reloading client');
 
           if (this.reloadInterval) {
@@ -128,7 +128,7 @@ export abstract class WebSocketClient {
           return;
         }
 
-        console.log(colorize('[Client]', Fg.Blue), 'Sending', action, 'with payload', this.sendStack[action]);
+        console.log(colorize('[Client]', Fg.Blue), 'Sending', action);
         this.ws.send(JSON.stringify({
           action,
           payload: this.sendStack[action].payload
@@ -147,7 +147,7 @@ export abstract class WebSocketClient {
       }
 
       sendAndWaitForAck(0)
-    }, 50)
+    }, 100)
   }
 
   disconnect () {

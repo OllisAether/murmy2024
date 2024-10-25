@@ -159,8 +159,8 @@ function onPointerDown (e: PointerEvent) {
 
   svg {
     display: block;
-    width: 10rem;
-    height: 10rem;
+    width: 7rem;
+    height: 7rem;
   }
 
   &--nothing-found {

@@ -114,7 +114,7 @@ export const useAdmin = defineStore('admin', () => {
       }),
       ws.onAction('forms', (data) => {
         forms.value = data
-      }),
+      })
     ]
 
     ws.send('getTeams')
@@ -607,12 +607,20 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('addEntry', { teamId, entryId })
   }
 
+  function resetEntries (teamId: string) {
+    ws.send('resetEntries', { teamId })
+  }
+
   function removeShownSuspect (suspectId: string) {
     ws.send('removeShownSuspect', { suspectId })
   }
 
   function addShownSuspect (suspectId: string) {
     ws.send('addShownSuspect', { suspectId })
+  }
+
+  function resetShownSuspects () {
+    ws.send('resetShownSuspects')
   }
   // #endregion
 
@@ -653,6 +661,14 @@ export const useAdmin = defineStore('admin', () => {
     ws.send('removeClue', { clueId })
   }
 
+  function clearAvailableClues () {
+    ws.send('clearAvailableClues')
+  }
+
+  function clearUnlockedClues () {
+    ws.send('clearUnlockedClues')
+  }
+
   function unlockClue (teamId: string, clueId: string) {
     ws.send('unlockClue', { teamId, clueId })
   }
@@ -684,15 +700,31 @@ export const useAdmin = defineStore('admin', () => {
 
   // #region Forms
   const forms = ref<{
-    forms: Record<string, Record<string, FormFieldValue>>
+    // forms: Record<string, Record<string, FormFieldValue>>
+    pages: Record<string, number>
     results: Result[]
+    submitted: string[]
   }>({
-    forms: {},
-    results: []
+    // forms: {},
+    pages: {},
+    results: [],
+    submitted: []
   })
 
   function clearForms () {
     ws.send('clearForms')
+  }
+
+  function clearForm(teamId: string) {
+    ws.send('clearForm', { teamId })
+  }
+
+  function setSubmittedForm(teamId: string, submitted: boolean) {
+    ws.send('setSubmittedForm', { teamId, submitted })
+  }
+
+  function setFormPage(teamId: string, page: number) {
+    ws.send('setFormPage', { teamId, page })
   }
   // #endregion
   
@@ -758,14 +790,18 @@ export const useAdmin = defineStore('admin', () => {
     suspectDatabases,
     removeEntry,
     addEntry,
+    resetEntries,
     removeShownSuspect,
     addShownSuspect,
+    resetShownSuspects,
 
     clues,
     setGivenInvestigationCoins,
     setInvestigationCoinDelta,
     addClue,
     removeClue,
+    clearAvailableClues,
+    clearUnlockedClues,
     unlockClue,
     lockClue,
     setAssignFurtherMainClueTypesRandomly,
@@ -775,6 +811,9 @@ export const useAdmin = defineStore('admin', () => {
     assignRandomMainClueTypeForAllTeams,
 
     forms,
-    clearForms
+    clearForms,
+    clearForm,
+    setSubmittedForm,
+    setFormPage
   }
 })

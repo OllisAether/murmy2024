@@ -164,8 +164,8 @@ async function startOrbAnimation () {
   &--inline {
     display: inline;
     width: fit-content;
-    padding: .5em;
-    margin: -.5em;
+    padding: .25em;
+    margin: -.25em;
   }
 
   &--highlight {

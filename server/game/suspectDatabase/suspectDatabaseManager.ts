@@ -101,6 +101,14 @@ export class SuspectDatabaseManager {
     this.save()
   }
 
+  public resetShownSuspects (): void {
+    console.log(colorize('[SuspectDatabaseManager]', Fg.Cyan), 'Resetting shown suspects')
+    this.shownSuspects = []
+
+    Game.get().sendShownSuspectsToClients()
+    this.save()
+  }
+
   public addEntry (teamId: string, entryId: string): void {
     const game = Game.get()
     const team = game.getTeam(teamId)
@@ -126,6 +134,20 @@ export class SuspectDatabaseManager {
 
     teamClient && game.sendSuspectDatabaseToTeams(teamClient)
     game.sendSuspectDatabasesToAdmins()
+    this.save()
+  }
+
+  public resetEntries (teamId: string): void {
+    if (!this.databases[teamId]) {
+      this.databases[teamId] = { entries: [] }
+    }
+
+    this.databases[teamId].entries = []
+
+    const teamClient = Game.get().getTeamClient(teamId)
+    
+    teamClient && Game.get().sendSuspectDatabaseToTeams(teamClient)
+    Game.get().sendSuspectDatabasesToAdmins()
     this.save()
   }
 

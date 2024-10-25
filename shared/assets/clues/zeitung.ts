@@ -1,5 +1,5 @@
 import { Clue } from "../../clue";
-import { bold, textContent } from "../../textContent";
+import { italic, textContent } from "../../textContent";
 
 export const zeitung: Clue<'images'> = {
   type: 'images',
@@ -19,11 +19,8 @@ export const zeitung: Clue<'images'> = {
         },
         entry: {
           id: 'leiche-im-wald',
-          title: 'LEICHE IM WALD GEFUNDEN',
-          description: textContent([
-            bold('LEICHE IM STADTWALD LEBENDIG BEGRABEN!!!'),
-            '\n\nAm Samstag, den 16. Februar 2013, wurde im Stadtwald von Alt-Arborwinde die Leiche eines jungen Mannes entdeckt. Bei dem Opfer handelt es sich um Phineas Musé, eines Jugendlichen, der von Ermittlern identifiziert wurde. Phineas wurde lebendig begraben und erlag seinem qualvollen Schicksal bereits zwei Tage zuvor, unweit einer abgelegenen Holzfällerhütte.\n\nDie Ermittler fahnden weiterhin intensiv nach dem Täter.'
-          ]),
+          title: textContent(['Zeitungsartikel - ', italic('„LEICHE IM WALD GEFUNDEN“')]),
+          description: 'Am 16. Februar 2013, wurde die Leiche von Phineas Musé im Stadtwald unweit einer abgelegenen Holzfällerhütte aufgefunden. Der Tod wird auf zwei Tage zuvor datiert.',
           suspectId: 'phineas',
         }
       }

@@ -192,7 +192,7 @@
                 </b>
               </p>
               <Btn
-                class="w-100"
+                class="w-100 mb-4"
                 @click="reload()"
               >
                 Seite neu laden

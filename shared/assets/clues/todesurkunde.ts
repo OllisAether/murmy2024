@@ -45,9 +45,9 @@ export const todesurkundeIvy: Clue<'images'> = {
         },
         entry: {
           id: 'ivy-todesdatum',
-          title: '14.02.2013 14:11 - Zeitpunkt des Todes',
+          title: '14.02.2013 13:30 - Zeitpunkt des Todes',
           suspectId: 'ivy',
-          description: 'Ivy ist am 14.02.2013 um 14:11 verstorben.'
+          description: 'Ivys Tod wird auf den 14.02.2013 um 13:30 datiert.'
         }
       }
     ]

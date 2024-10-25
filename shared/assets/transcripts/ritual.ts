@@ -4,9 +4,9 @@ import { getSuspectById } from "../suspects";
 
 export const ritual: Transcript =  {
   id: 'ritual',
-  for: 'Ritual.mp4',
+  for: 'Recap.mp4',
   thumbnailAssetId: 'thumbnails/Ritual.webp',
-  title: 'Ritual',
+  title: 'Ritual des Orakels',
   content: [
     ['ivy', 'Filmt!'],
     [null, 'Ivy stellt die Kamera auf.\nCassandra und Ivy sitzen vor einem Tisch mit Kerzen, kleinen Totenköpfen und einer leuchtenden Kristallkugel.'],
@@ -42,8 +42,7 @@ Führt es dich auf Pfade mystisch.`],
   speakers: [
     {
       id: 'ivy',
-      avatarAssetId: 'suspects/phoebe.webp',
-      flipAvatar: true,
+      avatarAssetId: 'suspects/Ivy.webp',
       alignment: 'right',
       name: getSuspectById('ivy')?.name ?? '',
       color: getSuspectById('ivy')?.color

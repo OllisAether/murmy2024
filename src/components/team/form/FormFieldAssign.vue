@@ -3,7 +3,7 @@
     'form-field-assign--multiple': field.multiple,
     'form-field-assign--dragging': currentEntry
   }]">
-    <div class="form-field-assign__pool">
+    <div class="form-field-assign__pool" ref="poolEl">
       <div
         v-for="entry in pool"
         :key="entry.id"
@@ -87,6 +87,7 @@ const props = defineProps<{
 const emit = defineEmits(['setForm'])
 
 const choices = ref<HTMLDivElement[]>([])
+const poolEl = ref<HTMLDivElement | null>(null)
 
 const pairs = ref<FormFieldAssignValue>(props.value ?? [])
 watch(pairs, () => emit('setForm', pairs.value), { deep: true })
@@ -189,7 +190,13 @@ function pointerdown (event: PointerEvent, b: string) {
 
       const a = choiceEl?.dataset.choiceId
 
-      if (a) {
+      let hoveringPool = false
+      const poolRect = poolEl.value?.getBoundingClientRect()
+      if (poolRect && event.clientX >= poolRect.left && event.clientX <= poolRect.right && event.clientY >= poolRect.top && event.clientY <= poolRect.bottom) {
+        hoveringPool = true
+      }
+
+      if (a && !hoveringPool) {
         hovering.value = a
       } else {
         hovering.value = null
@@ -205,7 +212,15 @@ function pointerdown (event: PointerEvent, b: string) {
 
     const a = choiceEl?.dataset.choiceId
 
-    if (a) {
+    let hoveringPool = false
+    const poolRect = poolEl.value?.getBoundingClientRect()
+    if (poolRect && event.clientX >= poolRect.left && event.clientX <= poolRect.right && event.clientY >= poolRect.top && event.clientY <= poolRect.bottom) {
+      hoveringPool = true
+    }
+
+    console.log(a, hoveringPool)
+
+    if (a && !hoveringPool) {
       if (!(pairs.value.find(p => p.a === a)?.b.includes(b) ?? false)) {
         addPair(a, b)
       }
@@ -235,16 +250,15 @@ function pointerdown (event: PointerEvent, b: string) {
     display: flex;
     flex-wrap: wrap;
     gap: .5rem;
-    background: #393c3fa1;
+    background: #282c2f;
     border: 1px solid #fff2;
-    padding: .5rem;
+    padding: .5rem 4rem .5rem .5rem;
     border-radius: 1rem;
-
-    -webkit-backdrop-filter: blur(2rem);
-    backdrop-filter: blur(2rem);
+    max-height: 20rem;
+    overflow-x: auto;
 
     &__entry {
-      padding: 1rem;
+      padding: .25rem .5rem;
       border-radius: 0.5rem;
       background: #fff1;
       border: 1px solid #fff1;
@@ -260,7 +274,7 @@ function pointerdown (event: PointerEvent, b: string) {
     }
 
     &__no-more {
-      padding: 1rem;
+      padding: .5rem .75rem;
       color: #fff8;
       text-align: center;
       width: 100%;
@@ -291,7 +305,7 @@ function pointerdown (event: PointerEvent, b: string) {
       border-radius: 1rem;
       background: #393c3fa1;
       border: 1px solid #fff2;
-      min-height: 4.5rem;
+      min-height: 4rem;
       line-height: 1rem;
       display: flex;
       gap: .5rem;
@@ -305,7 +319,7 @@ function pointerdown (event: PointerEvent, b: string) {
       }
 
       &__entry {
-        padding: 1rem;
+        padding: .5rem .75rem;
         border-radius: 0.5rem;
         background: #fff1;
         border: 1px solid #fff1;
@@ -332,13 +346,14 @@ function pointerdown (event: PointerEvent, b: string) {
 
   &__current-entry {
     position: fixed;
-    padding: 1rem;
+    padding: .5rem .75rem;
     border-radius: 0.5rem;
     background: #fff1;
     border: 1px solid #fff1;
     transform: translate(-50%, -100%);
 
     display: flex;
+    width: max-content;
     gap: .5rem;
     align-items: center;
 
