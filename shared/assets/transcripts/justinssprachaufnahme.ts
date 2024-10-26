@@ -12,7 +12,13 @@ export const justinssprachaufnahme: Transcript =  {
 
 Du hast's verdient. Dieser Blick. Du hast einfach auf mich- aufgehört auf mich runterzuschauen. Du denkst du bist was besseres als ich.
 
-Irgendwann reicht's halt, checkst du? Also hab ich dich gepackt und eine geknallt. Ich hab nicht mal richtig nachgedacht, Mann.
+Irgendwann reicht's halt, checkst du? Also hab ich dich gepackt und `, entry({
+  id: 'justin-phineas-zusammengeschlagen',
+  suspectId: 'justin',
+
+  title: 'Jemanden zusammengeschlagen',
+  description: 'Justin hat Phineas zusammengeschlagen.\n\nWarum hat er das getan?'
+}, 'eine geknallt'), `. Ich hab nicht mal richtig nachgedacht, Mann.
 
 Auf einmal fliegst du hin und lässt dich zusammenschlagen ohne dich zu wehren. Ich hab mehr erwartet einen Kampf, eine Reaktion, irgendwas. Ich hab dich gehauen, richtig heftig. Aber ich schwöre, ich wollte dir nichts tun, wallah!
 

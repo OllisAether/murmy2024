@@ -113,4 +113,4 @@ Der Park ist mein Territorium!
 
 Du hast Parkverbot!
 
-Wenn ich dich dort sehe ohne Film bist du tot!
+Wenn ich dich dort sehe ohne Film bist du tot! ;)

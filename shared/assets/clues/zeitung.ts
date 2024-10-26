@@ -18,7 +18,7 @@ export const zeitung: Clue<'images'> = {
           height: 0.48211751805985553,
         },
         entry: {
-          id: 'leiche-im-wald',
+          id: 'zeitung-leiche-im-wald',
           title: textContent(['Zeitungsartikel - ', italic('„LEICHE IM WALD GEFUNDEN“')]),
           description: 'Am 16. Februar 2013, wurde die Leiche von Phineas Musé im Stadtwald unweit einer abgelegenen Holzfällerhütte aufgefunden. Der Tod wird auf zwei Tage zuvor datiert.',
           suspectId: 'phineas',

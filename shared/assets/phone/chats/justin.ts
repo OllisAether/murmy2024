@@ -4,12 +4,6 @@ import { Chat } from "../../../phone/chat";
 export const justin: Chat = {
   type: 'private',
   number: '+49 1521 28895456',
-  entry: {
-    id: 'phineas-justins-textnachrichten',
-    suspectId: 'phineas',
-    title: 'Textnachrichten von Justin',
-    description: 'Phineas wird von Justin belästigt. Justin droht Phineas und fordert Filme von ihm. Phineas scheint genervt zu sein und versucht, Justin mit DVDs zu besänftigen.',
-  },
   messages: [
     {
       type: 'timestamp',
@@ -50,7 +44,13 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Ich bin hier der babo'
+      content: 'Ich bin hier der babo',
+      entry: {
+        id: 'phineas-justins-textnachrichten',
+        suspectId: 'phineas',
+        title: 'Textnachrichten von Justin',
+        description: 'Phineas wird von Justin belästigt. Justin droht Phineas und fordert Filme von ihm. Phineas scheint genervt zu sein und versucht, Justin mit DVDs zu besänftigen.',
+      },
     },
     {
       type: 'timestamp',
@@ -64,7 +64,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Villager'
+      content: 'Villager',
+      entry: 'justin-villager'
     },
     {
       type: 'message',
@@ -74,7 +75,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Weil du kannst nix wie die villager aus minekraft'
+      content: 'Weil du kannst nix wie die villager aus minekraft',
+      entry: 'justin-villager'
     },
     {
       type: 'timestamp',
@@ -84,6 +86,15 @@ export const justin: Chat = {
       type: 'image',
       sender: '+49 1521 28895456',
       imageAssetId: 'phone/villager.webp',
+      entries: [{
+        rect: {
+          x: 0,
+          y: 0,
+          width: 1,
+          height: 1
+        },
+        entryId: 'justin-villager'
+      }]
     },
     {
       type: 'message',
@@ -97,13 +108,15 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Was antwortest du net du hund!'
+      content: 'Was antwortest du net du hund!',
+      entry: 'phineas-justins-textnachrichten'
     },
 
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Wallah das gibt schläge!'
+      content: 'Wallah das gibt schläge!',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -112,7 +125,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Ey du Pussy!'
+      content: 'Ey du Pussy!',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -121,7 +135,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Hast zu viel Angst oder was du Schisser'
+      content: 'Hast zu viel Angst oder was du Schisser',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -130,7 +145,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Wenn du net antwortest bist du ein Hurensohn'
+      content: 'Wenn du net antwortest bist du ein Hurensohn',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -139,7 +155,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Lan willst du Stress du beschissener Arschficker'
+      content: 'Lan willst du Stress du beschissener Arschficker',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -158,12 +175,14 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Ich will dich fetzen'
+      content: 'Ich will dich fetzen',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Wenn du nicht kommst hau ich dich!'
+      content: 'Wenn du nicht kommst hau ich dich!',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -177,7 +196,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: 'me',
-      content: 'Ich kann dir auch dvds geben wenn damit aufhörst'
+      content: 'Ich kann dir auch dvds geben wenn damit aufhörst',
+      entry: 'diary-justin-dvd'
     },
     {
       type: 'message',
@@ -199,6 +219,17 @@ export const justin: Chat = {
       type: 'image',
       sender: 'me',
       imageAssetId: 'phone/gallery/CD1.webp',
+      entries: [
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1
+          },
+          entryId: 'diary-justin-dvd'
+        }
+      ]
     },
 
     {
@@ -254,7 +285,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: 'me',
-      content: 'Ich gib dir eine neue dvd. Wenn du nicht nervst'
+      content: 'Ich gib dir eine neue dvd. Wenn du nicht nervst',
+      entry: 'diary-justin-dvd'
     },
     {
       type: 'message',
@@ -296,7 +328,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Du kelb'
+      content: 'Du kelb',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'timestamp',
@@ -344,7 +377,8 @@ export const justin: Chat = {
     {
       type: 'message',
       sender: '+49 1521 28895456',
-      content: 'Dafür kriegst du ne bombe geschoben'
+      content: 'Dafür kriegst du ne bombe geschoben',
+      entry: 'phineas-justins-textnachrichten'
     },
     {
       type: 'message',

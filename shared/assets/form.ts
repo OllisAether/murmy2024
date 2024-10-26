@@ -23,7 +23,6 @@ export const form: Form = [
         type: 'choice',
 
         title: 'Wie wurde das Mordopfer getötet?',
-        description: 'Auf welche Weise wurde das Mordopfer getötet?',
 
         choices: [
           {
@@ -69,7 +68,7 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Welche Indizien deuten darauf hin?',
-        description: 'Welche Indizien deuten darauf hin, wie das Mordopfer getötet wurde?',
+        description: 'Gebe Indizien an, die darauf hindeuten, wie das Mordopfer getötet wurde.',
 
         morePossible: {
           max: 2,
@@ -79,11 +78,11 @@ export const form: Form = [
         deductPoints: 2,
         solutions: [
           {
-            id: 'leiche-im-wald',
+            id: 'zeitung-leiche-im-wald',
             points: 3
           },
           {
-            id: 'leiche-im-wald-radio',
+            id: 'radio-phineas-lebendig-begraben',
             points: 3
           },
         ],
@@ -94,7 +93,7 @@ export const form: Form = [
         type: 'choice',
 
         title: 'Was wurde dem Mordopfer noch angetan?',
-        description: 'Was wurde dem Mordopfer vor oder nach dem Tod noch angetan?',
+        description: 'Gebe an was dem Mordopfer vor oder nach dem Tod angetan wurde.',
 
         choices: [
           {
@@ -143,16 +142,31 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Welche Indizien deuten darauf hin?',
-        description: 'Welche Indizien deuten darauf hin, dass dem Mordopfer noch etwas angetan wurde?',
+        description: 'Gebe Indizien an, die darauf hindeuten, dass dem Mordopfer noch etwas angetan wurde.',
 
         morePossible: {
-          max: 2,
+          max: 3,
           points: 1
         },
-        amount: 1,
-        deductPoints: 2,
+        amount: 2,
+        deductPoints: 1,
         solutions: [
-          
+          {
+            id: 'cassy-justin-zusammengeschlagen',
+            points: 2
+          },
+          {
+            id: 'justin-phineas-zusammengeschlagen',
+            points: 2
+          },
+          {
+            id: 'cassy-notruf-1',
+            points: 2
+          },
+          {
+            id: 'justin-phineas-umgebracht',
+            points: 1
+          }
         ],
       },
 
@@ -161,6 +175,7 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Wo verstarb das Mordopfer?',
+        description: 'Gebe markierte Hinweise an, die darauf hindeuten, wo das Mordopfer verstarb.',
 
         amount: 1,
         deductPoints: 1,
@@ -174,12 +189,12 @@ export const form: Form = [
             points: 3
           },
           {
-            id: 'leiche-im-wald',
+            id: 'zeitung-leiche-im-wald',
             points: 3
           },
           {
             id: 'wald',
-            points: 2
+            points: 1
           }
         ]
       }
@@ -263,16 +278,149 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Welche Indizien deuten darauf hin?',
-        description: 'Welche Indizien deuten darauf hin, dass das Motiv des Mörders zutrifft?',
+        description: 'Gebe Indizien an, die darauf hindeuten, welches Motiv der Mörder hatte.',
 
         morePossible: {
           max: 2,
-          points: 1
+          points: 0
         },
         amount: 1,
-        deductPoints: 2,
+        deductPoints: 3,
         solutions: [
-          
+          {
+            id: 'hugo-rache',
+            points: 6
+          }
+        ],
+      },
+      {
+        id: 'mord-werkzeug',
+        type: 'choice',
+
+        title: 'Welche Mittel wurden benutzt?',
+        description: 'Gebe an, welche Mittel der Mörder benutzt hat, um das Mordopfer zu töten.',
+
+        choices: [
+          {
+            id: 'dolch',
+            text: 'Ein Dolch',
+          },
+          {
+            id: 'kissen',
+            text: 'Ein Kissen',
+          },
+          {
+            id: 'cello-koffer',
+            text: 'Ein Cello-Koffer',
+          },
+          {
+            id: 'betaeubungsmittel',
+            text: 'Betäubungsmittel',
+          },
+          {
+            id: 'magie',
+            text: 'Magie',
+          },
+          {
+            id: 'faust',
+            text: 'Die Faust',
+          },
+          {
+            id: 'gift',
+            text: 'Gift',
+          },
+          {
+            id: 'manipulation',
+            text: 'Manipulation',
+          }
+        ],
+        points: 2,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['cello-koffer', 'betaeubungsmittel'],
+      },
+      {
+        id: 'mord-werkzeug-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, welche Mittel der Mörder benutzt hat.',
+
+        morePossible: {
+          max: 3,
+          points: 1
+        },
+        amount: 2,
+        deductPoints: 1,
+        solutions: [
+          {
+            id: 'hugo-cellokoffer',
+            points: 2
+          },
+          {
+            id: 'chloroformtuch',
+            points: 2
+          },
+          {
+            id: 'chloroformtuch-fundort',
+            points: 2
+          }
+        ],
+      },
+
+      {
+        id: 'weite-indizien',
+        type: 'entry',
+
+        title: 'Welche weiteren Indizien deuten auf den Mörder hin?',
+
+        morePossible: {
+          max: 5,
+          points: 1
+        },
+        amount: 3,
+        deductPoints: 1,
+        solutions: [
+          {
+            id: 'hugos-besuch',
+            points: 2
+          },
+          {
+            id: 'hugo-kriminelle-vergangenheit',
+            points: 2
+          },
+          {
+            id: 'hugo-orchester-stundenplan',
+            points: 2
+          },
+          {
+            id: 'diary-hugo-distanter',
+            points: 2
+          },
+          {
+            id: 'hugo-holz',
+            points: 2
+          },
+          {
+            id: 'hugo-ivy-gefunden-zuhause',
+            points: 2
+          },
+          {
+            id: 'hugo-ivy-ermordet',
+            points: 2
+          },
+          {
+            id: 'hugo-kein-selbstmord',
+            points: 2
+          },
+          {
+            id: 'hugo-rache',
+            points: 2
+          },
+          {
+            id: 'hugo-cellokoffer',
+            points: 2
+          }
         ],
       }
     ]
@@ -293,6 +441,208 @@ export const form: Form = [
           {
             suspectId: 'ivy',
             points: 10
+          }
+        ]
+      },
+      {
+        id: 'was-grund-suizid',
+        type: 'choice',
+
+        title: 'Was war der Grund für den Suizid?',
+        description: 'Gebe an, warum das Suizidopfer sich das Leben genommen hat.',
+
+        choices: [
+          {
+            id: 'verlorenes-familienmitglied',
+            text: 'Das Suizidopfer hat ein Familienmitglied verloren',
+          },
+          {
+            id: 'opfergabe',
+            text: 'Das Suizidopfer war eine Opfergabe für ein Ritual',
+          },
+          {
+            id: 'liebesgestaendnis-abgelehnt',
+            text: 'Dem Suizidopfer wurde ein Liebesgeständnis abgelehnt',
+          },
+          {
+            id: 'verhaengisvolles-liebesritual',
+            text: 'Das Suizidopfer hat ein verhängnisvolles Liebesritual durchgeführt',
+          },
+          {
+            id: 'geheimnis-offenbart',
+            text: 'Ein tieferes Geheimnis vom Suizidopfer wurde offenbart',
+          },
+          {
+            id: 'schuldgefuehl',
+            text: 'Das Suizidopfer hatte untragbare Schuldgefühle für einen Mord',
+          },
+          {
+            id: 'kindheitsfreund-verloren',
+            text: 'Das Suizidopfer hat einen Kindheitsfreund verloren',
+          },
+          {
+            id: 'mobbing',
+            text: 'Das Suizidopfer wurde gemobbt',
+          },
+          {
+            id: 'flucht',
+            text: 'Das Suizidopfer wollte von den Konsequenzen fliehen',
+          },
+          {
+            id: 'manipulation',
+            text: 'Das Suizidopfer wurde manipuliert',
+          }
+        ],
+        points: 6,
+        deductPoints: 4,
+        multiple: true,
+        solutionIds: ['verhaengisvolles-liebesritual', 'liebesgestaendnis-abgelehnt'],
+      },
+      {
+        id: 'was-grund-suizid-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, warum das Suizidopfer sich das Leben genommen hat.',
+
+        morePossible: {
+          max: 5,
+          points: 1
+        },
+        amount: 2,
+        deductPoints: 1,
+        solutions: [
+          {
+            id: 'ivy-suizid-zeit',
+            points: 2
+          },
+          {
+            id: 'blutflecken',
+            points: 1
+          },
+          {
+            id: 'ivy-rose',
+            points: 2
+          },
+          {
+            id: 'phineas-rose',
+            points: 2
+          },
+          {
+            id: 'diary-ivy-nachrichten',
+            points: 2
+          },
+          {
+            id: 'phineas-liebesnachrichten',
+            points: 2
+          },
+          {
+            id: 'ivy-liebe-des-lebens',
+            points: 2
+          },
+        ],
+      },
+      {
+        id: 'wie-suizid',
+        type: 'choice',
+
+
+        title: 'Wie hat sich das Suizidopfer das Leben genommen?',
+        description: 'Gebe an, wie das Suizidopfer gestorben ist.',
+
+        choices: [
+          {
+            id: 'medikamente',
+            text: 'Das Suizidopfer hat Medikamente genommen',
+          },
+          {
+            id: 'erwuergt',
+            text: 'Das Suizidopfer hat sich erwuergt',
+          },
+          {
+            id: 'vergiftet',
+            text: 'Das Suizidop fer hat sich vergiftet',
+          },
+          {
+            id: 'erhaengt',
+            text: 'Das Suizidopfer hat sich erhaengt',
+          },
+          {
+            id: 'ertränkt',
+            text: 'Das Suizidopfer hat sich im See ertränkt',
+          },
+          {
+            id: 'kehle-durchgeschnitten',
+            text: 'Das Suizidopfer hat sich die Kehle durchgeschnitten',
+          },
+          {
+            id: 'kopf-eingeschlagen',
+            text: 'Das Suizidopfer hat sich den Kopf eingeschlagen',
+          },
+          {
+            id: 'lebendig-begraben',
+            text: 'Das Suizidopfer hat sich lebendig begraben',
+          },
+        ],
+        points: 4,
+        deductPoints: 3,
+        multiple: true,
+        solutionIds: ['kehle-durchgeschnitten'],
+      },
+      {
+        id: 'wie-suizid-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, wie das Suizidopfer gestorben ist.',
+
+        morePossible: {
+          max: 2,
+          points: 1
+        },
+        amount: 1,
+        deductPoints: 2,
+        solutions: [
+          {
+            id: 'ivy-schnittwunde',
+            points: 3
+          },
+          {
+            id: 'ivy-suizid-zeit',
+            points: 3
+          },
+          {
+            id: 'bluttyp-auf-dolch',
+            points: 3
+          },
+          {
+            id: 'ivy-blutgruppe',
+            points: 3
+          }
+        ],
+      },
+      {
+        id: 'wo-suizid',
+        type: 'entry',
+
+        title: 'Wo hat sich das Suizidopfer das Leben genommen?',
+        description: 'Gebe markierte Hinweise an, die darauf hindeuten, wo das Suizidopfer gestorben ist.',
+        
+        amount: 1,
+        deductPoints: 1,
+        morePossible: {
+          max: 2,
+          points: 1
+        },
+
+        solutions: [
+          {
+            id: 'ivy-huette',
+            points: 3
+          },
+          {
+            id: 'wald',
+            points: 1
           }
         ]
       }
@@ -316,6 +666,152 @@ export const form: Form = [
             points: 3
           }
         ]
+      },
+      {
+        id: 'mobbing-grund',
+        type: 'choice',
+
+        title: 'Warum hat der Mobber gemobbt?',
+        description: 'Gebe an, warum der Mobber das Mordopfer gemobbt hat.',
+
+        choices: [
+          {
+            id: 'eifersucht',
+            text: 'Der Mobber war eifersüchtig',
+          },
+          {
+            id: 'rache',
+            text: 'Der Mobber wollte sich rächen',
+          },
+          {
+            id: 'verrat',
+            text: 'Das Mordopfer hat den Mobber verraten',
+          },
+          {
+            id: 'beweisen',
+            text: 'Der Mobber wollte beweisen, dass er der Babo ist',
+          },
+          {
+            id: 'wut',
+            text: 'Der Mobber war wütend',
+          },
+          {
+            id: 'liebe',
+            text: 'Der Mobber hat aus Liebe gemobbt',
+          },
+          {
+            id: 'angst',
+            text: 'Der Mobber hatte Angst etwas zu verlieren',
+          },
+          {
+            id: 'spass',
+            text: 'Der Mobber hat aus Spaß gemobbt',
+          }
+        ],
+        points: 2,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['beweisen', 'spass'],
+      },
+      {
+        id: 'mobbing-grund-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, warum der Mobber gemobbt hat.',
+
+        amount: 5,
+        deductPoints: 1,
+
+        solutions: [
+          {
+            id: 'diary-justin-mobbing',
+            points: 1
+          },
+          {
+            id: 'phineas-justins-textnachrichten',
+            points: 1
+          },
+          {
+            id: 'justin-villager',
+            points: 1
+          },
+          {
+            id: 'cassy-justin-zusammengeschlagen',
+            points: 1
+          },
+          {
+            id: 'justin-phineas-zusammengeschlagen',
+            points: 1
+          }
+        ],
+      },
+      {
+        id: 'mordopfer-reaktion-mobber',
+        type: 'choice',
+
+        title: 'Wie hat das Mordopfer gegen den Mobber reagiert?',
+        description: 'Gebe an, was das Mordopfer gegen den Mobber unternommen hat.',
+
+        choices: [
+          {
+            id: 'hugo-erzaehlt',
+            text: 'Das Mordopfer hat Hr. Montague von dem Mobbing erzählt',
+          },
+          {
+            id: 'ignoriert',
+            text: 'Das Mordopfer hat den Mobber ignoriert',
+          },
+          {
+            id: 'verflucht',
+            text: 'Das Mordopfer hat den Mobber verflucht',
+          },
+          {
+            id: 'dvds-angeboten',
+            text: 'Das Mordopfer hat dem Mobber DVDs angeboten',
+          },
+          {
+            id: 'geflirtet',
+            text: 'Das Mordopfer hat mit dem Mobber geflirtet',
+          },
+          {
+            id: 'geschlagen',
+            text: 'Das Mordopfer hat den Mobber geschlagen',
+          },
+          {
+            id: 'verklagt',
+            text: 'Das Mordopfer hat den Mobber verklagt',
+          },
+          {
+            id: 'zurueckgemobbt',
+            text: 'Das Mordopfer hat den Mobber zurückgemobbt',
+          }
+        ],
+        points: 1,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['ignoriert', 'dvds-angeboten'],
+      },
+      {
+        id: 'was-gegen-mobber-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, was das Mordopfer gegen den Mobber unternommen hat.',
+
+        morePossible: {
+          max: 3,
+          points: 0
+        },
+        amount: 1,
+        deductPoints: 2,
+
+        solutions: [
+          {
+            id: 'diary-justin-dvd',
+            points: 3
+          }
+        ],
       }
     ]
   },
@@ -337,6 +833,134 @@ export const form: Form = [
             points: 3
           }
         ]
+      },
+      {
+        id: 'beziehung',
+        type: 'choice',
+
+        title: 'Wie stand die nahestehende Person zum Mordopfer?',
+        description: 'Gebe an, wie die nahestehende Person zum Mordopfer stand.',
+
+        choices: [
+          {
+            id: 'beste-freunde',
+            text: 'Die nahestehende Person war der beste Freund des Mordopfers',
+          },
+          {
+            id: 'liebespartner',
+            text: 'Die nahestehende Person war der Liebespartner des Mordopfers',
+          },
+          {
+            id: 'verwandt',
+            text: 'Die nahestehende Person war mit dem Mordopfer verwandt',
+          },
+          {
+            id: 'kindheitsfreunde',
+            text: 'Die nahestehende Person war der Kindheitsfreund des Mordopfers',
+          },
+          {
+            id: 'ritual-partner',
+            text: 'Die nahestehende Person war der Ritualpartner des Mordopfers',
+          },
+          {
+            id: 'pakt',
+            text: 'Die nahestehende Person hatte einen Pakt mit dem Mordopfer',
+          }
+        ],
+        points: 2,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['beste-freunde', 'kindheitsfreunde'],
+      },
+      {
+        id: 'beziehung-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, wie die nahestehende Person zum Mordopfer stand.',
+
+        morePossible: {
+          max: 2,
+          points: 1
+        },
+        amount: 2,
+        deductPoints: 1,
+
+        solutions: [
+          {
+            id: 'phineas-kindheitsfoto',
+            points: 1
+          },
+          {
+            id: 'phoebe-enge-freunde',
+            points: 1
+          },
+          // Freunde Handy/Tagebuch
+        ],
+      },
+      {
+        id: 'beziehung-besonderheit',
+        type: 'choice',
+
+        title: 'Was war besonders an der Beziehung?',
+        description: 'Gebe an, was die Beziehung zwischen der nahestehenden Person und dem Mordopfer besonders machte.',
+
+        choices: [
+          {
+            id: 'ritual',
+            text: 'Die Beziehung war Teil eines Rituals',
+          },
+          {
+            id: 'geheimnis',
+            text: 'Die Beziehung war ein Geheimnis',
+          },
+          {
+            id: 'verboten',
+            text: 'Die Beziehung war verboten',
+          },
+          {
+            id: 'rivalitaet',
+            text: 'Die Beziehung war von Rivalität geprägt',
+          },
+          {
+            id: 'verrat',
+            text: 'Die Beziehung war von Verrat geprägt',
+          },
+          {
+            id: 'vertrauen',
+            text: 'Die Beziehung war von Vertrauen geprägt',
+          }
+        ],
+        points: 2,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['geheimnis', 'vertrauen'],
+      },
+      {
+        id: 'beziehung-besonderheit-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, was die Beziehung besonders machte.',
+
+        morePossible: {
+          max: 2,
+          points: 1
+        },
+        amount: 1,
+        deductPoints: 2,
+
+        solutions: [
+          {
+            id: 'phoebe-geheimnis',
+            points: 1
+          },
+          {
+            id: 'phoebe-phineas-wenig-miteinander-zu-tun',
+            points: 1
+          },
+          // Vertrauen Handy/Tagebuch
+        ],
       }
     ]
   },
@@ -355,6 +979,119 @@ export const form: Form = [
           {
             suspectId: 'cassandra',
             points: 3
+          }
+        ]
+      },
+      {
+        id: 'wer-okkult-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, dass die nahestehende Person der Leiter des Okkult-Clubs ist.',
+        
+        morePossible: {
+          max: 2,
+          points: 0
+        },
+        amount: 1,
+
+        solutions: [
+          {
+            id: 'cassandra-okkult-leiterin',
+            points: 2
+          }
+        ]
+      },
+      {
+        id: 'was-okkult',
+        type: 'choice',
+
+        title: 'Was macht der Okkult-Club?',
+        description: 'Gebe an, was der Okkult-Club macht.',
+
+        choices: [
+          {
+            id: 'menschen-opfern',
+            text: 'Der Okkult-Club verfolgt Menschen und opfert sie',
+          },
+          {
+            id: 'rituale',
+            text: 'Der Okkult-Club führt Rituale durch',
+          },
+          {
+            id: 'horrorfilme-schauen',
+            text: 'Der Okkult-Club schaut Horrorfilme',
+          },
+          {
+            id: 'orakel-verehrung',
+            text: 'Der Okkult-Club verehrt das Orakel',
+          },
+          {
+            id: 'verschwoerungstheorien',
+            text: 'Der Okkult-Club diskutiert Verschwörungstheorien',
+          },
+          {
+            id: 'kräuter-sammeln',
+            text: 'Der Okkult-Club sammelt Kräuter',
+          }
+        ],
+        points: 2,
+        deductPoints: 1,
+        multiple: true,
+        solutionIds: ['rituale', 'orakel-verehrung'],
+      },
+      {
+        id: 'okkult-echt',
+        type: 'choice',
+
+        title: 'Ist das was der Okkult-Club macht wirklich echt?',
+        description: 'Gebe an, ob das was der Okkult-Club macht wirklich echt ist.',
+
+        choices: [
+          {
+            id: 'wahr',
+            text: 'Das was der Okkult-Club macht ist wahr',
+          },
+          {
+            id: 'falsch',
+            text: 'Das was der Okkult-Club macht ist falsch',
+          }
+        ],
+        points: 2,
+        solutionIds: ['falsch'],
+      },
+      {
+        id: 'wer-noch-okkult',
+        type: 'suspect',
+
+        title: 'Wer ist noch im Okkult-Club?',
+        description: 'Gebe an, wer noch im Okkult-Club ist.',
+
+        solutions: [
+          {
+            suspectId: 'ivy',
+            points: 2
+          }
+        ]
+      },
+      {
+        id: 'wer-noch-okkult-indizien',
+        type: 'entry',
+
+        title: 'Welche Indizien deuten darauf hin?',
+        description: 'Gebe Indizien an, die darauf hindeuten, dass die nahestehende Person noch im Okkult-Club ist.',
+
+        morePossible: {
+          max: 2,
+          points: 0
+        },
+        deductPoints: 1,
+        amount: 1,
+
+        solutions: [
+          {
+            id: 'ivy-okkult-club',
+            points: 2
           }
         ]
       }
@@ -384,7 +1121,7 @@ export const form: Form = [
             points: 3
           },
           {
-            id: 'leiche-im-wald',
+            id: 'zeitung-leiche-im-wald',
             points: 3
           },
           {
@@ -483,134 +1220,301 @@ export const form: Form = [
           {
             id: 'streit-phoebe-phineas',
             text: 'Streit zwischen Phoebe und Phineas',
-          },
+          }, // 0700-0800
           {
             id: 'ivy-liebesgestaendnis',
             text: 'Ivy gesteht ihre Liebe',
-          },
+          }, // 1115
           {
             id: 'phoebe-liebesgestaendnis',
             text: 'Phoebe gesteht ihre Liebe',
-          },
+          }, // falsch
           {
             id: 'phineas-lehnt-ab',
             text: 'Phineas lehnt ab',
-          },
+          }, // 1115
           {
             id: 'ivy-liebesritual',
-            text: 'Ivy führt ein Liebesritual durch',
-          },
+            text: 'Ivy führt das Ritual der ewigen Liebe durch',
+          }, // 1326-1328
+          {
+            id: 'ivy-selbstmord',
+            text: 'Ivy begeht Selbstmord',
+          }, // 1326-1328
           {
             id: 'ivy-holt-liebesritual',
             text: 'Ivy holt sich das Liebesritual von Cassandra',
-          },
+          }, // falsch
           {
             id: 'ivy-klaut-liebesritual',
             text: 'Ivy klaut sich das Liebesritual aus dem Okkult-Club',
-          },
+          }, // 1300-1326
           {
-            id: 'ivy-klaut-dolch',
+            id: 'ivy-klaut-dolch-hugo',
             text: 'Ivy klaut den Dolch von Hr. Montague',
-          },
+          }, // 1300-1326
+          {
+            id: 'ivy-klaut-dolch-cassy',
+            text: 'Ivy klaut den Dolch von Cassandra',
+          }, // falsch
           {
             id: 'justin-phineas-streit',
             text: 'Justin schlägt Phineas zusammen',
-          },
+          }, // 1343-1345
           {
             id: 'justin-selbstmord',
             text: 'Justin begeht Selbstmord',
-          },
+          }, // falsch
           {
             id: 'justin-notruf',
             text: 'Justin ruft 112 an',
-          },
+          }, // falsch
           {
             id: 'cassandra-ritual',
             text: 'Cassandra führt das Ritual des Orakels durch',
-          },
+          }, // falsch
           {
             id: 'cassandra-notruf',
             text: 'Cassandra ruft 112 an',
-          },
+          }, // 1343-1345
           {
             id: 'hugo-holzfällerhütte',
             text: 'Montague geht zur Holzfällerhütte',
-          },
+          }, // 1400-1430
           {
             id: 'hugo-holzfällerhütte-cello',
-            text: 'Montague geht zur Holzfällerhütte mit seinem Cello',
-          },
+            text: 'Montague geht zur Holzfällerhütte mit seinem Cello-Koffer',
+          }, // 1700-1800
           {
             id: 'hugo-sieht-notarzt',
             text: 'Montague sieht den Krankenwagen im Park mit Phineas',
-          },
+          }, // 1400-1430
           {
             id: 'phineas-krankenhaus',
             text: 'Phineas wird ins Krankenhaus gebracht',
-          },
+          }, // 1400-1430
           {
             id: 'cassandra-besuch',
             text: 'Cassandra besucht Phineas im Krankenhaus',
-          },
+          }, // 1430
           {
             id: 'hugo-cello-koffer',
-            text: 'Hr. Montague holt seinen Cello-Koffer',
-          },
+            text: 'Hr. Montague nimmt seinen Cello-Koffer mit',
+          }, // 1500-1600
           {
             id: 'hugo-entdeckt-ivy',
             text: 'Hr. Montague entdeckt Ivy Tod',
-          },
+          }, // 1400-1430
           {
             id: 'hugo-bringt-ivy-zurueck',
             text: 'Hr. Montague bringt Ivy nach Hause',
-          },
+          }, // 1400-1430
+          {
+            id: 'hugo-kommt-an-1',
+            text: 'Hr. Montague kommt zu Hause an',
+          }, // 1500-1600, 1900
+          {
+            id: 'hugo-kommt-an-2',
+            text: 'Hr. Montague kommt zu Hause an',
+          }, // 1500-1600, 1900
           {
             id: 'hugo-besuch',
             text: 'Hr. Montague besucht Phineas im Krankenhaus',
-          },
+          }, // 1638
           {
             id: 'phineas-betäubt',
             text: 'Phineas wird betäubt',
-          },
+          }, // 1638
           {
             id: 'kissen-taeuschung',
             text: 'Kissen werden als Täuschung benutzt',
-          },
+          }, // 1638
           {
             id: 'phineas-erstickt',
             text: 'Phineas wird mit einem Kissen erstickt',
-          },
+          }, // falsch
           {
             id: 'phineas-cello',
             text: 'Phineas wird in den Cello-Koffer gestopft',
-          },
+          }, // 1638
           {
             id: 'phoebe-besuch',
             text: 'Phoebe besucht Phineas im Krankenhaus',
-          },
+          }, // 1654
           {
             id: 'phoebe-entschuldigt-sich',
             text: 'Phoebe entschuldigt sich bei Phineas',
-          },
+          }, // 1654
           {
             id: 'hugo-vergräbt-phineas',
             text: 'Hr. Montague vergräbt Phineas',
-          },
+          }, // 1700-1800
           {
             id: 'hugo-geht-zurueck',
             text: 'Hr. Montague geht nach Hause',
-          },
+          }, // 1700-1800
           {
             id: 'hugo-notruf',
             text: 'Hr. Montague ruft 112 an',
+          }, // 1900
+          {
+            id: 'justin-besuch',
+            text: 'Justin besucht Phineas im Krankenhaus',
+          }, // falsch
+          {
+            id: 'cassy-liebesritual',
+            text: 'Cassandra führt das Ritual der ewigen Liebe durch',
+          }, // falsch
+          {
+            id: 'cassy-opfert-phineas',
+            text: 'Cassandra opfert Phineas für ihr Ritual',
+          }, // falsch
+          {
+            id: 'cassy-selbstmord',
+            text: 'Cassandra begeht Selbstmord',
+          }, // falsch
+          {
+            id: 'phineas-selbstmord',
+            text: 'Phineas begeht Selbstmord',
+          }, // falsch
+          {
+            id: 'cassy-opfert',
+            text: 'Cassandra opfert sich für ihr Ritual',
+          },
+          {
+            id: 'hugo-selbstmord',
+            text: 'Hr. Montague begeht Selbstmord',
+          },
+          {
+            id: 'phoebe-selbstmord',
+            text: 'Phoebe begeht Selbstmord',
+          },
+          {
+            id: 'justin-enderdrache',
+            text: 'Justin besiegt den Enderdrachen in Minecraft',
           }
         ].sort(() => Math.random() - 0.5),
         points: 2,
+        deductPoints: 1,
         multiple: true,
         solutionPairs: [],
       }
     ]
   },
+
+  {
+    title: 'Sonstiges',
+    description: 'Sonstige Fragen',
+
+    fields: [
+      {
+        id: 'illegales-hobby',
+        type: 'entry',
+
+        title: 'Was war Phineas\' illegales Hobby?',
+
+        amount: 1,
+        
+        solutions: [
+          {
+            id: 'diary-dvd',
+            points: 1
+          },
+          {
+            id: 'phineas-dvd-fotos',
+            points: 1
+          }
+        ]
+      },
+      {
+        id: 'wann-phineas-schule',
+        type: 'entry',
+
+        title: 'Wann kam Phineas auf das Max-Planck-Gymnasium?',
+
+        amount: 1,
+
+        solutions: [
+          {
+            id: 'phineas-erster-schultag',
+            points: 1
+          }
+        ]
+      },
+      {
+        id: 'hugo-gefehlt',
+        type: 'entry',
+
+        title: 'Warum hat Hr. Montague eine Woche gefehlt?',
+
+        amount: 1,
+
+        solutions: [
+          {
+            id: 'hugo-elenas-tod',
+            points: 2
+          }
+        ]
+      },
+      {
+        id: 'wer-phineas-stalker',
+        type: 'suspect',
+
+        title: 'Wer hat Phineas gestalkt?',
+
+        solutions: [
+          {
+            suspectId: 'cassandra',
+            points: 1
+          }
+        ]
+      },
+      {
+        id: 'justin-am-wichtigsten',
+        type: 'choice',
+
+        title: 'Was ist Justin am wichtigsten?',
+
+        choices: [
+          {
+            id: 'babo',
+            text: 'Zeigen, wer der Babo ist',
+          },
+          {
+            id: 'minecraft',
+            text: 'Seine Minecraft-Welt',
+          },
+          {
+            id: 'mobben',
+            text: 'Phineas mobben',
+          },
+          {
+            id: 'chayas-klaeren',
+            text: 'Chayas klären',
+          }
+        ],
+        multiple: true,
+        points: 1,
+        solutionIds: ['babo', 'minecraft', 'mobben', 'chayas-klaeren'],
+      },
+      {
+        id: 'phoebes-leistung',
+        type: 'entry',
+
+        title: 'Wie ist Phoebes Leistung in der Schule?',
+        description: 'Gebe an, wie Phoebes Leistung in der Schule ist.',
+
+        amount: 1,
+
+        solutions: [
+          {
+            id: 'phoebe-top-a-student',
+            points: 2
+          }
+        ]
+      }
+    ]
+  }
 ]
 
 export function getFieldFromId (id: string) {

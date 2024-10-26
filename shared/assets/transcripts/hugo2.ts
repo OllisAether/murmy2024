@@ -54,7 +54,7 @@ export const hugo2: Transcript =  {
       description: 'Hr. Montague wurde mit einem Cellokoffer im Krankenhaus gesehen.'
     }, 'Krankenhaus mit einem Cellokoffer'), ' gesehen wurden. Sie kamen also direkt von der Orchesterprobe.'])],
     ['hugo', textContent(['Ja, das hatte ich Ihnen doch gesagt. Ich war in der Orchesterprobe, hatte mein Instrument dabei und bin dann in das Krankenhaus gefahren und habe Phineas besucht, und- Da war er schon in einem sehr schlechten Zustand. Deswegen bin ich eigentlich direkt wieder gefahren, aber- Ja, jetzt fällt es mir ein, als ich- als ich gegangen bin, kam ', entry({
-      id: 'hugo-phoebe-besucht',
+      id: 'hugo-phoebe-krankenhaus',
       suspectId: 'phoebe',
 
       title: 'Aufgewühlt im Krankenhaus',
