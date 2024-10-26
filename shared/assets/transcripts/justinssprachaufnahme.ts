@@ -3,20 +3,31 @@ import { getSuspectById } from "../suspects";
 
 export const justinssprachaufnahme: Transcript =  {
   id: 'justinssprachaufnahme',
-  for: 'Justins Sprachaufnahme.mp3',
-  thumbnailAssetId: 'thumbnails/Ritual.webp',
-  title: 'Ivys Ritual der ewigen Liebe',
+  for: 'Justinssprachaufnahme.mp3',
+  thumbnailAssetId: 'thumbnails/tape.webp',
+  title: 'Kassettenrecorder von Justin van Bustin',
   content: [
-    
+    ['justin', `Das lässt mich nicht mehr in Ruhe, Mann. Ich muss es irgendwie loswerden.
+
+Du hast's verdient. Dieser Blick. Du hast einfach auf mich- aufgehört auf mich runterzuschauen. Du denkst du bist was besseres als ich.
+
+Irgendwann reicht's halt, checkst du? Also hab ich dich gepackt und eine geknallt. Ich hab nicht mal richtig nachgedacht, Mann.
+
+Auf einmal fliegst du hin und lässt dich zusammenschlagen ohne dich zu wehren. Ich hab mehr erwartet einen Kampf, eine Reaktion, irgendwas. Ich hab dich gehauen, richtig heftig. Aber ich schwöre, ich wollte dir nichts tun, wallah!
+
+Aber seine Fresse passte einfach zu gut in meine Faust! Dann war er auf einmal weg. Tot.
+
+Da lagst du dann, einfach so. Ich hab's gar nicht gecheckt, aber als ich gesehen hab, dass du dich nicht mehr bewegst, wusste ich, das war's.
+In dem Moment kriegt ich Schiss und bin einfach abgehauen.
+
+Ich hab' dich umgebracht, Mann. Es war keine Absicht. Ich- Es tut mir leid. Ich wusste nicht, dass es so- Ich wollt nicht, dass du abkratzt! Es tut mir leid, bro. Ich- Ich hab' dich im Real Life PvP zerstört. Dich zusammengeschlagen. Nein- niemand darf das erfahren.`]
   ],
   speakers: [
     {
-      id: 'ivy',
-      avatarAssetId: 'suspects/phoebe.webp',
-      flipAvatar: true,
-      alignment: 'right',
-      name: getSuspectById('ivy')?.name ?? '',
-      color: getSuspectById('ivy')?.color
+      id: 'justin',
+      avatarAssetId: 'suspects/Justin2.webp',
+      name: getSuspectById('justin')?.name ?? '',
+      color: getSuspectById('justin')?.color
     }
   ]
 }

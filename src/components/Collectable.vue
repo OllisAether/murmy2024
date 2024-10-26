@@ -5,6 +5,9 @@
       'collectable--highlight': highlight && !collected,
       'collectable--collected': collected
     }]"
+    :style="{
+      // outline: game.isDev ? 'red solid 2px' : 'none'
+    }"
     ref="root"
   >
     <VIcon v-if="highlight && !collected" class="collectable--highlight__icon">mdi-gesture-tap</VIcon>
@@ -155,8 +158,6 @@ async function startOrbAnimation () {
 @use '@/scss/vars' as *;
 
 .collectable {
-  // outline: red solid 2px;
-
   :deep(*) {
     pointer-events: none;
   }
@@ -164,8 +165,8 @@ async function startOrbAnimation () {
   &--inline {
     display: inline;
     width: fit-content;
-    padding: .25em;
-    margin: -.25em;
+    padding: .1rem .25em;
+    margin:  -.1rem -.25em;
   }
 
   &--highlight {

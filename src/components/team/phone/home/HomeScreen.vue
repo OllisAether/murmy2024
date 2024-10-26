@@ -109,6 +109,7 @@
         <div class="home-screen__appgrid">
           <ClockWidget style="grid-column: 1 / span 4; grid-row: 2 / span 2"/>
           <GoogleWidget style="grid-column: 1 / span 4; grid-row: 1"/>
+          <ImgWidget style="grid-column: 1 / span 2; grid-row: 4 / span 2"/>
         </div>
 
         <div class="home-screen__appbar">
@@ -160,6 +161,7 @@ import { useMainClue } from '@/store/team/mainClue';
 import AppIcon from './AppIcon.vue';
 import ClockWidget from './ClockWidget.vue';
 import GoogleWidget from './GoogleWidget.vue';
+import ImgWidget from './ImgWidget.vue';
 
 const phone = useMainClue();
 const game = useGameManager();

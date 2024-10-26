@@ -107,6 +107,58 @@
       </VCardText>
     </VCard>
 
+    <VBtn class="mb-4 w-100">
+      Liste aller Hinweiseinträge anzeigen
+
+      <VDialog
+        activator="parent"
+        max-width="500"
+        scrollable
+      >
+        <template #="{ isActive }">
+          <VCard>
+            <VToolbar>
+              <VToolbarTitle>
+                Alle Hinweiseinträge ({{ game.allEntries.length }})
+              </VToolbarTitle>
+
+              <VBtn
+                icon
+                @click="isActive.value = false"
+              >
+                <VIcon>mdi-close</VIcon>
+              </VBtn>
+            </VToolbar>
+            <VCardText>
+              <VCard
+                v-for="entry in game.allEntries"
+                :key="entry.id"
+                class="mb-2"
+                flat
+                color="background"
+              >
+                <VCardTitle style="line-height: 1;" class="mt-2">
+                  <TextContentRenderer :text-content="entry.title" />
+                </VCardTitle>
+                <VCardText>
+                  <div class="d-flex mb-2 flex-wrap" style="gap: .5rem">
+                    <VChip size="small" :color="getSuspectById(entry.suspectId)?.color ?? '#d9dbfb'">
+                      {{ getSuspectById(entry.suspectId)?.name ?? 'Allgemein' }}
+                    </VChip>
+                    <VChip class="mr-2" size="small">
+                      {{ entry.id }}
+                    </VChip>
+                  </div>
+
+                  <TextContentRenderer v-if="entry.description" :text-content="entry.description" />
+                </VCardText>
+              </VCard>
+            </VCardText>
+          </VCard>
+        </template>
+      </VDialog>
+    </VBtn>
+
     <TeamDatabase
       v-for="team in admin.teams" :class="{
         'mb-4': team !== admin.teams[admin.teams.length - 1]
@@ -121,8 +173,9 @@
 import TeamDatabase from '@/components/admin/TeamDatabase.vue';
 import { useAdmin } from '@/store/admin';
 import { useGameManager } from '@/store/gameManager';
-import { suspects } from '../../../shared/assets/suspects';
+import { getSuspectById, suspects } from '../../../shared/assets/suspects';
 import { VDialog } from 'vuetify/components';
+import TextContentRenderer from '@/components/TextContentRenderer.vue';
 
 const admin = useAdmin();
 const game = useGameManager();

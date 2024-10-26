@@ -1,5 +1,6 @@
 import moment from "moment";
 import { Gallery } from "../../phone/gallery";
+import { italic, textContent } from "../../textContent";
 
 export const gallery: Gallery = [
   {
@@ -9,6 +10,33 @@ export const gallery: Gallery = [
   {
     assetId: "phone/gallery/image-2.webp",
     date: moment("2013-01-04 07:39"),
+  },
+
+  {
+    assetId: 'phone/burn-it.webp',
+    date: moment("2012-12-21 18:32"),
+
+    entries: [
+      {
+        rect: {
+          x: 0,
+          y: 0,
+          width: 1,
+          height: 1,
+        },
+        entry: {
+          id: 'phone-burn-it',
+          suspectId: 'phineas',
+
+          title: italic('„VERBRENNT ES!“'),
+          description: textContent([
+            'Ein Bild auf dem steht: ',
+            italic('„Wenn jemand dieses Handy findet\n\nVERBRENNT ES!“'),
+            '.\n\nKönnte das ein Hinweis auf ein Geheimnis sein, das Phineas mit ins Grab nehmen wollte?',
+          ])
+        }
+      }
+    ]
   },
 
   {

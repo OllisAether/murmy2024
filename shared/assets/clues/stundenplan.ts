@@ -17,7 +17,7 @@ export const stundenplan: Clue<'images'> = {
           height: 0.03772010448916409,
         },
         entry: {
-          id: 'orchesterag',
+          id: 'hugo-orchester-stundenplan',
           title: 'Orchester-AG dienstags 7. Stunde',
           suspectId: 'hugo',
           description: 'Hugo Montague hat die Orchester-AG dienstags in der 7. Stunde im Raum A.301Mu.',

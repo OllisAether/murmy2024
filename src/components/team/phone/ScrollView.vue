@@ -2,6 +2,7 @@
   <div
     @pointerdown.passive="pointerdown"
     @touchstart="pointerdown"
+    @mousewheel="scroll"
     :class="['scroll-view', {
       'scroll-view--scrolling': scrolling,
     }]"
@@ -26,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import e from 'express';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -36,6 +38,13 @@ const scroller = ref<HTMLElement | null>(null);
 const scrollProgress = ref(0);
 const scrollRatio = ref(0);
 const scrolling = ref(false);
+
+function scroll (event: WheelEvent) {
+  if (!scroller.value) return;
+
+  const scale = scroller.value.getBoundingClientRect().height / scroller.value.offsetHeight;
+  scroller.value.scrollTop += event.deltaY / scale;
+}
 
 let velocity = 0;
 let animationFrame: number | null = null;

@@ -32,7 +32,9 @@
             </div>
             <div v-if="chat.lastMessage" class="chats-screen__list__item__last-message">
               {{
-                chat.lastMessage.sender === 'me'
+                chat.lastMessage.type === 'info'
+                ? null
+                : chat.lastMessage.sender === 'me'
                   ? 'Du: '
                   : (chat.lastMessageContact?.name ?? chat.lastMessage.sender) + ': '
               }}
@@ -58,16 +60,18 @@ import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
 import { chats } from '../../../../../shared/assets/phone/chats';
 import { getRawText } from '../../../../../shared/textContent';
-import { ChatImage, ChatMessage, ChatTimestamp } from '../../../../../shared/phone/chat';
+import { ChatImage, ChatInfo, ChatMessage, ChatTimestamp } from '../../../../../shared/phone/chat';
 
 const game = useGameManager();
 const phone = useMainClue();
 
 const computedChats = chats.map((chat) => {
-  const lastMessage = chat.messages.filter(m => !((m as ChatTimestamp).timestamp)).pop() as ChatMessage | ChatImage | undefined;
-  const lastMessageContact = lastMessage?.sender === 'me'
+  const lastMessage = chat.messages.filter(m => !((m as ChatTimestamp).timestamp)).pop() as ChatMessage | ChatImage | ChatInfo | undefined;
+  const lastMessageContact = lastMessage?.type === 'info'
     ? null
-    : contacts.find((c) => c.number === lastMessage?.sender);
+    : (lastMessage?.sender === 'me'
+      ? null
+      : contacts.find((c) => c.number === lastMessage?.sender));
 
   if (chat.type === 'group') {
     return {

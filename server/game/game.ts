@@ -16,7 +16,7 @@ import { ClueManager } from "./clueManager/clueManager"
 import { Bg, colorize, Fg } from "../console"
 import { FormManager } from "./formManager/formManager"
 
-export const ENTRY_EARN_COINS = 4
+export const ENTRY_EARN_COINS = 3
 
 export class Game {
   private adminPassword: string

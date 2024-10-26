@@ -4,7 +4,7 @@ import { Transcript } from "../../transcript";
 export const radiodurchsage: Transcript =  {
   id: 'radiodurchsage',
   for: 'Ivys Suizid.mp4',
-  thumbnailAssetId: 'thumbnails/Ritual.webp',
+  thumbnailAssetId: 'thumbnails/radio.webp',
   title: 'Radiodurchsage',
   content: [
     ['radio', textContent(['Wir unterbrechen unser Programm für eine dringende Eilmeldung.\n\n',

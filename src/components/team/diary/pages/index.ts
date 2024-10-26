@@ -7,6 +7,7 @@ import FrontCoverBack from "./FrontCoverBack.vue";
 import Page0 from "./Page0.vue";
 import Page0201 from "./Page02-01.vue";
 import Page0312 from "./Page03-12.vue";
+import Page0412 from "./Page04-12.vue";
 import Page0701 from "./Page07-01.vue";
 import Page0702 from "./Page07-02.vue";
 import Page1012 from "./Page10-12.vue";
@@ -28,11 +29,13 @@ import PageSketch3 from "./PageSketch3.vue";
 import PageSketch4 from "./PageSketch4.vue";
 import PageSketch5 from "./PageSketch5.vue";
 import PageSketch6 from "./PageSketch6.vue";
+import Page0401 from "./Page04-01.vue";
 
 const _pages = [
   FrontCoverBack,
   Page0,
   Page0312,
+  Page0412,
   Page1012,
   PageSketch3,
   Page1412,
@@ -44,6 +47,7 @@ const _pages = [
   Page2812,
   Page2912,
   Page0201,
+  Page0401,
   Page0701,
   PageSketch5,
   Page1801,

@@ -1,4 +1,4 @@
-import { italic, shaky, textContent } from "../../textContent";
+import { entry, italic, shaky, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -8,6 +8,7 @@ export const stalker2: Transcript =  {
   thumbnailAssetId: 'thumbnails/stalker2.webp',
   title: 'Stalkeraufnahme 2',
   content: [
+    [null, 'Zeitstempel: 14.02.2013 13:43'],
     ['cassandra', 'Oh mein Gott, Leute! Phiny ist alleine im Park.'],
     [null, 'Die Kamera schwenkt zu Phineas, der alleine durch den Park läuft'],
     ['cassandra', 'Aber ich bin immer bei dir, Phiny ❤️'],
@@ -20,7 +21,14 @@ export const stalker2: Transcript =  {
     ['Phineas', 'Lass mich in Ruhe! Lass mich in Ruhe!'],
     [{ speaker: 'justin', withLastSpeaker: true }, shaky('DU WEISST, DASS DAS MEIN REVIER IST! WAS MACHST DU HIER?')],
     [null, 'Justin schlägt Phineas ins Gesicht und Phineas fällt zu Boden.\nDie Kamera schwenkt zu Cassandra, die sich die Hand vor den Mund hält.\nDie Kamera schwenkt zurück zu Phineas, der von Justin weiter geschlagen wird.'],
-    ['justin', shaky('WAS MACHST DU HIER? KOMM SCHON, DU SCHEISS VILLAGER! SCHLAG MICH SCHON!')],
+    ['justin', shaky(textContent(['WAS MACHST DU HIER? KOMM SCHON, ', entry({
+      id: 'justin-villager',
+      suspectId: 'justin',
+      title: italic('„Villager“'),
+      description: textContent([
+        'Justin nennt Phineas „Villager“.'
+      ])
+    }, 'DU SCHEISS VILLAGER!'), ' SCHLAG MICH SCHON!']))],
     ['cassandra', 'Justin ruiniert einfach alles! Aber wow, ich kann einfach nicht wegsehen.'],
     [{ speaker: 'justin', withLastSpeaker: true }, shaky('SCHLAG MICH! SCHLAG MICH SCHON! WAS MACHST DU?')],
     ['justin', shaky('SCHLAG MICH! KOMM SCHON!')],

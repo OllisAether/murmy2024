@@ -5,11 +5,12 @@
     </template>
     <template #text>
       <br>
-      Neue Schule, neues Glück. so wie Phoebe immer sagt, einfach überleben.
-      <br>
-      Noch zwei Jahre und dann hab ich es hinter mir.
+      <Collectable entry-id="phineas-erster-schultag">
+        Neue Schule, neues Glück. so wie Phoebe immer sagt, einfach überleben.
+        <br>
+        Noch zwei Jahre und dann hab ich es hinter mir.
+      </Collectable>
 
-      <br>
       <br>
       <br>
       <br>
@@ -32,6 +33,7 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import Page from '../Page.vue';
+import Collectable from '@/components/Collectable.vue';
 
 const game = useGameManager()
 </script>

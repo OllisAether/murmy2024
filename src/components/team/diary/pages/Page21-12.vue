@@ -5,15 +5,17 @@
     </template>
     <template #text>
       <br>
-      Dieser Justin geht mir sowas von auf die Nerven und am liebsten will ich ihn einfach <Strike :height="90">zusammenschlagen</Strike> kein Witz.
-      <br>
-      <br>
-      So ein großes Maul haben und nichts dahinter, typisch!
-      <br>
-      Mit sowas verschwend ich meine Zeit nicht, soll der mich „Mobben“ wie er will.
-      <br>
-      <br>
-      Diese Befriedigung kann er sich woanders holen.
+        <Collectable entry-id="diary-justin-mobbing">
+          Dieser Justin geht mir sowas von auf die Nerven und am liebsten will ich ihn einfach <Strike :height="90">zusammenschlagen</Strike> kein Witz.
+        </Collectable>
+        <br>
+        <br>
+        So ein großes Maul haben und nichts dahinter, typisch!
+        <br>
+        Mit sowas verschwend ich meine Zeit nicht, soll der mich „Mobben“ wie er will.
+        <br>
+        <br>
+        Diese Befriedigung kann er sich woanders holen.
     </template>
   </Page>
 </template>
@@ -21,4 +23,5 @@
 <script setup lang="ts">
 import Strike from '../Strike.vue';
 import Page from '../Page.vue';
+import Collectable from '@/components/Collectable.vue';
 </script>

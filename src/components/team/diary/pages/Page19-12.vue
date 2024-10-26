@@ -16,7 +16,10 @@
       Wenn ich mich nicht irre, hat er eine Tochter hier an der Schule. Ivy oder sowas? Phoebe weiß bestimmt mehr drüber.
       <br>
       <br>
-      Oh ich hab gehört dass Montague eine kriminelle Vergangenheit hat, ich muss mal herausfinden was er gemacht hat. Vielleicht hat er ja einige Tipps für mich.
+      Oh ich hab gehört dass Montague eine kriminelle Vergangenheit hat, ich muss mal herausfinden was er gemacht hat.
+      <Collectable inline entry-id="diary-kriminelle-tips">
+        Vielleicht hat er ja einige Tipps für mich.
+      </Collectable>
     </template>
   </Page>
 </template>
@@ -24,4 +27,5 @@
 <script setup lang="ts">
 import Strike from '../Strike.vue';
 import Page from '../Page.vue';
+import Collectable from '@/components/Collectable.vue';
 </script>

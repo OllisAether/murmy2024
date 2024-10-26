@@ -5,7 +5,10 @@ import { hugo1 } from "./hugo1";
 import { hugo2 } from "./hugo2";
 import { justin1 } from "./justin1";
 import { justin2 } from "./justin2";
+import { justinssprachaufnahme } from "./justinssprachaufnahme";
 import { krankenhausLog } from "./krankenhauslog";
+import { liebesritual } from "./liebesritual";
+import { notruf } from "./notruf";
 import { phoebe1 } from "./phoebe1";
 import { phoebe2 } from "./phoebe2";
 import { radiodurchsage } from "./radiodurchsage";
@@ -18,15 +21,18 @@ export const transcripts: Transcript[] = [
   hugo1,
   justin1,
   phoebe1,
+  notruf,
+  radiodurchsage,
 
   ritual,
-  radiodurchsage,
-  krankenhausLog,
+  liebesritual,
   
   cassy2,
   hugo2,
   justin2,
   phoebe2,
+  krankenhausLog,
+  justinssprachaufnahme,
 
   stalker1,
   stalker2,

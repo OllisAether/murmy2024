@@ -11,7 +11,7 @@
         v-for="(clue, i) in newClues"
         class="show-new-clues-screen__new-clues__clue"
         :style="{
-          animationDelay: `${i * 0.2 + 0.4}s`
+          animationDelay: `${i * 0.25 + 0.4}s`
         }"
       >
         <SkewBox
@@ -33,14 +33,32 @@
 import NewBadge from '@/components/NewBadge.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { clues } from '../../../shared/assets/clues/index';
 import SkewBox from '@/components/SkewBox.vue';
+import { useAudio } from '@/store/board/audio';
 
 const game = useGameManager()
+const audio = useAudio()
 
 const newClues = computed(() => {
   return game.clues.new.map(clue => clues.find(c => c.id === clue))
+})
+
+onMounted(async () => {
+  const sounds = newClues.value.map((_, i) => {
+    const sound = new Audio(game.getAsset(`sounds/new_clue_${Math.min(i + 1, 4)}.mp3`)?.content)
+  
+    audio.controlVolume(sound, 'vote')
+    return sound
+  })
+
+  await new Promise(resolve => setTimeout(resolve, 400))
+  for (const sound of sounds) {
+    
+    sound.play()
+    await new Promise(resolve => setTimeout(resolve, 250))
+  }
 })
 </script>
 

@@ -27,6 +27,17 @@
       </VToolbar>
 
       <VCardText>
+        <div class="mb-2">
+          <VBtn icon variant="tonal" @click="playpause" class="mr-2">
+            <VIcon>mdi-play-pause</VIcon>
+          </VBtn>
+          <VBtn icon variant="tonal" @click="audio.nextTrack()" class="mr-2">
+            <VIcon>mdi-skip-next</VIcon>
+          </VBtn>
+
+          <span>{{ audio.currentTrack?.src.split('/').pop() }}</span>
+        </div>
+
         <VExpandTransition>
           <div v-if="volumePanel">
             <VCard class="mb-2 pa-4" color="background" flat>
@@ -121,7 +132,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
-import { onBeforeMount, onUnmounted, ref } from 'vue';
+import { onBeforeMount, onUnmounted, ref, watch } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
 import { useGameManager } from '@/store/gameManager';
@@ -137,6 +148,14 @@ import { useAudio } from '@/store/board/audio';
 const auth = useAuthManager()
 const game = useGameManager()
 const audio = useAudio()
+
+function playpause () {
+  if (audio.currentTrack?.paused) {
+    audio.currentTrack?.play()
+  } else {
+    audio.currentTrack?.pause()
+  }
+}
 
 const volumePanel = ref(false)
 

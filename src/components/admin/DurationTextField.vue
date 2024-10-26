@@ -30,7 +30,7 @@
 import { computed, useModel } from 'vue';
 
 const props = defineProps<{
-  modelValue: number
+  modelValue: number | null
   disabled?: boolean
 }>()
 

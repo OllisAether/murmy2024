@@ -24,6 +24,8 @@ export const useGameManager = defineStore('gameManager', () => {
 
   const interacted = ref(false)
 
+  const isDev = import.meta.env.DEV
+
   window.addEventListener('pointerdown', () => {
     interacted.value = true
   }, { once: true })
@@ -956,6 +958,7 @@ export const useGameManager = defineStore('gameManager', () => {
   // #endregion
 
   return {
+    isDev,
     interacted: readonly(interacted),
     loading: readonly(loading),
     initialized: readonly(initialized),

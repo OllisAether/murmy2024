@@ -8,6 +8,7 @@ export const stalker1: Transcript =  {
   thumbnailAssetId: 'thumbnails/stalker1.webp',
   title: 'Stalkeraufnahme 1',
   content: [
+    [null, 'Zeitstempel: 14.02.2013 11:16'],
     [null, 'Phineas setzt sich alleine auf eine Bank auf dem Schulhof.\nIvy kommt auf Phineas zu und gibt ihm eine Rose.\nPhineas nimmt die Rose und wirft sie gnadenlos in den Busch.'],
     ['cassandra', 'Wow, Ivy wurde einfach gerade brutalst gekorbt.'],
     [null, 'Hugo Montague versucht auf Ivy zu zulaufen'],

@@ -1,6 +1,7 @@
 import { computed } from "@vue/reactivity";
 import { defineStore } from "pinia";
 import { ref, watch, WatchStopHandle } from "vue";
+import { useGameManager } from "../gameManager";
 
 export const useAudio = defineStore('audio', () => {
   const masterVolume = ref(1)
@@ -69,6 +70,49 @@ export const useAudio = defineStore('audio', () => {
     })
   }
 
+  const backgroundPlaylist = [
+    'music/HalloweenBg.mp3',
+    'music/murmytheme.mp3',
+  ]
+  const trackIndex = ref(0)
+  const currentTrack = ref<HTMLAudioElement | null>(null)
+
+  function startBackgroundMusic () {
+    if (currentTrack.value) {
+      currentTrack.value.pause()
+    }
+
+    const audio = new Audio(useGameManager().getAsset(backgroundPlaylist[trackIndex.value])?.content)
+    controlVolume(audio, 'music')
+
+    audio.play()
+
+    audio.addEventListener('ended', nextTrack)
+
+    currentTrack.value = audio
+  }
+
+  function nextTrack () {
+    trackIndex.value = (trackIndex.value + 1) % backgroundPlaylist.length
+    currentTrack.value?.removeEventListener('ended', nextTrack)
+
+    if (currentTrack.value) {
+      fade(currentTrack.value, 1000)
+      currentTrack.value = null
+    }
+    startBackgroundMusic()
+  }
+
+  async function stopBackgroundMusic () {
+    currentTrack.value?.removeEventListener('ended', nextTrack)
+
+    if (currentTrack.value) {
+      fade(currentTrack.value, 1000)
+      currentTrack.value = null
+      trackIndex.value = (trackIndex.value + 1) % backgroundPlaylist.length
+    }
+  }
+
   // #region Save/Load
 
   function save() {
@@ -76,7 +120,8 @@ export const useAudio = defineStore('audio', () => {
       masterVolume: masterVolume.value,
       voteVolume: voteVolume.value,
       mediaVolume: mediaVolume.value,
-      musicVolume: musicVolume.value
+      musicVolume: musicVolume.value,
+      trackIndex: trackIndex.value,
     }))
   }
   watch([masterVolume, voteVolume, mediaVolume, musicVolume], save, { deep: true })
@@ -90,16 +135,20 @@ export const useAudio = defineStore('audio', () => {
 
       if (typeof parsed === 'object') {
         if ('masterVolume' in parsed && typeof parsed.masterVolume === 'number') {
-        masterVolume.value = parsed.masterVolume
+          masterVolume.value = parsed.masterVolume
         }
         if ('voteVolume' in parsed && typeof parsed.voteVolume === 'number') {
-        voteVolume.value = parsed.voteVolume
+          voteVolume.value = parsed.voteVolume
         }
         if ('mediaVolume' in parsed && typeof parsed.mediaVolume === 'number') {
-        mediaVolume.value = parsed.mediaVolume
+          mediaVolume.value = parsed.mediaVolume
         }
         if ('musicVolume' in parsed && typeof parsed.musicVolume === 'number') {
-        musicVolume.value = parsed.musicVolume
+          musicVolume.value = parsed.musicVolume
+        }
+
+        if ('trackIndex' in parsed && typeof parsed.trackIndex === 'number') {
+          trackIndex.value = parsed.trackIndex
         }
       } else {
         throw new Error('Invalid audio data format')
@@ -125,6 +174,11 @@ export const useAudio = defineStore('audio', () => {
 
     controlVolume,
     offControlVolume,
-    fade
+    fade,
+
+    startBackgroundMusic,
+    stopBackgroundMusic,
+    nextTrack,
+    currentTrack,
   }
 })

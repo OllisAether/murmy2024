@@ -69,9 +69,9 @@ export const kursbuch: Clue<'book'> = {
           height: 0.03184897682883523,
         },
         entry: {
-          id: 'phineas-vorstellung',
+          id: 'phineas-erster-schultag',
           title: '03.12.2012 - Der erste Schultag',
-          description: 'Phineas hatte am 03.12.2012 seinen ersten Schultag und stellte sich vor dem Geographie-Orientierungskurs vor.',
+          description: 'Phineas hatte am 03.12.2012 seinen ersten Schultag.',
           suspectId: 'phineas',
         }
       },

@@ -8,6 +8,7 @@ export const ritual: Transcript =  {
   thumbnailAssetId: 'thumbnails/Ritual.webp',
   title: 'Ritual des Orakels',
   content: [
+    [null, 'Zeitstempel: 03.12.2012 13:36'],
     ['ivy', 'Filmt!'],
     [null, 'Ivy stellt die Kamera auf.\nCassandra und Ivy sitzen vor einem Tisch mit Kerzen, kleinen Totenköpfen und einer leuchtenden Kristallkugel.'],
     ['cassandra', 'Hi, liebe Verehrer des Orakels.'],

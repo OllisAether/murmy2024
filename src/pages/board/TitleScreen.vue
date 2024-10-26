@@ -81,9 +81,10 @@ import NewBadge from '@/components/NewBadge.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { clues } from '../../../shared/assets/clues/index';
 import SkewBox from '@/components/SkewBox.vue';
+import { useAudio } from '@/store/board/audio';
 
 const game = useGameManager()
 
@@ -93,6 +94,15 @@ const isShowNewClues = computed(() => {
 
 const newClues = computed(() => {
   return game.clues.new.map(clue => clues.find(c => c.id === clue))
+})
+
+const audio = useAudio()
+onMounted(() => {
+  audio.startBackgroundMusic()
+})
+
+onBeforeUnmount(() => {
+  audio.stopBackgroundMusic()
 })
 </script>
 

@@ -87,6 +87,13 @@
           </span>
           <span></span>
         </div>
+        <div v-if="message.type === 'info'" class="chat-screen__info">
+          <span></span>
+          <span>
+            {{ message.content }}
+          </span>
+          <span></span>
+        </div>
       </template>
       <Collectable
         class="chat-screen__content__collectable"
@@ -341,7 +348,7 @@ const computedChat = computed(() => {
     }
   }
 
-  &__timestamp {
+  &__timestamp, &__info {
     display: flex;
     align-items: center;
 

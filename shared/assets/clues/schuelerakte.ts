@@ -30,7 +30,7 @@ export const schuelerakteKopelius: Clue<'images'> = {
           id: 'justin-echtername',
           title: 'Kopelius van Bustin',
           suspectId: 'justin',
-          description: textContent(['In der Schülerakte von Justin steht, dass sein echter Name ', italic('„Kopelius van Bustin“'), ' ist.']),
+          description: textContent(['Justins echter Name ist ', italic('„Kopelius van Bustin“.')]),
         },
       }
     ]
@@ -55,8 +55,8 @@ export const schueleraktePhoebe: Clue<'images'> = {
         },
         entry: {
           id: 'phoebe-top-a-student',
-          title: 'Top-Schülerin',
           suspectId: 'phoebe',
+          title: 'Top-Schülerin',
           description: 'Phoebe ist sehr sozial engagiert, hilfsbereit und eine der besten Schülerinnen der Schule.\n\nDoch ist sie wirklich so unschuldig, wie sie scheint?',
         }
       }

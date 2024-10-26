@@ -92,6 +92,8 @@ export const useMainClue = defineStore('mainClue', () => {
   
     const date = new Date()
     date.setFullYear(2013)
+    date.setMonth(1)
+    date.setDate(18)
     const day = date.getDate().toString().padStart(2, '0')
     const month = months[date.getMonth()]
     const year = date.getFullYear()

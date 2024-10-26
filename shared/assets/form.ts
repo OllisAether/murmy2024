@@ -319,6 +319,7 @@ export const form: Form = [
       }
     ]
   },
+
   {
     title: 'Die nahestehende Person',
     description: 'Fragen zur nahestehenden Person',
@@ -339,6 +340,7 @@ export const form: Form = [
       }
     ]
   },
+  
   {
     title: 'Was hat es mit dem Okkult auf sich?',
     description: 'Fragen zum Okkult',

@@ -80,10 +80,12 @@ const game = useGameManager();
     grid-template-columns: repeat(5, 1fr);
 
     &__item {
+      display: block;
       position: relative;
       aspect-ratio: 1;
 
       img {
+        display: block;
         pointer-events: none;
         width: 100%;
         height: 100%;

@@ -7,7 +7,7 @@
       @click="unlock"
       ref="unlockButton"
     >
-      <VIcon>mdi-chevron-left</VIcon>
+      <VIcon>mdi-lock-open-outline</VIcon>
     </button>
 
     <div class="pin-lock__digits">

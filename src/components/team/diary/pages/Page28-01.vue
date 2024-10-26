@@ -5,11 +5,12 @@
     </template>
     <template #text>
       <br>
-      Warum liegt ein blutiger Schädel vor meiner Haustür?
-      <br>
-      <br>
-      Ich vermute dass war Cassandra.
-      <br>
+      <Collectable entry-id="diary-schaedel" inline>
+        Warum liegt ein blutiger Schädel vor meiner Haustür?
+        <br>
+        <br>
+        Ich vermute dass war Cassandra.
+      </Collectable>
       Ivy steht nicht so ganz auf knochen.
       <br>Indem Sinne ist dieser blutige Brief gestern dann ihrer...
       <br>
@@ -20,5 +21,6 @@
 </template>
 
 <script setup lang="ts">
+import Collectable from '@/components/Collectable.vue';
 import Page from '../Page.vue';
 </script>

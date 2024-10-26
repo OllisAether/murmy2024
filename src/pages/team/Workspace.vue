@@ -21,8 +21,8 @@
               </template>
 
               Ermittlungspunkte sind <b class="help-color">Währungseinheiten</b>, die ihr für das Freischalten von Clues benötigt. <br><br>
-              Ihr erhaltet <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 15</b> vor jeder Arbeitsphase<br>
-              und <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 5</b> pro markiertem Hinweis.
+              Ihr erhaltet <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 10</b> vor jeder Arbeitsphase<br>
+              und <b><VIcon size="1em" style="vertical-align: 0;">mdi-star-four-points-circle</VIcon> 3</b> pro markiertem Hinweis.
             </HelpBtn>
           </div>
           <div class="workspace__indicators__center">

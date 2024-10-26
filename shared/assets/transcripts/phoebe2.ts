@@ -4,7 +4,7 @@ import { getSuspectById } from "../suspects";
 export const phoebe2: Transcript =  {
   id: 'phoebe2',
   for: 'Phoebe 2.mp4',
-  thumbnailAssetId: 'suspects/phoebe.webp',
+  thumbnailAssetId: 'suspects/Phoebe2.webp',
   title: 'Interview 2: Phoebe Blight',
   content: [
     ['ermittlerin', 'Guten Tag, Phoebe. Danke, dass Sie sich noch mal die Zeit genommen haben, um an einem Vollgespräch mit mir teilzunehmen.'],
@@ -36,6 +36,7 @@ export const phoebe2: Transcript =  {
     ['ermittlerin', 'Sie waren also lange in einem einseitigen Gespräch mit ihm verwickelt?'],
     ['phoebe', 'Ja, ich- ich habe ihm alles gesagt. I- Ich hab ihm alles gesagt, was ich konnte, aber es war- es war einfach zu wenig. Und ich hätte ihm mehr sagen sollen. Sorry. Ich- Ich hatte einfach mehr tun sollen.'],
     ['ermittlerin', 'Alles gut. Mein Beileid wegen Ihrem Verlust, Phoebe.'],
+    [null, 'Die Ermittlerin gibt Phoebe ein Taschentuch.'],
     ['phoebe', 'Dankeschön.'],
     ['ermittlerin', 'Ich danke Ihnen vielmals für Ihre Zeit und für Ihre Ehrlichkeit.'],
     ['phoebe', 'Ich danke Ihnen.'],
@@ -43,7 +44,7 @@ export const phoebe2: Transcript =  {
   speakers: [
     {
       id: 'phoebe',
-      avatarAssetId: 'suspects/phoebe.webp',
+      avatarAssetId: 'suspects/Phoebe2.webp',
       alignment: 'right',
       name: getSuspectById('phoebe')?.name ?? '',
       color: getSuspectById('phoebe')?.color

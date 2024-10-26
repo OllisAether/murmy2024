@@ -28,7 +28,8 @@ export const voteOptions: VoteOption[] = [
     media: 'Cassy 1.mp4',
     availableClues: [
       'schuelerakteCassandra',
-      'rituale'
+      'rituale',
+      'schuelerakteIvy'
     ],
     options: {
       main: [
@@ -118,7 +119,7 @@ export const voteOptions: VoteOption[] = [
   {
     id: 'phoebe1',
     title: 'Interview: Phoebe Blight',
-    image: 'suspects/phoebe.webp',
+    image: 'suspects/Phoebe1.webp',
     suspectIds: ['phoebe', 'ivy'],
     color: getSuspectById('phoebe')?.color,
     removeSelf: true,
@@ -131,7 +132,7 @@ export const voteOptions: VoteOption[] = [
   {
     id: 'phoebe2',
     title: 'Interview 2: Phoebe Blight',
-    image: 'suspects/phoebe.webp',
+    image: 'suspects/Phoebe2.webp',
     suspectIds: ['phoebe', 'phineas', 'ivy'],
     color: getSuspectById('phoebe')?.color,
     removeSelf: true,
@@ -175,8 +176,9 @@ export const voteOptions: VoteOption[] = [
   },
   {
     id: 'notruf',
-    title: 'Telefontaufzeichnung: Notruf 112',
-    image: 'suspects/phoebe.webp',
+    title: 'Telefontaufzeichnung 13:45: Notruf 112',
+    image: 'thumbnails/kw.webp',
+    color: '#ff5a4a',
     suspectIds: ['cassandra', 'phineas'],
     removeSelf: true,
 
@@ -189,7 +191,7 @@ export const voteOptions: VoteOption[] = [
   {
     id: 'justinsSprachaufnahme',
     title: 'Kassettenrecorder von Justin van Bustin',
-    image: 'suspects/phoebe.webp',
+    image: 'thumbnails/tape.webp',
     suspectIds: ['justin'],
     removeSelf: true,
 
@@ -206,7 +208,7 @@ export const voteOptions: VoteOption[] = [
   {
     id: 'krankenhausLog',
     title: 'Log_17_45_016',
-    image: 'suspects/phoebe.webp',
+    image: 'thumbnails/intercom.webp',
     suspectIds: ['phineas'],
     removeSelf: true,
 

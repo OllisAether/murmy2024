@@ -4,7 +4,7 @@ export const phoebe: Suspect = {
   id: 'phoebe',
   name: 'Phoebe Blight',
   color: '#ffef40',
-  imageAssetId: 'suspects/phoebe.webp',
+  imageAssetId: 'suspects/Phoebe1.webp',
 }
 
 export const phineas: Suspect = {

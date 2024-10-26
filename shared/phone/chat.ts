@@ -8,7 +8,7 @@ export type Chat = GroupChat | PrivateChat
 export interface ChatBase {
   type: 'private' | 'group'
   entry?: Entry | string
-  messages: (ChatMessage | ChatTimestamp | ChatImage)[]
+  messages: (ChatMessage | ChatTimestamp | ChatImage | ChatInfo)[]
 }
 
 export interface GroupChat extends ChatBase {
@@ -26,6 +26,12 @@ export interface PrivateChat extends ChatBase {
 export interface ChatMessage {
   type: 'message'
   sender: string | 'me'
+  entry?: Entry | string
+  content: TextContent | string
+}
+
+export interface ChatInfo {
+  type: 'info'
   content: TextContent | string
 }
 

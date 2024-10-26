@@ -4,7 +4,6 @@ import { Chat } from "../../../phone/chat";
 export const cassy: Chat = {
   type: 'private',
   number: '+49 172 9925904',
-
   messages: [
     {
       type: 'timestamp',
@@ -59,17 +58,12 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Ich hab dich heute gesehen und du siehst perfekt aus wie immer~ '
+      content: 'Ich hab dich heute gesehen und du siehst perfekt aus wie immer~ ',
     },
     {
       type: 'message',
       sender: '+49 172 9925904',
       content: 'Meine Hände sind schon am jucken ich kanns schon spüren das Ritual wird bald vollendet'
-    },
-    {
-      type: 'message',
-      sender: '+49 172 9925904',
-      content: '(edgy bild)'
     },
     {
       type: 'timestamp',
@@ -95,9 +89,9 @@ export const cassy: Chat = {
       content: 'Ich hab schonmal ein paar schöne Geschenke für dich hinterlassen damit du vorbereitet sein kannst'
     },
     {
-      type: 'message',
+      type: 'image',
       sender: '+49 172 9925904',
-      content: '(edgy bild)'
+      imageAssetId: 'phone/skull_porch.webp'
     },
     {
       type: 'timestamp',
@@ -151,9 +145,9 @@ export const cassy: Chat = {
       content: 'Das Bild erinnert mich an uns 🖤'
     },
     {
-      type: 'message',
+      type: 'image',
       sender: '+49 172 9925904',
-      content: '(irgendwas unsettling)'
+      imageAssetId: 'phone/eyes.webp'
     },
     {
       type: 'timestamp',
@@ -167,16 +161,16 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'ALL HAIL THE ORACLEEE '
+      content: 'ALL HAIL THE ORACLEEE'
     },
     {
       type: 'timestamp',
       timestamp: moment('2013-01-28 21:14')
     },
     {
-      type: 'message',
+      type: 'image',
       sender: '+49 172 9925904',
-      content: '(blutiger schädel) '
+      imageAssetId: 'phone/skull.webp'
     },
     {
       type: 'message',
@@ -185,7 +179,7 @@ export const cassy: Chat = {
     },
     {
       type: 'timestamp',
-      timestamp: moment('2013-02-2 13:14')
+      timestamp: moment('2013-02-02 13:14')
     },
     {
       type: 'message',
@@ -209,12 +203,12 @@ export const cassy: Chat = {
     },
     {
       type: 'timestamp',
-      timestamp: moment('2013-02-7 11:14')
+      timestamp: moment('2013-02-07 11:14')
     },
     {
-      type: 'message',
+      type: 'image',
       sender: '+49 172 9925904',
-      content: '(einfach nur ein bild von einem blutigen messer oder so)'
+      imageAssetId: 'phone/knife.webp'
     },
     {
       type: 'timestamp',
