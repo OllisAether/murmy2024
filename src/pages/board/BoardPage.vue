@@ -132,7 +132,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
-import { onBeforeMount, onUnmounted, ref, watch } from 'vue';
+import { onBeforeMount, onUnmounted, ref } from 'vue';
 import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
 import { useGameManager } from '@/store/gameManager';

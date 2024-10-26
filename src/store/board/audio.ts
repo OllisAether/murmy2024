@@ -73,6 +73,7 @@ export const useAudio = defineStore('audio', () => {
   const backgroundPlaylist = [
     'music/HalloweenBg.mp3',
     'music/murmytheme.mp3',
+    'music/HalloweenBg2.mp3',
   ]
   const trackIndex = ref(0)
   const currentTrack = ref<HTMLAudioElement | null>(null)
