@@ -1,3 +1,4 @@
+import { entry, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -7,29 +8,53 @@ export const liebesritual: Transcript =  {
   thumbnailAssetId: 'thumbnails/suizid.webp',
   title: 'Ivys Ritual der ewigen Liebe',
   content: [
-    [null, 'Zeitstempel: 14.02.2013 13:26'],
+    [null, entry({
+      id: 'ivy-suizid-zeit',
+      suspectId: 'ivy',
+
+      title: '13:26 Uhr - Ivy führt das Ritual der ewigen Liebe durch',
+      description: 'Am 14.02.2013 um 13:26 Uhr führt Ivy ein Ritual der ewigen Liebe durch.'
+    }, 'Zeitstempel: 14.02.2013 13:26')],
     
     ['ivy', 'Hii Verehrer des Orakels. Ich habe heute etwas ganz ganz besonderes vor. Ihr werdet es gleich sehen, aber zunächst-'],
 
-    [null, 'Zeigt mit dem Finger auf die Hütte und läuft darauf zu'],
+    [null, textContent(['Zeigt mit dem Finger auf ', entry({
+      id: 'ivy-huette',
+      suspectId: 'ivy',
 
-    ['ivy', 'Schaut, meine Hütte. Sie ist der perfekte Ort für das was ich vor habe.'],
+      title: 'Ivys Hütte',
+      description: 'Ivy hat eine Hütte im Stadtwald. Dort führt sie das Ritual der ewigen Liebe durch.'
+    }, 'eine Hütte'), ' und läuft darauf zu'])],
+
+    ['ivy', textContent(['Schaut, ', entry('ivy-huette', 'meine Hütte'), '. Sie ist der perfekte Ort für das was ich vor habe.'])],
 
     [null, 'Geht in die Hütte\nStellt die Kamera auf eine unstabile Oberfläche'],
 
-    ['ivy', `Steht die?
+    ['ivy', textContent([`Steht die?
 
-    Ok, kommen wir nun zu unserem ganz besonderen Ritual. Es geht um meine Liebe des Lebens. Phineas!
+    Ok, kommen wir nun zu unserem ganz besonderen Ritual. Es geht um `, entry({
+      id: 'ivy-liebe-des-lebens',
+      suspectId: 'ivy',
+
+      title: 'Phineas ist Ivys Liebe des Lebens',
+      description: 'Ivy bezeichnet Phineas Musé als ihre Liebe des Lebens.'
+    }, 'meine Liebe des Lebens. Phineas!'), `
     
-    Und hier haben wir das Ritual der ewigen Liebe.`],
+    Und hier haben wir das Ritual der ewigen Liebe.`])],
 
     [null, 'Zeigt das Ritual der ewigen Liebe in die Kamera'],
 
-    ['ivy', 'Und hier habe ich ein Dolch. Den habe ich aus der Sammlung meines Vaters stibitzt.'],
+    ['ivy', textContent(['Und hier habe ich ', entry({
+      id: 'ivy-dolch',
+      suspectId: 'ivy',
+
+      title: 'Ivys Dolch',
+      description: 'Ivy hat einen Dolch, den sie aus der Sammlung ihres Vaters stibitzt hat. Sie verwendet ihn für das Ritual der ewigen Liebe.'
+    }, 'einen Dolch'), '. Den habe ich aus der Sammlung meines Vaters stibitzt.'])],
 
     [null, 'Zeigt den Dolch in die Kamera'],
 
-    ['ivy', `Ok. Mal sehen.
+    ['ivy', textContent([`Ok. Mal sehen.
 
 Geliebt zu sein, das fällt oft schwer,
 Doch suchst du Rat, dann folg dem Orakel
@@ -43,7 +68,13 @@ In der Geisterwelt vereint.
 
 Das ist das was ich brauche für Phineas. Er wird für immer meins sein.
 
-Es wird Zeit. Das Orakel ruft mich, ich höre es. Ich darf es nicht warten lassen. Uh- Hier steht, dass ich die coolste bin. Liket und Subscribet den Kanal des Okkult-Clubs!`],
+Es wird Zeit. Das Orakel ruft mich, ich höre es. Ich darf es nicht warten lassen. Uh- Hier steht, dass ich die coolste bin. Liket und Subscribet `, entry({
+  id: 'ivy-okkult-kanal',
+  suspectId: 'ivy',
+
+  title: 'Video für den Kanal des Okkult-Clubs',
+  description: 'Ivy zeichnet das Ritual der ewigen Liebe auf, um ihn auf den Kanal des Okkult-Clubs hochzuladen.'
+}, 'den Kanal des Okkult-Clubs!')])],
 
     [null, 'Hält sich den Dolch an die Brust'],
     
@@ -55,7 +86,13 @@ Es wird Zeit. Das Orakel ruft mich, ich höre es. Ich darf es nicht warten lasse
 
     [null, 'Die Kamera fällt um.\nBlut spritzt auf die Kamera. Man hört einen schrillen Schrei'],
 
-    ['ivy', 'Liebe komm her! Lieber komm her! Liebe- komm-'],
+    ['ivy', entry({
+      id: 'ivy-ritual-fertig',
+      suspectId: 'ivy',
+
+      title: 'Ritual nicht zu Ende praktiziert',
+      description: 'Ivy ist zu Boden gefallen, bevor sie den letzten Satz vollendet hat.\n\nHat das Ritual noch funktioniert?'
+    }, 'Liebe komm her! Lieber komm her! Liebe- komm-')],
     
     [null, 'Man hört etwas auf den Boden schlagen.\nDaraufhin hört man das tropfen einer Flüssigkeit.']
   ],

@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import e from 'express';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{

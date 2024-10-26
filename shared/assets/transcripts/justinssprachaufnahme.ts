@@ -1,3 +1,4 @@
+import { entry, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -7,7 +8,7 @@ export const justinssprachaufnahme: Transcript =  {
   thumbnailAssetId: 'thumbnails/tape.webp',
   title: 'Kassettenrecorder von Justin van Bustin',
   content: [
-    ['justin', `Das lässt mich nicht mehr in Ruhe, Mann. Ich muss es irgendwie loswerden.
+    ['justin', textContent([`Das lässt mich nicht mehr in Ruhe, Mann. Ich muss es irgendwie loswerden.
 
 Du hast's verdient. Dieser Blick. Du hast einfach auf mich- aufgehört auf mich runterzuschauen. Du denkst du bist was besseres als ich.
 
@@ -20,7 +21,13 @@ Aber seine Fresse passte einfach zu gut in meine Faust! Dann war er auf einmal w
 Da lagst du dann, einfach so. Ich hab's gar nicht gecheckt, aber als ich gesehen hab, dass du dich nicht mehr bewegst, wusste ich, das war's.
 In dem Moment kriegt ich Schiss und bin einfach abgehauen.
 
-Ich hab' dich umgebracht, Mann. Es war keine Absicht. Ich- Es tut mir leid. Ich wusste nicht, dass es so- Ich wollt nicht, dass du abkratzt! Es tut mir leid, bro. Ich- Ich hab' dich im Real Life PvP zerstört. Dich zusammengeschlagen. Nein- niemand darf das erfahren.`]
+`, entry({
+  id: 'justin-phineas-umgebracht',
+  suspectId: 'justin',
+
+  title: 'Habe Phineas umgebracht',
+  description: 'Justin glaubt, dass er Phineas umgebracht hat.\n\nGibt er das einfach so zu?'
+}, 'Ich hab\' dich umgebracht, Mann.'), ` Es war keine Absicht. Ich- Es tut mir leid. Ich wusste nicht, dass es so- Ich wollt nicht, dass du abkratzt! Es tut mir leid, bro. Ich- Ich hab' dich im Real Life PvP zerstört. Dich zusammengeschlagen. Nein- niemand darf das erfahren.`])]
   ],
   speakers: [
     {

@@ -2,7 +2,7 @@ import { Form } from "../form";
 
 export const form: Form = [
   {
-    title: 'Das Mordopfer 💀',
+    title: 'Das Mordopfer',
     description: 'Fragen zum Mordopfer',
 
     fields: [

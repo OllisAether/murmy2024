@@ -1,4 +1,4 @@
-import { entry, italic, textContent } from "../../textContent";
+import { entry, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 

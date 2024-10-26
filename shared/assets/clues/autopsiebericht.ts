@@ -5,9 +5,9 @@ export const autopsieberichtIvy: Clue<'images'> = {
   id: 'autopsieberichtIvy',
   cost: 20,
   title: 'Autopsiebericht von Ivy',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
+  thumbnailAssetId: 'thumbnails/AutopsieIvy.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
+    assetIds: ['clues/AutopsieIvy.webp'],
   }
 }
 
@@ -16,9 +16,9 @@ export const autopsieberichtPhineas: Clue<'images'> = {
   id: 'autopsieberichtPhineas',
   cost: 20,
   title: 'Autopsiebericht von Phineas',
-  thumbnailAssetId: 'clues/kursbuch/Kursbuch-21.webp',
+  thumbnailAssetId: 'thumbnails/AutopsiePhineas.webp',
   images: {
-    assetIds: ['clues/kursbuch/Kursbuch-21.webp'],
+    assetIds: ['clues/AutopsiePhineas.webp'],
   }
 }
 

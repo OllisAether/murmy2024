@@ -1,4 +1,4 @@
-import { shaky, wiggly } from "../../textContent";
+import { entry, shaky, wiggly } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -8,7 +8,13 @@ export const ritual: Transcript =  {
   thumbnailAssetId: 'thumbnails/Ritual.webp',
   title: 'Ritual des Orakels',
   content: [
-    [null, 'Zeitstempel: 03.12.2012 13:36'],
+    [null, entry({
+      id: 'ritual-zeit',
+      suspectId: 'orakel',
+
+      title: '13:36 Uhr - Ivy und Cassandra führen das Ritual des Orakels durch',
+      description: 'Am 03.12.2012 um 13:36 Uhr führen Ivy und Cassandra das Ritual des Orakels durch.\n\nHat es funktioniert?'
+    }, 'Zeitstempel: 03.12.2012 13:36')],
     ['ivy', 'Filmt!'],
     [null, 'Ivy stellt die Kamera auf.\nCassandra und Ivy sitzen vor einem Tisch mit Kerzen, kleinen Totenköpfen und einer leuchtenden Kristallkugel.'],
     ['cassandra', 'Hi, liebe Verehrer des Orakels.'],

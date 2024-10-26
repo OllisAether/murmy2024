@@ -1,3 +1,4 @@
+import { entry, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -12,13 +13,19 @@ export const justin2: Transcript =  {
     ['ermittlerin', 'Justin. Justin, Sie sollten sich nicht noch tiefer in Ihre Lügen verstricken. Sie haben das im letzten Interview schon versucht, als Sie uns nicht die ganze Wahrheit gesagt haben. Es wäre besser für Sie, offen zu reden.'],
     ['justin', 'Nein, ich wollte das nicht.'],
     ['ermittlerin', 'Was wollten Sie nicht?'],
-    ['justin', 'Es kann sein, dass ich ihn vielleicht zu hart getroffen habe.'],
+    ['justin', entry('justin-phineas-umgebracht', 'Es kann sein, dass ich ihn vielleicht zu hart getroffen habe.')],
     ['ermittlerin', 'Zu hart getroffen? Erklären Sie das bitte genauer.'],
     ['justin', 'Ich wusste nicht, dass der Bre so schnell aufgeben würde. Ich wollte das nicht. Ehrlich.'],
     ['ermittlerin', 'Was meinen Sie damit, Justin?'],
     ['justin', 'Ich wollte ihm einfach zeigen, wer der Babo ist. Ihm klar machen, dass er mir nicht auf die Nase herumtanzen kann. Aber er wollte nicht mitspielen. Also habe ich ihn geschlagen und dann noch mal geschlagen. Und nochmal. Und nochmal. Und dann hat er aufgehört, sich zu bewegen und kriegte Schiss und bin weggelaufen.'],
     ['ermittlerin', 'Waren Sie alleine mit Phineas im Park oder waren noch andere Personen beteiligt?'],
-    ['justin', 'Es war nur wie zwei. Seine Fresse. Ich konnte mich nicht zurückhalten, also habe ich einfach drauflosgeschlagen. Ich wollte des nicht.'],
+    ['justin', textContent([entry({
+      id: 'justin-nur-wir-zwei',
+      suspectId: 'justin',
+
+      title: 'Sei nur mit Phineas im Park gewesen',
+      description: 'Justin behauptet, dass nur er und Phineas im Park gewesen sind.'
+    }, 'Es waren nur wir zwei.'), ' Seine Fresse. Ich konnte mich nicht zurückhalten, also habe ich einfach drauflosgeschlagen. Ich wollte des nicht.'])],
     ['ermittlerin', 'Verstehe. Das ist also, was passiert ist. Sehr interessant. Aber warum haben Sie uns das nicht beim letzten Mal schon gesagt? Da haben Sie behauptet, dass Sie nichts im Park zu suchen hatten. Warum die Lügen, Justin?'],
     ['justin', 'Ich hätte Angst, okay? Ich wollte einfach keinen Stress. Sie hatten mich so bedrängt. Ich wollte das nicht. Bitte, ich- ich bin zu jung für den Knast. Ich wollte das wirklich nicht. Ich wollte ihn nicht so hart treffen. Ich wollte gar nichts davon. Meine Minecraft-Welt. Ich habe den Enderdrachen immer noch nicht besiegt.'],
     ['ermittlerin', 'Justin, das ist hier kein Spiel. Ein Mensch ist tot und der Mörder ist immer noch auf freier Spur. Sie hätten von Anfang an ehrlich sein müssen.'],

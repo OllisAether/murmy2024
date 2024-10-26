@@ -207,6 +207,8 @@ export const useGameManager = defineStore('gameManager', () => {
 
   function deinitGameManager () {
     console.log('GameManager deinitialized')
+    
+    stopInvestigationCoinsDelay()
 
     stopTimerInterval()
     timer.value = {
