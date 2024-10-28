@@ -6,9 +6,9 @@ export const ivy: Chat = {
   number: '+49 174 9464308',
   entry: {
     id: 'phineas-liebesnachrichten',
-    suspectId: 'phineas',
-    title: 'Liebesnachrichten von +49 174 9464308',
-    description: 'Phineas bekommt viele Liebesnachrichten von einer unbekannten Nummer (+49 174 9464308) und scheint diese zu ignorieren.\n\nWer könnte die unbekannte Nummer sein?',
+    suspectId: 'ivy',
+    title: 'Liebesnachrichten',
+    description: 'Ivy sendet Phineas viele Liebesnachrichten. Phineas scheint diese zu ignorieren.\n\nHat Phineas ein Geheimnis vor Ivy?',
   },
   messages: [
     {

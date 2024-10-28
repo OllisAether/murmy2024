@@ -46,10 +46,10 @@ export const justin: Chat = {
       sender: '+49 1521 28895456',
       content: 'Ich bin hier der babo',
       entry: {
-        id: 'phineas-justins-textnachrichten',
-        suspectId: 'phineas',
-        title: 'Textnachrichten von Justin',
-        description: 'Phineas wird von Justin belästigt. Justin droht Phineas und fordert Filme von ihm. Phineas scheint genervt zu sein und versucht, Justin mit DVDs zu besänftigen.',
+        id: 'phone-justin-mobbing',
+        suspectId: 'justin',
+        title: 'Nervt Phineas',
+        description: 'Phineas wird von Justin belästigt.',
       },
     },
     {
@@ -109,14 +109,14 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Was antwortest du net du hund!',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
 
     {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Wallah das gibt schläge!',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -126,7 +126,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Ey du Pussy!',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -136,7 +136,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Hast zu viel Angst oder was du Schisser',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -146,7 +146,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Wenn du net antwortest bist du ein Hurensohn',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -156,7 +156,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Lan willst du Stress du beschissener Arschficker',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -176,13 +176,13 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Ich will dich fetzen',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Wenn du nicht kommst hau ich dich!',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -329,7 +329,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Du kelb',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'timestamp',
@@ -378,7 +378,7 @@ export const justin: Chat = {
       type: 'message',
       sender: '+49 1521 28895456',
       content: 'Dafür kriegst du ne bombe geschoben',
-      entry: 'phineas-justins-textnachrichten'
+      entry: 'phone-justin-mobbing'
     },
     {
       type: 'message',

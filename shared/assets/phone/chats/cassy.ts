@@ -17,7 +17,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Du kannst mir nicht mehr entkommen 😈'
+      content: 'Du kannst mir nicht mehr entkommen 😈',
+      entry: 'diary-cassy-verfolgt'
     },
     {
       type: 'timestamp',
@@ -26,7 +27,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Dich kann man so einfach finden ich liebe es wie das Orakel mich zu dir führt'
+      content: 'Dich kann man so einfach finden ich liebe es wie das Orakel mich zu dir führt',
+      entry: 'diary-cassy-verfolgt'
     },
     {
       type: 'timestamp',
@@ -35,7 +37,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Heute ist zwar der letzte Schultag aber glaub nicht dass du mir entkommen kannst 😈'
+      content: 'Heute ist zwar der letzte Schultag aber glaub nicht dass du mir entkommen kannst 😈',
+      entry: 'diary-cassy-verfolgt'
     },
     {
       type: 'timestamp',
@@ -72,7 +75,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Icj kamn es kaim erawrten dich zuuopfern 🖤🖤'
+      content: 'Icj kamn es kaim erawrten dich zuuopfern 🖤🖤',
+      entry: 'diary-cassy-rituale'
     },
     {
       type: 'timestamp',
@@ -81,7 +85,14 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Das ORAKEL hat mich zu dir geführt und jetzt weiß ich wo du wohnst 😈 Cassanova wird sich freuen'
+      content: 'Das ORAKEL hat mich zu dir geführt und jetzt weiß ich wo du wohnst 😈 Cassanova wird sich freuen',
+      entry: {
+        id: 'phone-wohnung',
+        suspectId: 'cassandra',
+
+        title: 'Weiß wo Phineas wohnt',
+        description: 'Cassandra weiß wo Phineas wohnt\n\nStalkt sie ihn?',
+      }
     },
     {
       type: 'message',
@@ -91,7 +102,24 @@ export const cassy: Chat = {
     {
       type: 'image',
       sender: '+49 172 9925904',
-      imageAssetId: 'phone/skull_porch.webp'
+      imageAssetId: 'phone/skull_porch.webp',
+      entries: [
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+          },
+          entry: {
+            id: 'phone-scheadel',
+            suspectId: 'cassandra',
+
+            title: 'Schädel vor Phineas\' Haustür',
+            description: 'Cassandra hat einen Schädel vor Phineas\' Haustür gelegt.\n\nWas will sie ihm damit sagen?'        
+          }
+        }
+      ]
     },
     {
       type: 'timestamp',
@@ -133,7 +161,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Was ich jetzt alles damit machen kann! Das ORAKEL wird sich über das Opfer freuen '
+      content: 'Was ich jetzt alles damit machen kann! Das ORAKEL wird sich über das Opfer freuen ',
+      entry: 'diary-cassy-rituale'
     },
     {
       type: 'timestamp',
@@ -147,7 +176,24 @@ export const cassy: Chat = {
     {
       type: 'image',
       sender: '+49 172 9925904',
-      imageAssetId: 'phone/eyes.webp'
+      imageAssetId: 'phone/eyes.webp',
+      entries: [
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+          },
+          entry: {
+            id: 'phone-cassy-gore',
+            suspectId: 'cassandra',
+
+            title: 'Zeigt Phineas blutige Bilder',
+            description: 'Cassandra zeigt Phineas Bilder von blutigen Gegeständen.\n\nEkelt sie ihn damit ab?',
+          }
+        }
+      ]
     },
     {
       type: 'timestamp',
@@ -170,12 +216,24 @@ export const cassy: Chat = {
     {
       type: 'image',
       sender: '+49 172 9925904',
-      imageAssetId: 'phone/skull.webp'
+      imageAssetId: 'phone/skull.webp',
+      entries: [
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+          },
+          entryId: 'phone-cassy-gore'
+        }
+      ]
     },
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Das wirst bald du sein ich seh schon die Vision 🗡🩸'
+      content: 'Das wirst bald du sein ich seh schon die Vision 🗡🩸',
+      entry: 'diary-cassy-rituale'
     },
     {
       type: 'timestamp',
@@ -208,7 +266,18 @@ export const cassy: Chat = {
     {
       type: 'image',
       sender: '+49 172 9925904',
-      imageAssetId: 'phone/knife.webp'
+      imageAssetId: 'phone/knife.webp',
+      entries: [
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+          },
+          entryId: 'phone-cassy-gore'
+        }
+      ]
     },
     {
       type: 'timestamp',
@@ -240,7 +309,8 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Schon bereit? 🗡🩸'
+      content: 'Schon bereit? 🗡🩸',
+      entry: 'diary-cassy-rituale'
     },
   ]
 }

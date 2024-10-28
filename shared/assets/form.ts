@@ -164,9 +164,13 @@ export const form: Form = [
             points: 2
           },
           {
+            id: 'phineas-haematome',
+            points: 3
+          },
+          {
             id: 'justin-phineas-umgebracht',
             points: 1
-          }
+          },
         ],
       },
 
@@ -616,6 +620,10 @@ export const form: Form = [
             points: 3
           },
           {
+            id: 'ivy-dolch',
+            points: 3
+          },
+          {
             id: 'ivy-blutgruppe',
             points: 3
           }
@@ -729,7 +737,7 @@ export const form: Form = [
             points: 1
           },
           {
-            id: 'phineas-justins-textnachrichten',
+            id: 'phone-justin-mobbing',
             points: 1
           },
           {
@@ -895,7 +903,14 @@ export const form: Form = [
             id: 'phoebe-enge-freunde',
             points: 1
           },
-          // Freunde Handy/Tagebuch
+          {
+            id: 'phone-phoebe-weisheiten',
+            points: 1
+          },
+          {
+            id: 'diary-phoebe-sagt',
+            points: 1
+          }
         ],
       },
       {
@@ -1112,8 +1127,8 @@ export const form: Form = [
         amount: 2,
         deductPoints: 2,
         morePossible: {
-          max: 3,
-          points: 2
+          max: 4,
+          points: 1
         },
         solutions: [
           {
@@ -1126,6 +1141,10 @@ export const form: Form = [
           },
           {
             id: 'ivy-todesdatum',
+            points: 3
+          },
+          {
+            id: 'phineas-todesdatum',
             points: 3
           }
         ]

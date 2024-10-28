@@ -6,7 +6,7 @@
       'collectable--collected': collected
     }]"
     :style="{
-      // outline: game.isDev ? 'red solid 2px' : 'none'
+      outline: game.isDev ? 'red solid 2px' : 'none'
     }"
     ref="root"
   >

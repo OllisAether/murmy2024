@@ -5,9 +5,9 @@ import { CueType } from "../cue/CueTypes";
 import { Phase } from "../phase";
 import { JsonMap } from "../json";
 
-export const Idle = (duration?: number | FieldReference, meta?: JsonMap | FieldReference): Playback => ({
+export const Idle = (duration?: number | FieldReference, meta?: JsonMap | FieldReference, trigger: 'auto' | 'manual' = 'auto'): Playback => ({
   name: 'Wartephase',
-  trigger: 'auto',
+  trigger: trigger,
   cues: [
     {
       type: CueType.SetPhase,

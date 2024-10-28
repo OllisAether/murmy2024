@@ -84,7 +84,23 @@ export class AddVoteOptions extends CueHandle {
         return
       }
 
-      voteManager.addOptionsToPool(pool, opts)
+      const filtered = opts.filter((opt) => {
+        const option = voteManager.getVoteOptions().find(o => o.id === opt)
+
+        if (!option) {
+          return false
+        }
+
+        const media = option.media
+
+        if (!media) {
+          return true
+        }
+
+        return !game.getWatchedMedia().includes(media)
+      })
+
+      voteManager.addOptionsToPool(pool, filtered)
     })
 
     next()

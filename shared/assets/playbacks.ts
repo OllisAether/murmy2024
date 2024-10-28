@@ -61,7 +61,6 @@ export const playbacks: (Playback | {
 
   { divider: '- Runde 1 -' },
 
-  Media('durchsage.mp3'),
   {
     name: 'Todesurkunde Ivy',
     trigger: 'auto',
@@ -76,6 +75,8 @@ export const playbacks: (Playback | {
     fields: {}
   },
   ShowNewClues(),
+  AddInvestigationCoins(10),
+
   Work(30_000, true),
 
   { divider: '- Runde 2 -' },
@@ -246,11 +247,9 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
-
   { divider: '=== Finale ===' },
 
-  FilloutForms(10 * 60_000),
+  FilloutForms(20 * 60_000),
   Idle(0, {
     end: true
   }),
@@ -259,5 +258,5 @@ export const playbacks: (Playback | {
 
   Idle(0, {
     results: true
-  }),
+  }, 'manual'),
 ]

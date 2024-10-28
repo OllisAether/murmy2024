@@ -15,10 +15,10 @@
 
       <div class="main-clue-card__content__text">
         <div class="main-clue-card__content__text__title">
-          {{ game.clues.mainClueType === 'phone' ? 'Handy vom Opfer' : 'Tagebuch vom Opfer' }}
+          Hauptclue: {{ game.clues.mainClueType === 'phone' ? 'Handy' : 'Tagebuch' }}
         </div>
         <div class="main-clue-card__content__text__description">
-          Dieses {{ game.clues.mainClueType === 'phone' ? 'Handy' : 'Tagebuch' }} enthält einen tiefen Einblick in das Leben des Opfers.
+          Dieses {{ game.clues.mainClueType === 'phone' ? 'Handy' : 'Tagebuch' }} enthält tiefe Einblicke in die Gedankenwelt von jemandem.
         </div>
       </div>
     </button>

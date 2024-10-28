@@ -69,6 +69,71 @@ export const autopsieberichtPhineas: Clue<'images'> = {
   thumbnailAssetId: 'thumbnails/AutopsiePhineas.webp',
   images: {
     assetIds: ['clues/AutopsiePhineas.webp'],
+    entries: [
+      {
+        rect: {
+          x: 0.1889431299885975,
+          y: 0.31509682211925866,
+          width: 0.14582739452679588,
+          height: 0.02919772360999194,
+        },
+        entry: {
+          id: 'phineas-blutgruppe',
+          suspectId: 'phineas',
+
+          title: 'Blutgruppe 0-',
+          description: 'Phineas hat die Blutgruppe 0-.'
+        }
+      },
+      {
+        rect: {
+          x: 0.8253545467502851,
+          y: 0.4903240834004835,
+          width: 0.13084378563283922,
+          height: 0.021212102135374698,
+        },
+        entry: {
+          id: 'phineas-todesdatum',
+          suspectId: 'phineas',
+
+          title: '14.02.2013 17:30 Uhr - Todeszeitpunkt',
+          description: 'Phineas ist am 14.02.2013 um 17:30 Uhr gestorben.'
+        },
+      },
+      {
+        rect: {
+          x: 0.0546519221091757,
+          y: 0.5708545647045173,
+          width: 0.33647412669901944,
+          height: 0.2687622399935306,
+        },
+        entry: {
+          id: 'phineas-haematome',
+          suspectId: 'phineas',
+
+          title: 'Hämatome',
+          description: 'Phineas hat Hämatome an der linken Wange.\n\nWahrscheinlich durch äußere Gewalteinwirkung.'
+        }
+      },
+      {
+        rect: {
+          x: 0.5709146772112165,
+          y: 0.5450402645244993,
+          width: 0.04829850488779496,
+          height: 0.047596764070938345,
+        },
+        entryId: 'phineas-haematome'
+      },
+      {
+        rect: {
+          x: 0.754892076764788,
+          y: 0.543535426540701,
+          width: 0.04829850488779496,
+          height: 0.047596764070938345,
+        },
+        entryId: 'phineas-haematome'
+      }
+    ]
   }
 }
 

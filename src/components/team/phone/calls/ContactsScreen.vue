@@ -25,6 +25,11 @@
             {{ contact.number }}
           </div>
         </div>
+        <Collectable
+          v-if="contact.entry"
+          :entry-id="contact.entry"
+          class="contacts-screen__list__item__collectable"
+        />
       </div>
     </div>
   </ScrollView>
@@ -34,6 +39,7 @@
 import { useGameManager } from '@/store/gameManager';
 import { contacts } from '../../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
+import Collectable from '@/components/Collectable.vue';
 
 const game = useGameManager();
 </script>
@@ -50,11 +56,17 @@ const game = useGameManager();
     padding-bottom: 50%;
 
     &__item {
+      position: relative;
       display: flex;
       align-items: center;
       padding: 5px * $scale 5px * $scale 5px * $scale 10px * $scale;
       border-bottom: 1px * $scale solid #fff2;
       line-height: 1;
+
+      &__collectable {
+        position: absolute;
+        inset: 0;
+      }
 
       &__info {
         flex: 1;

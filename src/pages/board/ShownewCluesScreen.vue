@@ -11,7 +11,7 @@
         v-for="(clue, i) in newClues"
         class="show-new-clues-screen__new-clues__clue"
         :style="{
-          animationDelay: `${i * 0.25 + 0.4}s`
+          animationDelay: `${i * 0.25 + 0.5}s`
         }"
       >
         <SkewBox
@@ -33,7 +33,7 @@
 import NewBadge from '@/components/NewBadge.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed, onMounted } from 'vue';
+import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { clues } from '../../../shared/assets/clues/index';
 import SkewBox from '@/components/SkewBox.vue';
 import { useAudio } from '@/store/board/audio';
@@ -46,19 +46,29 @@ const newClues = computed(() => {
 })
 
 onMounted(async () => {
+  const bg = new Audio(game.getAsset('sounds/new_clue.mp3')?.content)
+  const stop = audio.controlVolume(bg, 'vote', 0.1)
+  bg.play()
+
+  const stopCb: (() => void)[] = []
   const sounds = newClues.value.map((_, i) => {
     const sound = new Audio(game.getAsset(`sounds/new_clue_${Math.min(i + 1, 4)}.mp3`)?.content)
   
-    audio.controlVolume(sound, 'vote')
+    stopCb.push(audio.controlVolume(sound, 'vote', 0.3))
     return sound
   })
 
-  await new Promise(resolve => setTimeout(resolve, 400))
+  await new Promise(resolve => setTimeout(resolve, 500))
   for (const sound of sounds) {
     
     sound.play()
     await new Promise(resolve => setTimeout(resolve, 250))
   }
+
+  onBeforeUnmount(() => {
+    stop()
+    stopCb.forEach(cb => cb())
+  })
 })
 </script>
 

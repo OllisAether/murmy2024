@@ -87,8 +87,7 @@ export const calls: Call[] = [
   {
     number: phoebe.number,
     timestamp: moment('2013-01-28 20:41'),
-    type: 'outgoing',
-    duration: '6:58',
+    type: 'rejected',
   },
   {
     number: papa.number,
@@ -107,12 +106,6 @@ export const calls: Call[] = [
     duration: '10:17',
   },
   {
-    number: phoebe.number,
-    timestamp: moment('2013-01-20 21:16'),
-    type: 'answered',
-    duration: '5:55',
-  },
-  {
     number: cassyNumber,
     timestamp: moment('2013-01-19 18:34'),
     type: 'missed',
@@ -123,12 +116,6 @@ export const calls: Call[] = [
     type: 'missed',
   },
   {
-    number: phoebe.number,
-    timestamp: moment('2013-01-15 18:17'),
-    type: 'answered',
-    duration: '9:12',
-  },
-  {
     number: cassyNumber,
     timestamp: moment('2013-01-14 21:29'),
     type: 'missed',
@@ -137,12 +124,6 @@ export const calls: Call[] = [
     number: mama.number,
     timestamp: moment('2013-01-10 22:03'),
     type: 'missed',
-  },
-  {
-    number: phoebe.number,
-    timestamp: moment('2013-01-09 20:34'),
-    type: 'answered',
-    duration: '7:41',
   },
   {
     number: cassyNumber,
@@ -156,12 +137,6 @@ export const calls: Call[] = [
     duration: '10:44',
   },
   {
-    number: phoebe.number,
-    timestamp: moment('2013-01-05 20:46'),
-    type: 'answered',
-    duration: '6:39',
-  },
-  {
     number: cassyNumber,
     timestamp: moment('2013-01-03 19:53'),
     type: 'missed',
@@ -170,19 +145,6 @@ export const calls: Call[] = [
     number: mama.number,
     timestamp: moment('2013-01-01 22:25'),
     type: 'missed',
-  },
-
-  {
-    number: phoebe.number,
-    timestamp: moment('2012-12-31 22:45'),
-    type: 'answered',
-    duration: '11:48',
-  },
-  {
-    number: phoebe.number,
-    timestamp: moment('2012-12-31 19:12'),
-    type: 'outgoing',
-    duration: '9:02',
   },
   {
     number: cassyNumber,
@@ -198,12 +160,6 @@ export const calls: Call[] = [
     number: mama.number,
     timestamp: moment('2012-12-29 21:34'),
     type: 'missed',
-  },
-  {
-    number: phoebe.number,
-    timestamp: moment('2012-12-29 20:19'),
-    type: 'answered',
-    duration: '6:27',
   },
   {
     number: cassyNumber,
@@ -227,18 +183,6 @@ export const calls: Call[] = [
     type: 'missed',
   },
   {
-    number: phoebe.number,
-    timestamp: moment('2012-12-27 22:05'),
-    type: 'answered',
-    duration: '8:51',
-  },
-  {
-    number: phoebe.number,
-    timestamp: moment('2012-12-27 20:37'),
-    type: 'outgoing',
-    duration: '5:36',
-  },
-  {
     number: mama.number,
     timestamp: moment('2012-12-26 21:58'),
     type: 'outgoing',
@@ -254,16 +198,6 @@ export const calls: Call[] = [
     timestamp: moment('2012-12-25 22:41'),
     type: 'answered',
     duration: '10:15',
-  },
-  {
-    number: phoebe.number,
-    timestamp: moment('2012-12-25 19:32'),
-    type: 'missed',
-  },
-  {
-    number: cassyNumber,
-    timestamp: moment('2012-12-24 19:56'),
-    type: 'missed',
   },
   {
     number: phoebe.number,

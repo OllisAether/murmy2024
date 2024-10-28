@@ -21,10 +21,13 @@
           <Strike behind :thickness="60" color="#fff06daa">Abfuck!</Strike>
         </i>
       </div>
-      <Collectable entry-id="diary-phoebe-ignoriert">
-        Phoebe sagt, ich soll sie einfach ignorieren und das werd ich auch tun.
-        Genauso wie wir uns in der Schule auch ignorieren. Stört mich eigentlich nicht aber, dass es sie
-      </Collectable> gar nicht interessiert dass Cassandra mich verfolgt nervt mich schon. Ich weiß dass mir das stinken
+      
+      <Collectable inline entry-id="diary-phoebe-sagt">
+        Phoebe sagt,
+      </Collectable>
+      ich soll sie einfach ignorieren und das werd ich auch tun.
+      <Collectable inline entry-id="diary-phoebe-ignoriert">Genauso wie wir uns in der Schule auch ignorieren.</Collectable> Stört mich eigentlich nicht aber, dass es sie
+      gar nicht interessiert dass Cassandra mich verfolgt nervt mich schon. Ich weiß dass mir das stinken
       <br>
       <div style="margin-left: 13rem;">
         würde an ihrer Stelle.

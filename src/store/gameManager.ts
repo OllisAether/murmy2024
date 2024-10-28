@@ -819,6 +819,10 @@ export const useGameManager = defineStore('gameManager', () => {
           getEntries(message.content).forEach((entry) => {
             entries.push(entry)
           })
+
+          if (message.entry && typeof message.entry !== 'string') {
+            entries.push(message.entry)
+          }
         }
 
         if (message.type === 'image') {
@@ -932,7 +936,7 @@ export const useGameManager = defineStore('gameManager', () => {
     // ws.send('setField', { fieldId, value })
 
     if (fieldIdQueue[fieldId] !== undefined && fieldIdQueue[fieldId] !== null) {
-      clearTimeout(fieldIdQueue[fieldId].timeout)
+      clearTimeout(fieldIdQueue[fieldId]?.timeout)
     }
 
     fieldIdQueue[fieldId] = {

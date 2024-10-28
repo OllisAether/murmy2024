@@ -4,7 +4,7 @@
       16.12.2012
     </template>
     <template #text>
-      <Collectable  entry-id="diary-cassy-verfolgt">
+      <Collectable entry-id="diary-cassy-verfolgt">
         Cassandra verfolgt mich immer noch.
       </Collectable>
       Diesmal hat sie sogar angefangen Papierkugeln auf mich zu werfen.
@@ -18,14 +18,16 @@
       Bitte lass das ein schlechter Albtraum sein.
       <br>
       <br>
-      <Collectable  entry-id="diary-cassy-rituale">
+      <Collectable entry-id="diary-cassy-rituale">
         Sie spricht ständig über irgendwelche Rituale, für die sie mich opfern will??
-        <br>
-        <br>
-        Ständig Bilder von irgendwelchen Ritualen mit diesem Orakel, irgendwelche Gore-Sachen??
-        <br>
-        Okay, manche sehen cool aus und deswegen hab ich sie noch nicht geblockt, aber trotzdem.
       </Collectable>
+      <br>
+      Ständig Bilder von irgendwelchen Ritualen mit diesem Orakel,
+      <Collectable inline entry-id="diary-cassy-gore">
+        irgendwelche Gore-Sachen??
+      </Collectable>
+      <br>
+      Okay, manche sehen cool aus und deswegen hab ich sie noch nicht geblockt, aber trotzdem.
     </template>
   </Page>
 </template>

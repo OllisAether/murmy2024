@@ -53,7 +53,10 @@
             {{ message.sender }}
           </div>
           <div class="chat-screen__message__content">
-            <div v-if="message.type === 'message'" class="chat-screen__message__text">
+            <Collectable v-if="message.type === 'message' && message.entry" :entry-id="typeof message.entry === 'string' ? message.entry : message.entry.id" class="chat-screen__message__text">
+              <TextContentRenderer :textContent="message.content" />
+            </Collectable>
+            <div v-else-if="message.type === 'message'" class="chat-screen__message__text">
               <TextContentRenderer :textContent="message.content" />
             </div>
             <div v-else class="chat-screen__message__image">
@@ -312,7 +315,7 @@ const computedChat = computed(() => {
       border-radius: 5px * $scale;
       line-height: 1.2;
       width: fit-content;
-      max-width: 70%;
+      max-width: 80%;
 
       box-shadow: 0 2px * $scale 4px * $scale 1px * $scale #000;
 

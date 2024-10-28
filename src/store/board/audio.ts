@@ -10,7 +10,7 @@ export const useAudio = defineStore('audio', () => {
   const musicVolume = ref(1)
 
   const controlVolumeListeners = ref<{ off: WatchStopHandle, audio: HTMLMediaElement }[]>([])
-  function controlVolume(audio: HTMLMediaElement, type: 'vote' | 'media' | 'music') {
+  function controlVolume(audio: HTMLMediaElement, type: 'vote' | 'media' | 'music', multiplier = 1) {
     let volumeType
 
     switch (type) {
@@ -26,7 +26,7 @@ export const useAudio = defineStore('audio', () => {
     }
 
     const off = watch([volumeType, masterVolume], () => {
-      audio.volume = volumeType.value * masterVolume.value
+      audio.volume = volumeType.value * masterVolume.value * multiplier
     }, { immediate: true, deep: true })
 
     controlVolumeListeners.value.push({ off, audio })

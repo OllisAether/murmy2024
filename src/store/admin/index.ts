@@ -10,7 +10,6 @@ import { VoteOption } from "../../../shared/vote";
 import { useGameManager } from "../gameManager";
 import { JsonMap } from "../../../shared/json";
 import { Phase } from "../../../shared/phase";
-import { FormFieldValue } from "../../../shared/form";
 import { Result } from "../../../shared/results";
 
 export interface AlertOptions {

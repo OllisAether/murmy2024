@@ -3,17 +3,17 @@ import { FieldReference } from "../cue/FieldRefrence";
 import { Phase } from "../phase";
 import { Playback } from "./Playback";
 
-export function Media (media?: string | FieldReference): Playback {
+export function Media (media?: string | FieldReference, noIdle = false): Playback {
   return {
     name: typeof media === 'string' ? media : 'Medien abspielen',
     trigger: 'auto',
     cues: [
-      {
+      ...(noIdle ? [] : [{
         type: CueType.SetPhase,
         options: {
           phase: Phase.Idle
         }
-      },
+      }]),
       {
         type: CueType.SetMedia,
         options: {

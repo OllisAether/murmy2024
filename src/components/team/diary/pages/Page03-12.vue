@@ -5,11 +5,16 @@
     </template>
     <template #text>
       <br>
-      <Collectable entry-id="phineas-erster-schultag">
-        Neue Schule, neues Glück. so wie Phoebe immer sagt, einfach überleben.
-        <br>
-        Noch zwei Jahre und dann hab ich es hinter mir.
+      <Collectable inline entry-id="phineas-erster-schultag">
+        Neue Schule, neues Glück.
       </Collectable>
+      so wie
+      <Collectable inline entry-id="diary-phoebe-sagt">
+        Phoebe immer sagt,
+      </Collectable>
+      einfach überleben.
+      <br>
+      Noch zwei Jahre und dann hab ich es hinter mir.
 
       <br>
       <br>

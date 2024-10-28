@@ -6,16 +6,22 @@
     <template #text>
       <br>
       <Collectable entry-id="diary-justin-mobbing">
-      Justins Fresse macht mich so aggressiv aber ich muss mich gedulden.
+        Justins Fresse macht mich so aggressiv aber ich muss mich gedulden.
+      </Collectable>
       <br>
-      Geduld ist eine Tugend oder was auch immer Phoebe immer gesagt hat.
+      Geduld ist eine Tugend oder was auch immer 
+      <Collectable inline entry-id="diary-phoebe-sagt">
+        Phoebe immer gesagt
+      </Collectable>
+      hat.
       <br>
       Wenn ich könnte, würd ich ihn am liebsten in tausend Stücke zerhacken und seiner Familie zu essen geben.
-      </Collectable>
       <br>
-      <Collectable entry-id="diary-justin-dvd">
-        Ich konnte zum Glück eine Konfrontation mit Justin aus dem Weg gehen, indem ich ihm eine Shrek DVD angeboten habe.
+      Ich konnte zum Glück eine Konfrontation mit Justin aus dem Weg gehen, indem ich ihm 
+      <Collectable inline entry-id="diary-justin-dvd">
+        eine Shrek DVD angeboten
       </Collectable>
+      habe.
     </template>
   </Page>
 </template>

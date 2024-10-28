@@ -49,24 +49,33 @@
     </template>
 
     <Transition name="title-screen__countdown">
-      <div class="title-screen__countdown title-screen__countdown--blur" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
+      <div :class="['title-screen__countdown title-screen__countdown--blur', {
+        'title-screen__countdown--break': isBreak,
+      }]" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
         <div class="title-screen__countdown__next" v-if="game.phase.meta.next">
           <template v-if="game.phase.meta.next === 'vote'">
             Nächste Viewsrunde beginnt in
           </template>
         </div>
         <Timer />
+        <div v-if="isBreak" class="title-screen__break">
+          Päuschen!
+        </div>
       </div>
     </Transition>
     <Transition name="title-screen__countdown">
-      <div class="title-screen__countdown" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
+      <div :class="['title-screen__countdown', {
+        'title-screen__countdown--break': isBreak,
+      }]" v-if="game.timer.state !== 'stopped' && !isShowNewClues">
         <div class="title-screen__countdown__next" v-if="game.phase.meta.next">
           <template v-if="game.phase.meta.next === 'vote'">
             Nächste Viewsrunde beginnt in
           </template>
         </div>
-
         <Timer />
+        <div v-if="isBreak" class="title-screen__break">
+          Päuschen!
+        </div>
       </div>
     </Transition>
 
@@ -81,10 +90,11 @@ import NewBadge from '@/components/NewBadge.vue';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
-import { computed, onBeforeUnmount, onMounted } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import { clues } from '../../../shared/assets/clues/index';
 import SkewBox from '@/components/SkewBox.vue';
 import { useAudio } from '@/store/board/audio';
+import { useMounted } from '@vueuse/core';
 
 const game = useGameManager()
 
@@ -92,17 +102,37 @@ const isShowNewClues = computed(() => {
   return game.phase.meta.showNewClues ?? false
 })
 
+const isBreak = computed(() => {
+  return game.phase.meta.break ?? false
+})
+
+const isEnd = computed(() => {
+  return game.phase.meta.end ?? false
+})
+
 const newClues = computed(() => {
   return game.clues.new.map(clue => clues.find(c => c.id === clue))
 })
 
 const audio = useAudio()
-onMounted(() => {
-  audio.startBackgroundMusic()
-})
 
-onBeforeUnmount(() => {
-  audio.stopBackgroundMusic()
+onMounted(() => {
+  const stop = watch([isBreak, isEnd], () => {
+    setTimeout(() => {
+      if (!useMounted()) return
+
+      if (!isBreak.value && !isEnd.value) {
+        audio.startBackgroundMusic()
+      } else {
+        audio.stopBackgroundMusic()
+      }
+    })
+  }, { deep: true, immediate: true })
+
+  onBeforeUnmount(() => {
+    stop()
+    audio.stopBackgroundMusic()
+  })
 })
 </script>
 
@@ -215,6 +245,12 @@ onBeforeUnmount(() => {
       transform: translateY(-1%);
     }
   }
+  
+  &__break {
+    font-size: 15vw;
+    margin-top: 4vw;
+    font-family: $fontDisplayCursive;
+  }
 
   &__countdown {
     // background: $surface;
@@ -233,6 +269,10 @@ onBeforeUnmount(() => {
 
     mix-blend-mode: overlay;
     color: #c5b9c6;
+
+    &--break {
+      font-size: 12vw;
+    }
 
     &-enter-active, &-leave-active {
       transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);

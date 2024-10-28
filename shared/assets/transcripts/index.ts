@@ -22,10 +22,10 @@ export const transcripts: Transcript[] = [
   justin1,
   phoebe1,
   notruf,
-  radiodurchsage,
-
-  ritual,
+  
   liebesritual,
+  radiodurchsage,
+  ritual,
   
   cassy2,
   hugo2,

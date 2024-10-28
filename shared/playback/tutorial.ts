@@ -45,14 +45,14 @@ export const Tutorial = (): Playback => ({
     {
       type: CueType.SetMedia,
       options: {
-        media: 'Intro.mp3'
+        media: 'Intro.mp4'
       }
     },
 
     {
       type: CueType.WhenMediaAt,
       options: {
-        time: 2 * 60_000
+        time: 2 * 60_000 + 500
       }
     },
       {
