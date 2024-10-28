@@ -110,24 +110,32 @@ const isEnd = computed(() => {
   return game.phase.meta.end ?? false
 })
 
+const isInfo = computed(() => {
+  return game.phase.meta.info ?? false
+})
+
 const newClues = computed(() => {
   return game.clues.new.map(clue => clues.find(c => c.id === clue))
+})
+
+const playMusic = computed(() => {
+  return !isBreak.value && !isEnd.value && !isInfo.value
 })
 
 const audio = useAudio()
 
 onMounted(() => {
-  const stop = watch([isBreak, isEnd], () => {
+  const stop = watch(playMusic, () => {
     setTimeout(() => {
       if (!useMounted()) return
 
-      if (!isBreak.value && !isEnd.value) {
+      if (playMusic.value) {
         audio.startBackgroundMusic()
       } else {
         audio.stopBackgroundMusic()
       }
     })
-  }, { deep: true, immediate: true })
+  }, { immediate: true })
 
   onBeforeUnmount(() => {
     stop()

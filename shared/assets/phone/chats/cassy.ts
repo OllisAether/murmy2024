@@ -148,7 +148,14 @@ export const cassy: Chat = {
     {
       type: 'message',
       sender: '+49 172 9925904',
-      content: 'Ivy hat mir den perfekten Ort für unser Ritual gezeigt 😈'
+      entry: {
+        id: 'phone-ritualort',
+        suspectId: 'cassandra',
+
+        title: 'Kennt die Hütte im Wald',
+        description: 'Cassandra kennt die abgelegene Hütte im Wald.\n\nWas plant sie dort?',
+      },
+      content: 'Ivy hat mir eine kleine Hütte, den perfekten Ort für unser Ritual gezeigt 😈'
     },
     {
       type: 'message',

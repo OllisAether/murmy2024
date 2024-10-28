@@ -12,17 +12,17 @@ export const justinssprachaufnahme: Transcript =  {
 
 Du hast's verdient. Dieser Blick. Du hast einfach auf mich- aufgehört auf mich runterzuschauen. Du denkst du bist was besseres als ich.
 
-Irgendwann reicht's halt, checkst du? Also hab ich dich gepackt und `, entry({
+Irgendwann reicht's halt, checkst du? `, entry({
   id: 'justin-phineas-zusammengeschlagen',
   suspectId: 'justin',
 
   title: 'Jemanden zusammengeschlagen',
   description: 'Justin hat Phineas zusammengeschlagen.\n\nWarum hat er das getan?'
-}, 'eine geknallt'), `. Ich hab nicht mal richtig nachgedacht, Mann.
+}, 'Also hab ich dich gepackt und eine geknallt.'), ` Ich hab nicht mal richtig nachgedacht, Mann.
 
-Auf einmal fliegst du hin und lässt dich zusammenschlagen ohne dich zu wehren. Ich hab mehr erwartet einen Kampf, eine Reaktion, irgendwas. Ich hab dich gehauen, richtig heftig. Aber ich schwöre, ich wollte dir nichts tun, wallah!
+Auf einmal fliegst du hin und `, entry('justin-phineas-zusammengeschlagen', 'lässt dich zusammenschlagen'), ` ohne dich zu wehren. Ich hab mehr erwartet einen Kampf, eine Reaktion, irgendwas. `, entry('justin-phineas-zusammengeschlagen', 'Ich hab dich gehauen, richtig heftig.'), ` Aber ich schwöre, ich wollte dir nichts tun, wallah!
 
-Aber seine Fresse passte einfach zu gut in meine Faust! Dann war er auf einmal weg. Tot.
+Aber seine Fresse passte einfach zu gut in meine Faust! Dann war er auf einmal weg. `, entry('justin-phineas-umgebracht', 'Tot.'), `
 
 Da lagst du dann, einfach so. Ich hab's gar nicht gecheckt, aber als ich gesehen hab, dass du dich nicht mehr bewegst, wusste ich, das war's.
 In dem Moment kriegt ich Schiss und bin einfach abgehauen.
@@ -33,7 +33,7 @@ In dem Moment kriegt ich Schiss und bin einfach abgehauen.
 
   title: 'Habe Phineas umgebracht',
   description: 'Justin glaubt, dass er Phineas umgebracht hat.\n\nGibt er das einfach so zu?'
-}, 'Ich hab\' dich umgebracht, Mann.'), ` Es war keine Absicht. Ich- Es tut mir leid. Ich wusste nicht, dass es so- Ich wollt nicht, dass du abkratzt! Es tut mir leid, bro. Ich- Ich hab' dich im Real Life PvP zerstört. Dich zusammengeschlagen. Nein- niemand darf das erfahren.`])]
+}, 'Ich hab\' dich umgebracht, Mann.'), ` Es war keine Absicht. Ich- Es tut mir leid. Ich wusste nicht, dass es so- Ich wollt nicht, dass du abkratzt! Es tut mir leid, bro. Ich- Ich hab' dich im Real Life PvP zerstört. `, entry('justin-phineas-zusammengeschlagen', 'Dich zusammengeschlagen'), `. Nein- niemand darf das erfahren.`])]
   ],
   speakers: [
     {

@@ -1,4 +1,7 @@
+import Color from "color";
 import { Form } from "../form";
+import { css, textContent } from "../textContent";
+import { getSuspectById } from "./suspects";
 
 export const form: Form = [
   {
@@ -23,6 +26,7 @@ export const form: Form = [
         type: 'choice',
 
         title: 'Wie wurde das Mordopfer getötet?',
+        description: 'Gebe an, wie das Mordopfer getötet wurde.',
 
         choices: [
           {
@@ -67,7 +71,7 @@ export const form: Form = [
         id: 'wie-gestorben-indizien',
         type: 'entry',
 
-        title: 'Welche Indizien deuten darauf hin?',
+        title: 'Welche Indizien deuten darauf hin, wie das Mordopfer getötet wurde?',
         description: 'Gebe Indizien an, die darauf hindeuten, wie das Mordopfer getötet wurde.',
 
         morePossible: {
@@ -179,7 +183,7 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Wo verstarb das Mordopfer?',
-        description: 'Gebe markierte Hinweise an, die darauf hindeuten, wo das Mordopfer verstarb.',
+        description: 'Gebe an, wo das Mordopfer verstorben ist.\nHinweise die belegen, wo das Mordopfer verstorben ist, geben mehr Punkte.',
 
         amount: 1,
         deductPoints: 1,
@@ -198,7 +202,7 @@ export const form: Form = [
           },
           {
             id: 'wald',
-            points: 1
+            points: 2
           }
         ]
       }
@@ -377,6 +381,7 @@ export const form: Form = [
         type: 'entry',
 
         title: 'Welche weiteren Indizien deuten auf den Mörder hin?',
+        description: 'Hier kannst du weitere Indizien angeben, die auf den Mörder hinweisen, die bisher nicht genannt wurden.',
 
         morePossible: {
           max: 5,
@@ -387,6 +392,14 @@ export const form: Form = [
         solutions: [
           {
             id: 'hugos-besuch',
+            points: 2
+          },
+          {
+            id: 'hugo-cellokoffer',
+            points: 2
+          },
+          {
+            id: 'hugo-rache',
             points: 2
           },
           {
@@ -1238,185 +1251,234 @@ export const form: Form = [
         choicesB: [
           {
             id: 'streit-phoebe-phineas',
-            text: 'Streit zwischen Phoebe und Phineas',
+            text: textContent(['Streit zwischen ', css(timelineText('phoebe'), 'Phoebe'), ' und ', css(timelineText('phineas'), 'Phineas'), ' 🤬']),
           }, // 0700-0800
           {
             id: 'ivy-liebesgestaendnis',
-            text: 'Ivy gesteht ihre Liebe',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' gesteht ihre Liebe 💌']),
           }, // 1115
           {
             id: 'phoebe-liebesgestaendnis',
-            text: 'Phoebe gesteht ihre Liebe',
+            text: textContent([css(timelineText('phoebe'), 'Phoebe'), ' gesteht ihre Liebe 💌']),
           }, // falsch
           {
             id: 'phineas-lehnt-ab',
-            text: 'Phineas lehnt ab',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' lehnt ab 💔']),
           }, // 1115
           {
             id: 'ivy-liebesritual',
-            text: 'Ivy führt das Ritual der ewigen Liebe durch',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' führt das Ritual der ewigen Liebe durch 💘']),
           }, // 1326-1328
           {
             id: 'ivy-selbstmord',
-            text: 'Ivy begeht Selbstmord',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' begeht Selbstmord ☠️']),
           }, // 1326-1328
           {
             id: 'ivy-holt-liebesritual',
-            text: 'Ivy holt sich das Liebesritual von Cassandra',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' holt sich das Liebesritual von ', css(timelineText('cassandra'), 'Cassandra'), ' 💘']),
           }, // falsch
           {
             id: 'ivy-klaut-liebesritual',
-            text: 'Ivy klaut sich das Liebesritual aus dem Okkult-Club',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' klaut sich das Liebesritual aus dem Okkult-Club 💘']),
           }, // 1300-1326
           {
             id: 'ivy-klaut-dolch-hugo',
-            text: 'Ivy klaut den Dolch von Hr. Montague',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' klaut den Dolch von ', css(timelineText('hugo'), 'Hr. Montague'), ' 🔪']),
           }, // 1300-1326
           {
             id: 'ivy-klaut-dolch-cassy',
-            text: 'Ivy klaut den Dolch von Cassandra',
+            text: textContent([css(timelineText('ivy'), 'Ivy'), ' klaut den Dolch von ', css(timelineText('cassandra'), 'Cassandra'), ' 🔪']),
           }, // falsch
           {
             id: 'justin-phineas-streit',
-            text: 'Justin schlägt Phineas zusammen',
+            text: textContent([css(timelineText('justin'), 'Justin'), ' schlägt ', css(timelineText('phineas'), 'Phineas'), ' zusammen 👊']),
           }, // 1343-1345
           {
             id: 'justin-selbstmord',
-            text: 'Justin begeht Selbstmord',
+            text: textContent([css(timelineText('justin'), 'Justin'), ' begeht Selbstmord ☠️']),
           }, // falsch
           {
             id: 'justin-notruf',
-            text: 'Justin ruft 112 an',
+            text: textContent([css(timelineText('justin'), 'Justin'), ' ruft 112 an 🚑']),
           }, // falsch
           {
             id: 'cassandra-ritual',
-            text: 'Cassandra führt das Ritual des Orakels durch',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' führt das Ritual des Orakels durch 🔮']),
           }, // falsch
           {
             id: 'cassandra-notruf',
-            text: 'Cassandra ruft 112 an',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' ruft 112 an 🚑']),
           }, // 1343-1345
           {
             id: 'hugo-holzfällerhütte',
-            text: 'Montague geht zur Holzfällerhütte',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' geht zur Holzfällerhütte 🌲']),
           }, // 1400-1430
           {
             id: 'hugo-holzfällerhütte-cello',
-            text: 'Montague geht zur Holzfällerhütte mit seinem Cello-Koffer',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' geht zur Holzfällerhütte mit seinem Cello-Koffer 🎵']),
           }, // 1700-1800
           {
             id: 'hugo-sieht-notarzt',
-            text: 'Montague sieht den Krankenwagen im Park mit Phineas',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' sieht den Krankenwagen im Park mit ', css(timelineText('phineas'), 'Phineas'), ' 🚑']),
           }, // 1400-1430
           {
             id: 'phineas-krankenhaus',
-            text: 'Phineas wird ins Krankenhaus gebracht',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' wird ins Krankenhaus gebracht 🏥']),
           }, // 1400-1430
           {
             id: 'cassandra-besuch',
-            text: 'Cassandra besucht Phineas im Krankenhaus',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' besucht ', css(timelineText('phineas'), 'Phineas'), ' im Krankenhaus 🏥']),
           }, // 1430
           {
             id: 'hugo-cello-koffer',
-            text: 'Hr. Montague nimmt seinen Cello-Koffer mit',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' nimmt seinen Cello-Koffer mit 🎵']),
           }, // 1500-1600
           {
             id: 'hugo-entdeckt-ivy',
-            text: 'Hr. Montague entdeckt Ivy Tod',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' entdeckt ', css(timelineText('ivy'), 'Ivy'), ' Tod ☠️']),
           }, // 1400-1430
           {
             id: 'hugo-bringt-ivy-zurueck',
-            text: 'Hr. Montague bringt Ivy nach Hause',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' bringt ', css(timelineText('ivy'), 'Ivy'), ' nach Hause 🏡']),
           }, // 1400-1430
           {
             id: 'hugo-kommt-an-1',
-            text: 'Hr. Montague kommt zu Hause an',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' kommt zu Hause an 🏡']),
           }, // 1500-1600, 1900
           {
             id: 'hugo-kommt-an-2',
-            text: 'Hr. Montague kommt zu Hause an',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' kommt zu Hause an 🏡']),
           }, // 1500-1600, 1900
           {
             id: 'hugo-besuch',
-            text: 'Hr. Montague besucht Phineas im Krankenhaus',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' besucht ', css(timelineText('phineas'), 'Phineas'), ' im Krankenhaus 🏥']),
           }, // 1638
           {
             id: 'phineas-betäubt',
-            text: 'Phineas wird betäubt',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' wird betäubt 💉']),
           }, // 1638
           {
             id: 'kissen-taeuschung',
-            text: 'Kissen werden als Täuschung benutzt',
+            text: textContent(['Kissen werden als Täuschung benutzt 🛏️']),
           }, // 1638
           {
             id: 'phineas-erstickt',
-            text: 'Phineas wird mit einem Kissen erstickt',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' wird mit einem Kissen erstickt 🛏️']),
           }, // falsch
           {
             id: 'phineas-cello',
-            text: 'Phineas wird in den Cello-Koffer gestopft',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' wird in den Cello-Koffer gestopft 🎵']),
           }, // 1638
           {
             id: 'phoebe-besuch',
-            text: 'Phoebe besucht Phineas im Krankenhaus',
+            text: textContent([css(timelineText('phoebe'), 'Phoebe'), ' besucht ', css(timelineText('phineas'), 'Phineas'), ' im Krankenhaus 🏥']),
           }, // 1654
           {
             id: 'phoebe-entschuldigt-sich',
-            text: 'Phoebe entschuldigt sich bei Phineas',
+            text: textContent([css(timelineText('phoebe'), 'Phoebe'), ' entschuldigt sich bei ', css(timelineText('phineas'), 'Phineas'), ' 🙏']),
           }, // 1654
           {
             id: 'hugo-vergräbt-phineas',
-            text: 'Hr. Montague vergräbt Phineas',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' vergräbt ', css(timelineText('phineas'), 'Phineas'), ' 🌲']),
           }, // 1700-1800
           {
             id: 'hugo-geht-zurueck',
-            text: 'Hr. Montague geht nach Hause',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' geht nach Hause 🏡']),
           }, // 1700-1800
           {
             id: 'hugo-notruf',
-            text: 'Hr. Montague ruft 112 an',
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' ruft 112 an 🚑']),
           }, // 1900
           {
             id: 'justin-besuch',
-            text: 'Justin besucht Phineas im Krankenhaus',
+            text: textContent([css(timelineText('justin'), 'Justin'), ' besucht ', css(timelineText('phineas'), 'Phineas'), ' im Krankenhaus 🏥']),
           }, // falsch
           {
             id: 'cassy-liebesritual',
-            text: 'Cassandra führt das Ritual der ewigen Liebe durch',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' führt das Ritual der ewigen Liebe durch 🩸']),
           }, // falsch
           {
             id: 'cassy-opfert-phineas',
-            text: 'Cassandra opfert Phineas für ihr Ritual',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' opfert ', css(timelineText('phineas'), 'Phineas'), ' für ihr Ritual 🩸']),
           }, // falsch
           {
             id: 'cassy-selbstmord',
-            text: 'Cassandra begeht Selbstmord',
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' begeht Selbstmord ☠️']),
           }, // falsch
           {
             id: 'phineas-selbstmord',
-            text: 'Phineas begeht Selbstmord',
+            text: textContent([css(timelineText('phineas'), 'Phineas'), ' begeht Selbstmord ☠️']),
           }, // falsch
           {
             id: 'cassy-opfert',
-            text: 'Cassandra opfert sich für ihr Ritual',
-          },
+            text: textContent([css(timelineText('cassandra'), 'Cassandra'), ' opfert sich für ihr Ritual 🩸']),
+          }, // falsch
           {
             id: 'hugo-selbstmord',
-            text: 'Hr. Montague begeht Selbstmord',
-          },
+            text: textContent([css(timelineText('hugo'), 'Hr. Montague'), ' begeht Selbstmord ☠️']),
+          }, // falsch
           {
             id: 'phoebe-selbstmord',
-            text: 'Phoebe begeht Selbstmord',
-          },
+            text: textContent([css(timelineText('phoebe'), 'Phoebe'), ' begeht Selbstmord ☠️']),
+          }, // falsch
           {
             id: 'justin-enderdrache',
-            text: 'Justin besiegt den Enderdrachen in Minecraft',
-          }
+            text: textContent([css(timelineText('justin'), 'Justin'), ' besiegt den Enderdrachen in Minecraft 🎮']),
+          } // falsch
         ].sort(() => Math.random() - 0.5),
         points: 2,
         deductPoints: 1,
         multiple: true,
-        solutionPairs: [],
+        solutionPairs: [
+          {
+            a: '0700-0800',
+            b: ['streit-phoebe-phineas'],
+          },
+          {
+            a: '1115',
+            b: ['ivy-liebesgestaendnis', 'phineas-lehnt-ab'],
+          },
+          {
+            a: '1300-1326',
+            b: ['ivy-klaut-liebesritual', 'ivy-klaut-dolch-hugo'],
+          },
+          {
+            a: '1326-1328',
+            b: ['ivy-selbstmord', 'ivy-liebesritual'],
+          },
+          {
+            a: '1343-1345',
+            b: ['justin-phineas-streit', 'cassandra-notruf'],
+          },
+          {
+            a: '1400-1430',
+            b: ['hugo-holzfällerhütte', 'hugo-sieht-notarzt', 'phineas-krankenhaus', 'hugo-entdeckt-ivy', 'hugo-bringt-ivy-zurueck'],
+          },
+          {
+            a: '1430',
+            b: ['cassandra-besuch'],
+          },
+          {
+            a: '1500-1600',
+            b: ['hugo-kommt-an-1', 'hugo-kommt-an-2', 'hugo-cello-koffer'],
+          },
+          {
+            a: '1638',
+            b: ['hugo-besuch', 'phineas-betäubt', 'kissen-taeuschung', 'phineas-cello'],
+          },
+          {
+            a: '1654',
+            b: ['phoebe-besuch', 'phoebe-entschuldigt-sich'],
+          },
+          {
+            a: '1700-1800',
+            b: ['hugo-holzfällerhütte-cello', 'hugo-vergräbt-phineas', 'hugo-geht-zurueck'],
+          },
+          {
+            a: '1900',
+            b: ['hugo-notruf', 'hugo-kommt-an-1', 'hugo-kommt-an-2'],
+          },
+        ],
       }
     ]
   },
@@ -1538,4 +1600,14 @@ export const form: Form = [
 
 export function getFieldFromId (id: string) {
   return form.flatMap(f => f.fields).find(f => f.id === id)
+}
+
+function timelineText (suspect: string) {
+  return {
+    background: Color(getSuspectById(suspect)?.color ?? '').alpha(0.1).string(),
+    'borderRadius': '.25rem',
+    padding: '0 .2rem',
+    margin: '0 -.2rem',
+    color: getSuspectById(suspect)?.color ?? ''
+  }
 }

@@ -35,6 +35,12 @@ export const klassenchat: Chat = {
     },
     {
       type: 'message',
+      sender: '+49 171 3920072',
+      entry: 'diary-hugo-distanter',
+      content: 'Er wirkt auch sonst so distanziert in letzter Zeit...'
+    },
+    {
+      type: 'message',
       sender: cassyNumber,
       content: 'Ich sag\'s euch - er bereitet ein Ritual vor. Es passt alles perfekt. Der Zeitpunkt, die Woche vor Weihnachten… Die Sterne sind auf jeden Fall richtig ausgerichtet 🌑🔮'
     },

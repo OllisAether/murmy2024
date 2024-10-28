@@ -110,6 +110,20 @@
           <ClockWidget style="grid-column: 1 / span 4; grid-row: 2 / span 2"/>
           <GoogleWidget style="grid-column: 1 / span 4; grid-row: 1"/>
           <ImgWidget style="grid-column: 1 / span 2; grid-row: 4 / span 2"/>
+
+          <AppIcon
+            style="grid-column: 4; grid-row: 5"
+            :iconSrc="game.getAsset('phone/icons/Icon_Notes.webp')?.content"
+            name="Memo"
+            app="notes"
+          />
+
+          <AppIcon
+            style="grid-column: 4; grid-row: 4"
+            :iconSrc="game.getAsset('phone/icons/Icon_Minecraft.webp')?.content"
+            name="Minecraft: Pocket Edition"
+            crash
+          />
         </div>
 
         <div class="home-screen__appbar">

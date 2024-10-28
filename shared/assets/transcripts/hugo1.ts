@@ -21,12 +21,12 @@ export const hugo1: Transcript =  {
       suspectId: 'hugo',
       title: 'Unterricht und Klausurvorbereitung',
       description: 'Hr. Montague habe am Donnerstag, den 14. Februar, Unterricht hatte und eine Klausur für seinen Oberstufenkurs vorbereitet.'
-    }, 'eine Klausur vorbereitet'), ' für mein Oberstufenkurs. Und dann war ich noch ', entry({
+    }, 'eine Klausur vorbereitet für mein Oberstufenkurs.'), ' Und dann war ich noch ', entry({
       id: 'hugo-holz',
       suspectId: 'hugo',
       title: 'Holz holen für den Kamin',
       description: 'Hr. Montague habe am Donnerstag, den 14. Februar, Holz für den Kamin geholt und sei frische Luft schnappen gegangen.'
-    }, 'Holz holen'), ' für den Kamin und draußen etwas frische Luft schnappen. Anschließend hatte ich noch ', entry({
+    }, 'Holz holen für den Kamin'), ' und draußen etwas frische Luft schnappen. Anschließend hatte ich noch ', entry({
       id: 'hugo-orchester',
       suspectId: 'hugo',
       title: 'War in der Orchester-AG',
@@ -38,15 +38,15 @@ export const hugo1: Transcript =  {
       suspectId: 'hugo',
       title: 'Ivy tot zu Hause gefunden',
       description: 'Hr. Montague habe seine Tochter Ivy tot zu Hause gefunden. Laut ihm sei das Fenster offen gewesen und jemand sei eingebrochen.'
-    }, 'tot zu Hause gefunden.'), ' Das Fenster stand offen und- Jemand- Jemand muss eingebrochen sein. Irgendjemand- Irgendjemand muss sie ', entry({
+    }, 'tot zu Hause gefunden. Das Fenster stand offen und- Jemand- Jemand muss eingebrochen sein.'), ' Irgendjemand- ', entry({
       id: 'hugo-ivy-ermordet',
       suspectId: 'hugo',
       title: 'Ivy sei ermordet worden',
       description: 'Ivy sei ermordet worden und jemand müsse sie verfolgt haben.\n\nWarum glaubt er das?'
-    }, 'ermordet'), ' haben. Ich-'])],
+    }, 'Irgendjemand muss sie ermordet haben.'), ' Ich-'])],
     ['ermittlerin', 'Ein furchtbares Ereignis. Kennen Sie jemanden, der einen Groll gegen Ivy hatte? Jemand, der dazu fähig ist, etwas zu tun?'],
     ['hugo', 'Nein. Einige an ein freundliches, ein- ein strahlendes Kind. Sie war so- so wie ihre Mutter. Immer freundlich und zuvorkommend. Ich- Ich kann mir nicht vorstellen, dass ihr jemand absichtlich wehtun wollte. Das- Das muss ein Monster gewesen sein. Finden Sie das!'],
-    ['ermittlerin', textContent(['Verstehe. Ihre Akte zeigt, dass Sie ', entry('hugo-kriminelle-vergangenheit', 'eine kriminelle Vergangenheit'), ' haben. Könnte es jemand aus der Vergangenheit geben, der sich revanchieren wollte bei Ihnen?'])],
+    ['ermittlerin', textContent(['Verstehe. Ihre Akte zeigt, dass ', entry('hugo-kriminelle-vergangenheit', 'Sie eine kriminelle Vergangenheit haben.'), ' Könnte es jemand aus der Vergangenheit geben, der sich revanchieren wollte bei Ihnen?'])],
     ['hugo', entry({
       id: 'hugo-elenas-tod',
       suspectId: 'hugo',
@@ -65,9 +65,9 @@ export const hugo1: Transcript =  {
       suspectId: 'hugo',
       title: 'Ivy sei kein Selbstmord',
       description: 'Hr. Montague sagt, dass Ivy kein Selbstmord begangen habe und dass sie viel zu stark dafür gewesen sei.\n\nWarum glaubt er das?'
-    }, 'Nein, es war kein Selbstmord.'), ' Dafür war sie viel zu stark. Jeder hier kann das bestätigen. Sie müssen dieses Monster finden, das das getan hat. Es muss- Es muss jemand von da draußen gewesen sein.'])],
+    }, 'Nein, es war kein Selbstmord. Dafür war sie viel zu stark.'), ' Jeder hier kann das bestätigen. Sie müssen dieses Monster finden, das das getan hat. Es muss- Es muss jemand von da draußen gewesen sein.'])],
     ['ermittlerin', 'Es tut mir leid, dass ich diese Möglichkeit ansprechen musste, Herr Montague. Aber es ist wichtig, dass wir alle Optionen in Betracht ziehen.'],
-    ['hugo', textContent(['Bitte finden Sie den Schuldigen. Ich kann es nicht ertragen, wenn man Ivy einfach so vergisst und ich habe alles verloren. Ich will nur, dass der, ', entry('hugo-rache', 'der das getan hat, zur Rechenschaft gezogen wird.')])],
+    ['hugo', textContent(['Bitte finden Sie den Schuldigen. Ich kann es nicht ertragen, wenn man Ivy einfach so vergisst und ich habe alles verloren. ', entry('hugo-rache', 'Ich will nur, dass der, der das getan hat, zur Rechenschaft gezogen wird.')])],
     ['ermittlerin', 'Vielen Dank, Herr Montague. Es muss Ihnen wirklich schwer gefallen sein, das jetzt alles mit uns zu teilen. Und ich kann Ihnen versprechen, wir werden alles dafür tun, um diesen Fall so schnell und gerecht wie möglich zu klären. Bei weiteren Fragen werden wir uns dann bei Ihnen melden.'],
   ],
   speakers: [

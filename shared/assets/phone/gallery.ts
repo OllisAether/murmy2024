@@ -28,6 +28,8 @@ export const gallery: Gallery = [
           id: 'phone-burn-it',
           suspectId: 'phineas',
 
+          imageAssetId: 'phone/burn-it.webp',
+
           title: italic('„VERBRENNT ES!“'),
           description: textContent([
             'Ein Bild auf dem steht: ',

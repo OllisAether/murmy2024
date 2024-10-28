@@ -144,7 +144,7 @@ function startInterval () {
   function update () {
     const now = Date.now()
 
-    indicatorProgress.value = (now - start) / 10000 * 100
+    indicatorProgress.value = (now - start) / 30_000 * 100
 
     if (indicatorProgress.value >= 100) {
       indicatorProgress.value = 0

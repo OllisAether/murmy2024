@@ -139,7 +139,9 @@ export const playbacks: (Playback | {
   Idle(20 * 60_000, {
     break: true
   }),
-  Idle(),
+  Idle(0, {
+    break: true
+  }),
 
   { divider: '=== Akt 2 ===' },
 

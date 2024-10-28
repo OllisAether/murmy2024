@@ -1,4 +1,4 @@
-import { entry, italic, textContent } from "../../textContent";
+import { entry, textContent } from "../../textContent";
 import { Transcript } from "../../transcript";
 import { getSuspectById } from "../suspects";
 
@@ -9,12 +9,12 @@ export const cassy1: Transcript =  {
   title: 'Interview: Cassandra Novak',
   content: [
     ['ermittlerin', 'Guten Tag, Cassandra Novak. Vielen Dank, dass Sie sich bereiterklärt haben, dieses Gespräch zu führen.'],
-    ['cassy', textContent(['Kein Problem. Das wird eh später ein großer Eintrag für mein Blog. Kennen Sie ihn? ', entry({
+    ['cassy', textContent(['Kein Problem. Das wird eh später ', entry({
       id: 'cassy-blog',
       suspectId: 'cassandra',
       title: '„Cassanova“-Blog',
       description: 'Cassandra hat einen Blog, auf dem sie über ihre Aktivitäten im Okkult-Club schreibt. Sie nennt den Blog „Cassanova“.'
-    }, '„Cassanova“'), ' Clever, oder?'])],
+    }, 'ein großer Eintrag für mein Blog. Kennen Sie ihn? „Cassanova“'), ' Clever, oder?'])],
     ['ermittlerin', 'Nein, den kenne ich nicht. Lass uns bei der Sache bleiben Cassandra.'],
     ['cassy', 'Spaßbremse.'],
     ['ermittlerin', 'Wie dem auch sei. Können Sie mir sagen, was Sie am Donnerstag, den 14. Februar, gegen 14 Uhr gemacht haben?'],
@@ -34,12 +34,12 @@ export const cassy1: Transcript =  {
       suspectId: 'cassandra',
       title: 'Justin habe Phineas angegriffen',
       description: 'Justin habe Phineas angegriffen.\n\nWarum hat Justin das getan?'
-    }, 'Der Typ hat einfach auf Phiny eingeschlagen.'), ' Eine Sekunde schaue ich weg und- und auf einmal schlägt sie ihn komplett zusammen.'])],
+    }, 'Der Typ hat einfach auf Phiny eingeschlagen. Eine Sekunde schaue ich weg und- und auf einmal schlägt sie ihn komplett zusammen.')])],
     ['ermittlerin', 'Das müssen Sie genauer erklären. Justin van Bustin hat Phineas also grundlos angegriffen?'],
     ['cassy', textContent(['Ja, und wie? Es war richtig brutal, ', entry({
       id: 'cassy-zusammengeschlagen-spannend',
       suspectId: 'cassandra',
-      title: italic('„aber irgendwie auch spannend.“'),
+      title: 'Fand den Angriff spannend',
       description: 'Cassandra fand es brutal, wie Justin Phineas zusammengeschlagen habe, aber auch spannend.\n\nIst das nicht ein bisschen seltsam?'
     } ,'aber irgendwie auch spannend.')])],
     ['ermittlerin', 'Lass uns den letzten Teil einfach ignorieren. Also, Sie sagen, Justin hätte Phineas körperlich verletzt und Sie haben nichts dagegen unternommen.'],
@@ -48,12 +48,12 @@ export const cassy1: Transcript =  {
       suspectId: 'cassandra',
       title: 'Vor Phineas versteckt',
       description: 'Cassandra habe sich vor Phineas versteckt.\n\nWarum hat sie das getan?',
-    }, 'Ich habe mich zwar versteckt'), ', weil Phiny mich nicht sehen sollte und hab gewartet, bis Justin ihn in Ruhe gelassen hat. ', entry({
+    }, 'Ich habe mich zwar versteckt, weil Phiny mich nicht sehen sollte'), ' und hab gewartet, bis Justin ihn in Ruhe gelassen hat. ', entry({
       id: 'cassy-krankenwagen',
       suspectId: 'cassandra',
       title: 'Krankenwagen gerufen',
       description: 'Cassandra habe nach dem Angriff den Krankenwagen gerufen.'
-    }, 'Und dannach habe ich sofort den Krankenwagen gerufen. '), 'Denn was sollte ich denn sonst machen? Justin ist unberechenbar.'])],
+    }, 'Und dannach habe ich sofort den Krankenwagen gerufen.'), ' Denn was sollte ich denn sonst machen? Justin ist unberechenbar.'])],
     ['ermittlerin', 'Wissen Sie, wie es Phineas momentan geht?'],
     ['cassy', textContent(['Er war seitdem nicht mehr in der Schule. ', entry({
       id: 'cassy-krankenhaus',

@@ -7,13 +7,13 @@ export const krankenhausLog: Transcript =  {
   thumbnailAssetId: 'thumbnails/intercom.webp',
   title: 'Log_17_45_016',
   content: [
-    ['elli', textContent(['Hallo?! Schwester Ellie hier, ', entry('phineas-zimmer', 'Zimmer- eh- B34'), '! Der Patient Phineas Musé. ', entry({
+    ['elli', textContent(['Hallo?! Schwester Ellie hier, ', entry('phineas-zimmer', 'Zimmer- eh- B34'), '! ', entry({
       id: 'phineas-verschwunden',
       suspectId: 'phineas',
 
       title: 'Krankenschwester findet Phineas nicht',
       description: 'Krankenschwester Elli findet Phineas nicht in seinem Zimmer.'
-    }, 'Er- Er ist weg!'), ' ', entry({
+    }, 'Der Patient Phineas Musé. Er- Er ist weg!'), ' ', entry({
       id: 'phineas-kissen',
       suspectId: 'phineas',
 

@@ -19,6 +19,8 @@ export const bfbChloroformTuch: Clue<'images'> = {
         entry: {
           id: 'chloroformtuch',
           suspectId: 'general',
+
+          imageAssetId: 'thumbnails/Tuch.webp',
           
           title: 'Chloroformtuch',
           description: 'Ein Tuch, das mit Chloroform getränkt wurde.\n\nChloroform ist ein chlorierter Kohlenwasserstoff, der lange Zeit als Betäubungs- bzw. Narkosemittel große Bedeutung in der Chirurgie und der Anästhesie hatte.\n\nWurde dieses Tuch benutzt, um jemanden zu betäuben?',
@@ -63,7 +65,7 @@ export const bfbDolch: Clue<'images'> = {
           id: 'bluttyp-auf-dolch',
           suspectId: 'general',
 
-          title: 'Bluttyp A+ auf Dolch',
+          title: 'Bluttyp A+ auf dem Dolch',
           description: 'Der Dolch ist mit Blut besudelt, das die Blutgruppe A+ aufweist.\n\nWem gehört das Blut?'
         }
       },

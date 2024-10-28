@@ -12,7 +12,7 @@ export const mama: Contact = {
 
 export const phoebe: Contact = {
   number: '+49 174 9091317',
-  name: 'Pheobe',
+  name: 'Phoebe',
   entry: 'phineas-nummer-phoebe'
 };
 

@@ -13,12 +13,12 @@ export const justin1: Transcript =  {
     ['ermittlerin', 'Entschuldigen Sie, Justin. Bitte beruhigen Sie sich. Ich bin nur hier, um Ihnen ein paar Fragen zu stellen. Es wäre so gut, wenn wir kooperieren könnten. Okay? Für’s Protokoll. Zunächst einmal, wo waren Sie am Donnerstag,  den 14. Februar, gegen 14 Uhr?'],
     ['justin', 'Na ja alter, woher soll ich das denn wissen, aller? Das war doch ewig her. Valentinstag oder so?'],
     ['ermittlerin', 'Ich bitte Sie, noch einmal gründlich darüber nachzudenken. Immerhin war es erst gestern. Nebensache. Waren Sie an jenem Tag zu Hause oder haben Sie jemanden getroffen?'],
-    ['justin', textContent(['Ja, ich check schon. Ja, ich habe mich halt mit so ', entry({
+    ['justin', textContent(['Ja, ich check schon. Ja, ', entry({
       id: 'justin-chaya',
       suspectId: 'justin',
       title: 'Date mit Chaya',
       description: 'Justin habe sich mit einer Chaya getroffen und hatte ein Date mit ihr. Er behauptet, dass er nicht im Park war.'
-    }, 'Chaya getroffen'), ', du weist. Hab Sie so geklärt. Und ich hatte so Date mit ihr im Park, oder- oder warte ne, nicht im Park. Äh, das- Scheiß mal darauf. Ich hatte einfach ein Date.'])],
+    }, 'ich habe mich halt mit so Chaya getroffen'), ', du weist. Hab Sie so geklärt. Und ich hatte so ', entry('justin-chaya', 'Date mit ihr im Park,'), ' oder- oder warte ne, nicht im Park. Äh, das- Scheiß mal darauf. Ich hatte einfach ein Date.'])],
     ['ermittlerin', 'Sie scheinen sich aber nicht sicher zu sein, Justin. Es wäre vorteilhaft für sie, wenn Sie uns die Wahrheit sagen. Immerhin können wir das ganz leicht überprüfen.'],
     ['justin', 'Was wollt ihr von mir? Ich sag doch, ich war nicht im Park. Ich war unterwegs mit meiner Freundin. So schwer zu checken?'],
     ['ermittlerin', 'Gut, gut. Es ist wichtig, dass Sie sich klar ausdrücken. Immerhin handelt es sich um eine ernste Angelegenheit. Es geht um einen kürzlichen Mord an Ihrer Schule.'],
@@ -50,12 +50,12 @@ export const justin1: Transcript =  {
     ['ermittlerin', 'Setzen Sie sich hin, Justin. Wir sind fast fertig.'],
     ['justin', 'Aller.'],
     ['ermittlerin', 'Es geht hier nur darum, alle Seiten zu hören. In dem Sinne. Haben Sie irgendwas gesehen oder gehört, was uns weiterhelfen könnte?'],
-    ['justin', textContent(['Ey, ich sag doch, ich habe nichts gesehen. Nichts gehört. Ich war einfach nur ', entry({
+    ['justin', textContent(['Ey, ich sag doch, ich habe nichts gesehen. Nichts gehört. ', entry({
       id: 'justin-park',
       suspectId: 'justin',
       title: 'Sei im Park gewesen',
       description: 'Justin sei im Park gewesen und habe nichts gesehen oder gehört.\n\nWarte, hat er nicht gesagt, dass er nicht im Park war?'
-    }, 'im Park'), ' chillen, da war\'s.'])],
+    }, 'Ich war einfach nur im Park chillen'), ', da war\'s.'])],
     ['ermittlerin', 'Das wäre dann alles für jetzt. Vielen Dank, Justin. Bei weiteren Fragen werden wir uns bei Ihnen melden.'],
     ['justin', 'Na klar. Geht einfach. Denn Justin geht jetzt was Bustin.'],
     ['ermittlerin', 'Okay, Justin.'],

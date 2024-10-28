@@ -26,7 +26,7 @@ export const liebesritual: Transcript =  {
       description: 'Ivy hat eine Hütte im Stadtwald. Dort führt sie das Ritual der ewigen Liebe durch.'
     }, 'eine Hütte'), ' und läuft darauf zu'])],
 
-    ['ivy', textContent(['Schaut, ', entry('ivy-huette', 'meine Hütte'), '. Sie ist der perfekte Ort für das was ich vor habe.'])],
+    ['ivy', textContent([entry('ivy-huette', 'Schaut, meine Hütte.'), ' Sie ist der perfekte Ort für das was ich vor habe.'])],
 
     [null, 'Geht in die Hütte\nStellt die Kamera auf eine unstabile Oberfläche'],
 
@@ -44,13 +44,13 @@ export const liebesritual: Transcript =  {
 
     [null, 'Zeigt das Ritual der ewigen Liebe in die Kamera'],
 
-    ['ivy', textContent(['Und hier habe ich ', entry({
+    ['ivy', textContent([entry({
       id: 'ivy-dolch',
       suspectId: 'ivy',
 
       title: 'Ivys Dolch',
       description: 'Ivy hat einen Dolch, den sie aus der Sammlung ihres Vaters stibitzt hat. Sie verwendet ihn für das Ritual der ewigen Liebe.'
-    }, 'einen Dolch'), '. Den habe ich aus der Sammlung meines Vaters stibitzt.'])],
+    }, 'Und hier habe ich einen Dolch.'), ' Den habe ich aus der Sammlung meines Vaters stibitzt.'])],
 
     [null, 'Zeigt den Dolch in die Kamera'],
 

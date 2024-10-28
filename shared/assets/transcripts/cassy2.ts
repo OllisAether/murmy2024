@@ -52,7 +52,7 @@ export const cassy2: Transcript =  {
       description: 'Cassandra bezeichnet Ivy als Verräterin.'
     }, 'Diese Verräterin.'), ' Na ja, dass kann ich ja jetzt nicht mehr.'])],
     ['ermittlerin', 'Sie haben also Herrn Montague getroffen? Ist etwas an ihm aufgefallen?'],
-    ['cassy',textContent(['Eigentlich war er wie immer. Er hatte eine ', entry('hugo-cellokoffer', 'große Tasche'), ' dabei gehabt. War bestimmt so ein Instrument drinne. Er ist im Orchester.'])],
+    ['cassy',textContent(['Eigentlich war er wie immer. ', entry('hugo-cellokoffer', 'Er hatte eine große Tasche dabei gehabt.'), ' War bestimmt so ein Instrument drinne. Er ist im Orchester.'])],
     ['ermittlerin', 'Ist Ihnen sonst noch etwas Ungewöhnliches aufgefallen?'],
     ['cassy', 'Nö, eigentlich nichts.'],
     ['ermittlerin', 'Gut, dann bedanke ich mich für Ihre Zeit, Cassandra.'],
