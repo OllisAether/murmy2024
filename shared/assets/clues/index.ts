@@ -28,16 +28,16 @@ export const clues: Clue<ClueTypes>[] = [
   schueleraktePhineas,
 
   // Spurensicherungen
-  autopsieberichtIvy, // TODO
-  autopsieberichtPhineas, // TODO
+  autopsieberichtIvy,
+  autopsieberichtPhineas,
 
   // Hinweisfundberichte
-  bfbChloroformTuch, // TODO
-  bfbDolch, // TODO
+  bfbChloroformTuch,
+  bfbDolch,
 
   // Sonstige
   map,
-  fuehrungszeugnis, // TODO
+  fuehrungszeugnis,
   kursbuch,
   besucherliste,
   stundenplan,

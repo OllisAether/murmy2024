@@ -11,10 +11,10 @@ export const fuehrungszeugnis: Clue<'images'> = {
     entries: [
       {
         rect: {
-          x: 0,
-          y: 0,
-          width: 1,
-          height: 1,
+          x: 0.11457339376590331,
+          y: 0.5204032121962197,
+          width: 0.7889481949745547,
+          height: 0.44575902902790276,
         },
         entry: {
           id: 'hugo-kriminelle-vergangenheit',

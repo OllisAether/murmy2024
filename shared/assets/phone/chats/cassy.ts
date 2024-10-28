@@ -140,6 +140,41 @@ export const cassy: Chat = {
       sender: '+49 172 9925904',
       content: 'Es schmeckt bestimmt so süß wie du aussiehst hehehehe'
     },
+
+    {
+      type: 'timestamp',
+      timestamp: moment('2013-01-04 18:10')
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Ivy hat mir den perfekten Ort für unser Ritual gezeigt 😈'
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Ich kanns kaum erwarten dich dorthin zu bringen 🖤'
+    },
+
+    {
+      type: 'timestamp',
+      timestamp: moment('2013-01-05 03:57')
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Ich habs mir nochmal alleine genauer angeschaut und es ist wirklich perfekt um dich zu opfern Phiny 🖤 '
+    },
+    {
+      type: 'timestamp',
+      timestamp: moment('2013-01-05 04:03')
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Oh Phineas dein Opfer im Wald wird das ORAKEL erfreuen 🖤🗡️'
+    },
+
     {
       type: 'timestamp',
       timestamp: moment('2013-01-06 21:10')
@@ -259,6 +294,27 @@ export const cassy: Chat = {
       sender: '+49 172 9925904',
       content: 'Du wirst so schön aussehen Phiny du bist perfekt für diese Aufgabe und das ORAKEL wird die perfekte Opfergabe kriegen~'
     },
+
+    {
+      type: 'timestamp',
+      timestamp: moment('2013-02-04 21:35')
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Jeden Tag wird der Drang stärker Phiny, bald kann ich es nicht mehr innehalten..🗡️'
+    },
+
+    {
+      type: 'timestamp',
+      timestamp: moment('2013-02-06 04:07')
+    },
+    {
+      type: 'message',
+      sender: '+49 172 9925904',
+      content: 'Das ORAKEL flüstert deinen Namen 🖤 Ich werde es bald tun, versprochen mein Phiny 😈'
+    },
+
     {
       type: 'timestamp',
       timestamp: moment('2013-02-07 11:14')

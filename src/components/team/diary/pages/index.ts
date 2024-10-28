@@ -30,6 +30,10 @@ import PageSketch4 from "./PageSketch4.vue";
 import PageSketch5 from "./PageSketch5.vue";
 import PageSketch6 from "./PageSketch6.vue";
 import Page0401 from "./Page04-01.vue";
+import Page0402 from "./Page04-02.vue";
+import Page2601 from "./Page26-01.vue";
+import Page2401 from "./Page24-01.vue";
+import Page0501 from "./Page05-01.vue";
 
 const _pages = [
   FrontCoverBack,
@@ -48,12 +52,16 @@ const _pages = [
   Page2912,
   Page0201,
   Page0401,
+  Page0501,
   Page0701,
   PageSketch5,
   Page1801,
   PageSketch6,
+  Page2401,
+  Page2601,
   Page2801,
   PageSketch1,
+  Page0402,
   Page0702,
   Page1202,
   PageSketch4,
