@@ -313,9 +313,6 @@ const computedChat = computed(() => {
       padding: 3px * $scale 6px * $scale;
       font-size: 10px * $scale;
     }
-    &__image-entry {
-      position: absolute;
-    }
   }
 
   &__timestamp, &__info {

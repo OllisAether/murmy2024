@@ -1,10 +1,10 @@
 <template>
-  <div :class="['chat-ima-message', {
-    'chat-ima-message--explicit': message.explicit
+  <div :class="['chat-img-message', {
+    'chat-img-message--explicit': message.explicit
   }]" @click="showExplicit" :data-open="open">
     <img :src="game.getAsset(message.imageAssetId)?.content">
 
-    <div class="chat-ima-message__tw" v-if="message.explicit">
+    <div class="chat-img-message__tw" v-if="message.explicit">
       Achtung: Dieses Bild enthält blutige Inhalte!
       <br>
       <br>
@@ -17,7 +17,7 @@
     >
       <Collectable
         disappear
-        class="chat-ima-message-entry"
+        class="chat-img-message__entry"
         v-if="entry.entryId ?? entry.entry?.id"
         :entryId="(entry.entryId ?? entry.entry?.id)!"
         :style="{
@@ -36,6 +36,7 @@
 import { ref } from 'vue';
 import { ChatImage } from '../../../../../shared/phone/chat';
 import { useGameManager } from '@/store/gameManager';
+import Collectable from '@/components/Collectable.vue';
 
 const props = defineProps<{
   message: ChatImage
@@ -54,7 +55,7 @@ const showExplicit = () => {
 <style lang="scss" scoped>
 @use '@/scss/vars' as *;
 
-.chat-ima-message {
+.chat-img-message {
   position: relative;
   padding: 5px * $scale;
 
@@ -94,6 +95,10 @@ const showExplicit = () => {
   }
   &[data-open=true] &__tw {
     opacity: 0;
+  }
+
+  &__entry {
+    position: absolute;
   }
 }
 
