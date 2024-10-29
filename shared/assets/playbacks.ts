@@ -26,8 +26,8 @@ export const playbacks: (Playback | {
         options: {
           options: {
             mainClue: [
-              'phone',
               'diary',
+              'phone',
             ],
             main: [
               'cassy1',
@@ -86,7 +86,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(1 * 60_000),
+  Work(3 * 60_000),
 
   { divider: '- Runde 3 -' },
 
@@ -96,7 +96,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(2 * 60_000),
+  Work(4 * 60_000),
 
   { divider: '- Runde 4 -' },
 
@@ -106,7 +106,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(3 * 60_000),
+  Work(5 * 60_000),
 
   { divider: '- Runde 5 -' },
 
@@ -116,7 +116,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(3 * 60_000),
+  Work(5 * 60_000),
 
   { divider: '- Runde 6 -' },
 
@@ -129,7 +129,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(3 * 60_000),
+  Work(5 * 60_000),
 
   { divider: '=== Interlude ===' },
 
@@ -179,7 +179,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(3 * 60_000),
+  Work(6 * 60_000),
 
   { divider: '- Runde 8 -' },
 
@@ -189,7 +189,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(4 * 60_000),
+  Work(6 * 60_000),
 
   { divider: '- Runde 9 -' },
 
@@ -199,7 +199,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(6 * 60_000),
 
   { divider: '- Runde 10 -' },
 
@@ -209,7 +209,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(7 * 60_000),
 
   { divider: '- Runde 11 -' },
 
@@ -219,7 +219,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(7 * 60_000),
 
   { divider: '- Runde 12 -' },
 
@@ -229,7 +229,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(8 * 60_000),
 
   { divider: '- Runde 13 -' },
 
@@ -239,7 +239,7 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
-  Work(5 * 60_000),
+  Work(8 * 60_000),
 
   { divider: '- Runde 14 -' },
 
@@ -249,12 +249,18 @@ export const playbacks: (Playback | {
   ShowNewClues(),
   AddInvestigationCoins(10),
 
+  Work(10 * 60_000),
+
+  Idle(5_000),
+  Media('Der Loesung auf der Spur.mp3'),
+
   { divider: '=== Finale ===' },
 
-  FilloutForms(20 * 60_000),
+  FilloutForms(30 * 60_000),
   Idle(0, {
     end: true
   }),
+  Media('Ende.mp4', true),
 
   { divider: '=== Epilog ===' },
 

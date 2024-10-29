@@ -40,6 +40,7 @@ export interface ChatImage {
   sender: string | 'me'
   imageAssetId: string
   entries?: ImageEntry[]
+  explicit?: boolean
 }
 
 export interface ChatTimestamp {

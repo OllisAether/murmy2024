@@ -103,6 +103,7 @@ export const cassy: Chat = {
       type: 'image',
       sender: '+49 172 9925904',
       imageAssetId: 'phone/skull_porch.webp',
+      explicit: true,
       entries: [
         {
           rect: {
@@ -219,6 +220,7 @@ export const cassy: Chat = {
       type: 'image',
       sender: '+49 172 9925904',
       imageAssetId: 'phone/eyes.webp',
+      explicit: true,
       entries: [
         {
           rect: {
@@ -259,6 +261,7 @@ export const cassy: Chat = {
       type: 'image',
       sender: '+49 172 9925904',
       imageAssetId: 'phone/skull.webp',
+      explicit: true,
       entries: [
         {
           rect: {
@@ -330,6 +333,7 @@ export const cassy: Chat = {
       type: 'image',
       sender: '+49 172 9925904',
       imageAssetId: 'phone/knife.webp',
+      explicit: true,
       entries: [
         {
           rect: {
