@@ -150,16 +150,6 @@ const computedChat = computed(() => {
     };
   }
 })
-
-function showExplicit (el: HTMLElement) {
-  const open = el.dataset.open === 'true';
-
-  if (open) {
-    el.dataset.open = 'false';
-  } else {
-    el.dataset.open = 'true';
-  }
-}
 </script>
 
 <style lang="scss" scoped>
