@@ -57,7 +57,7 @@
           }"
         >
           <VCardTitle>
-            {{ getPosition(form.result.score, form.result.entries) }}.
+            {{ form.result.team.active ? getPosition(form.result.score, form.result.entries) : 'Passiv' }}.
 
             <VChip color="primary">
               {{ form.result.score }} pt
@@ -191,13 +191,21 @@ const admin = useAdmin();
 
 const formPageLength = form.length;
 const forms = computed(() => {
-  return admin.forms.results.sort((a, b) => {
+  const passiveForms = admin.forms.results.filter(t => !t.team.active).sort((a, b) => {
     if (a.score === b.score) {
       return b.entries - a.entries;
     }
 
     return b.score - a.score;
-  }).map(result => ({
+  })
+
+  return [...admin.forms.results.filter(t => t.team.active).sort((a, b) => {
+    if (a.score === b.score) {
+      return b.entries - a.entries;
+    }
+
+    return b.score - a.score;
+  }), ...passiveForms].map(result => ({
     result,
     page: admin.forms.pages[result.team.id] ?? 0,
     submitted: admin.forms.submitted.includes(result.team.id)

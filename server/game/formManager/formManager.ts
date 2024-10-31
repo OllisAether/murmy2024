@@ -128,11 +128,15 @@ export class FormManager {
     return this.forms[teamId]
   }
 
-  public getResults(): Result[] {
+  public getResults(includePassive: boolean = true): Result[] {
     const game = Game.get()
     const suspectDatabaseManager = game.suspectDatabaseManager
 
-    const teams = game.getTeams()
+    let teams = game.getTeams()
+
+    if (!includePassive) {
+      teams = teams.filter((team) => team.active)
+    }
 
     const results: Result[] = teams.map((team) => {
       const teamId = team.id
@@ -144,6 +148,7 @@ export class FormManager {
           id: teamId,
           name: teamName,
           meta: teamMeta,
+          active: team.active,
         },
         score: this.results[teamId] || 0,
         entries: suspectDatabaseManager.getDatabase(teamId).entries.length,

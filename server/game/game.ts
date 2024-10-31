@@ -1068,7 +1068,7 @@ export class Game {
   sendResultsToBoard (client?: WebSocketClient) {
     console.log(colorize('[Game]', Fg.White, Bg.Blue), 'Sending results to board')
 
-    const results = this.formManager.getResults()
+    const results = this.formManager.getResults(false)
 
     if (client) {
       if (client.type !== Role.Board) {

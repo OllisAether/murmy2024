@@ -5,6 +5,7 @@ export interface Result {
     id: string
     name: string
     meta: JsonMap
+    active: boolean
   },
   score: number,
   entries: number
