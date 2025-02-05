@@ -1,10 +1,76 @@
 <template>
-  <div class="main-page">
-    <RouterView v-slot="{ Component }">
-      <VFadeTransition>
-        <component :is="Component" />
-      </VFadeTransition>
-    </RouterView>
+  <VDialog :scrim="false" scrollable v-model="gamedeck">
+    <VCard width="500" :style="{
+      marginLeft: gamedeckPosition === 'l' ? '0' : 'auto',
+    }">
+      <VToolbar>
+        <VToolbarTitle>
+          <VIcon>mdi-cog</VIcon>
+          Debug
+        </VToolbarTitle>
+        <VBtn icon @click="gamedeckPosition = gamedeckPosition === 'l' ? 'r' : 'l'">
+          <VIcon>{{ 
+            gamedeckPosition === 'l'
+              ? 'mdi-arrow-right'
+              : 'mdi-arrow-left'
+            }}</VIcon>
+        </VBtn>
+        <VBtn icon @click="gamedeck = false">
+          <VIcon>mdi-close</VIcon>
+        </VBtn>
+      </VToolbar>
+
+      <VCardText>
+        <GameControl color="surface-light" />
+
+        <template
+          v-for="(playback, i) in Game.get().cueManager.getPlaybacks()"
+          :key="i"
+        >
+          <div v-if="playback.divider" class="mt-4 mb-2">
+            <VDivider>
+              {{ playback.divider }}
+            </VDivider>
+          </div>
+
+          <PlaybackCard
+            v-else
+            :playback="(playback as Playback)"
+            :index="Game.get().cueManager.getPlaybacks().filter(p => !p.divider).indexOf(playback)"
+            :class="{
+              'mt-1': i !== 0,
+            }"
+          />
+        </template>
+      </VCardText>
+    </VCard>
+  </VDialog>
+
+  <div class="interact-confirm" v-if="!game.interacted && !game.phase.meta.info">
+    <VIcon size="64" class="mb-8">mdi-gesture-tap</VIcon><br>
+    Bitte interagiere mit dem Bildschirm, um fortzufahren.
+  </div>
+
+  <div class="main-page" v-else>
+    <template v-if="!game.phase.meta.board">
+      <RouterView v-slot="{ Component }">
+        <VFadeTransition>
+          <component :is="Component" />
+        </VFadeTransition>
+      </RouterView>
+    </template>
+
+    <VFadeTransition>
+      <div v-show="game.phase.meta.board">
+        <VFadeTransition mode="out-in">
+          <MediaScreen v-if="game.currentMedia !== null" />
+          <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
+          <ResultsScreen v-if="game.phase.meta.results" />
+          <ShownewCluesScreen v-if="game.phase.meta.showNewClues" />
+          <TitleScreen v-else />
+        </VFadeTransition>
+      </div>
+    </VFadeTransition>
 
     <div class="controls">
       <VBtn
@@ -147,6 +213,21 @@
         </VOverlay>
       </VBtn>
 
+      <VExpandXTransition>
+        <Btn
+          v-if="game.phase.type === Phase.Work && !useTutorial().isTutorial"
+          @click="Game.get().cueManager.nextCue()"
+          small
+          nowrap
+          color="#A23946"
+          >
+          Überspringen
+          <VIcon>
+            mdi-arrow-right
+          </VIcon>
+        </Btn>
+      </VExpandXTransition>
+
       <Btn
         v-if="game.canFullscreen"
         class="fullscreen-button"
@@ -159,31 +240,22 @@
         class="help-button"
         square
       >
-        <VIcon size="small">mdi-account-question</VIcon>
+        <VIcon size="small">mdi-cog</VIcon>
 
         <VDialog activator="parent" v-model="helpDialog" max-width="500" transition="scale-transition">
-          <VCard color="transparent" elevation="0" style="overflow: visible;">
-            <SkewBox
-              style="
-                position: absolute;
-                inset: -1rem -2rem;
-              "
-              :rounded-corners="8"
-              :skew="5"
-            />
-
-            <VToolbar color="transparent">
+          <VCard flat>
+            <VToolbar>
               <VToolbarTitle>
                 <VIcon class="mr-2">mdi-account-question</VIcon>
                 Hilfe anfordern
               </VToolbarTitle>
 
-              <VBtn icon @click="helpDialog = false" :rounded="false" :ripple="false">
+              <VBtn icon @click="helpDialog = false">
                 <VIcon>mdi-close</VIcon>
               </VBtn>
             </VToolbar>
-            <VCardText style="position: relative;">
-              <p class="mb-2">
+            <VCardText>
+              <!-- <p class="mb-2">
                 Falls euch das Orakel nicht weiterhelfen kann, z. B. bei technischen Problemen, könnt ihr hier die liebe <b>Technik-Crew</b>💗 um Hilfe bitten.
               </p>
               <p class="mb-8">
@@ -214,14 +286,122 @@
                 }"
               >
                 {{ helpMessage }}
-              </p>
+              </p> -->
+
+              <div class="mb-2">
+                <VBtn icon variant="tonal" @click="playpause" class="mr-2">
+                  <VIcon>mdi-play-pause</VIcon>
+                </VBtn>
+                <VBtn icon variant="tonal" @click="audio.nextTrack()" class="mr-2">
+                  <VIcon>mdi-skip-next</VIcon>
+                </VBtn>
+
+                <span>{{ audio.currentTrack?.src.split('/').pop() }}</span>
+              </div>
+
+              <VCard class="mb-2 pa-4" color="background" flat>
+                <div>
+                  <VIcon>mdi-volume-high</VIcon>
+                  Hauptlautstärke
+                </div>
+                <VSlider
+                  v-model="audio.masterVolume"
+                  thumb-size="16"
+                  step=".01"
+                  min="0"
+                  max="1"
+                  hide-details
+                  color="primary"
+                  class="mb-2"
+                />
+
+                <VDivider class="mb-4" />
+
+                <div>
+                  <VIcon>mdi-music</VIcon>
+                  Music Volume
+                </div>
+                <VSlider
+                  v-model="audio.rawMusicVolume"
+                  thumb-size="16"
+                  step=".01"
+                  min="0"
+                  max="1"
+                  hide-details
+                  class="mb-2"
+                />
+                <div>
+                  <VIcon>mdi-play-circle</VIcon>
+                  Media Volume
+                </div>
+                <VSlider
+                  v-model="audio.rawMediaVolume"
+                  thumb-size="16"
+                  step=".01"
+                  min="0"
+                  max="1"
+                  hide-details
+                  class="mb-2"
+                />
+                <div>
+                  <VIcon>mdi-poll</VIcon>
+                  Vote Volume
+                </div>
+                <VSlider
+                  v-model="audio.rawVoteVolume"
+                  thumb-size="16"
+                  step=".01"
+                  min="0"
+                  max="1"
+                  hide-details
+                />
+              </VCard>
+
+              <VBtn class="w-100 mb-2" variant="tonal" @click="gamedeck = !gamedeck; helpDialog = false">
+                Debug
+              </VBtn>
+
+              <VBtn class="w-100" color="error" variant="tonal">
+                Demo von vorne starten
+
+                <VDialog max-width="300" activator="parent">
+                  <template #default="{isActive}">
+                    <VCard>
+                      <VToolbar>
+                        <VToolbarTitle>
+                          <VIcon>mdi-restart</VIcon>
+                          Demo zurücksetzen
+                        </VToolbarTitle>
+                        <VBtn icon @click="isActive.value = false">
+                          <VIcon>mdi-close</VIcon>
+                        </VBtn>
+                      </VToolbar>
+
+                      <VCardText>
+                        <p class="mb-2">
+                          Möchtest du die Demo wirklich zurücksetzen?
+                        </p>
+
+                        <VBtn
+                          color="error"
+                          variant="tonal"
+                          @click="reload()"
+                          class="w-100"
+                        >
+                          Demo zurücksetzen
+                        </VBtn>
+                      </VCardText>
+                    </VCard>
+                  </template>
+                </VDialog>
+              </VBtn>
             </VCardText>
           </VCard>
         </VDialog>
       </Btn>
     </div>
 
-    <VDialog v-model="logoutDialog" max-width="300">
+    <!-- <VDialog v-model="logoutDialog" max-width="300">
       <VCard>
         <VToolbar>
           <VToolbarTitle>
@@ -262,7 +442,7 @@
           </VBtn>
         </VCardText>
       </VCard>
-    </VDialog>
+    </VDialog> -->
   </div>
 </template>
 
@@ -274,21 +454,45 @@ import { useGameManager } from '../../store/gameManager';
 // import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
 import Btn from '@/components/Btn.vue';
-import SkewBox from '@/components/SkewBox.vue';
 import { VOverlay } from 'vuetify/components';
 import { VBtn } from 'vuetify/components/VBtn';
 import { preventGestures } from '@/main';
+import { Phase } from '@/shared/phase';
+import ShownewCluesScreen from '../board/ShownewCluesScreen.vue';
+import TitleScreen from '../board/TitleScreen.vue';
+import ResultsScreen from '../board/ResultsScreen.vue';
+import VoteScreen from '../board/VoteScreen.vue';
+import MediaScreen from '../board/MediaScreen.vue';
+import { Game } from '@/server/game/game';
+import { useTutorial } from '@/store/team/tutorial';
+import { useAudio } from '@/store/board/audio';
+import PlaybackCard from '@/components/admin/playbacks/PlaybackCard.vue';
+import { Playback } from '@/shared/playback/Playback';
+import GameControl from '@/components/admin/GameControl.vue';
 
 // const display = useDisplay()
 
 const router = useRouter()
 const auth = useAuthManager()
 const game = useGameManager()
+const audio = useAudio()
+
+const gamedeck = ref(false)
+const gamedeckPosition = ref<'l' | 'r'>('l')
+
+function playpause () {
+  if (audio.currentTrack?.paused) {
+    audio.currentTrack?.play()
+  } else {
+    audio.currentTrack?.pause()
+  }
+}
 
 const logoutDialog = ref(false)
 const helpDialog = ref(false)
 
 function reload () {
+  localStorage.clear()
   location.reload()
 }
 
@@ -296,50 +500,50 @@ watch(helpDialog, () => {
   preventGestures.value = !helpDialog.value
 })
 
-const logoutOtp = import.meta.env.VITE_TEAM_LOGOUT_PASSCODE ?? '0000'
-const otp = ref('')
-watch(logoutDialog, () => {
-  otp.value = ''
-})
+// const logoutOtp = import.meta.env.VITE_TEAM_LOGOUT_PASSCODE ?? '0000'
+// const otp = ref('')
+// watch(logoutDialog, () => {
+//   otp.value = ''
+// })
 
-const cornerPadding = 300
-const sequence = '010232'
-let typedSequence = ''
-let clearSequenceTimeout: number
-useEventListener('pointerdown', (event) => {
-  if (logoutDialog.value) return
+// const cornerPadding = 300
+// const sequence = '010232'
+// let typedSequence = ''
+// let clearSequenceTimeout: number
+// useEventListener('pointerdown', (event) => {
+//   if (logoutDialog.value) return
 
-  let corner: string
+//   let corner: string
 
-  if (event.clientX < cornerPadding && event.clientY < cornerPadding) {
-    corner = '0'
-  } else if (event.clientX > window.innerWidth - cornerPadding && event.clientY < cornerPadding) {
-    corner = '1'
-  } else if (event.clientX < cornerPadding && event.clientY > window.innerHeight - cornerPadding) {
-    corner = '2'
-  } else if (event.clientX > window.innerWidth - cornerPadding && event.clientY > window.innerHeight - cornerPadding) {
-    corner = '3'
-  } else {
-    typedSequence = ''
-    return
-  }
+//   if (event.clientX < cornerPadding && event.clientY < cornerPadding) {
+//     corner = '0'
+//   } else if (event.clientX > window.innerWidth - cornerPadding && event.clientY < cornerPadding) {
+//     corner = '1'
+//   } else if (event.clientX < cornerPadding && event.clientY > window.innerHeight - cornerPadding) {
+//     corner = '2'
+//   } else if (event.clientX > window.innerWidth - cornerPadding && event.clientY > window.innerHeight - cornerPadding) {
+//     corner = '3'
+//   } else {
+//     typedSequence = ''
+//     return
+//   }
   
-  // console.log('Click:', event.clientX, event.clientY, corner)
+//   // console.log('Click:', event.clientX, event.clientY, corner)
 
-  typedSequence += corner
-  typedSequence = typedSequence.slice(-sequence.length)
+//   typedSequence += corner
+//   typedSequence = typedSequence.slice(-sequence.length)
 
-  if (typedSequence === sequence) {
-    window.addEventListener('pointerup', () => {
-      logoutDialog.value = true
-    }, { once: true })
-  }
+//   if (typedSequence === sequence) {
+//     window.addEventListener('pointerup', () => {
+//       logoutDialog.value = true
+//     }, { once: true })
+//   }
 
-  clearTimeout(clearSequenceTimeout)
-  clearSequenceTimeout = setTimeout(() => {
-    typedSequence = ''
-  }, 1000) as unknown as number
-})
+//   clearTimeout(clearSequenceTimeout)
+//   clearSequenceTimeout = setTimeout(() => {
+//     typedSequence = ''
+//   }, 1000) as unknown as number
+// })
 
 useEventListener('keydown', (event) => {
   if (logoutDialog.value) return
@@ -349,15 +553,15 @@ useEventListener('keydown', (event) => {
   }
 })
 
-const logoutError = ref('')
-function logout () {
-  if (otp.value !== logoutOtp) {
-    logoutError.value = 'Ungültiger Code'
-    return
-  }
+// const logoutError = ref('')
+// function logout () {
+//   if (otp.value !== logoutOtp) {
+//     logoutError.value = 'Ungültiger Code'
+//     return
+//   }
 
-  auth.logout()
-}
+//   auth.logout()
+// }
 
 watch(() => game.phase.type, () => {
   router.replace('/team')
@@ -370,29 +574,6 @@ onBeforeMount(() => {
 onUnmounted(() => {
   game.wakelockShouldBeActive = false
 })
-
-const helpIsError = ref(false)
-const helpMessage = ref('')
-const helpLoading = ref(false)
-
-watch(helpDialog, () => {
-  helpIsError.value = false
-  helpMessage.value = ''
-})
-
-async function help () {
-  helpLoading.value = true
-  const res = await game.getHelp()
-  
-  if (res.success) {
-    helpIsError.value = false
-    helpMessage.value = 'Hilfe wurde angefordert!'
-  } else {
-    helpIsError.value = true
-    helpMessage.value = res.message!
-  }
-  helpLoading.value = false
-}
 </script>
 
 <style scoped lang="scss">
@@ -414,5 +595,12 @@ async function help () {
     transform-origin: top right;
     transform: scale(0.75);
   }
+}
+.interact-confirm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 </style>

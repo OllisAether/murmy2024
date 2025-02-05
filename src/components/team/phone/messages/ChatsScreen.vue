@@ -55,12 +55,12 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/contacts';
+import { contacts } from '../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { chats } from '../../../../../shared/assets/phone/chats';
-import { getRawText } from '../../../../../shared/textContent';
-import { ChatImage, ChatInfo, ChatMessage, ChatTimestamp } from '../../../../../shared/phone/chat';
+import { chats } from '../../../../shared/assets/phone/chats';
+import { getRawText } from '../../../../shared/textContent';
+import { ChatImage, ChatInfo, ChatMessage, ChatTimestamp } from '../../../../shared/phone/chat';
 
 const game = useGameManager();
 const phone = useMainClue();

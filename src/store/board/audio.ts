@@ -5,9 +5,9 @@ import { useGameManager } from "../gameManager";
 
 export const useAudio = defineStore('audio', () => {
   const masterVolume = ref(1)
-  const voteVolume = ref(1)
+  const voteVolume = ref(0.5)
   const mediaVolume = ref(1)
-  const musicVolume = ref(1)
+  const musicVolume = ref(0.2)
 
   const controlVolumeListeners = ref<{ off: WatchStopHandle, audio: HTMLMediaElement }[]>([])
   function controlVolume(audio: HTMLMediaElement, type: 'vote' | 'media' | 'music', multiplier = 1) {

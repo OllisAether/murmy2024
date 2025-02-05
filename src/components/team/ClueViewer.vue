@@ -197,9 +197,9 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { ImageEntry } from '../../../shared/clue';
+import { ImageEntry } from '../../shared/clue';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue';
-import { Asset } from '@/../shared/asset';
+import { Asset } from '@/shared/asset';
 import { useSwipe } from '@vueuse/core';
 import Btn from '../Btn.vue';
 import Collectable from '../Collectable.vue';

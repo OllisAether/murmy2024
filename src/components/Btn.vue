@@ -2,7 +2,9 @@
   <button :class="['btn', {
     'btn--square': square,
     'btn--disabled': $attrs.disabled,
-    'btn--loading': loading
+    'btn--loading': loading,
+    'btn--small': small,
+    'btn--nowrap': nowrap
   }]">
     <SkewBox
       class="btn__box"
@@ -31,7 +33,9 @@ import SkewBox from './SkewBox.vue';
 defineProps<{
   color?: string
   square?: boolean,
-  loading?: boolean
+  loading?: boolean,
+  small?: boolean,
+  nowrap?: boolean
 }>()
 </script>
 
@@ -76,10 +80,18 @@ defineProps<{
     padding: 0;
   }
 
+  &--nowrap {
+    white-space: nowrap;
+  }
+
   &--loading {
     .btn__content {
       opacity: .5;
     }
+  }
+
+  &--small {
+    padding: .5rem 1rem;
   }
 
   &__loading {

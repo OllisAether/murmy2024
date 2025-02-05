@@ -1,5 +1,5 @@
-import { ConditionOrValue } from "../../shared/cue/Condition";
-import { JsonContent } from "../../shared/json";
+import { ConditionOrValue } from "../shared/cue/Condition";
+import { JsonContent } from "../shared/json";
 
 export function conditionToString (condition: ConditionOrValue | JsonContent): string {
   if ((condition as any).$condition) {

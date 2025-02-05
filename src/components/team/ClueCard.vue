@@ -169,11 +169,11 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import SkewBox from '../SkewBox.vue';
-import { clues } from '../../../shared/assets/clues/index';
+import { clues } from '../../shared/assets/clues/index';
 import { computed, ref, useModel, watch } from 'vue';
 import Btn from '../Btn.vue';
 import ClueImageViewer from './ClueViewer.vue';
-import { Transcript } from '../../../shared/transcript';
+import { Transcript } from '../../shared/transcript';
 import TranscriptDisplay from './TranscriptDisplay.vue';
 import { useTutorial } from '@/store/team/tutorial';
 import NewBadge from '../NewBadge.vue';

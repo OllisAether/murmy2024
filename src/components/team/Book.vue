@@ -67,10 +67,10 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
-import { Asset } from '../../../shared/asset';
+import { Asset } from '../../shared/asset';
 import Collectable from '../Collectable.vue';
 import { useTutorial } from '@/store/team/tutorial';
-import { ImageEntry } from '../../../shared/clue';
+import { ImageEntry } from '../../shared/clue';
 
 const props = defineProps<{
   zoomScale: number,

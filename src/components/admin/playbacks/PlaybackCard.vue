@@ -4,13 +4,13 @@
       <VBtn
         variant="flat"
         icon
-        :color="admin.currentPlaybackIndex === index ? 'primary' : 'grey-darken-2'"
+        :color="game.cueManager.currentPlaybackIndex.value === index ? 'primary' : 'grey-darken-2'"
         size="2rem"
         class="mr-2 ml-4"
         @click="play"
       >
-        <VIcon v-if="admin.currentPlaybackIndex !== index">mdi-circle-double</VIcon>
-        <VIcon v-else-if="admin.currentCueIndex === -1">mdi-motion-play-outline</VIcon>
+        <VIcon v-if="game.cueManager.currentPlaybackIndex.value !== index">mdi-circle-double</VIcon>
+        <VIcon v-else-if="game.cueManager.currentCueIndex.value === -1">mdi-motion-play-outline</VIcon>
         <VIcon v-else>mdi-skip-next</VIcon>
       </VBtn>
       <VChip
@@ -27,13 +27,13 @@
       </VToolbarTitle>
 
       <VChip
-        :color="admin.currentPlaybackIndex === index ? 'primary' : 'grey-darken-2'"
+        :color="game.cueManager.currentPlaybackIndex.value === index ? 'primary' : 'grey-darken-2'"
         variant="flat"
         class="mr-2"
         size="small"
       >
-        <template v-if="admin.currentPlaybackIndex === index">
-          {{ admin.currentCueIndex + 1 }}
+        <template v-if="game.cueManager.currentPlaybackIndex.value === index">
+          {{ game.cueManager.currentCueIndex.value + 1 }}
         </template>
         <template v-else>0</template>
         / {{ playback.cues.length }}
@@ -169,7 +169,7 @@
             :playback="playback"
             :index="i"
             :cue="cue"
-            :active="admin.delayedCurrentPlaybackIndex === index && admin.delayedCurrentCueIndex === i"
+            :active="game.cueManager.currentPlaybackIndex.value === index && game.cueManager.currentPlaybackIndex.value === i"
           />
         </VCardText>
       </div>
@@ -178,14 +178,14 @@
 </template>
 
 <script setup lang="ts">
-import { Playback } from '@/../shared/playback/Playback';
+import { Playback } from '../../../shared/playback/Playback';
 import CueCard from './CueCard.vue';
-import { useAdmin } from '@/store/admin/index';
 import { computed, ref, watch } from 'vue';
-import { JsonContent } from '../../../../shared/json';
+import { JsonContent } from '../../../shared/json';
+import { Game } from '../../../server/game/game';
 
-const admin = useAdmin()
 const showDetails = ref(false)
+const game = Game.get()
 
 const props = defineProps<{
   index: number
@@ -195,15 +195,15 @@ const props = defineProps<{
 const trigger = computed({
   get: () => props.playback.trigger,
   set: (value: 'auto' | 'manual') => {
-    admin.setPlaybackTrigger(props.index, value)
+    game.cueManager.setPlaybackTrigger(props.index, value)
   }
 })
 
 function play () {
-  if (admin.currentPlaybackIndex !== props.index) {
-    admin.setCurrentPlayback(props.index)
+  if (game.cueManager.currentPlaybackIndex.value !== props.index) {
+    game.cueManager.setCurrentPlayback(props.index)
   } else {
-    admin.nextCue()
+    game.cueManager.nextCue()
   }
 }
 
@@ -285,6 +285,6 @@ function applyFields () {
     return
   }
 
-  admin.setPlaybackFields(props.index, computedFields.value)
+  game.cueManager.setPlaybackFields(props.index, computedFields.value)
 }
 </script>

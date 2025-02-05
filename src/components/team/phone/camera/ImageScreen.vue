@@ -75,12 +75,12 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import { useMainClue } from '@/store/team/mainClue';
-import { gallery } from '../../../../../shared/assets/phone/gallery';
+import { gallery } from '../../../../shared/assets/phone/gallery';
 import { computed, onMounted, ref } from 'vue';
 import Collectable from '../../../Collectable.vue';
 import { useSwipe } from '@vueuse/core';
 import { watch } from 'vue';
-import { GalleryItem } from '../../../../../shared/phone/gallery';
+import { GalleryItem } from '../../../../shared/phone/gallery';
 
 const phone = useMainClue();
 const game = useGameManager();

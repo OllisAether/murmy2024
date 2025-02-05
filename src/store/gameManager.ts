@@ -2,22 +2,23 @@ import { defineStore } from "pinia";
 import { useWsClient } from "./wsClient";
 import { computed, readonly, ref, watch, WatchStopHandle } from "vue";
 import { UAParser } from "ua-parser-js";
-import { Asset } from "@/../shared/asset";
+import { Asset } from "@/shared/asset";
 import { useAuthManager } from "./authManager";
-import { Role } from "../../shared/roles";
-import { Phase } from "../../shared/phase";
-import { VoteOption, VoteSession } from "../../shared/vote";
-import { Entry } from "../../shared/suspectDatabase/entry";
+import { Role } from "../shared/roles";
+import { Phase } from "../shared/phase";
+import { VoteOption, VoteSession } from "../shared/vote";
+import { Entry } from "../shared/suspectDatabase/entry";
 import { useWakeLock } from "@vueuse/core";
-import { clues as cluesAsset } from "@/../shared/assets/clues/index";
-import { getEntries } from "../../shared/textContent";
-import { gallery } from "../../shared/assets/phone/gallery";
-import { chats } from "../../shared/assets/phone/chats";
-import { transcripts } from "../../shared/assets/transcripts/index";
-import { FormFieldValue } from "../../shared/form";
-import { notes } from "../../shared/assets/phone/notes";
-import { diaryEntries } from "../../shared/assets/diary/entries";
-import { Result } from "../../shared/results";
+import { clues as cluesAsset } from "@/shared/assets/clues/index";
+import { getEntries } from "../shared/textContent";
+import { gallery } from "../shared/assets/phone/gallery";
+import { chats } from "../shared/assets/phone/chats";
+import { transcripts } from "../shared/assets/transcripts/index";
+import { FormFieldValue } from "../shared/form";
+import { notes } from "../shared/assets/phone/notes";
+import { diaryEntries } from "../shared/assets/diary/entries";
+import { Result } from "../shared/results";
+import allAssets from "@/assets/assets.json";
 
 export const useGameManager = defineStore('gameManager', () => {
   const ws = useWsClient()
@@ -66,8 +67,8 @@ export const useGameManager = defineStore('gameManager', () => {
       ws.send('getTimer')
     })
 
-    startTimeSync()
-    syncTime()
+    // startTimeSync()
+    // syncTime()
 
     await Promise.all([
       ...(auth.role === Role.Team ? [
@@ -156,43 +157,47 @@ export const useGameManager = defineStore('gameManager', () => {
         switch (auth.role) {
           case Role.Team:
             console.log('Fetching team assets')
-            const teamRes = await fetch('/api/assets/team')
-              .catch((e) => {
-                console.error('Failed to fetch team assets', e)
-                return null
-              })
+            // const teamRes = await fetch('/api/assets/team')
+            //   .catch((e) => {
+            //     console.error('Failed to fetch team assets', e)
+            //     return null
+            //   })
 
-            if (!teamRes) {
-              break
-            }
+            // if (!teamRes) {
+            //   break
+            // }
 
-            const teamAssets: Asset[] = await teamRes.json()
-            await preloadAssets(teamAssets)
+            // const teamAssets: Asset[] = allAssets
+            // await preloadAssets(teamAssets)
+            assets.value = allAssets.map(asset => ({
+              ...asset,
+              content: asset.url
+            }))
             break
-          case Role.Board:
-            console.log('Fetching board assets')
-            const boardRes = await fetch('/api/assets/board')
-              .catch((e) => {
-                console.error('Failed to fetch board assets', e)
-                return null
-              })
+          // case Role.Board:
+          //   console.log('Fetching board assets')
+          //   const boardRes = await fetch('/api/assets/board')
+          //     .catch((e) => {
+          //       console.error('Failed to fetch board assets', e)
+          //       return null
+          //     })
 
-            if (!boardRes) {
-              break
-            }
+          //   if (!boardRes) {
+          //     break
+          //   }
 
-            const boardAssets: Asset[] = await boardRes.json()
-            await preloadAssets(boardAssets)
-            break
-          case Role.Admin:
-            console.log('Fetching admin assets')
-            const { useAdmin } = await import('./admin')
-            const admin = useAdmin()
-            await preloadAssets(
-              admin.assets.team.concat(admin.assets.shared, admin.assets.board)
-                .filter((asset) => !asset.url.endsWith('.mp4'))
-            )
-            break
+          //   const boardAssets: Asset[] = await boardRes.json()
+          //   await preloadAssets(boardAssets)
+          //   break
+          // case Role.Admin:
+          //   console.log('Fetching admin assets')
+          //   const { useAdmin } = await import('./admin')
+          //   const admin = useAdmin()
+          //   await preloadAssets(
+          //     admin.assets.team.concat(admin.assets.shared, admin.assets.board)
+          //       .filter((asset) => !asset.url.endsWith('.mp4'))
+          //   )
+          //   break
         }
       })()
     ])
@@ -218,11 +223,11 @@ export const useGameManager = defineStore('gameManager', () => {
       state: 'stopped'
     }
 
-    stopTimeSync()
-    timeSync.value = {
-      ping: null,
-      diff: 0
-    }
+    // stopTimeSync()
+    // timeSync.value = {
+    //   ping: null,
+    //   diff: 0
+    // }
 
     phase.value = {
       type: Phase.Idle,
@@ -328,10 +333,10 @@ export const useGameManager = defineStore('gameManager', () => {
     return { success: true }
   }
 
-  ws.onAction('reload', () => {
-    console.log('Reloading')
-    window.location.reload()
-  })
+  // ws.onAction('reload', () => {
+  //   console.log('Reloading')
+  //   window.location.reload()
+  // })
   // #endregion
 
   // #region Assets
@@ -350,6 +355,9 @@ export const useGameManager = defineStore('gameManager', () => {
   })
   const assets = ref<Asset[]>([])
   function preloadAssets (_assets: Asset[]) {
+    // assets.value = _assets
+    // return Promise.resolve()
+
     assetsProgress.value.loading = true
     assetsProgress.value.loadedAssets = 0
     assetsProgress.value.progresses = {}
@@ -476,27 +484,27 @@ export const useGameManager = defineStore('gameManager', () => {
     duration: 0,
     state: 'stopped'
   })
-  const timeSync = ref<{
-    ping: number | null
-    diff: number
-  }>({
-    ping: null,
-    diff: 0
-  })
+  // const timeSync = ref<{
+  //   ping: number | null
+  //   diff: number
+  // }>({
+  //   ping: null,
+  //   diff: 0
+  // })
 
-  try {
-    const timeSyncData = JSON.parse(localStorage.getItem('timeSync') || '{}')
+  // try {
+  //   const timeSyncData = JSON.parse(localStorage.getItem('timeSync') || '{}')
 
-    timeSync.value = {
-      ping: timeSyncData.ping,
-      diff: timeSyncData.diff
-    }
-  } catch (e) {
-    console.error('Failed to load time sync data', e)
-  }
-  watch(timeSync, (value) => {
-    localStorage.setItem('timeSync', JSON.stringify(value))
-  })
+  //   timeSync.value = {
+  //     ping: timeSyncData.ping,
+  //     diff: timeSyncData.diff
+  //   }
+  // } catch (e) {
+  //   console.error('Failed to load time sync data', e)
+  // }
+  // watch(timeSync, (value) => {
+  //   localStorage.setItem('timeSync', JSON.stringify(value))
+  // })
 
   ws.onAction('timer', (data: {
     startTime: number | null
@@ -536,7 +544,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
       // console.log('Timer:', timer.value.currentTime)
 
-      timer.value.currentTime = Math.max(0, Math.min(timer.value.duration, Date.now() - (timer.value.startTime || 0) + timeSync.value.diff))
+      timer.value.currentTime = Math.max(0, Math.min(timer.value.duration, Date.now() - (timer.value.startTime || 0)))
     }
 
     timerInterval = requestAnimationFrame(updateTimer)
@@ -549,51 +557,51 @@ export const useGameManager = defineStore('gameManager', () => {
     }
   }
 
-  async function syncTime() {
-    const pingStart = Date.now()
+  // async function syncTime() {
+  //   const pingStart = Date.now()
 
-    const serverTime = await ws.request('timeSync')
+  //   const serverTime = await ws.request('timeSync')
 
-    const pingEnd = Date.now()
+  //   const pingEnd = Date.now()
 
-    const ping = pingEnd - pingStart
+  //   const ping = pingEnd - pingStart
 
-    if (timeSync.value.ping && timeSync.value.ping < ping) {
-      return
-    }
+  //   if (timeSync.value.ping && timeSync.value.ping < ping) {
+  //     return
+  //   }
 
-    const clientTime = Date.now() - ping / 2
+  //   const clientTime = Date.now() - ping / 2
 
-    const diff = serverTime - clientTime
+  //   const diff = serverTime - clientTime
 
-    timeSync.value = {
-      ping,
-      diff
-    }
+  //   timeSync.value = {
+  //     ping,
+  //     diff
+  //   }
 
-    console.log('Time sync', timeSync.value)
-  }
+  //   console.log('Time sync', timeSync.value)
+  // }
 
-  let timeSyncTimeout: number | null = null
-  function startTimeSync () {
-    const upperBound = 30000
-    const interval = Math.min(upperBound, (1 / (Math.sqrt(timeSync.value.ping ?? 100))) * upperBound)
+  // let timeSyncTimeout: number | null = null
+  // function startTimeSync () {
+  //   const upperBound = 30000
+  //   const interval = Math.min(upperBound, (1 / (Math.sqrt(timeSync.value.ping ?? 100))) * upperBound)
 
-    console.log('Time sync interval', interval)
+  //   console.log('Time sync interval', interval)
 
-    timeSyncTimeout = setTimeout(() => {
-      syncTime()
+  //   timeSyncTimeout = setTimeout(() => {
+  //     syncTime()
 
-      startTimeSync()
-    }, interval) as unknown as number
-  }
+  //     startTimeSync()
+  //   }, interval) as unknown as number
+  // }
 
-  function stopTimeSync () {
-    if (timeSyncTimeout) {
-      clearInterval(timeSyncTimeout)
-      timeSyncTimeout = null
-    }
-  }
+  // function stopTimeSync () {
+  //   if (timeSyncTimeout) {
+  //     clearInterval(timeSyncTimeout)
+  //     timeSyncTimeout = null
+  //   }
+  // }
   // #endregion
 
   // #region Phases
@@ -983,7 +991,7 @@ export const useGameManager = defineStore('gameManager', () => {
     wakelockShouldBeActive: ref(false),
 
     timer: readonly(timer),
-    timeSync: readonly(timeSync),
+    // timeSync: readonly(timeSync),
     phase: readonly(phase),
 
     triggerBoardSkip,

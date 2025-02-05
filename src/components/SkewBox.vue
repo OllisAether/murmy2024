@@ -204,7 +204,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { idGen } from '../../shared/random';
+import { idGen } from '../shared/random';
 import Color from 'color';
 
 const root = ref<HTMLElement | null>(null)

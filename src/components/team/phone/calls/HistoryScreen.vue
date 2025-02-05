@@ -34,9 +34,9 @@
 </template>
 
 <script setup lang="ts">
-import { contacts } from '../../../../../shared/assets/phone/contacts';
+import { contacts } from '../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
-import { calls } from '@/../shared/assets/phone/calls';
+import { calls } from '@/shared/assets/phone/calls';
 </script>
 
 <style lang="scss" scoped>

@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
-import { contacts } from '../../../../../shared/assets/phone/contacts';
+import { contacts } from '../../../../shared/assets/phone/contacts';
 import ScrollView from '../ScrollView.vue';
 import Collectable from '@/components/Collectable.vue';
 

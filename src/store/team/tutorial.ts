@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useGameManager } from "../gameManager";
-import { TutorialState } from "../../../shared/tutorial";
+import { TutorialState } from "../../shared/tutorial";
 
 export interface TutorialHighlightElement {
   element: HTMLElement,

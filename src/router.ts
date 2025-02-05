@@ -1,23 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router"
 import { useAuthManager } from "./store/authManager"
 import { watch } from "vue"
-import { Role } from "../shared/roles"
-import LoginPage from "./pages/LoginPage.vue"
-import { Phase } from "../shared/phase"
+import { Role } from "./shared/roles"
+import { Phase } from "./shared/phase"
 import { useGameManager } from "./store/gameManager"
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      name: "login",
-      path: "/login/:code?",
-      component: LoginPage,
+    // {
+    //   name: "login",
+    //   path: "/login/:code?",
+    //   component: LoginPage,
 
-      meta: {
-        allowedRoles: [Role.Unauthorized],
-      },
-    },
+    //   meta: {
+    //     allowedRoles: [Role.Unauthorized],
+    //   },
+    // },
     {
       name: "team",
       path: "/team",
@@ -69,171 +68,174 @@ const router = createRouter({
         }
       ]
     },
-    {
-      name: "admin",
-      path: "/admin",
-      redirect: '/admin/dashboard',
-      component: () => import("./pages/admin/AdminPage.vue"),
+    // {
+    //   name: "admin",
+    //   path: "/admin",
+    //   redirect: '/admin/dashboard',
+    //   component: () => import("./pages/admin/AdminPage.vue"),
 
-      meta: {
-        allowedRoles: [Role.Admin],
-      },
+    //   meta: {
+    //     allowedRoles: [Role.Admin],
+    //   },
 
-      children: [
-        {
-          path: "dashboard",
-          component: () => import("./pages/admin/Dashboard.vue"),
-          meta: {
-            title: "Dashboard"
-          },
-        },
-        {
-          path: "teams",
-          component: () => import("./pages/admin/Teams.vue"),
-          meta: {
-            title: "Teams"
-          },
-        },
-        {
-          path: "clients",
-          component: () => import("./pages/admin/Clients.vue"),
-          meta: {
-            title: "Clients"
-          },
-        },
-        {
-          path: "playbacks",
-          component: () => import("./pages/admin/Playbacks.vue"),
-          meta: {
-            title: "Playbacks"
-          },
-        },
-        {
-          path: "pools",
-          component: () => import("./pages/admin/VotePools.vue"),
-          meta: {
-            title: "Pools"
-          },
-        },
-        {
-          path: "candidates",
-          component: () => import("./pages/admin/VoteOptions.vue"),
-          meta: {
-            title: "Kandidaten"
-          },
-        },
-        {
-          path: "media",
-          component: () => import("./pages/admin/Media.vue"),
-          meta: {
-            title: "Media"
-          },
-        },
-        {
-          path: "suspectDatabases",
-          component: () => import("./pages/admin/SuspectDatabases.vue"),
-          meta: {
-            title: "Datenbanken"
-          },
-        },
-        {
-          path: "clues",
-          component: () => import("./pages/admin/Clues.vue"),
-          meta: {
-            title: "Clues"
-          },
-        },
-        {
-          path: "forms",
-          component: () => import("./pages/admin/Forms.vue"),
-          meta: {
-            title: "Lösungsbögen"
-          },
-        }
-      ],
-    },
-    {
-      name: "adminLogin",
-      path: "/admin/login",
-      component: () => import("./pages/AdminLoginPage.vue"),
+    //   children: [
+    //     {
+    //       path: "dashboard",
+    //       component: () => import("./pages/admin/Dashboard.vue"),
+    //       meta: {
+    //         title: "Dashboard"
+    //       },
+    //     },
+    //     {
+    //       path: "teams",
+    //       component: () => import("./pages/admin/Teams.vue"),
+    //       meta: {
+    //         title: "Teams"
+    //       },
+    //     },
+    //     {
+    //       path: "clients",
+    //       component: () => import("./pages/admin/Clients.vue"),
+    //       meta: {
+    //         title: "Clients"
+    //       },
+    //     },
+    //     {
+    //       path: "playbacks",
+    //       component: () => import("./pages/admin/Playbacks.vue"),
+    //       meta: {
+    //         title: "Playbacks"
+    //       },
+    //     },
+    //     {
+    //       path: "pools",
+    //       component: () => import("./pages/admin/VotePools.vue"),
+    //       meta: {
+    //         title: "Pools"
+    //       },
+    //     },
+    //     {
+    //       path: "candidates",
+    //       component: () => import("./pages/admin/VoteOptions.vue"),
+    //       meta: {
+    //         title: "Kandidaten"
+    //       },
+    //     },
+    //     {
+    //       path: "media",
+    //       component: () => import("./pages/admin/Media.vue"),
+    //       meta: {
+    //         title: "Media"
+    //       },
+    //     },
+    //     {
+    //       path: "suspectDatabases",
+    //       component: () => import("./pages/admin/SuspectDatabases.vue"),
+    //       meta: {
+    //         title: "Datenbanken"
+    //       },
+    //     },
+    //     {
+    //       path: "clues",
+    //       component: () => import("./pages/admin/Clues.vue"),
+    //       meta: {
+    //         title: "Clues"
+    //       },
+    //     },
+    //     {
+    //       path: "forms",
+    //       component: () => import("./pages/admin/Forms.vue"),
+    //       meta: {
+    //         title: "Lösungsbögen"
+    //       },
+    //     }
+    //   ],
+    // },
+    // {
+    //   name: "adminLogin",
+    //   path: "/admin/login",
+    //   component: () => import("./pages/AdminLoginPage.vue"),
 
-      meta: {
-        allowedRoles: [Role.Unauthorized],
-      },
-    },
-    {
-      name: "board",
-      path: '/board',
-      component: () => import("./pages/board/BoardPage.vue"),
+    //   meta: {
+    //     allowedRoles: [Role.Unauthorized],
+    //   },
+    // },
+    // {
+    //   name: "board",
+    //   path: '/board',
+    //   component: () => import("./pages/board/BoardPage.vue"),
 
-      meta: {
-        allowedRoles: [Role.Board],
-      }
-    },
+    //   meta: {
+    //     allowedRoles: [Role.Board],
+    //   }
+    // },
     {
       path: '/:pathMatch(.*)',
       redirect () {
-        const auth = useAuthManager()
+        // const auth = useAuthManager()
 
-        switch (auth.role) {
-          case Role.Admin:
-            return "/admin"
-          case Role.Board:
-            return "/board"
-          case Role.Team:
+        // switch (auth.role) {
+        //   case Role.Admin:
+        //     return "/admin"
+        //   case Role.Board:
+        //     return "/board"
+        //   case Role.Team:
             return "/team"
-          default:
-            return "/login"
-        }
+          // default:
+          //   return "/login"
+        // }
       }
     },
   ],
 })
 
-router.beforeEach(async (to, _, next) => {
-  // console.log("Before each", to)
-  const auth = useAuthManager()
+// Handle authentication and authorization
+// router.beforeEach(async (to, _, next) => {
+//   // console.log("Before each", to)
+//   const auth = useAuthManager()
 
-  // Wait for the auth to be loaded
-  if (auth.loading) {
-    console.log("Waiting for auth to load")
-    await new Promise<void>((resolve) => {
-      const off = watch(() => auth.loading, () => {
-        if (!auth.loading) {
-          off()
-          resolve()
-        }
-      }, { immediate: true })
-    })
-  }
+//   // Wait for the auth to be loaded
+//   if (auth.loading) {
+//     console.log("Waiting for auth to load")
+//     await new Promise<void>((resolve) => {
+//       const off = watch(() => auth.loading, () => {
+//         if (!auth.loading) {
+//           off()
+//           resolve()
+//         }
+//       }, { immediate: true })
+//     })
+//   }
 
-  const allowedRoles = (to.meta.allowedRoles as Role[]) ?? null
-  if (allowedRoles && !allowedRoles.includes(auth.role)) {
-    console.log("Unauthorized access", auth.role, allowedRoles)
+//   const allowedRoles = (to.meta.allowedRoles as Role[]) ?? null
+//   if (allowedRoles && !allowedRoles.includes(auth.role)) {
+//     console.log("Unauthorized access", auth.role, allowedRoles)
 
-    switch (auth.role) {
-      case Role.Admin:
-        next("/admin")
-        break
-      case Role.Board:
-        next("/board")
-        break
-      case Role.Team:
-        next("/team")
-        break
-      default:
-        if (to.path.startsWith("/admin")) {
-          next("/admin/login")
-        } else {
-          next("/login")
-        }
-    }
-  } else {
-    console.log("Authorized access", to, auth.role, allowedRoles)
-    next()
-  }
-})
+//     switch (auth.role) {
+//       case Role.Admin:
+//         next("/admin")
+//         break
+//       case Role.Board:
+//         next("/board")
+//         break
+//       case Role.Team:
+//         next("/team")
+//         break
+//       default:
+//         if (to.path.startsWith("/admin")) {
+//           next("/admin/login")
+//         } else {
+//           next("/login")
+//         }
+//     }
+//   } else {
+//     console.log("Authorized access", to, auth.role, allowedRoles)
+//     next()
+//   }
+//   // next()
+// })
 
+// Handle phase checks
 router.beforeEach(async (to, _, next) => {
   const auth = useAuthManager()
   const game = useGameManager()

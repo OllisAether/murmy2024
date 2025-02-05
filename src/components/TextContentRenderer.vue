@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { TextContent, TextStyle } from '@/../shared/textContent';
+import { TextContent, TextStyle } from '@/shared/textContent';
 import Collectable from './Collectable.vue';
 import { onMounted, ref } from 'vue';
 

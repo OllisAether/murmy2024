@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { form } from '@/../shared/assets/form';
+import { form } from '@/shared/assets/form';
 import TextContentRenderer from '../../TextContentRenderer.vue';
 import { ref, useModel, watch } from 'vue';
 import FormField from './FormField.vue';

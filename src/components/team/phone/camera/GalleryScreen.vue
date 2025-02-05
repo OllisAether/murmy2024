@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { useGameManager } from '@/store/gameManager';
 import { useMainClue } from '@/store/team/mainClue';
-import { gallery } from '../../../../../shared/assets/phone/gallery';
+import { gallery } from '../../../../shared/assets/phone/gallery';
 import ScrollView from '../ScrollView.vue';
 import ImageScreen from './ImageScreen.vue';
 

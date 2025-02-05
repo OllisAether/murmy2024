@@ -37,35 +37,35 @@ export default defineConfig({
 
     rollupOptions: {
       output: {
-        manualChunks (id) {
-          if (id.endsWith('AdminLoginPage.vue')) {
-            return 'adminLogin'
-          }
+        // manualChunks (id) {
+        //   if (id.endsWith('AdminLoginPage.vue')) {
+        //     return 'adminLogin'
+        //   }
 
-          if (id.includes('/server')) {
-            return 'server'
-          }
-          if (id.includes('/@vue') || id.includes('/vuetify')) {
-            return 'vendor'
-          }
-          if (id.includes('node_modules')) {
-            return 'vendor'
-          }
-          if (id.includes('/shared')) {
-            return 'index'
-            // return 'shared'
-          }
-          if (id.includes('/admin')) {
-            return 'admin'
-          }
-          if (id.includes('/board')) {
-            return 'board'
-          }
-          if (id.includes('/team')) {
-            return 'team'
-          }
-          return 'index'
-        }
+        //   if (id.includes('/server')) {
+        //     return 'server'
+        //   }
+        //   if (id.includes('/@vue') || id.includes('/vuetify')) {
+        //     return 'vendor'
+        //   }
+        //   if (id.includes('node_modules')) {
+        //     return 'vendor'
+        //   }
+        //   if (id.includes('/shared')) {
+        //     return 'index'
+        //     // return 'shared'
+        //   }
+        //   if (id.includes('/admin')) {
+        //     return 'admin'
+        //   }
+        //   if (id.includes('/board')) {
+        //     return 'board'
+        //   }
+        //   if (id.includes('/team')) {
+        //     return 'team'
+        //   }
+        //   return 'index'
+        // }
       }
     },
   },

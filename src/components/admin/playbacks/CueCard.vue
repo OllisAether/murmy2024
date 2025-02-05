@@ -86,12 +86,12 @@
 
 <script setup lang="ts">
 import { conditionToString } from '@/utils/conditionToString';
-import { CueType, CueTypes } from '../../../../shared/cue/CueTypes';
+import { CueType, CueTypes } from '../../../shared/cue/CueTypes';
 import { cueIconMap } from '@/utils/cueIcon';
-import { Playback } from '../../../../shared/playback/Playback';
-import { Cue } from '../../../../shared/cue/Cue';
+import { Playback } from '../../../shared/playback/Playback';
+import { Cue } from '../../../shared/cue/Cue';
 import { computed, ref } from 'vue';
-import { cueSettingsMap } from '@/../shared/cue/cueSettings';
+import { cueSettingsMap } from '@/shared/cue/cueSettings';
 import { VDivider } from 'vuetify/components';
 
 const props = defineProps<{

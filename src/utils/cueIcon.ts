@@ -1,4 +1,4 @@
-import { CueType } from "../../shared/cue/CueTypes";
+import { CueType } from "../shared/cue/CueTypes";
 
 export const cueIconMap: Record<CueType, string> = {
   [CueType.SetPhase]: 'mdi-label-outline',

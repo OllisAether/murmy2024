@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Transcript, TranscriptLine as TranscriptLineType } from '../../../shared/transcript';
+import { Transcript, TranscriptLine as TranscriptLineType } from '../../shared/transcript';
 import HoldIndicator from './HoldIndicator.vue';
 import TranscriptLine from './TranscriptLine.vue';
 

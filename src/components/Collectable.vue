@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { useCollectables } from '@/store/collectables'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { idGen } from '../../shared/random'
+import { idGen } from '../shared/random'
 import { useGameManager } from '@/store/gameManager'
 import { getPathToElement } from '@/utils/getPathToElement';
 

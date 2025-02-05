@@ -75,7 +75,7 @@ import SkewBox from '@/components/SkewBox.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { VoteOption } from '../../../shared/vote';
+import { VoteOption } from '../../shared/vote';
 import { useAudio } from '@/store/board/audio';
 
 const game = useGameManager()
@@ -199,7 +199,7 @@ onMounted(() => {
     })
     game.triggerBoardSkip()
   } else if (game.timer.state !== 'stopped') {
-    const offset = (game.timer.startTime ?? Date.now()) + game.timeSync.diff - Date.now() - 800
+    const offset = (game.timer.startTime ?? Date.now()) - Date.now() - 800
 
     if (offset > 0) {
       setTimeout(() => {

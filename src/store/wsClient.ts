@@ -1,63 +1,60 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { Game } from '@/server/game/game'
+// import { WebSocketClient } from "@/server/clients/client";
+import { TeamClient } from "@/server/clients/teamClient";
 
 export const useWsClient = defineStore('wsClient', () => {
-  const ws = ref<WebSocket | null>(null)
-
-  const secure = window.location.protocol === 'https:'
+  const ws = ref<{
+    send: (data: string) => void,
+  } | null>(null)
 
   const status = ref<'disconnected' | 'connecting' | 'connected' | 'reconnecting'>('disconnected')
 
-  function connect(i = 0) {
+  function connect() {
     if (ws.value) {
       return
     }
 
     status.value = 'connecting'
 
-    ws.value = new WebSocket(`${secure ? 'wss' : 'ws'}://${window.location.host}/api/ws`)
+    const game = Game.get()
+    const team = game.getTeam()
+    const sendListener: ((data: string) => void)[] = []
+    const client = new TeamClient((onSend) => {
+      sendListener.push(onSend)
+    }, 'demo', team.id, team.name)
 
-    ws.value.addEventListener('open', () => {
-      console.log('%c[WebSocket]', 'color: purple', 'Connected')
-      status.value = 'connected'
-    })
+    client.onSend(handleMessage)
+    game.setClient(client)
 
-    ws.value.addEventListener('close', (e) => {
-      console.log('%c[WebSocket]', 'color: purple', 'Disconnected')
-      ws.value = null
-
-      if (e.code === 1000) {
-        status.value = 'disconnected'
-        return
+    ws.value = {
+      send: (data: string) => {
+        console.log('%c[WebSocket]', 'color: purple', data)
+        sendListener.forEach((listener) => listener(data))
       }
-      
-      if (i > 5) {
-        status.value = 'disconnected'
-        return
-      }
+    }
 
-      status.value = 'reconnecting'
-      setTimeout(() => connect(i + 1), 3000)
-    })
+    console.log(game.cueManager)
+    if (game.cueManager.currentPlaybackIndex.value === -1) {
+      game.cueManager.setCurrentPlayback(0)
+      game.cueManager.nextCue()
+    }
 
-    ws.value.addEventListener('message', handleMessage)
-
-    ws.value.addEventListener('error', (e) => {
-      console.error('%c[WebSocket]', 'color: purple', e)
-    })
+    status.value = 'connected'
   }
 
-  function disconnect() {
-    return new Promise<void>((resolve) => {
-      ws.value?.addEventListener('close', () => {
-        resolve()
-      })
-      ws.value?.close(
-        1000,
-        'Client closed connection'
-      )
-    })
-  }
+  // function disconnect() {
+  //   return new Promise<void>((resolve) => {
+  //     ws.value?.addEventListener('close', () => {
+  //       resolve()
+  //     })
+  //     ws.value?.close(
+  //       1000,
+  //       'Client closed connection'
+  //     )
+  //   })
+  // }
 
   const messageListeners = ref<((data: any) => void)[]>([])
   function onMessage(callback: (data: any) => void) {
@@ -72,12 +69,12 @@ export const useWsClient = defineStore('wsClient', () => {
     }
   }
 
-  function handleMessage(event: MessageEvent) {
+  function handleMessage(rawData: string) {
     try {
-      const data = JSON.parse(event.data)
+      const data = JSON.parse(rawData)
       console.log('%c[WebSocket]', 'color: purple', data)
 
-      send('ACK', { action: data.action })
+      // send('ACK', { action: data.action })
 
       messageListeners.value.forEach((listener) => listener(data))
     } catch (e) {
@@ -110,19 +107,19 @@ export const useWsClient = defineStore('wsClient', () => {
     })
   }
 
-  async function get(channel: string) {
-    return await fetch(`/api/${channel}`)
-  }
+  // async function get(channel: string) {
+  //   return await fetch(`/api/${channel}`)
+  // }
 
-  async function post(channel: string, payload: any) {
-    return await fetch(`/api/${channel}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-  }
+  // async function post(channel: string, payload: any) {
+  //   return await fetch(`/api/${channel}`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(payload),
+  //   })
+  // }
 
   function once (action: string) {
     return new Promise<any>((resolve) => {
@@ -136,14 +133,14 @@ export const useWsClient = defineStore('wsClient', () => {
   return {
     ws,
     connect,
-    disconnect,
+    // disconnect,
     onMessage,
     offMessage,
     onAction,
     send,
     request,
-    get,
-    post,
+    // get,
+    // post,
     status,
     once
   }

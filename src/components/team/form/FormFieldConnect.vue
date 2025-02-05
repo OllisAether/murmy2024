@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldConnect, FormFieldConnectValue } from '@/../shared/form';
+import { FormFieldConnect, FormFieldConnectValue } from '@/shared/form';
 import TextContentRenderer from '../../TextContentRenderer.vue';
 import { computed, ref, watch } from 'vue';
 

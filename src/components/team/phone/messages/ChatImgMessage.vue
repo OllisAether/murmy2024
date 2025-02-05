@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ChatImage } from '../../../../../shared/phone/chat';
+import { ChatImage } from '../../../../shared/phone/chat';
 import { useGameManager } from '@/store/gameManager';
 import Collectable from '@/components/Collectable.vue';
 

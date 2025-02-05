@@ -49,6 +49,19 @@
 
           <CarouselItem>
             <template #banner>
+              ⛳
+            </template>
+            <template #title>
+              Das ist nur eine Demo version des Spiels
+            </template>
+
+            <p>
+              Dieses Spiel ist nur eine Demo-Version und enthält nicht den vollen Umfang von Murder Mystery.
+            </p>
+          </CarouselItem>
+
+          <!-- <CarouselItem>
+            <template #banner>
               📱👉🗑️
             </template>
             <template #title>
@@ -100,9 +113,9 @@
             <p>
               Bindet alle Teammitglieder in eure Entscheidungen ein und hört aufeinander.
             </p>
-          </CarouselItem>
+          </CarouselItem> -->
 
-          <CarouselItem>
+          <!-- <CarouselItem>
             <template #banner>
               <VIcon>mdi-account-question</VIcon>
             </template>
@@ -118,8 +131,22 @@
             <p>
               Wir werden euch keine Hinweise zum Spiel geben, aber wir helfen euch gerne bei technischen Problemen.
             </p>
-          </CarouselItem>
+          </CarouselItem> -->
 
+          <CarouselItem>
+            <template #banner>
+              <img src="/favicon.png" style="width: 1.2em; height: 1.2em">
+            </template>
+            <template #title>
+              Gut! Es kann also losgehen!
+            </template>
+
+            <p style="font-size: 1.5rem;">
+              <Btn square color="#6949c2" @click="start">
+                <VIcon>mdi-play</VIcon>
+              </Btn>
+            </p>
+          </CarouselItem>
         </Carousel>
       </div>
 
@@ -128,15 +155,22 @@
           <span class="home__break-info__emoji">☕</span>
           Päuschen!
         </div>
-        <div class="home__break-info__timer">
+        <!-- <div class="home__break-info__timer">
           Um
           <span>{{ moment(resumeTime).format('HH:mm') }}</span>
           Uhr geht es weiter!
-        </div>
+        </div> -->
         
         <div class="home__break-info__text">
           Ihr könnt euch entspannen, auf die Toilette gehen oder
           etwas zum knabbern oder trinken am Verkaufsstand holen.
+        </div>
+
+        <div style="font-size: 1rem;" class="mt-4">
+          <Btn color="#6949c2" @click="start">
+            Weiter geht's!
+            <VIcon>mdi-play</VIcon>
+          </Btn>
         </div>
       </div>
 
@@ -155,23 +189,18 @@ import { useGameManager } from '@/store/gameManager';
 import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import Carousel from '@/components/team/Carousel.vue';
 import CarouselItem from '@/components/team/CarouselItem.vue';
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
-import moment from 'moment';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import Timer from '@/components/Timer.vue';
-import TextContentRenderer from '@/components/TextContentRenderer.vue';
-import { wiggly } from '../../../shared/textContent';
+// import TextContentRenderer from '@/components/TextContentRenderer.vue';
+// import { wiggly } from '../../shared/textContent';
+import Btn from '@/components/Btn.vue';
+import { Game } from '@/server/game/game';
 
 const auth = useAuthManager()
 const game = useGameManager()
 
 const mediaPlaying = computed(() => {
   return !!game.currentMedia
-})
-
-const resumeTime = computed(() => {
-  const timer = game.timer
-
-  return timer.duration + (timer.startTime ?? Date.now())
 })
 
 const isTimer = computed(() => {
@@ -217,6 +246,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
   game.wakelockShouldBeActive = wakelockShouldBeActiveBefore
 })
+
+function start () {
+  const game = Game.get()
+
+  game.cueManager.nextCue()
+}
 </script>
 
 <style lang="scss" scoped>

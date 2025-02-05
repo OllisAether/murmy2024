@@ -140,12 +140,12 @@
 import { computed, onBeforeUnmount, ref, useModel, watch } from 'vue';
 import Timer from '../Timer.vue';
 import { useSwipe } from '@vueuse/core';
-import { suspects as allSuspects } from '../../../shared/assets/suspects';
+import { suspects as allSuspects } from '../../shared/assets/suspects';
 import { useGameManager } from '@/store/gameManager';
 import DatabaseEntry from './DatabaseEntry.vue';
 import SkewBox from '../SkewBox.vue';
-import { Entry } from '../../../shared/suspectDatabase/entry';
-import { Suspect } from '../../../shared/suspectDatabase/suspect';
+import { Entry } from '../../shared/suspectDatabase/entry';
+import { Suspect } from '../../shared/suspectDatabase/suspect';
 import { useEntryDrag } from '@/store/team/entryDrag';
 import TextContentRenderer from '../TextContentRenderer.vue';
 import { useTutorial } from '@/store/team/tutorial';

@@ -1,18 +1,11 @@
 <template>
-  <div class="interact-confirm" v-if="!game.interacted">
+  <!-- <div class="interact-confirm" v-if="!game.interacted">
     <VIcon size="64" class="mb-8">mdi-gesture-tap</VIcon><br>
     Bitte interagiere mit dem Bildschirm, um fortzufahren.
-  </div>
+  </div> -->
 
-  <template v-else>
-    <VFadeTransition mode="out-in">
-      <MediaScreen v-if="game.currentMedia !== null" />
-      <VoteScreen v-else-if="game.phase.type === Phase.Vote" />
-      <ResultsScreen v-if="game.phase.meta.results" />
-      <ShownewCluesScreen v-if="game.phase.meta.showNewClues" />
-      <TitleScreen v-else />
-    </VFadeTransition>
-  </template>
+  <!-- <template v-else> -->
+  <!-- </template> -->
 
   <VDialog v-model="navigationDialog" max-width="500" :persistent="persistent">
     <VCard>
@@ -117,14 +110,14 @@
         >
           Vollbild an/aus
         </VBtn>
-        <VBtn
+        <!-- <VBtn
           variant="tonal"
           color="error"
           @click="logout"
           class="w-100"
         >
           Logout
-        </VBtn>
+        </VBtn> -->
       </VCardText>
     </VCard>
   </VDialog>
@@ -133,19 +126,10 @@
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
 import { onBeforeMount, onUnmounted, ref } from 'vue';
-import { useAuthManager } from '../../store/authManager';
 import { VToolbar } from 'vuetify/components';
 import { useGameManager } from '@/store/gameManager';
-import { Phase } from '../../../shared/phase';
-
-import TitleScreen from './TitleScreen.vue';
-import MediaScreen from './MediaScreen.vue';
-import VoteScreen from './VoteScreen.vue';
-import ResultsScreen from './ResultsScreen.vue';
-import ShownewCluesScreen from './ShownewCluesScreen.vue';
 import { useAudio } from '@/store/board/audio';
 
-const auth = useAuthManager()
 const game = useGameManager()
 const audio = useAudio()
 
@@ -198,9 +182,9 @@ function tap () {
   }
 }
 
-function logout () {
-  auth.logout()
-}
+// function logout () {
+//   auth.logout()
+// }
 
 onBeforeMount(() => {
   game.wakelockShouldBeActive = true

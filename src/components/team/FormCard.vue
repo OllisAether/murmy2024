@@ -153,7 +153,7 @@ import { computed, ref } from 'vue';
 import Btn from '../Btn.vue';
 import SkewBox from '../SkewBox.vue';
 import Form from './form/Form.vue';
-import { form } from '../../../shared/assets/form';
+import { form } from '../../shared/assets/form';
 
 const game = useGameManager();
 

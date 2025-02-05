@@ -71,7 +71,7 @@ import { useAuthManager } from './store/authManager';
 import { useWsClient } from './store/wsClient';
 import { useGameManager } from './store/gameManager';
 import { computed, onMounted, watch } from 'vue';
-import { Role } from '../shared/roles';
+import { Role } from './shared/roles';
 
 const auth = useAuthManager()
 const game = useGameManager()

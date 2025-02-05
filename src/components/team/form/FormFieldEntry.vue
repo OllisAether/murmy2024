@@ -76,13 +76,13 @@
 </template>
 
 <script setup lang="ts">
-import { FormFieldEntry, FormFieldEntryValue } from '@/../shared/form';
+import { FormFieldEntry, FormFieldEntryValue } from '@/shared/form';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import HelpBtn from '../HelpBtn.vue';
 import { useEntryDrag } from '@/store/team/entryDrag';
 import { useGameManager } from '@/store/gameManager';
-import { Entry } from '../../../../shared/suspectDatabase/entry';
-import { suspects } from '../../../../shared/assets/suspects';
+import { Entry } from '../../../shared/suspectDatabase/entry';
+import { suspects } from '../../../shared/assets/suspects';
 import TextContentRenderer from '../../TextContentRenderer.vue';
 
 const game = useGameManager()

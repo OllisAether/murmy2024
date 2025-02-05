@@ -1,0 +1,1242 @@
+[
+  {
+    "name": ".DS_Store",
+    "url": "/shared/.DS_Store"
+  },
+  {
+    "name": "suspects/Cassy1.webp",
+    "url": "/shared/suspects/Cassy1.webp"
+  },
+  {
+    "name": "suspects/Hugo1.webp",
+    "url": "/shared/suspects/Hugo1.webp"
+  },
+  {
+    "name": "suspects/Cassy2.webp",
+    "url": "/shared/suspects/Cassy2.webp"
+  },
+  {
+    "name": "suspects/Hugo2.webp",
+    "url": "/shared/suspects/Hugo2.webp"
+  },
+  {
+    "name": "suspects/Ivy.webp",
+    "url": "/shared/suspects/Ivy.webp"
+  },
+  {
+    "name": "suspects/Justin1.webp",
+    "url": "/shared/suspects/Justin1.webp"
+  },
+  {
+    "name": "suspects/Justin2.webp",
+    "url": "/shared/suspects/Justin2.webp"
+  },
+  {
+    "name": "suspects/Phineas.webp",
+    "url": "/shared/suspects/Phineas.webp"
+  },
+  {
+    "name": "suspects/Phoebe2.webp",
+    "url": "/shared/suspects/Phoebe2.webp"
+  },
+  {
+    "name": "suspects/Phoebe1.webp",
+    "url": "/shared/suspects/Phoebe1.webp"
+  },
+  {
+    "name": "suspects/orakel.webp",
+    "url": "/shared/suspects/orakel.webp"
+  },
+  {
+    "name": "thumbnails/intercom.webp",
+    "url": "/shared/thumbnails/intercom.webp"
+  },
+  {
+    "name": "thumbnails/kw.webp",
+    "url": "/shared/thumbnails/kw.webp"
+  },
+  {
+    "name": "thumbnails/stalker1.webp",
+    "url": "/shared/thumbnails/stalker1.webp"
+  },
+  {
+    "name": "thumbnails/stalker2.webp",
+    "url": "/shared/thumbnails/stalker2.webp"
+  },
+  {
+    "name": "thumbnails/tape.webp",
+    "url": "/shared/thumbnails/tape.webp"
+  },
+  {
+    "name": "mainClue/DiaryThumbnail.webp",
+    "url": "/shared/mainClue/DiaryThumbnail.webp"
+  },
+  {
+    "name": "mainClue/PhoneThumbnail.webp",
+    "url": "/shared/mainClue/PhoneThumbnail.webp"
+  },
+  {
+    "name": "Kindheitsfoto.webp",
+    "url": "/team/Kindheitsfoto.webp",
+    "metadata": {
+      "width": 1226,
+      "height": 1091
+    }
+  },
+  {
+    "name": ".DS_Store",
+    "url": "/team/.DS_Store"
+  },
+  {
+    "name": "diary/FrontCover.webp",
+    "url": "/team/diary/FrontCover.webp",
+    "metadata": {
+      "width": 910,
+      "height": 1176
+    }
+  },
+  {
+    "name": "diary/Sketch1.webp",
+    "url": "/team/diary/Sketch1.webp",
+    "metadata": {
+      "width": 426,
+      "height": 480
+    }
+  },
+  {
+    "name": "diary/Sketch2.webp",
+    "url": "/team/diary/Sketch2.webp",
+    "metadata": {
+      "width": 426,
+      "height": 480
+    }
+  },
+  {
+    "name": "diary/Sketch3.webp",
+    "url": "/team/diary/Sketch3.webp",
+    "metadata": {
+      "width": 441,
+      "height": 682
+    }
+  },
+  {
+    "name": "diary/Sketch4.webp",
+    "url": "/team/diary/Sketch4.webp",
+    "metadata": {
+      "width": 441,
+      "height": 682
+    }
+  },
+  {
+    "name": "diary/Sketch5.webp",
+    "url": "/team/diary/Sketch5.webp",
+    "metadata": {
+      "width": 353,
+      "height": 363
+    }
+  },
+  {
+    "name": "diary/Sketch6.webp",
+    "url": "/team/diary/Sketch6.webp",
+    "metadata": {
+      "width": 441,
+      "height": 682
+    }
+  },
+  {
+    "name": "diary/Sketch7.webp",
+    "url": "/team/diary/Sketch7.webp",
+    "metadata": {
+      "width": 441,
+      "height": 682
+    }
+  },
+  {
+    "name": "diary/Sketch8.webp",
+    "url": "/team/diary/Sketch8.webp",
+    "metadata": {
+      "width": 441,
+      "height": 682
+    }
+  },
+  {
+    "name": "diary/Sketch9.webp",
+    "url": "/team/diary/Sketch9.webp",
+    "metadata": {
+      "width": 658,
+      "height": 427
+    }
+  },
+  {
+    "name": "diary/Stiches.webp",
+    "url": "/team/diary/Stiches.webp",
+    "metadata": {
+      "width": 910,
+      "height": 1176
+    }
+  },
+  {
+    "name": "thumbnails/AutopsieIvy.webp",
+    "url": "/team/thumbnails/AutopsieIvy.webp",
+    "metadata": {
+      "width": 512,
+      "height": 725
+    }
+  },
+  {
+    "name": "thumbnails/AutopsiePhineas.webp",
+    "url": "/team/thumbnails/AutopsiePhineas.webp",
+    "metadata": {
+      "width": 512,
+      "height": 726
+    }
+  },
+  {
+    "name": "thumbnails/Besucherliste.webp",
+    "url": "/team/thumbnails/Besucherliste.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/BfbDolch.webp",
+    "url": "/team/thumbnails/BfbDolch.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/BfbTuch.webp",
+    "url": "/team/thumbnails/BfbTuch.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/Map.webp",
+    "url": "/team/thumbnails/Map.webp",
+    "metadata": {
+      "width": 512,
+      "height": 512
+    }
+  },
+  {
+    "name": "thumbnails/Ritual.webp",
+    "url": "/team/thumbnails/Ritual.webp",
+    "metadata": {
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "name": "thumbnails/Ritual1.webp",
+    "url": "/team/thumbnails/Ritual1.webp",
+    "metadata": {
+      "width": 512,
+      "height": 683
+    }
+  },
+  {
+    "name": "thumbnails/Rituale.webp",
+    "url": "/team/thumbnails/Rituale.webp",
+    "metadata": {
+      "width": 512,
+      "height": 683
+    }
+  },
+  {
+    "name": "thumbnails/Schuelerakte-Cassy.webp",
+    "url": "/team/thumbnails/Schuelerakte-Cassy.webp",
+    "metadata": {
+      "width": 512,
+      "height": 660
+    }
+  },
+  {
+    "name": "thumbnails/Schuelerakte-Ivy.webp",
+    "url": "/team/thumbnails/Schuelerakte-Ivy.webp",
+    "metadata": {
+      "width": 512,
+      "height": 656
+    }
+  },
+  {
+    "name": "thumbnails/Schuelerakte-Justin.webp",
+    "url": "/team/thumbnails/Schuelerakte-Justin.webp",
+    "metadata": {
+      "width": 512,
+      "height": 661
+    }
+  },
+  {
+    "name": "thumbnails/Schuelerakte-Phineas.webp",
+    "url": "/team/thumbnails/Schuelerakte-Phineas.webp",
+    "metadata": {
+      "width": 512,
+      "height": 659
+    }
+  },
+  {
+    "name": "thumbnails/Schuelerakte-Phoebe.webp",
+    "url": "/team/thumbnails/Schuelerakte-Phoebe.webp",
+    "metadata": {
+      "width": 512,
+      "height": 661
+    }
+  },
+  {
+    "name": "thumbnails/Stundenplan.webp",
+    "url": "/team/thumbnails/Stundenplan.webp",
+    "metadata": {
+      "width": 512,
+      "height": 663
+    }
+  },
+  {
+    "name": "thumbnails/Todesurkunde_Elena.webp",
+    "url": "/team/thumbnails/Todesurkunde_Elena.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/Todesurkunde_Ivy.webp",
+    "url": "/team/thumbnails/Todesurkunde_Ivy.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/Tuch.webp",
+    "url": "/team/thumbnails/Tuch.webp",
+    "metadata": {
+      "width": 205,
+      "height": 206
+    }
+  },
+  {
+    "name": "thumbnails/Zeitung.webp",
+    "url": "/team/thumbnails/Zeitung.webp",
+    "metadata": {
+      "width": 512,
+      "height": 430
+    }
+  },
+  {
+    "name": "thumbnails/burn-the-diary-postit.webp",
+    "url": "/team/thumbnails/burn-the-diary-postit.webp",
+    "metadata": {
+      "width": 512,
+      "height": 512
+    }
+  },
+  {
+    "name": "thumbnails/durchsage.webp",
+    "url": "/team/thumbnails/durchsage.webp",
+    "metadata": {
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "name": "thumbnails/fuehrungszeugnis.webp",
+    "url": "/team/thumbnails/fuehrungszeugnis.webp",
+    "metadata": {
+      "width": 512,
+      "height": 724
+    }
+  },
+  {
+    "name": "thumbnails/klinikum.webp",
+    "url": "/team/thumbnails/klinikum.webp",
+    "metadata": {
+      "width": 459,
+      "height": 454
+    }
+  },
+  {
+    "name": "thumbnails/mpg.webp",
+    "url": "/team/thumbnails/mpg.webp",
+    "metadata": {
+      "width": 863,
+      "height": 841
+    }
+  },
+  {
+    "name": "thumbnails/park.webp",
+    "url": "/team/thumbnails/park.webp",
+    "metadata": {
+      "width": 907,
+      "height": 910
+    }
+  },
+  {
+    "name": "thumbnails/pin.webp",
+    "url": "/team/thumbnails/pin.webp",
+    "metadata": {
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "name": "thumbnails/polizei.webp",
+    "url": "/team/thumbnails/polizei.webp",
+    "metadata": {
+      "width": 507,
+      "height": 505
+    }
+  },
+  {
+    "name": "thumbnails/radio.webp",
+    "url": "/team/thumbnails/radio.webp",
+    "metadata": {
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "name": "thumbnails/suizid.webp",
+    "url": "/team/thumbnails/suizid.webp",
+    "metadata": {
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  {
+    "name": "thumbnails/wald.webp",
+    "url": "/team/thumbnails/wald.webp",
+    "metadata": {
+      "width": 761,
+      "height": 712
+    }
+  },
+  {
+    "name": "phone/._.DS_Store",
+    "url": "/team/phone/._.DS_Store"
+  },
+  {
+    "name": "phone/Phone.webp",
+    "url": "/team/phone/Phone.webp",
+    "metadata": {
+      "width": 852,
+      "height": 1672
+    }
+  },
+  {
+    "name": "phone/PinterestLogo.webp",
+    "url": "/team/phone/PinterestLogo.webp",
+    "metadata": {
+      "width": 630,
+      "height": 191
+    }
+  },
+  {
+    "name": "phone/TumblrLogo.webp",
+    "url": "/team/phone/TumblrLogo.webp",
+    "metadata": {
+      "width": 300,
+      "height": 71
+    }
+  },
+  {
+    "name": "phone/background.webp",
+    "url": "/team/phone/background.webp",
+    "metadata": {
+      "width": 480,
+      "height": 800
+    }
+  },
+  {
+    "name": "phone/burn-it.webp",
+    "url": "/team/phone/burn-it.webp",
+    "metadata": {
+      "width": 512,
+      "height": 579
+    }
+  },
+  {
+    "name": "phone/eyes.webp",
+    "url": "/team/phone/eyes.webp",
+    "metadata": {
+      "width": 500,
+      "height": 375
+    }
+  },
+  {
+    "name": "phone/.DS_Store",
+    "url": "/team/phone/.DS_Store"
+  },
+  {
+    "name": "phone/klassenchat.webp",
+    "url": "/team/phone/klassenchat.webp",
+    "metadata": {
+      "width": 200,
+      "height": 200
+    }
+  },
+  {
+    "name": "phone/knife.webp",
+    "url": "/team/phone/knife.webp",
+    "metadata": {
+      "width": 640,
+      "height": 640
+    }
+  },
+  {
+    "name": "phone/love-gif.gif",
+    "url": "/team/phone/love-gif.gif"
+  },
+  {
+    "name": "phone/skull.webp",
+    "url": "/team/phone/skull.webp",
+    "metadata": {
+      "width": 512,
+      "height": 287
+    }
+  },
+  {
+    "name": "phone/skull_porch.webp",
+    "url": "/team/phone/skull_porch.webp",
+    "metadata": {
+      "width": 512,
+      "height": 307
+    }
+  },
+  {
+    "name": "phone/villager.webp",
+    "url": "/team/phone/villager.webp",
+    "metadata": {
+      "width": 512,
+      "height": 384
+    }
+  },
+  {
+    "name": "phone/gallery/CD1.webp",
+    "url": "/team/phone/gallery/CD1.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD2.webp",
+    "url": "/team/phone/gallery/CD2.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD3.webp",
+    "url": "/team/phone/gallery/CD3.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD4.webp",
+    "url": "/team/phone/gallery/CD4.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD5.webp",
+    "url": "/team/phone/gallery/CD5.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD6.webp",
+    "url": "/team/phone/gallery/CD6.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/CD7.webp",
+    "url": "/team/phone/gallery/CD7.webp",
+    "metadata": {
+      "width": 1152,
+      "height": 648
+    }
+  },
+  {
+    "name": "phone/gallery/image-1.webp",
+    "url": "/team/phone/gallery/image-1.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-10.webp",
+    "url": "/team/phone/gallery/image-10.webp",
+    "metadata": {
+      "width": 576,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-2.webp",
+    "url": "/team/phone/gallery/image-2.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-4.webp",
+    "url": "/team/phone/gallery/image-4.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-3.webp",
+    "url": "/team/phone/gallery/image-3.webp",
+    "metadata": {
+      "width": 886,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-6.webp",
+    "url": "/team/phone/gallery/image-6.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-5.webp",
+    "url": "/team/phone/gallery/image-5.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-7.webp",
+    "url": "/team/phone/gallery/image-7.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-8.webp",
+    "url": "/team/phone/gallery/image-8.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/gallery/image-9.webp",
+    "url": "/team/phone/gallery/image-9.webp",
+    "metadata": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Calculator.webp",
+    "url": "/team/phone/icons/Icon_Calculator.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Camera.webp",
+    "url": "/team/phone/icons/Icon_Camera.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Clock.webp",
+    "url": "/team/phone/icons/Icon_Clock.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Contacts.webp",
+    "url": "/team/phone/icons/Icon_Contacts.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Gallery.webp",
+    "url": "/team/phone/icons/Icon_Gallery.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Internet.webp",
+    "url": "/team/phone/icons/Icon_Internet.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Minecraft.webp",
+    "url": "/team/phone/icons/Icon_Minecraft.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Notes.webp",
+    "url": "/team/phone/icons/Icon_Notes.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Phone.webp",
+    "url": "/team/phone/icons/Icon_Phone.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Pinterest.webp",
+    "url": "/team/phone/icons/Icon_Pinterest.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_PlayStore.webp",
+    "url": "/team/phone/icons/Icon_PlayStore.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_SMS.webp",
+    "url": "/team/phone/icons/Icon_SMS.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Settings.webp",
+    "url": "/team/phone/icons/Icon_Settings.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "phone/icons/Icon_Tumblr.webp",
+    "url": "/team/phone/icons/Icon_Tumblr.webp",
+    "metadata": {
+      "width": 100,
+      "height": 100
+    }
+  },
+  {
+    "name": "clues/.DS_Store",
+    "url": "/team/clues/.DS_Store"
+  },
+  {
+    "name": "clues/AutopsieIvy.webp",
+    "url": "/team/clues/AutopsieIvy.webp",
+    "metadata": {
+      "width": 1659,
+      "height": 2348
+    }
+  },
+  {
+    "name": "clues/AutopsiePhineas.webp",
+    "url": "/team/clues/AutopsiePhineas.webp",
+    "metadata": {
+      "width": 1654,
+      "height": 2344
+    }
+  },
+  {
+    "name": "clues/Besucherliste.webp",
+    "url": "/team/clues/Besucherliste.webp",
+    "metadata": {
+      "width": 1090,
+      "height": 1542
+    }
+  },
+  {
+    "name": "clues/BfbDolch.webp",
+    "url": "/team/clues/BfbDolch.webp",
+    "metadata": {
+      "width": 1090,
+      "height": 1542
+    }
+  },
+  {
+    "name": "clues/BfbTuch.webp",
+    "url": "/team/clues/BfbTuch.webp",
+    "metadata": {
+      "width": 1090,
+      "height": 1542
+    }
+  },
+  {
+    "name": "clues/Map.webp",
+    "url": "/team/clues/Map.webp",
+    "metadata": {
+      "width": 3290,
+      "height": 3290
+    }
+  },
+  {
+    "name": "clues/Ritual1.webp",
+    "url": "/team/clues/Ritual1.webp",
+    "metadata": {
+      "width": 2048,
+      "height": 2732
+    }
+  },
+  {
+    "name": "clues/Ritual2.webp",
+    "url": "/team/clues/Ritual2.webp",
+    "metadata": {
+      "width": 2048,
+      "height": 2732
+    }
+  },
+  {
+    "name": "clues/Ritual3.webp",
+    "url": "/team/clues/Ritual3.webp",
+    "metadata": {
+      "width": 2048,
+      "height": 2732
+    }
+  },
+  {
+    "name": "clues/Ritual4.webp",
+    "url": "/team/clues/Ritual4.webp",
+    "metadata": {
+      "width": 2048,
+      "height": 2732
+    }
+  },
+  {
+    "name": "clues/Ritual5.webp",
+    "url": "/team/clues/Ritual5.webp",
+    "metadata": {
+      "width": 2048,
+      "height": 2732
+    }
+  },
+  {
+    "name": "clues/Stundenplan.webp",
+    "url": "/team/clues/Stundenplan.webp",
+    "metadata": {
+      "width": 2244,
+      "height": 2904
+    }
+  },
+  {
+    "name": "clues/Todesurkunde_Elena.webp",
+    "url": "/team/clues/Todesurkunde_Elena.webp",
+    "metadata": {
+      "width": 1653,
+      "height": 2338
+    }
+  },
+  {
+    "name": "clues/Todesurkunde_Ivy.webp",
+    "url": "/team/clues/Todesurkunde_Ivy.webp",
+    "metadata": {
+      "width": 1653,
+      "height": 2338
+    }
+  },
+  {
+    "name": "clues/Zeitung.webp",
+    "url": "/team/clues/Zeitung.webp",
+    "metadata": {
+      "width": 1754,
+      "height": 1473
+    }
+  },
+  {
+    "name": "clues/fuehrungszeugnis.webp",
+    "url": "/team/clues/fuehrungszeugnis.webp",
+    "metadata": {
+      "width": 1103,
+      "height": 1560
+    }
+  },
+  {
+    "name": "clues/schuelerakten/.DS_Store",
+    "url": "/team/clues/schuelerakten/.DS_Store"
+  },
+  {
+    "name": "clues/schuelerakten/Schuelerakte-Cassy.webp",
+    "url": "/team/clues/schuelerakten/Schuelerakte-Cassy.webp",
+    "metadata": {
+      "width": 1748,
+      "height": 2253
+    }
+  },
+  {
+    "name": "clues/schuelerakten/Schuelerakte-Ivy.webp",
+    "url": "/team/clues/schuelerakten/Schuelerakte-Ivy.webp",
+    "metadata": {
+      "width": 1748,
+      "height": 2240
+    }
+  },
+  {
+    "name": "clues/schuelerakten/Schuelerakte-Justin.webp",
+    "url": "/team/clues/schuelerakten/Schuelerakte-Justin.webp",
+    "metadata": {
+      "width": 1748,
+      "height": 2257
+    }
+  },
+  {
+    "name": "clues/schuelerakten/Schuelerakte-Phineas.webp",
+    "url": "/team/clues/schuelerakten/Schuelerakte-Phineas.webp",
+    "metadata": {
+      "width": 1748,
+      "height": 2249
+    }
+  },
+  {
+    "name": "clues/schuelerakten/Schuelerakte-Phoebe.webp",
+    "url": "/team/clues/schuelerakten/Schuelerakte-Phoebe.webp",
+    "metadata": {
+      "width": 1748,
+      "height": 2257
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-01.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-01.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-02.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-02.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-03.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-03.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-04.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-04.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-05.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-05.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-06.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-06.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-07.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-07.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-08.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-08.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-09.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-09.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-10.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-10.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-11.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-11.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-12.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-12.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-13.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-13.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-14.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-14.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-15.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-15.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-16.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-16.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-17.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-17.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-18.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-18.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-19.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-19.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-20.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-20.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-21.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-21.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": "clues/kursbuch/Kursbuch-22.webp",
+    "url": "/team/clues/kursbuch/Kursbuch-22.webp",
+    "metadata": {
+      "width": 1122,
+      "height": 1452
+    }
+  },
+  {
+    "name": ".DS_Store",
+    "url": "/board/.DS_Store"
+  },
+  {
+    "name": "Cassy 1.mp4",
+    "url": "/board/Cassy 1.mp4"
+  },
+  {
+    "name": "Cassy 2.mp4",
+    "url": "/board/Cassy 2.mp4"
+  },
+  {
+    "name": "Ende.mp4",
+    "url": "/board/Ende.mp4"
+  },
+  {
+    "name": "Hugo 1.mp4",
+    "url": "/board/Hugo 1.mp4"
+  },
+  {
+    "name": "Hugo 2.mp4",
+    "url": "/board/Hugo 2.mp4"
+  },
+  {
+    "name": "Intro.mp4",
+    "url": "/board/Intro.mp4"
+  },
+  {
+    "name": "Ivys Suizid.mp4",
+    "url": "/board/Ivys Suizid.mp4"
+  },
+  {
+    "name": "Justin 1.mp4",
+    "url": "/board/Justin 1.mp4"
+  },
+  {
+    "name": "Justin 2.mp4",
+    "url": "/board/Justin 2.mp4"
+  },
+  {
+    "name": "Der Loesung auf der Spur.mp3",
+    "url": "/board/Der Loesung auf der Spur.mp3"
+  },
+  {
+    "name": "Justinssprachaufnahme.mp3",
+    "url": "/board/Justinssprachaufnahme.mp3"
+  },
+  {
+    "name": "Notruf.mp3",
+    "url": "/board/Notruf.mp3"
+  },
+  {
+    "name": "Phoebe 1.mp4",
+    "url": "/board/Phoebe 1.mp4"
+  },
+  {
+    "name": "KrankenhausLog.mp3",
+    "url": "/board/KrankenhausLog.mp3"
+  },
+  {
+    "name": "Phoebe 2.mp4",
+    "url": "/board/Phoebe 2.mp4"
+  },
+  {
+    "name": "Stalkeraufnahme 1.mp4",
+    "url": "/board/Stalkeraufnahme 1.mp4"
+  },
+  {
+    "name": "Recap.mp4",
+    "url": "/board/Recap.mp4"
+  },
+  {
+    "name": "Stalkeraufnahme 2.mp4",
+    "url": "/board/Stalkeraufnahme 2.mp4"
+  },
+  {
+    "name": "music/HalloweenBg.mp3",
+    "url": "/board/music/HalloweenBg.mp3"
+  },
+  {
+    "name": "music/HalloweenBg2.mp3",
+    "url": "/board/music/HalloweenBg2.mp3"
+  },
+  {
+    "name": "music/murmytheme.mp3",
+    "url": "/board/music/murmytheme.mp3"
+  },
+  {
+    "name": "sounds/new_clue.mp3",
+    "url": "/board/sounds/new_clue.mp3"
+  },
+  {
+    "name": "sounds/new_clue_1.mp3",
+    "url": "/board/sounds/new_clue_1.mp3"
+  },
+  {
+    "name": "sounds/new_clue_2.mp3",
+    "url": "/board/sounds/new_clue_2.mp3"
+  },
+  {
+    "name": "sounds/new_clue_3.mp3",
+    "url": "/board/sounds/new_clue_3.mp3"
+  },
+  {
+    "name": "sounds/new_clue_4.mp3",
+    "url": "/board/sounds/new_clue_4.mp3"
+  },
+  {
+    "name": "sounds/.DS_Store",
+    "url": "/board/sounds/.DS_Store"
+  },
+  {
+    "name": "sounds/vote/vote.mp3",
+    "url": "/board/sounds/vote/vote.mp3"
+  },
+  {
+    "name": "sounds/vote/vote_end.mp3",
+    "url": "/board/sounds/vote/vote_end.mp3"
+  },
+  {
+    "name": "sounds/vote/vote_tiebreaker.mp3",
+    "url": "/board/sounds/vote/vote_tiebreaker.mp3"
+  }
+]

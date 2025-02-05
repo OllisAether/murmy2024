@@ -4,15 +4,9 @@
   "version": "2.0.4",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run watch:server\" \"npm run serve:client\" \"npm run serve\"",
-    "serve": "NODE_ENV=development nodemon dist/server/index.cjs --watch dist/server",
-    "serve:client": "vite --host",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "vue-tsc && vite build --mode=production",
-    "build:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws",
-    "watch:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/server/index.cjs --target=node20 --external:express --external:express-ws --external:ws --watch",
-    "start": "PORT=443 node dist/server/index.cjs",
-    "copyAssets": "cp -r public/assets dist/client"
+    "dev": "vite --host",
+    "build": "vue-tsc && vite build --mode=production",
+    "preview": "vite preview --mode=production"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -41,6 +35,7 @@
     "esbuild": "^0.21.3",
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
+    "image-size": "^1.2.0",
     "json5": "^2.2.3",
     "node-persist": "^4.0.1",
     "nodemon": "^3.1.0",

@@ -91,7 +91,7 @@ import ScreenWrapper from '@/components/ScreenWrapper.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
-import { clues } from '../../../shared/assets/clues/index';
+import { clues } from '../../shared/assets/clues/index';
 import SkewBox from '@/components/SkewBox.vue';
 import { useAudio } from '@/store/board/audio';
 import { useMounted } from '@vueuse/core';
@@ -106,25 +106,25 @@ const isBreak = computed(() => {
   return game.phase.meta.break ?? false
 })
 
-const isEnd = computed(() => {
-  return game.phase.meta.end ?? false
-})
-
-const isInfo = computed(() => {
-  return game.phase.meta.info ?? false
-})
-
 const newClues = computed(() => {
   return game.clues.new.map(clue => clues.find(c => c.id === clue))
 })
 
 const playMusic = computed(() => {
-  return !isBreak.value && !isEnd.value && !isInfo.value
+  return true
+  // return !isBreak.value && !isEnd.value && !isInfo.value
 })
 
 const audio = useAudio()
 
 onMounted(() => {
+
+  const stop2 = watch(() => game.interacted, () => {
+    if (game.interacted && playMusic.value) {
+      audio.startBackgroundMusic()
+    }
+  })
+
   const stop = watch(playMusic, () => {
     setTimeout(() => {
       if (!useMounted()) return
@@ -139,6 +139,7 @@ onMounted(() => {
 
   onBeforeUnmount(() => {
     stop()
+    stop2()
     audio.stopBackgroundMusic()
   })
 })

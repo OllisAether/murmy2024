@@ -96,7 +96,7 @@ import SkewBox from '@/components/SkewBox.vue';
 import Timer from '@/components/Timer.vue';
 import { useGameManager } from '@/store/gameManager';
 import { computed, ref, watch } from 'vue';
-import { VoteOption } from '../../../shared/vote';
+import { VoteOption } from '../../shared/vote';
 import Color from 'color';
 import HelpBtn from '@/components/team/HelpBtn.vue';
 

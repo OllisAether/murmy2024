@@ -34,8 +34,8 @@
 import { useGameManager } from '@/store/gameManager';
 import ScrollView from '../ScrollView.vue';
 import { useMainClue } from '@/store/team/mainClue';
-import { getRawText } from '../../../../../shared/textContent';
-import { notes } from '../../../../../shared/assets/phone/notes';
+import { getRawText } from '../../../../shared/textContent';
+import { notes } from '../../../../shared/assets/phone/notes';
 const game = useGameManager();
 const phone = useMainClue();
 </script>

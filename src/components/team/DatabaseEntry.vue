@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { Entry } from '../../../shared/suspectDatabase/entry'
+import { Entry } from '../../shared/suspectDatabase/entry'
 import { useGameManager } from '@/store/gameManager';
 import Btn from '../Btn.vue';
 import { useEntryDrag } from '@/store/team/entryDrag';

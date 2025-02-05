@@ -43,8 +43,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { suspects } from '../../../../shared/assets/suspects';
-import { FormFieldSuspect, FormFieldSuspectValue } from '../../../../shared/form';
+import { suspects } from '../../../shared/assets/suspects';
+import { FormFieldSuspect, FormFieldSuspectValue } from '../../../shared/form';
 import { useGameManager } from '@/store/gameManager';
 import SkewBox from '@/components/SkewBox.vue';
 

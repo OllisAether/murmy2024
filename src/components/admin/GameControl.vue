@@ -109,17 +109,17 @@
       >
         <VBtn
           class="flex-grow-1"
-          @click="admin.nextPlayback()"
+          @click="Game.get().cueManager.nextPlayback()"
         >
           <VIcon>mdi-filmstrip-box-multiple</VIcon>
 
-          <VIcon v-if="admin.currentPlaybackIndex >= 0">mdi-skip-next</VIcon>
+          <VIcon v-if="Game.get().cueManager.currentPlaybackIndex.value >= 0">mdi-skip-next</VIcon>
           <VIcon v-else>mdi-play</VIcon>
         </VBtn>
         <VBtn
           class="flex-grow-1"
-          @click="admin.nextCue()"
-          :disabled="admin.currentPlaybackIndex === -1"
+          @click="Game.get().cueManager.nextCue()"
+          :disabled="Game.get().cueManager.currentPlaybackIndex.value === -1"
         >
 
           <VIcon>mdi-motion-play-outline</VIcon>
@@ -131,13 +131,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useAdmin } from '@/store/admin/index';
 import { useGameManager } from '@/store/gameManager';
 import { useWsClient } from '@/store/wsClient';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import DurationTextField from './DurationTextField.vue'
+import { Game } from '@/server/game/game';
 
-const admin = useAdmin()
+// const admin = useAdmin()
 const game = useGameManager()
 const ws = useWsClient()
 
@@ -145,9 +145,9 @@ const timerState = computed({
   get: () => game.timer.state === 'stopped' ? null : game.timer.state,
   set: (value) => {
     if (value === 'running') {
-      admin.resumeTimer()
+      Game.get().resumeTimer()
     } else if (value === 'paused') {
-      admin.pauseTimer()
+      Game.get().pauseTimer()
     }
   }
 })
@@ -166,10 +166,10 @@ watch(timerDurationEditDialog, (value) => {
 const restartOnSave = ref(false)
 function applyDurationOverride () {
   if (durationOverride.value !== null) {
-    admin.setDuration(durationOverride.value)
+    Game.get().setDuration(durationOverride.value)
     
     if (restartOnSave.value) {
-      admin.setTime(-1000)
+      Game.get().setTime(-1000)
     }
   }
 }
@@ -202,7 +202,7 @@ const remainingTime = computed(() => {
 
 function applyTimeOverride () {
   if (timeOverride.value !== null) {
-    admin.setTime(timeOverride.value)
+    Game.get().setTime(timeOverride.value)
   }
 }
 
