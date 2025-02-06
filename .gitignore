@@ -27,7 +27,7 @@ dist-ssr
 *.cache
 
 certs
-# public/board
-# public/shared
-# public/team
+public/board
+public/shared
+public/team
 # src/assets/fonts
