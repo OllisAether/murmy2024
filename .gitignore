@@ -30,4 +30,4 @@ certs
 public/board
 public/shared
 public/team
-# src/assets/fonts
+src/assets/fonts

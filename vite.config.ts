@@ -28,7 +28,7 @@ export default defineConfig({
         display: 'standalone',
         icons: [{ src: '/appicon.png' }]
       },
-      includeAssets: assets.map(x => 'https://cdn.murmy-demo.ollisaether.art' + x.url),
+      includeAssets: assets.map(x => x.url),
       devOptions: {
         enabled: false
       },

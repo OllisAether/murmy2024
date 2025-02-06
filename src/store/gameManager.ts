@@ -168,10 +168,7 @@ export const useGameManager = defineStore('gameManager', () => {
             // }
 
             // const teamAssets: Asset[] = allAssets
-            await preloadAssets(allAssets.map((asset) => ({
-              ...asset,
-              url: 'https://cdn.murmy-demo.ollisaether.art' + asset.url
-            })))
+            await preloadAssets(allAssets)
             // assets.value = allAssets.map(asset => ({
             //   ...asset,
             //   content: asset.url
