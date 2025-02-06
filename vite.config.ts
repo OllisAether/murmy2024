@@ -5,6 +5,7 @@ import { configDotenv } from 'dotenv'
 import mkCert from 'vite-plugin-mkcert'
 import vuetify from 'vite-plugin-vuetify'
 import { VitePWA } from 'vite-plugin-pwa'
+import assets from './src/assets/assets.json'
 
 configDotenv({
   path: '.env'
@@ -27,13 +28,14 @@ export default defineConfig({
         display: 'standalone',
         icons: [{ src: '/appicon.png' }]
       },
+      includeAssets: assets.map(x => x.url),
       devOptions: {
         enabled: false
       },
     })
   ],
   build: {
-    outDir: 'dist/client',
+    outDir: 'dist',
 
     rollupOptions: {
       output: {

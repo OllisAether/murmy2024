@@ -168,11 +168,11 @@ export const useGameManager = defineStore('gameManager', () => {
             // }
 
             // const teamAssets: Asset[] = allAssets
-            // await preloadAssets(teamAssets)
-            assets.value = allAssets.map(asset => ({
-              ...asset,
-              content: asset.url
-            }))
+            await preloadAssets(allAssets)
+            // assets.value = allAssets.map(asset => ({
+            //   ...asset,
+            //   content: asset.url
+            // }))
             break
           // case Role.Board:
           //   console.log('Fetching board assets')
@@ -351,7 +351,7 @@ export const useGameManager = defineStore('gameManager', () => {
     loaded: false,
     loadedAssets: 0,
     progresses: {},
-    totalAssets: 0
+    totalAssets: 0,
   })
   const assets = ref<Asset[]>([])
   function preloadAssets (_assets: Asset[]) {
@@ -370,7 +370,7 @@ export const useGameManager = defineStore('gameManager', () => {
 
     assets.value = _assets.map(asset => ({
       ...asset,
-      content: undefined
+      content: assets.value.find((a) => a.name === asset.name)?.content
     }))
 
     return new Promise<void>(async (resolve) => {
@@ -390,6 +390,7 @@ export const useGameManager = defineStore('gameManager', () => {
         assetsProgress.value.progresses[asset.name] = 0
 
         if (asset.content !== undefined) {
+          console.log('%c[GameManager]', 'color: #4CAF50', 'Skipping asset preload', asset.name)
           finishAsset(asset)
           continue
         }

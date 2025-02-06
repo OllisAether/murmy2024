@@ -1,9 +1,5 @@
 [
   {
-    "name": ".DS_Store",
-    "url": "/shared/.DS_Store"
-  },
-  {
     "name": "suspects/Cassy1.webp",
     "url": "/shared/suspects/Cassy1.webp"
   },
@@ -82,10 +78,6 @@
       "width": 1226,
       "height": 1091
     }
-  },
-  {
-    "name": ".DS_Store",
-    "url": "/team/.DS_Store"
   },
   {
     "name": "diary/FrontCover.webp",
@@ -416,10 +408,6 @@
     }
   },
   {
-    "name": "phone/._.DS_Store",
-    "url": "/team/phone/._.DS_Store"
-  },
-  {
     "name": "phone/Phone.webp",
     "url": "/team/phone/Phone.webp",
     "metadata": {
@@ -466,10 +454,6 @@
       "width": 500,
       "height": 375
     }
-  },
-  {
-    "name": "phone/.DS_Store",
-    "url": "/team/phone/.DS_Store"
   },
   {
     "name": "phone/klassenchat.webp",
@@ -764,10 +748,6 @@
     }
   },
   {
-    "name": "clues/.DS_Store",
-    "url": "/team/clues/.DS_Store"
-  },
-  {
     "name": "clues/AutopsieIvy.webp",
     "url": "/team/clues/AutopsieIvy.webp",
     "metadata": {
@@ -894,10 +874,6 @@
       "width": 1103,
       "height": 1560
     }
-  },
-  {
-    "name": "clues/schuelerakten/.DS_Store",
-    "url": "/team/clues/schuelerakten/.DS_Store"
   },
   {
     "name": "clues/schuelerakten/Schuelerakte-Cassy.webp",
@@ -1116,127 +1092,119 @@
     }
   },
   {
-    "name": ".DS_Store",
-    "url": "/board/.DS_Store"
-  },
-  {
     "name": "Cassy 1.mp4",
-    "url": "/board/Cassy 1.mp4"
+    "url": "/board/Cassy 1.webm"
   },
   {
     "name": "Cassy 2.mp4",
-    "url": "/board/Cassy 2.mp4"
+    "url": "/board/Cassy 2.webm"
   },
   {
     "name": "Ende.mp4",
-    "url": "/board/Ende.mp4"
+    "url": "/board/Ende.webm"
   },
   {
     "name": "Hugo 1.mp4",
-    "url": "/board/Hugo 1.mp4"
+    "url": "/board/Hugo 1.webm"
   },
   {
     "name": "Hugo 2.mp4",
-    "url": "/board/Hugo 2.mp4"
+    "url": "/board/Hugo 2.webm"
   },
   {
     "name": "Intro.mp4",
-    "url": "/board/Intro.mp4"
+    "url": "/board/Intro.webm"
   },
   {
     "name": "Ivys Suizid.mp4",
-    "url": "/board/Ivys Suizid.mp4"
+    "url": "/board/Ivys Suizid.webm"
   },
   {
     "name": "Justin 1.mp4",
-    "url": "/board/Justin 1.mp4"
+    "url": "/board/Justin 1.webm"
   },
   {
     "name": "Justin 2.mp4",
-    "url": "/board/Justin 2.mp4"
+    "url": "/board/Justin 2.webm"
   },
   {
     "name": "Der Loesung auf der Spur.mp3",
-    "url": "/board/Der Loesung auf der Spur.mp3"
+    "url": "/board/Der Loesung auf der Spur.webm"
   },
   {
     "name": "Justinssprachaufnahme.mp3",
-    "url": "/board/Justinssprachaufnahme.mp3"
+    "url": "/board/Justinssprachaufnahme.webm"
   },
   {
     "name": "Notruf.mp3",
-    "url": "/board/Notruf.mp3"
+    "url": "/board/Notruf.webm"
   },
   {
     "name": "Phoebe 1.mp4",
-    "url": "/board/Phoebe 1.mp4"
+    "url": "/board/Phoebe 1.webm"
   },
   {
     "name": "KrankenhausLog.mp3",
-    "url": "/board/KrankenhausLog.mp3"
+    "url": "/board/KrankenhausLog.webm"
   },
   {
     "name": "Phoebe 2.mp4",
-    "url": "/board/Phoebe 2.mp4"
+    "url": "/board/Phoebe 2.webm"
   },
   {
     "name": "Stalkeraufnahme 1.mp4",
-    "url": "/board/Stalkeraufnahme 1.mp4"
+    "url": "/board/Stalkeraufnahme 1.webm"
   },
   {
     "name": "Recap.mp4",
-    "url": "/board/Recap.mp4"
+    "url": "/board/Recap.webm"
   },
   {
     "name": "Stalkeraufnahme 2.mp4",
-    "url": "/board/Stalkeraufnahme 2.mp4"
+    "url": "/board/Stalkeraufnahme 2.webm"
   },
   {
     "name": "music/HalloweenBg.mp3",
-    "url": "/board/music/HalloweenBg.mp3"
+    "url": "/board/music/HalloweenBg.webm"
   },
   {
     "name": "music/HalloweenBg2.mp3",
-    "url": "/board/music/HalloweenBg2.mp3"
+    "url": "/board/music/HalloweenBg2.webm"
   },
   {
     "name": "music/murmytheme.mp3",
-    "url": "/board/music/murmytheme.mp3"
+    "url": "/board/music/murmytheme.webm"
   },
   {
     "name": "sounds/new_clue.mp3",
-    "url": "/board/sounds/new_clue.mp3"
+    "url": "/board/sounds/new_clue.webm"
   },
   {
     "name": "sounds/new_clue_1.mp3",
-    "url": "/board/sounds/new_clue_1.mp3"
+    "url": "/board/sounds/new_clue_1.webm"
   },
   {
     "name": "sounds/new_clue_2.mp3",
-    "url": "/board/sounds/new_clue_2.mp3"
+    "url": "/board/sounds/new_clue_2.webm"
   },
   {
     "name": "sounds/new_clue_3.mp3",
-    "url": "/board/sounds/new_clue_3.mp3"
+    "url": "/board/sounds/new_clue_3.webm"
   },
   {
     "name": "sounds/new_clue_4.mp3",
-    "url": "/board/sounds/new_clue_4.mp3"
-  },
-  {
-    "name": "sounds/.DS_Store",
-    "url": "/board/sounds/.DS_Store"
+    "url": "/board/sounds/new_clue_4.webm"
   },
   {
     "name": "sounds/vote/vote.mp3",
-    "url": "/board/sounds/vote/vote.mp3"
+    "url": "/board/sounds/vote/vote.webm"
   },
   {
     "name": "sounds/vote/vote_end.mp3",
-    "url": "/board/sounds/vote/vote_end.mp3"
+    "url": "/board/sounds/vote/vote_end.webm"
   },
   {
     "name": "sounds/vote/vote_tiebreaker.mp3",
-    "url": "/board/sounds/vote/vote_tiebreaker.mp3"
+    "url": "/board/sounds/vote/vote_tiebreaker.webm"
   }
 ]

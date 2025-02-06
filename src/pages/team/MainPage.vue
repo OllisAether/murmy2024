@@ -1,5 +1,5 @@
 <template>
-  <VDialog :scrim="false" scrollable v-model="gamedeck">
+  <VDialog :scrim="false" scrollable v-model="gamedeck" persistent no-click-animation transition="slide-x-transition" content-class="gamedeck">
     <VCard width="500" :style="{
       marginLeft: gamedeckPosition === 'l' ? '0' : 'auto',
     }">
@@ -246,8 +246,8 @@
           <VCard flat>
             <VToolbar>
               <VToolbarTitle>
-                <VIcon class="mr-2">mdi-account-question</VIcon>
-                Hilfe anfordern
+                <VIcon class="mr-2">mdi-cog</VIcon>
+                Einstellungen
               </VToolbarTitle>
 
               <VBtn icon @click="helpDialog = false">
@@ -359,6 +359,15 @@
 
               <VBtn class="w-100 mb-2" variant="tonal" @click="gamedeck = !gamedeck; helpDialog = false">
                 Debug
+                <span class="d-inline-block ml-2">
+                  <VKbd :style="{
+                    background: '#040404'
+                  }">Ctrl</VKbd> <VKbd :style="{
+                    background: '#040404'
+                  }">Shift</VKbd> <VKbd :style="{
+                    background: '#040404'
+                  }">D</VKbd>
+                </span>
               </VBtn>
 
               <VBtn class="w-100" color="error" variant="tonal">
@@ -454,7 +463,7 @@ import { useGameManager } from '../../store/gameManager';
 // import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
 import Btn from '@/components/Btn.vue';
-import { VOverlay } from 'vuetify/components';
+import { VKbd, VOverlay } from 'vuetify/components';
 import { VBtn } from 'vuetify/components/VBtn';
 import { preventGestures } from '@/main';
 import { Phase } from '@/shared/phase';
@@ -488,7 +497,7 @@ function playpause () {
   }
 }
 
-const logoutDialog = ref(false)
+// const logoutDialog = ref(false)
 const helpDialog = ref(false)
 
 function reload () {
@@ -546,10 +555,8 @@ watch(helpDialog, () => {
 // })
 
 useEventListener('keydown', (event) => {
-  if (logoutDialog.value) return
-
-  if (event.key === 'L' && event.ctrlKey && event.shiftKey) {
-    logoutDialog.value = true
+  if (event.key === 'D' && event.ctrlKey && event.shiftKey) {
+    gamedeck.value = !gamedeck.value
   }
 })
 
@@ -596,6 +603,15 @@ onUnmounted(() => {
     transform: scale(0.75);
   }
 }
+
+:deep(.gamedeck) {
+  pointer-events: none;
+
+  .v-card {
+    pointer-events: auto;
+  }
+}
+
 .interact-confirm {
   position: absolute;
   top: 50%;

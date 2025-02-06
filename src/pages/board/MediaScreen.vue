@@ -3,6 +3,10 @@
     media: true,
     'media--show-controls': showControls
   }">
+    <div class="media__paused-overlay" v-if="state === 'paused'" @click="video?.play()">
+      <VIcon>mdi-play</VIcon>
+    </div>
+
     <video
       v-if="game.currentMedia"
       ref="video"
@@ -191,6 +195,19 @@ function finished () {
 <style lang="scss" scoped>
 .media {
   cursor: none;
+
+  &__paused-overlay {
+    z-index: 1;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
 
   &--show-controls {
     cursor: auto;

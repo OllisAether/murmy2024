@@ -262,7 +262,7 @@ function start () {
 
   &--info, &--timer {
     .home__teamname {
-      top: calc(40vh - 22rem);
+      top: calc(20vh - 7rem);
       transform: translateY(0);
     }
   }
